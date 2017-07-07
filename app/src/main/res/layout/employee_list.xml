@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:fresco="http://schemas.android.com/tools"
+    android:background="@drawable/ripple_effect"
+    android:orientation="horizontal"
+    android:paddingBottom="@dimen/_5sdp"
+    android:paddingLeft="@dimen/_15sdp"
+    android:paddingTop="@dimen/_7sdp">
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/profile_pic"
+        android:layout_width="@dimen/_55sdp"
+        android:layout_height="@dimen/_55sdp"
+        android:layout_gravity="left"
+        fresco:src="@drawable/profile"
+        fresco:roundAsCircle="true"
+        fresco:roundedCornerRadius="@dimen/_5sdp"
+        fresco:roundWithOverlayColor="#ccc"
+        fresco:roundBottomLeft="false"
+        fresco:roundBottomRight="false"
+        fresco:roundingBorderWidth="1dp"
+        fresco:roundingBorderColor="#ccc"/>
+       <!--
+        app:civ_border_color="#ccc"
+
+        app:civ_border_width="@dimen/_1sdp"
+        app:civ_shadow="true"
+        app:civ_shadow_color="#ccc"
+        app:civ_shadow_radius="0" />-->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center">
+    <TextView
+        android:id="@+id/employee_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="left|center_vertical"
+        android:paddingLeft="@dimen/_20sdp"
+        android:text="Rohit Agarwal"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_15sdp" />
+    <TextView
+        android:id="@+id/leave_count"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="left|center_vertical"
+        android:paddingLeft="@dimen/_20sdp"
+        android:text="2 days"
+        android:visibility="gone"
+        android:textColor="#757575"
+        android:textSize="@dimen/_15sdp" />
+    </LinearLayout>
+
+</LinearLayout>

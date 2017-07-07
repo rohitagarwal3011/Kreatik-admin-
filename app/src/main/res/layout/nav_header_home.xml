@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/nav_header_height"
+    android:background="@drawable/side_nav_bar"
+    android:gravity="bottom"
+    android:orientation="vertical"
+    android:paddingTop="@dimen/_25sdp"
+    android:theme="@style/ThemeOverlay.AppCompat.Dark">
+
+
+    <com.mikhaellopez.circularimageview.CircularImageView
+        android:id="@+id/profile_pic"
+        android:layout_width="@dimen/_100sdp"
+        android:layout_height="@dimen/_100sdp"
+        android:layout_gravity="center"
+        android:src="@drawable/profile"
+        app:civ_border_color="#EEEEEE"
+        app:civ_border_width="4dp"
+        app:civ_shadow="true"
+        app:civ_shadow_radius="0"
+        app:civ_shadow_color="@color/white"/>
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal"
+    android:visibility="visible"
+    android:padding="@dimen/_10sdp"
+    android:orientation="vertical">
+    <TextView
+        android:id="@+id/user_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Rohit Agarwal"
+        android:textSize="@dimen/_15sdp"
+        android:visibility="visible"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+    <TextView
+        android:id="@+id/user_type"
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:visibility="visible"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/_12sdp"
+        android:textStyle="italic"
+        android:textColor="@color/white"
+        android:text="Android Developer" />
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:visibility="visible"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/_5sdp"
+        android:textStyle="italic"
+        android:textColor="@color/white"
+        android:text="_____________________________________________________________" />
+    <TextView
+        android:id="@+id/user_mobile"
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:visibility="visible"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/_12sdp"
+        android:paddingTop="@dimen/_5sdp"
+        android:textStyle="italic"
+        android:textColor="@color/white"
+        android:text="+91-9564145000" />
+    <TextView
+        android:id="@+id/user_email"
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:visibility="visible"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/_12sdp"
+        android:paddingTop="@dimen/_5sdp"
+        android:textStyle="italic"
+        android:textColor="@color/white"
+        android:text="rohit.agarwal3011@gmail.com" />
+
+
+</LinearLayout>
+</LinearLayout>

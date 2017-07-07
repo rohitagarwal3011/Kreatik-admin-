@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#0097A7</color>
+    <color name="colorPrimaryDark">#097A86</color>
+    <!-- <color name="colorPrimary">#009688</color>
+    <color name="colorPrimaryDark">#00796B</color>-->
+    <color name="colorAccent">#FE9700</color>
+    <color name="white">#fff</color>
+    <color name="black">#000</color>
+    <color name="backgroundcolor">#f2f2f2</color>
+    <color name="Red_700">#ff6e65</color>
+    <color name="home_background">#2a2840</color>
+
+    <color name="black_overlay">#66000000</color>
+</resources>

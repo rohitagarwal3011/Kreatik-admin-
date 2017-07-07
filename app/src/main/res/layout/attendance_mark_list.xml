@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:weightSum="5"
+    android:padding="@dimen/_3sdp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_weight="5">
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/profile_pic"
+            android:layout_width="@dimen/_55sdp"
+            android:layout_height="@dimen/_55sdp"
+            android:layout_gravity="left"
+            fresco:roundAsCircle="true"
+            fresco:roundedCornerRadius="@dimen/_5sdp"
+            fresco:roundWithOverlayColor="#ccc"
+            fresco:roundBottomLeft="false"
+            fresco:roundBottomRight="false"
+            fresco:roundingBorderWidth="1dp"
+            fresco:roundingBorderColor="#ccc"/>
+        <!--
+         app:civ_border_color="#ccc"
+
+         app:civ_border_width="@dimen/_1sdp"
+         app:civ_shadow="true"
+         app:civ_shadow_color="#ccc"
+         app:civ_shadow_radius="0" />-->
+
+        <TextView
+            android:id="@+id/employee_name"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="left|center_vertical"
+            android:paddingLeft="@dimen/_10sdp"
+            android:text="Rohit Agarwal"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_15sdp" />
+    </LinearLayout>
+
+    <CheckBox
+        android:id="@+id/absent"
+        android:layout_width="@dimen/_50sdp"
+        android:layout_height="@dimen/_50sdp"
+        android:layout_weight="2"/>
+
+    <CheckBox
+        android:id="@+id/half_day"
+        android:layout_width="@dimen/_50sdp"
+        android:layout_height="@dimen/_50sdp"
+        android:layout_weight="1.05"/>
+</LinearLayout>

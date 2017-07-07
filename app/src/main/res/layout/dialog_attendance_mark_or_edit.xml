@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/colorPrimary"
+    android:padding="@dimen/_10sdp"
+    android:weightSum="3">
+
+    <TextView
+        android:id="@+id/mark_attendance"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Mark \n Today's \n Attendance"
+        android:textSize="@dimen/_15sdp"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:layout_weight="1.5"/>
+
+
+    <View
+        android:layout_width="@dimen/_2sdp"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:layout_marginBottom="@dimen/_10sdp"
+        android:background="@color/white"
+        />
+
+
+    <TextView
+        android:id="@+id/modify_attendance"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Modify \n Previous \n Attendance"
+        android:textSize="@dimen/_15sdp"
+        android:layout_weight="1.5"
+        android:textColor="@color/white"
+        android:gravity="center"/>
+
+</LinearLayout>

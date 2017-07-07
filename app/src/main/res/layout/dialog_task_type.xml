@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary">
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Task Type"
+        android:textSize="@dimen/_20sdp"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:layout_marginTop="@dimen/_10sdp"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_2sdp"
+        android:background="@color/white"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:layout_marginRight="@dimen/_30sdp"
+        android:layout_marginLeft="@dimen/_30sdp"
+        />
+    <LinearLayout
+        android:id="@+id/daily"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/_25sdp"
+        android:paddingRight="@dimen/_25sdp"
+        android:paddingTop="@dimen/_5sdp"
+        android:paddingBottom="@dimen/_5sdp"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:layout_marginBottom="@dimen/_5sdp"
+        android:gravity="center"
+        android:clickable="true"
+        android:background="@drawable/ripple_effect"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Daily Task"
+            android:textSize="@dimen/_15sdp"
+            android:layout_weight="4"
+            android:textColor="@color/white"
+            />
+        <ImageView
+            android:layout_width="@dimen/_35sdp"
+            android:layout_height="@dimen/_35sdp"
+            android:layout_gravity="right"
+            android:src="@drawable/white_daily"/>
+
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/meetings"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/_25sdp"
+        android:paddingRight="@dimen/_25sdp"
+        android:paddingTop="@dimen/_5sdp"
+        android:paddingBottom="@dimen/_5sdp"
+        android:layout_marginBottom="@dimen/_5sdp"
+        android:gravity="center"
+        android:clickable="true"
+        android:background="@drawable/ripple_effect"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Meeting"
+            android:textSize="@dimen/_15sdp"
+            android:layout_weight="4"
+            android:textColor="@color/white"
+            />
+        <ImageView
+            android:layout_width="@dimen/_35sdp"
+            android:layout_height="@dimen/_35sdp"
+            android:layout_gravity="right"
+            android:src="@drawable/white_meeting"/>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/letter"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/_25sdp"
+        android:paddingRight="@dimen/_25sdp"
+
+        android:paddingTop="@dimen/_5sdp"
+        android:paddingBottom="@dimen/_5sdp"
+        android:layout_marginBottom="@dimen/_5sdp"
+        android:gravity="center"
+        android:clickable="true"
+        android:background="@drawable/ripple_effect"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Letter"
+            android:textSize="@dimen/_15sdp"
+            android:layout_weight="4"
+            android:textColor="@color/white"
+            />
+        <ImageView
+            android:layout_width="@dimen/_35sdp"
+            android:layout_height="@dimen/_35sdp"
+            android:layout_gravity="right"
+            android:src="@drawable/white_letter"/>
+
+
+    </LinearLayout>
+
+
+</LinearLayout>

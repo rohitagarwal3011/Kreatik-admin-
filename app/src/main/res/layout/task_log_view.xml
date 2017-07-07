@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+  <com.mikhaellopez.circularimageview.CircularImageView
+        android:id="@+id/profile_pic"
+        android:layout_width="@dimen/_40sdp"
+        android:layout_height="@dimen/_40sdp"
+        android:layout_gravity="left"
+        android:src="@drawable/profile"
+        android:visibility="gone"
+        app:civ_border_color="#EEEEEE"
+        app:civ_border_width="@dimen/_2sdp"
+        app:civ_shadow="true"
+        app:civ_shadow_radius="0"
+        app:civ_shadow_color="@color/white"/>
+
+    <LinearLayout
+        android:id="@+id/left_message_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_marginTop="@dimen/_15sdp"
+        android:layout_marginLeft="@dimen/_10sdp"
+        android:orientation="horizontal"
+        android:gravity="left"
+        >
+
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/chat_background"
+            android:layout_marginRight="@dimen/_5sdp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/left_message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/_13sdp"
+                android:textColor="@color/white"
+                android:visibility="gone"
+                android:layout_marginBottom="@dimen/_15sdp"
+                android:text=" dsf "
+                android:padding="@dimen/_5sdp"
+                />
+
+            <TextView
+                android:id="@+id/left_attachment"
+                android:layout_width="@dimen/_165sdp"
+                android:layout_height="wrap_content"
+                android:background="#f4f4f4"
+                android:visibility="gone"
+                android:layout_marginBottom="@dimen/_20sdp"
+                android:layout_marginTop="@dimen/_3sdp"
+                android:layout_marginLeft="@dimen/_3sdp"
+                android:layout_marginRight="@dimen/_10sdp"
+                android:padding="@dimen/_5sdp"
+                android:text="Attachment"/>
+            <ImageView
+                android:id="@+id/left_attachment_icon"
+                android:layout_width="@dimen/_20sdp"
+                android:layout_height="@dimen/_20sdp"
+                android:visibility="gone"
+                android:layout_gravity="right"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:layout_marginRight="@dimen/_20sdp"
+                android:src="@drawable/ic_pdf"/>
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:id="@+id/left_attachment_image"
+                android:layout_width="@dimen/_150sdp"
+                android:visibility="gone"
+                fresco:actualImageScaleType="focusCrop"
+                fresco:viewAspectRatio="1.33"
+                android:layout_height="@dimen/_150sdp"
+                android:layout_marginBottom="@dimen/_20sdp"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:layout_marginLeft="@dimen/_7sdp"
+                android:layout_marginRight="@dimen/_7sdp"
+                />
+
+            <TextView
+                android:id="@+id/log_time_left"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|end"
+                android:layout_marginRight="@dimen/_5sdp"
+                android:layout_marginLeft="@dimen/_10sdp"
+                android:layout_marginBottom="@dimen/_5sdp"
+                android:textColor="#ccc"
+                android:textSize="@dimen/_10sdp"
+                android:paddingLeft="@dimen/_1sdp"
+                android:text="12:00 pm"/>
+
+        </FrameLayout>
+
+        <ImageView
+            android:id="@+id/download_left"
+            android:layout_width="@dimen/_30sdp"
+            android:layout_height="@dimen/_30sdp"
+            android:src="@drawable/download"
+            android:padding="@dimen/_6sdp"
+            android:visibility="gone"
+            android:layout_marginRight="@dimen/_80sdp"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/circle_primary_color"
+            android:scaleType="fitXY"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/right_message_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:layout_marginLeft="@dimen/_30sdp"
+        android:orientation="horizontal"
+        android:gravity="right">
+
+        <ImageView
+            android:id="@+id/download_right"
+            android:layout_width="@dimen/_30sdp"
+            android:layout_height="@dimen/_30sdp"
+            android:src="@drawable/download"
+            android:padding="@dimen/_6sdp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="@dimen/_5sdp"
+            android:background="@drawable/circle_white"
+            android:scaleType="fitXY"/>
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:layout_marginRight="@dimen/_5sdp"
+            android:background="@drawable/white_chat_background"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/right_message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:text="hello sir"
+                android:textSize="@dimen/_13sdp"
+                android:layout_marginBottom="@dimen/_15sdp"
+                android:padding="@dimen/_5sdp"
+                />
+            <TextView
+                android:id="@+id/right_attachment"
+                android:layout_width="@dimen/_175sdp"
+                android:layout_height="wrap_content"
+                android:background="#f4f4f4"
+                android:visibility="gone"
+                android:layout_marginBottom="@dimen/_20sdp"
+                android:layout_marginTop="@dimen/_3sdp"
+                android:layout_marginLeft="@dimen/_3sdp"
+                android:layout_marginRight="@dimen/_3sdp"
+                android:padding="@dimen/_5sdp"
+                android:text="Attachment"/>
+            <ImageView
+                android:id="@+id/right_attachment_icon"
+                android:layout_width="@dimen/_20sdp"
+                android:layout_height="@dimen/_20sdp"
+                android:layout_gravity="right"
+                android:visibility="gone"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:layout_marginRight="@dimen/_20sdp"
+                android:src="@drawable/ic_pdf"/>
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:id="@+id/right_attachment_image"
+                android:layout_width="wrap_content"
+                fresco:actualImageScaleType="focusCrop"
+                fresco:viewAspectRatio="1.33"
+                android:layout_height="@dimen/_150sdp"
+                android:layout_marginBottom="@dimen/_20sdp"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:layout_marginLeft="@dimen/_7sdp"
+                android:layout_marginRight="@dimen/_7sdp"
+                />
+            <TextView
+                android:id="@+id/log_time_right"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|end"
+                android:layout_marginRight="@dimen/_5sdp"
+                android:layout_marginLeft="@dimen/_10sdp"
+                android:layout_marginBottom="@dimen/_5sdp"
+                android:textColor="#ccc"
+                android:textSize="@dimen/_10sdp"
+                android:paddingLeft="@dimen/_1sdp"
+                android:text="12:00 pm"/>
+
+
+
+        </FrameLayout>
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/status_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:gravity="center">
+        <TextView
+            android:id="@+id/status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/status_background"
+            android:textSize="@dimen/_13sdp"
+            android:text="hello sir"
+            android:textColor="@color/white"
+            android:padding="@dimen/_6sdp"
+            />
+    </LinearLayout>
+
+
+
+
+</LinearLayout>

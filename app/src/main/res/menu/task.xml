@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item android:id="@+id/attachment"
+        android:title="attachment"
+        android:visible="true"
+        android:icon="@drawable/ic_attach_file_black_24dp"
+        app:showAsAction="always"/>
+
+
+    <item android:id="@+id/status"
+        android:title="Status"
+        android:visible="true"
+        android:icon="@drawable/status_change"
+        android:orderInCategory="100"
+        app:showAsAction="always"
+        />
+</menu>
