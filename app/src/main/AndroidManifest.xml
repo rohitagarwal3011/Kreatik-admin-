@@ -97,7 +97,9 @@
             android:name=".activities.AttendanceActivity"
             android:label="@string/title_activity_attendance"
             android:parentActivityName=".activities.HomeActivity"
-            android:theme="@style/AppTheme">
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="stateHidden|adjustPan">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.app.rbc.admin.activities.HomeActivity" />

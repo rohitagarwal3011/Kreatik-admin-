@@ -1,10 +1,15 @@
 package com.app.rbc.admin.activities;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -12,11 +17,16 @@ import android.widget.TextView;
 
 import com.app.rbc.admin.R;
 import com.app.rbc.admin.fragments.Attendance_all;
+import com.app.rbc.admin.fragments.Attendance_emp_wise;
 import com.app.rbc.admin.fragments.Attendance_mark;
+import com.app.rbc.admin.fragments.Task_details;
 import com.app.rbc.admin.interfaces.ApiServices;
 import com.app.rbc.admin.utils.AppUtil;
 import com.app.rbc.admin.utils.ChangeFragment;
 import com.app.rbc.admin.utils.RetrofitClient;
+import com.rackspira.kristiawan.rackmonthpicker.RackMonthPicker;
+import com.rackspira.kristiawan.rackmonthpicker.listener.DateMonthDialogListener;
+import com.rackspira.kristiawan.rackmonthpicker.listener.OnCancelMonthDialogListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -34,133 +44,83 @@ import retrofit2.Response;
 public class AttendanceActivity extends AppCompatActivity {
 
   public  FloatingActionButton fab;
+    private String TAG = "AttendanceActivity";
+   RackMonthPicker rackMonthPicker;
+    Toolbar toolbar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_attendance);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
 
-//                fab.hide();
-//                ChangeFragment.addFragment(getSupportFragmentManager(),R.id.frame_main,new Attendance_mark(),Attendance_mark.TAG);
-                show_dialog();
+                final Attendance_all info = (Attendance_all) getSupportFragmentManager().findFragmentByTag(Attendance_all.TAG);
+                info.show_mark_dialog();
 
-                //send_attendance();
             }
         });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         ChangeFragment.changeFragment(getSupportFragmentManager(),R.id.frame_main, new Attendance_all(),Attendance_all.TAG);
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.search_attendance, menu);
 
-    public void send_attendance()
-    {
-        JSONObject obj = new JSONObject();
-        JSONArray data = new JSONArray();
-        try {
+        return true;
+    }
 
-
-            JSONObject object1 = new JSONObject();
-            object1.put("user_id", "SA2323");
-            object1.put("status", "Present");
-            object1.put("remarks", "");
-
-            data.put(object1);
-            JSONObject object2 = new JSONObject();
-            object2.put("user_id", "MJ2323");
-            object2.put("status", "Absent");
-            object2.put("remarks", "Fever");
-            data.put(object2);
-
-            JSONObject object3 = new JSONObject();
-            object3.put("user_id", "NJ2323");
-            object3.put("status", "Half Day");
-            object3.put("remarks", "Sleep");
-            data.put(object3);
-
-
-
+    @Override
+    public void onBackPressed() {
+        if(getSupportFragmentManager().findFragmentByTag(Attendance_all.TAG).isVisible()) {
+            Intent intent = new Intent(AttendanceActivity.this, HomeActivity.class);
+            startActivity(intent);
         }
-        catch (Exception e)
+        else
+            super.onBackPressed();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId())
         {
-            AppUtil.logger("AttendanceActivity",e.toString());
-        }
-            AppUtil.logger("Attendance",data.toString());
-        final ApiServices apiServices = RetrofitClient.getApiService();
-       // AppUtil.logger(TAG, "User id : " + user_id + " Pwd : " + new_password.getText().toString());
+            case android.R.id.home :
+                AppUtil.logger(TAG,"Home pressed");
+                onBackPressed();
+                return true;
+            case R.id.search_attendance:
+                if(getSupportFragmentManager().findFragmentByTag(Attendance_all.TAG).isVisible()){
+                    final Attendance_all info = (Attendance_all) getSupportFragmentManager().findFragmentByTag(Attendance_all.TAG);
+                    info.show_dialog();
 
-        Call<ResponseBody> call = apiServices.mark_attendance(data, String.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime())));
-        AppUtil.logger("Attendance Activity ", "Mark Attendance request: " + call.request().toString());
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                }
+                else if (getSupportFragmentManager().findFragmentByTag(Attendance_emp_wise.TAG).isVisible()){
+                    final Attendance_emp_wise info = (Attendance_emp_wise) getSupportFragmentManager().findFragmentByTag(Attendance_emp_wise.TAG);
+                    info.show_dialog();
 
-                try {
-
-                    try {
-                        JSONObject obj = new JSONObject(response.body().string());
-                        AppUtil.logger("Mark Attendance response: ", response.body().toString());
-                    } catch (IOException | NullPointerException e) {
-                        e.printStackTrace();
-                    }
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
                 }
 
 
-            }
-
-
-            @Override
-            public void onFailure(Call<ResponseBody> call1, Throwable t) {
-
-                AppUtil.showToast(AttendanceActivity.this, "Network Issue. Please check your connectivity and try again");
-            }
-        });
-
-
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
-    public void show_dialog()
+    public void setToolbar(String title)
     {
-        final Dialog dialog = new Dialog(AttendanceActivity.this);
-
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(true);
-        dialog.setCancelable(true);
-        dialog.setContentView(R.layout.dialog_attendance_mark_or_edit);
-        dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
-
-        TextView mark_attendance = (TextView) dialog.findViewById(R.id.mark_attendance);
-        TextView modify_attendance = (TextView) dialog.findViewById(R.id.modify_attendance);
-
-        mark_attendance.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-                ChangeFragment.changeFragment(getSupportFragmentManager(),R.id.frame_main,new Attendance_mark().newInstance("mark"),Attendance_mark.TAG);
-            }
-        });
-
-        modify_attendance.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-                ChangeFragment.changeFragment(getSupportFragmentManager(),R.id.frame_main,new Attendance_mark().newInstance("modify"),Attendance_mark.TAG);
-            }
-        });
-
-
-
-        dialog.show();
+        toolbar.setTitle(title);
     }
+
+
+
+
+
 }

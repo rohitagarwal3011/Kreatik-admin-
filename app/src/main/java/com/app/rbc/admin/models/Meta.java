@@ -1,15 +1,15 @@
 
 package com.app.rbc.admin.models;
 
-
 import com.google.gson.annotations.SerializedName;
+
 
 public class Meta {
 
     @SerializedName("message")
     private String mMessage;
     @SerializedName("status")
-    private int mStatus;
+    private Long mStatus;
 
     public String getMessage() {
         return mMessage;
@@ -19,11 +19,11 @@ public class Meta {
         mMessage = message;
     }
 
-    public int getStatus() {
+    public Long getStatus() {
         return mStatus;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(Long status) {
         mStatus = status;
     }
 

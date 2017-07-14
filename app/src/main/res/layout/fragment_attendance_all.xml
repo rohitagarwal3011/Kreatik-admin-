@@ -2,14 +2,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context="com.app.rbc.admin.fragments.Attendance_all">
-<ScrollView
+<android.support.v4.widget.NestedScrollView
     android:layout_width="match_parent"
     android:layout_height="match_parent">
    <LinearLayout
        android:layout_width="match_parent"
        android:layout_height="match_parent"
        android:orientation="vertical">
+
    <TextView
        android:id="@+id/emp_wise_attendance"
        android:layout_width="match_parent"
@@ -17,6 +19,7 @@
        android:text="EMPLOYEE WISE ATTENDANCE"
        android:drawableRight="@drawable/ic_chevron_right_black_24dp"
        android:gravity="left"
+       android:visibility="gone"
        android:textSize="@dimen/_15sdp"
        android:paddingLeft="@dimen/_20sdp"
        android:paddingTop="@dimen/_10sdp"
@@ -24,26 +27,32 @@
        android:paddingRight="@dimen/_15sdp"
        android:textColor="#000"
        android:layout_marginTop="@dimen/_10sdp"/>
-       <View
-           android:layout_width="match_parent"
-           android:layout_height="@dimen/_2sdp"
-           android:background="#ccc"
-           />
+
        <TextView
            android:id="@+id/todays_absentees"
            android:layout_width="match_parent"
            android:layout_height="wrap_content"
-           android:text="Today's Absentees"
+           android:text="Absentees for the day"
+           android:visibility="visible"
            android:paddingLeft="@dimen/_20sdp"
-           android:paddingTop="@dimen/_10sdp"
-           android:paddingBottom="@dimen/_10sdp"
+           android:paddingTop="@dimen/_5sdp"
+           android:paddingBottom="@dimen/_5sdp"
            android:paddingRight="@dimen/_15sdp"
            android:textColor="#000"
-           android:background="#ccc"
-           android:drawableRight="@drawable/ic_arrow_drop_down_black_24dp"
-           android:textSize="@dimen/_15sdp"
-           android:layout_marginTop="@dimen/_10sdp"
+           android:background="#ecebeb"
+           android:textSize="@dimen/_12sdp"
+
            />
+       <TextView
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:id="@+id/zero_absentees"
+           android:text="&quot;All Present. No Absentees for the day&quot;"
+           android:textStyle="italic"
+           android:gravity="center"
+           android:visibility="gone"
+           android:paddingTop="@dimen/_20sdp"
+           android:paddingBottom="@dimen/_15sdp"/>
        <android.support.v7.widget.RecyclerView
            android:id="@+id/absent_employees"
            android:layout_width="match_parent"
@@ -55,21 +64,21 @@
            android:layout_width="match_parent"
            android:layout_height="@dimen/_2sdp"
            android:background="#ccc"
+           android:visibility="gone"
            />
        <TextView
            android:id="@+id/todays_hd"
            android:layout_width="match_parent"
            android:layout_height="wrap_content"
-           android:text="Today's Half days"
+           android:text="Half day takers for the day"
            android:paddingLeft="@dimen/_20sdp"
-           android:paddingTop="@dimen/_10sdp"
-           android:paddingBottom="@dimen/_10sdp"
+           android:paddingTop="@dimen/_5sdp"
+           android:paddingBottom="@dimen/_5sdp"
            android:paddingRight="@dimen/_15sdp"
            android:textColor="#000"
-           android:background="#ccc"
-           android:drawableRight="@drawable/ic_arrow_drop_down_black_24dp"
-           android:textSize="@dimen/_15sdp"
-           android:layout_marginTop="@dimen/_10sdp"
+           android:background="#ecebeb"
+           android:visibility="visible"
+           android:textSize="@dimen/_12sdp"
            />
        <android.support.v7.widget.RecyclerView
            android:id="@+id/hd_employees"
@@ -82,21 +91,31 @@
            android:layout_width="match_parent"
            android:layout_height="@dimen/_2sdp"
            android:background="#ccc"
+           android:visibility="gone"
            />
+       <TextView
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:id="@+id/no_attendance"
+           android:text="&quot;Attendance is not yet marked for the day&quot;"
+           android:textStyle="italic"
+           android:gravity="center"
+           android:visibility="gone"
+           android:paddingTop="@dimen/_20sdp"
+           android:paddingBottom="@dimen/_15sdp"/>
        <TextView
            android:id="@+id/total_leaves"
            android:layout_width="match_parent"
            android:layout_height="wrap_content"
-           android:text="Leaves for this month"
+           android:text="Month status"
            android:paddingLeft="@dimen/_20sdp"
-           android:paddingTop="@dimen/_10sdp"
-           android:paddingBottom="@dimen/_10sdp"
+           android:paddingTop="@dimen/_5sdp"
+           android:paddingBottom="@dimen/_5sdp"
            android:paddingRight="@dimen/_15sdp"
            android:textColor="#000"
-           android:background="#ccc"
-           android:drawableRight="@drawable/ic_arrow_drop_down_black_24dp"
-           android:textSize="@dimen/_15sdp"
-           android:layout_marginTop="@dimen/_10sdp"
+           android:background="#ecebeb"
+           android:textSize="@dimen/_12sdp"
+
            />
        <android.support.v7.widget.RecyclerView
            android:id="@+id/all_employees"
@@ -106,5 +125,5 @@
            android:visibility="visible"
            />
    </LinearLayout>
-</ScrollView>
+</android.support.v4.widget.NestedScrollView>
 </FrameLayout>

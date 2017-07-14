@@ -37,6 +37,19 @@ public class Employee {
         @SerializedName("pic_url")
         private String mpic_url;
 
+        @SerializedName("role")
+        private String role;
+
+        public String getRole() {
+            return role;
+        }
+
+        public void setRole(String role) {
+            this.role = role;
+        }
+
+
+
         public String getMpic_url() {
             return mpic_url;
         }

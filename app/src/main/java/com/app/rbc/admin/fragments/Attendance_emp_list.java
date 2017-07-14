@@ -103,7 +103,7 @@ public class Attendance_emp_list extends Fragment {
 //                                                            getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 ////stuff that updates ui
 
-                                                            ChangeFragment.changeFragment(getActivity().getSupportFragmentManager(),R.id.frame_main,new Attendance_emp_wise().newInstance(user_id_selected),Attendance_emp_wise.TAG);
+                                                            ChangeFragment.changeFragment(getActivity().getSupportFragmentManager(),R.id.frame_main,new Attendance_emp_wise().newInstance(user_id_selected,"ROhit"),Attendance_emp_wise.TAG);
 
                                                         }
                                                     }

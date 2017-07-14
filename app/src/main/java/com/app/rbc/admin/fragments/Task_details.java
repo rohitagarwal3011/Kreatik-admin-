@@ -21,6 +21,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -61,6 +62,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.OnTouch;
 import butterknife.Unbinder;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import okhttp3.MediaType;
@@ -217,6 +219,16 @@ public class Task_details extends Fragment {
         };
 
         show_task_details();
+
+        comment_text.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                AppUtil.showToast(context, "Text Selected");
+                taskChat.smoothScrollToPosition(taskChat.getAdapter().getItemCount());
+                //taskChat.scrollToPosition(logs.size() - 1);
+                return false;
+            }
+        });
     }
 
     List<Tasklogs.Log> logs;
@@ -417,6 +429,7 @@ public class Task_details extends Fragment {
     @OnClick(R.id.send_comment)
     public void setSendComment(View view) {
         if (comment_text.getText().toString().length() > 0) {
+
             log_type= "Comment";
             cmt = comment_text.getText().toString();
             status = "null";
@@ -830,10 +843,11 @@ public class Task_details extends Fragment {
 
 
 
+
     public void set_task_deleted()
     {
-        comment_text.setVisibility(View.GONE);
-        sendComment.setVisibility(View.GONE);
+        comment_text.setVisibility(View.INVISIBLE);
+        sendComment.setVisibility(View.INVISIBLE);
     }
 
 

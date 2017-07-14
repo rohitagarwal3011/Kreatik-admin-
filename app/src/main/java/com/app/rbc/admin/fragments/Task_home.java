@@ -241,6 +241,7 @@ public class Task_home extends Fragment implements Todo_list_adapter.OnItemLongC
         assignedIndicator.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorAccent));
         todoIndicator.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
     //    Todolist todolist = new Gson().fromJson(AppUtil.getString(getContext().getApplicationContext(), TagsPreferences.TASK_LIST), Todolist.class);
+        todolist= new Gson().fromJson(AppUtil.getString(getContext().getApplicationContext(), TagsPreferences.TASK_LIST), Todolist.class);
 
         tasks_assigned_adapter = new Tasks_assigned_adapter(todolist.getData1(), getContext(),Task_home.this);
         LinearLayoutManager gridLayoutManager = new LinearLayoutManager(getContext());
@@ -401,8 +402,8 @@ public class Task_home extends Fragment implements Todo_list_adapter.OnItemLongC
                 AppUtil.logger("List : ", AppUtil.getString(getContext().getApplicationContext(), TagsPreferences.EMPLOYEE_LIST));
 
 
-                show_todo_list();
-
+               // show_todo_list();
+                show_tasks_assigned();
 
                 //  proceed();
             }

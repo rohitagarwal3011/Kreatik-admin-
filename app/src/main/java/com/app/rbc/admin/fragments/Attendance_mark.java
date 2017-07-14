@@ -11,17 +11,22 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.app.rbc.admin.R;
+import com.app.rbc.admin.activities.AttendanceActivity;
 import com.app.rbc.admin.adapters.Attendance_mark_adapter;
 import com.app.rbc.admin.interfaces.ApiServices;
 import com.app.rbc.admin.models.DatewiseAttendance;
 import com.app.rbc.admin.models.Employee;
+import com.app.rbc.admin.models.TodaysAbsentees;
 import com.app.rbc.admin.utils.AdapterWithCustomItem;
 import com.app.rbc.admin.utils.AppUtil;
+import com.app.rbc.admin.utils.ChangeFragment;
 import com.app.rbc.admin.utils.RetrofitClient;
 import com.app.rbc.admin.utils.TagsPreferences;
 import com.dd.processbutton.iml.ActionProcessButton;
@@ -35,6 +40,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
@@ -61,6 +67,7 @@ public class Attendance_mark extends Fragment implements DatePickerDialog.OnDate
     AdapterWithCustomItem dateAdapter;
     @BindView(R.id.date)
     TextView date;
+    final String[] remarks = {"Most Common","Medical Emergency", "Not well","Family Issue"};
 
     private String type;
 
@@ -85,7 +92,7 @@ public class Attendance_mark extends Fragment implements DatePickerDialog.OnDate
             type = getArguments().getString(TYPE);
         }
 
-//        setHasOptionsMenu(true);
+        setHasOptionsMenu(true);
         AppUtil.logger(TAG, "Created");
     }
 
@@ -103,13 +110,17 @@ public class Attendance_mark extends Fragment implements DatePickerDialog.OnDate
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         Attendance_mark_adapter.attendance_grid.clear();
+        Attendance_mark_adapter.remarks_grid.clear();
+        ((AttendanceActivity) getActivity()).fab.hide();
         submitAttendance.setMode(ActionProcessButton.Mode.ENDLESS);
         if (type.equalsIgnoreCase("modify")) {
+            ((AttendanceActivity)getContext()).setToolbar("Modify Attendance");
             show_date_selector();
         }
         else {
+            ((AttendanceActivity)getContext()).setToolbar("Mark Attendance");
             date.setText("Today's Attendance");
-            date.setEnabled(false);
+            date.setClickable(false);
         }
 
         date.setOnClickListener(new View.OnClickListener() {
@@ -119,6 +130,13 @@ public class Attendance_mark extends Fragment implements DatePickerDialog.OnDate
             }
         });
         set_employee_list();
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        MenuItem item = menu.findItem(R.id.search_attendance);
+        item.setVisible(false);
     }
 
     public void set_employee_list() {
@@ -148,15 +166,24 @@ public class Attendance_mark extends Fragment implements DatePickerDialog.OnDate
                 obj.put("user_id", user_id);
                 if (Attendance_mark_adapter.attendance_grid.containsKey(user_id)) {
                     obj.put("status", Attendance_mark_adapter.attendance_grid.get(user_id));
+                    if(Attendance_mark_adapter.remarks_grid.get(user_id).containsKey("Selected"))
+                        obj.put("remarks",Attendance_mark_adapter.remarks_grid.get(user_id).get("Selected"));
+                    else
+                        obj.put("remarks",Attendance_mark_adapter.remarks_grid.get(user_id).get("Other"));
+
+
                 } else {
                     obj.put("status", "Present");
+                    obj.put("remarks", "");
                 }
-                obj.put("remarks", "Pata nahi");
+
                 data.put(obj);
 
 
             }
-            send_attendance(data);
+            AppUtil.logger("Attendance Data : ",data.toString());
+
+             send_attendance(data);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -198,6 +225,7 @@ public class Attendance_mark extends Fragment implements DatePickerDialog.OnDate
                             @Override
                             public void onClick(SweetAlertDialog sweetAlertDialog) {
                                 pDialog.dismiss();
+                                ChangeFragment.changeFragment(getActivity().getSupportFragmentManager(),R.id.frame_main, new Attendance_all(),Attendance_all.TAG);
 
 
                             }
@@ -245,6 +273,7 @@ public class Attendance_mark extends Fragment implements DatePickerDialog.OnDate
             @Override
             public void onCancel(DialogInterface dialogInterface) {
                 Log.d("TimePicker", "Dialog was cancelled");
+                ChangeFragment.changeFragment(getActivity().getSupportFragmentManager(),R.id.frame_main, new Attendance_all(),Attendance_all.TAG);
 
 
             }
@@ -289,10 +318,12 @@ public class Attendance_mark extends Fragment implements DatePickerDialog.OnDate
                 if(response.body().getMeta().getStatus()==0){
                     pDialog.dismiss();
                     AppUtil.showToast(getContext(),response.body().getMeta().getMessage());
+                    show_date_selector();
 
                 }
                 else if(response.body().getMeta().getStatus()==2) {
                     Attendance_mark_adapter.attendance_grid.clear();
+                    Attendance_mark_adapter.remarks_grid.clear();
                     pDialog.dismiss();
                     DatewiseAttendance datewiseAttendance = new Gson().fromJson(new Gson().toJson(response.body()), DatewiseAttendance.class);
                     List<DatewiseAttendance.SearchResult> attendance_data = datewiseAttendance.getSearchResult();
@@ -302,7 +333,27 @@ public class Attendance_mark extends Fragment implements DatePickerDialog.OnDate
                         } else if (attendance_data.get(i).getStatus().equalsIgnoreCase("Half day")) {
                             Attendance_mark_adapter.attendance_grid.put(attendance_data.get(i).getEmployee(), "Half day");
                         }
+                        if(attendance_data.get(i).getStatus().equalsIgnoreCase("Absent")||attendance_data.get(i).getStatus().equalsIgnoreCase("Half day"))
+                        {
+                            Attendance_mark_adapter.remarks_grid.put(attendance_data.get(i).getEmployee(),new HashMap<String, String>());
+                            int f=0;
+                            for(int j=0;j<remarks.length;j++)
+                            {
+                                if(attendance_data.get(j).getRemarks().equalsIgnoreCase(remarks[j]))
+                                {
+                                    f=1;
+                                    Attendance_mark_adapter.remarks_grid.get(attendance_data.get(i).getEmployee()).put("Selected",attendance_data.get(i).getRemarks());
+                                    break;
+                                }
+                            }
+                            if(f==0)
+                            {
+                                Attendance_mark_adapter.remarks_grid.get(attendance_data.get(i).getEmployee()).put("Other",attendance_data.get(i).getRemarks());
+                            }
+                        }
+
                     }
+
                     set_employee_list();
                 }
                 else {

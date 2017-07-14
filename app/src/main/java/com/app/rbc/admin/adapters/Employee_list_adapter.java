@@ -36,12 +36,18 @@ public class Employee_list_adapter extends RecyclerView.Adapter<Employee_list_ad
         public SimpleDraweeView profile_pic;
         public TextView employee_name;
         public TextView leave_count;
+        public TextView present_count;
+        public TextView hd_count;
+        public TextView role;
 
         public MyViewHolder(View view) {
             super(view);
             profile_pic=(SimpleDraweeView) view.findViewById(R.id.profile_pic);
             employee_name=(TextView)view.findViewById(R.id.employee_name);
             leave_count=(TextView)view.findViewById(R.id.leave_count);
+            present_count=(TextView)view.findViewById(R.id.present_count);
+            hd_count=(TextView)view.findViewById(R.id.hd_count);
+            role=(TextView)view.findViewById(R.id.role);
 
 //            view.setOnClickListener(new View.OnClickListener() {
 //                @Override
@@ -83,13 +89,35 @@ public class Employee_list_adapter extends RecyclerView.Adapter<Employee_list_ad
 
         holder.profile_pic.setImageURI(Uri.parse(data.get(position).getMpic_url()));
 
-        if(fragment.equalsIgnoreCase(Attendance_all.TAG))
+        holder.role.setText(data.get(position).getRole());
+        if(fragment.equalsIgnoreCase("MonthlyList"))
         {
             holder.leave_count.setVisibility(View.VISIBLE);
-            holder.leave_count.setText(Attendance_all.leave_grid.get(data.get(position).getUserId())+" days");
+            if(Attendance_all.month_leave_grid.containsKey(data.get(position).getUserId()))
+            holder.leave_count.setText("\u25CF Absent : "+Attendance_all.month_leave_grid.get(data.get(position).getUserId())+" days");
+            else
+                holder.leave_count.setText("\u25CF"+ " No leaves taken");
+
+
+            holder.present_count.setVisibility(View.VISIBLE);
+            if(Attendance_all.month_present_count.containsKey(data.get(position).getUserId()))
+                holder.present_count.setText("\u25CF Present : "+Attendance_all.month_present_count.get(data.get(position).getUserId())+" days");
+            else
+                holder.present_count.setText("\u25CF"+ "Present : 0 days");
+
+
+            holder.hd_count.setVisibility(View.VISIBLE);
+            if(Attendance_all.month_hd_count.containsKey(data.get(position).getUserId()))
+                holder.hd_count.setText("\u25CF Half day : "+Attendance_all.month_hd_count.get(data.get(position).getUserId())+" days");
+            else
+                holder.hd_count.setText("\u25CF"+ " No half days");
+
         }
-        else
+        else {
             holder.leave_count.setVisibility(View.GONE);
+            holder.present_count.setVisibility(View.GONE);
+            holder.hd_count.setVisibility(View.GONE);
+        }
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,9 +126,9 @@ public class Employee_list_adapter extends RecyclerView.Adapter<Employee_list_ad
                     final Task_create info = (Task_create) ((TaskActivity) context).getSupportFragmentManager().findFragmentByTag(Task_create.TAG);
                     info.set_employee_id(data.get(position).getUserId());
                 }
-                else if(fragment.equalsIgnoreCase(Attendance_emp_list.TAG)){
-                    final Attendance_emp_list info = (Attendance_emp_list) ((AttendanceActivity) context).getSupportFragmentManager().findFragmentByTag(Attendance_emp_list.TAG);
-                    info.set_employee_id(data.get(position).getUserId());
+                else if(fragment.equalsIgnoreCase(Attendance_all.TAG)||fragment.equalsIgnoreCase("MonthlyList")){
+                    final Attendance_all info = (Attendance_all) ((AttendanceActivity) context).getSupportFragmentManager().findFragmentByTag(Attendance_all.TAG);
+                    info.set_employee_id(data.get(position).getUserId(),data.get(position).getUserName());
                 }
             }
         });

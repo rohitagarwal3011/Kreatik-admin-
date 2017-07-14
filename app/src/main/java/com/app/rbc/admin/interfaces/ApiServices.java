@@ -32,7 +32,7 @@ public interface ApiServices {
 
     /*Vendor login api REQUEST*/
     @FormUrlEncoded
-    @POST("auth_view/")
+    @POST("auth_view_admin/")
     Call<login> vendorLogin(@Field("user_id") String username , @Field("pwd") String password ,@Field("gcm_id")String gcm_id);
 
 
@@ -100,11 +100,24 @@ public interface ApiServices {
     /*Fetch Attendance employee-wise*/
     @FormUrlEncoded
     @POST("emp_wise_attendance/")
-    Call<EmployeewiseAttendance> emp_wise_attendance(@Field("user_id") String user_id);
+    Call<EmployeewiseAttendance> emp_wise_attendance(@Field("user_id") String user_id,@Field("date") String date);
 
     /*Fetch todays attendance*/
     @GET("absent_hd_status")
     Call<TodaysAbsentees> absent_hd_status();
+
+    /*Fetch Attendance monthwise*/
+    @FormUrlEncoded
+    @POST("monthwise_search_admin/")
+    Call<TodaysAbsentees> monthwise_search_admin( @Field("year") String year, @Field("month") String month);
+
+    /*Fetch Attendance monthwise*/
+    @FormUrlEncoded
+    @POST("monthwise_search/")
+    Call<EmployeewiseAttendance> monthwise_search(@Field("user_id") String user_id, @Field("year") String year, @Field("month") String month);
+
+
+
 
 //
 //    /*Task_assigned */

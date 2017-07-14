@@ -8,7 +8,7 @@ import android.widget.Spinner;
  * Created by rohit on 1/6/17.
  */
 
-public class MySpinner extends Spinner {
+public class MySpinner extends android.support.v7.widget.AppCompatSpinner {
     OnItemSelectedListener listener;
 
     public MySpinner(Context context, AttributeSet attrs) {
