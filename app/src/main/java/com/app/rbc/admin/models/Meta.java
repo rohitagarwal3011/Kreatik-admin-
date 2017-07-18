@@ -1,8 +1,8 @@
 
 package com.app.rbc.admin.models;
 
-import com.google.gson.annotations.SerializedName;
 
+import com.google.gson.annotations.SerializedName;
 
 public class Meta {
 

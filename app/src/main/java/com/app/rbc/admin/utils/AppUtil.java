@@ -5,11 +5,17 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.util.Base64;
 import android.util.Log;
 import android.util.Patterns;
 import android.widget.Toast;
+
+import com.app.rbc.admin.R;
+import com.app.rbc.admin.models.Employee;
+import com.facebook.drawee.generic.RoundingParams;
+import com.google.gson.Gson;
 
 import java.io.UnsupportedEncodingException;
 import java.util.regex.Pattern;
@@ -177,4 +183,19 @@ public class AppUtil {
         Long value=sharedPreferences.getLong(key, 0);
         return value;
     }
+
+    public static String[] get_employee_from_user_id(Context context, String user_id) {
+        Employee employee = new Gson().fromJson(AppUtil.getString(context.getApplicationContext(), TagsPreferences.EMPLOYEE_LIST), Employee.class);
+        for (int i = 0; i < employee.getData().size(); i++) {
+            if (employee.getData().get(i).getUserId().equalsIgnoreCase(user_id)) {
+
+                String[] user = {employee.getData().get(i).getUserName(),employee.getData().get(i).getMpic_url(),employee.getData().get(i).getRole()};
+
+                return user;
+
+            }
+        }
+        return null;
+    }
 }
+

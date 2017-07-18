@@ -106,6 +106,7 @@ public class Task_details extends Fragment {
     File attactment;
     Image image;
     String current_status;
+    Menu bar_menu =null;
 
     Task_log_adapter task_log_adapter;
 
@@ -158,6 +159,13 @@ public class Task_details extends Fragment {
                 show_attachment_dialog();
 
                 return true;
+            case R.id.status:
+//                if (getSupportFragmentManager().findFragmentByTag(ContextMenuDialogFragment.TAG) == null) {
+//                    mMenuDialogFragment.show(getSupportFragmentManager(), ContextMenuDialogFragment.TAG);
+//                }
+
+               set_status();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -175,6 +183,7 @@ public class Task_details extends Fragment {
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
+        bar_menu=menu;
         MenuItem item = menu.findItem(R.id.attachment);
         item.setVisible(true);
         MenuItem item1 = menu.findItem(R.id.status);
@@ -233,6 +242,14 @@ public class Task_details extends Fragment {
 
     List<Tasklogs.Log> logs;
 
+    private void hide_status_icon()
+    {
+        MenuItem item = bar_menu.findItem(R.id.status);
+        item.setVisible(false);
+        MenuItem item1 = bar_menu.findItem(R.id.attachment);
+        item1.setVisible(false);
+    }
+
     public void show_task_details() {
         pDialog = new SweetAlertDialog(context, SweetAlertDialog.PROGRESS_TYPE);
         pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
@@ -248,8 +265,8 @@ public class Task_details extends Fragment {
                 pDialog.dismiss();
                 logs = response.body().getLogs();
                 current_status = response.body().getData().get(0).getStatus();
+                update_status();
                 deadline=response.body().getData().get(0).getDeadline().replace('T',' ');
-
 
 //                String date = deadline.substring(0,deadline.indexOf('T'));
 //                String time = deadline.substring(deadline.indexOf('T')+1);
@@ -358,6 +375,11 @@ public class Task_details extends Fragment {
 
     }
 
+    public void update_status()
+    {
+        final Task_home info = (Task_home) getActivity().getSupportFragmentManager().findFragmentByTag(Task_home.TAG);
+        info.setStatus(task_id,current_status);
+    }
 
     public void add_new_message(Tasklogs.Log log) {
         logs.add(log);
@@ -365,12 +387,15 @@ public class Task_details extends Fragment {
         task_log_adapter.notifyItemInserted(logs.size() - 1);
         taskChat.scrollToPosition(logs.size() - 1);
         sendComment.setEnabled(true);
-        if(log.getmLogtype().equalsIgnoreCase("Status_change"))
-        {
-            AppUtil.logger(TAG,"set status change");
-            final Task_home info = (Task_home) getActivity().getSupportFragmentManager().findFragmentByTag(Task_home.TAG);
-            info.setStatus(task_id,log.getStatus());
-        }
+        current_status=log.getStatus();
+        update_status();
+//        if(log.getmLogtype().equalsIgnoreCase("Status_change"))
+//        {
+//            AppUtil.logger(TAG,"set status change");
+//            update_status();
+////            final Task_home info = (Task_home) getActivity().getSupportFragmentManager().findFragmentByTag(Task_home.TAG);
+////            info.setStatus(task_id,log.getStatus());
+//        }
     }
 
     public void add_new_log() {
@@ -412,6 +437,19 @@ public class Task_details extends Fragment {
 
     public void add_new_status(){
 
+        pDialog.dismiss();
+
+        new SweetAlertDialog(getContext(), SweetAlertDialog.SUCCESS_TYPE)
+                .setTitleText("Completed!")
+                .setContentText("This task is complete!")
+                .setConfirmText("OK")
+                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                       sweetAlertDialog.dismiss();
+                    }
+                })
+                .changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
 
         Tasklogs.Log newlog1 = new Tasklogs().new Log();
         newlog1.setChangedBy(AppUtil.getString(getContext(), TagsPreferences.USER_ID));
@@ -833,12 +871,95 @@ public class Task_details extends Fragment {
 
     public void set_status()
     {
-        log_type= "Status change";
-        cmt = "";
-        status = current_status;
-        docs="";
-        body=null;
-        send_comment();
+        if(current_status.equalsIgnoreCase("Check for completion")) {
+
+            new SweetAlertDialog(getContext(), SweetAlertDialog.WARNING_TYPE)
+                    .setTitleText("Is this task complete?")
+                    .setContentText("You won't be able to undo the process")
+                    .setConfirmText("Yes,its Complete!")
+                    .setCancelText("No, not yet")
+                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sDialog) {
+
+                            sDialog.dismiss();
+                            pDialog = new SweetAlertDialog(context, SweetAlertDialog.PROGRESS_TYPE);
+                            pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+                            pDialog.setTitleText("Updating Status");
+                            pDialog.setCancelable(false);
+                            pDialog.show();
+
+
+                            log_type = "Status change";
+                            cmt = "";
+                            status = "Complete";
+                            docs = "";
+                            body = null;
+                            send_comment();
+
+
+                        }
+                    })
+                    .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+
+                            sweetAlertDialog.dismiss();
+                            pDialog = new SweetAlertDialog(context, SweetAlertDialog.PROGRESS_TYPE);
+                            pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+                            pDialog.setTitleText("Updating Status");
+                            pDialog.setCancelable(false);
+                            pDialog.show();
+
+
+                            log_type = "Status change";
+                            cmt = "";
+                            status = "Incomplete";
+                            docs = "";
+                            body = null;
+                            send_comment();
+                        }
+                    })
+                    .show();
+        }
+        else {
+
+            if(!current_status.equalsIgnoreCase("Complete")) {
+                new SweetAlertDialog(getContext(), SweetAlertDialog.WARNING_TYPE)
+                        .setTitleText("Mark this task as Complete?")
+                        .setContentText("You won't be able to undo the process")
+                        .setConfirmText("Yes,its Complete!")
+                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sDialog) {
+
+                                sDialog.dismiss();
+                                pDialog = new SweetAlertDialog(context, SweetAlertDialog.PROGRESS_TYPE);
+                                pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+                                pDialog.setTitleText("Updating Status");
+                                pDialog.setCancelable(false);
+                                pDialog.show();
+
+
+                                log_type = "Status change";
+                                cmt = "";
+                                status = "Complete";
+                                docs = "";
+                                body = null;
+                                send_comment();
+
+
+                            }
+                        })
+                        .show();
+
+
+            }
+            else {
+
+
+            }
+        }
     }
 
 
@@ -846,8 +967,9 @@ public class Task_details extends Fragment {
 
     public void set_task_deleted()
     {
-        comment_text.setVisibility(View.INVISIBLE);
-        sendComment.setVisibility(View.INVISIBLE);
+        comment_text.setVisibility(View.GONE);
+        sendComment.setVisibility(View.GONE);
+        hide_status_icon();
     }
 
 

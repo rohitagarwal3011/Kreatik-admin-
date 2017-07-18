@@ -43,6 +43,8 @@ public class HomeActivity extends AppCompatActivity
     final ApiServices apiServices = RetrofitClient.getApiService();
     @BindView(R.id.module_attendance)
     LinearLayout moduleAttendance;
+    @BindView(R.id.module_stocks)
+    LinearLayout stocks;
 
 
     @Override
@@ -93,6 +95,15 @@ public class HomeActivity extends AppCompatActivity
     public void open_task_module(View view) {
 
         Intent intent = new Intent(HomeActivity.this, TaskActivity.class);
+        startActivity(intent);
+
+    }
+
+    //Open stocks module
+    @OnClick(R.id.module_stocks)
+    public void open_stocks_module(View view) {
+
+        Intent intent = new Intent(HomeActivity.this, StockActivity.class);
         startActivity(intent);
 
     }

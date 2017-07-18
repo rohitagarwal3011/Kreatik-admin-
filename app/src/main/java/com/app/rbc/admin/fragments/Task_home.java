@@ -492,23 +492,23 @@ public class Task_home extends Fragment implements Todo_list_adapter.OnItemLongC
     public void setStatus(String task_id ,String status)
     {
         AppUtil.logger(TAG,"set status change");
-        Boolean flag=false;
-        for(int i=0;i<todolist.getData().size();i++)
-        {
-            if(todolist.getData().get(i).getTask_id().equalsIgnoreCase(task_id))
-            {
-                flag=true;
-                todolist.getData().get(i).setStatus(status);
-                todo_list_adapter.notifyDataSetChanged();
-            }
-        }
-        if(flag==false)
-        {
+//        Boolean flag=false;
+//        for(int i=0;i<todolist.getData().size();i++)
+//        {
+//            if(todolist.getData().get(i).getTask_id().equalsIgnoreCase(task_id))
+//            {
+//                flag=true;
+//                todolist.getData().get(i).setStatus(status);
+//                todo_list_adapter.notifyDataSetChanged();
+//            }
+//        }
+//        if(flag==false)
+//        {
             for(int i=0;i<todolist.getData1().size();i++)
             {
                 if(todolist.getData1().get(i).getTask_id().equalsIgnoreCase(task_id))
                 {
-                    flag=true;
+//                    flag=true;
                     todolist.getData1().get(i).setStatus(status);
                     tasks_assigned_adapter.notifyDataSetChanged();
 
@@ -518,7 +518,7 @@ public class Task_home extends Fragment implements Todo_list_adapter.OnItemLongC
 
         }
 
-    }
+
 
 }
 

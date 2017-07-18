@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:padding="@dimen/_20sdp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:layout_width="@dimen/_50sdp"
+        android:layout_height="@dimen/_50sdp"
+        android:id="@+id/stock_type"
+        android:background="#000"
+        android:padding="@dimen/_5sdp"
+        android:src="@drawable/site_overview"
+        />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="@dimen/_30sdp"
+        android:gravity="center_vertical"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/stock_location"
+            android:text="Site A"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_15sdp"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/stock_quantity"
+            android:text="2000 bags"
+            android:textSize="@dimen/_12sdp"/>
+    </LinearLayout>
+
+</LinearLayout>

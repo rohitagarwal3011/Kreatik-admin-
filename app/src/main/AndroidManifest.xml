@@ -104,6 +104,17 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.app.rbc.admin.activities.HomeActivity" />
         </activity>
+        <activity
+            android:name=".activities.StockActivity"
+            android:label="@string/title_activity_stock"
+            android:parentActivityName=".activities.HomeActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="stateHidden|adjustPan">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.app.rbc.admin.activities.HomeActivity" />
+        </activity>
     </application>
 
 </manifest>

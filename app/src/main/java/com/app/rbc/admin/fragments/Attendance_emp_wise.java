@@ -159,6 +159,8 @@ public class Attendance_emp_wise extends Fragment implements DatePickerDialog.On
             user_name = getArguments().getString(USER_NAME);
         }
 
+        date_search=false;
+
 //        setHasOptionsMenu(true);
         AppUtil.logger(TAG, "Created");
     }
@@ -197,22 +199,19 @@ public class Attendance_emp_wise extends Fragment implements DatePickerDialog.On
         get_attendance_record(date_send);
     }
 
+
     public void show_profile_pic() {
-        Employee employee = new Gson().fromJson(AppUtil.getString(getContext().getApplicationContext(), TagsPreferences.EMPLOYEE_LIST), Employee.class);
-        for (int i = 0; i < employee.getData().size(); i++) {
-            if (employee.getData().get(i).getUserId().equalsIgnoreCase(user_id)) {
-                int color = getContext().getResources().getColor(R.color.black_overlay);
-                RoundingParams roundingParams = RoundingParams.fromCornersRadius(5f);
-                roundingParams.setBorder(color, 1.0f);
-                roundingParams.setRoundAsCircle(true);
-                profilePic.getHierarchy().setRoundingParams(roundingParams);
+
+        String[] user = AppUtil.get_employee_from_user_id(getContext(),user_id);
+        int color = getContext().getResources().getColor(R.color.black_overlay);
+        RoundingParams roundingParams = RoundingParams.fromCornersRadius(5f);
+        roundingParams.setBorder(color, 1.0f);
+        roundingParams.setRoundAsCircle(true);
+        profilePic.getHierarchy().setRoundingParams(roundingParams);
 
 
-                profilePic.setImageURI(Uri.parse(employee.getData().get(i).getMpic_url()));
+        profilePic.setImageURI(Uri.parse(user[1]));
 
-                break;
-            }
-        }
     }
 
     SweetAlertDialog pDialog;

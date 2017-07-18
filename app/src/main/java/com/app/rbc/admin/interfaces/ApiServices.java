@@ -2,10 +2,14 @@ package com.app.rbc.admin.interfaces;
 
 
 
+import com.app.rbc.admin.fragments.Stock_categories;
 import com.app.rbc.admin.models.DatewiseAttendance;
 import com.app.rbc.admin.models.Employee;
 import com.app.rbc.admin.models.EmployeewiseAttendance;
 import com.app.rbc.admin.models.Otp;
+import com.app.rbc.admin.models.StockCategories;
+import com.app.rbc.admin.models.StockPoDetails;
+import com.app.rbc.admin.models.StockProductDetails;
 import com.app.rbc.admin.models.Tasklogs;
 import com.app.rbc.admin.models.TodaysAbsentees;
 import com.app.rbc.admin.models.Todolist;
@@ -117,6 +121,21 @@ public interface ApiServices {
     Call<EmployeewiseAttendance> monthwise_search(@Field("user_id") String user_id, @Field("year") String year, @Field("month") String month);
 
 
+
+    /*Fetch stock categories*/
+    @GET("stock_category")
+    Call<StockCategories> stock_category();
+
+    /*Fetch Stock Products*/
+    @FormUrlEncoded
+    @POST("stock_product_list/")
+    Call<StockProductDetails> stock_product_list(@Field("product") String product);
+
+
+    /*Fetch PO Details*/
+    @FormUrlEncoded
+    @POST("po_details/")
+    Call<StockPoDetails> po_details(@Field("po_num") String po_number);
 
 
 //

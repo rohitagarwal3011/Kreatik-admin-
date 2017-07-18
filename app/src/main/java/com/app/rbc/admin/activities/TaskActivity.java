@@ -173,14 +173,7 @@ public class TaskActivity extends AppCompatActivity implements Task_home.OnTaskT
             case R.id.add_attachment:
 
                 return true;
-            case R.id.status:
-//                if (getSupportFragmentManager().findFragmentByTag(ContextMenuDialogFragment.TAG) == null) {
-//                    mMenuDialogFragment.show(getSupportFragmentManager(), ContextMenuDialogFragment.TAG);
-//                }
 
-                final Task_details info = (Task_details) getSupportFragmentManager().findFragmentByTag(Task_details.TAG);
-                info.set_status();
-                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

@@ -1,5 +1,7 @@
 package com.app.rbc.admin.utils;
 
+import com.app.rbc.admin.models.DatewiseAttendance;
+
 /**
  * Created by rohit on 7/4/17.
  */
@@ -16,5 +18,8 @@ public class TagsPreferences {
     public static final String TASK_LIST = "TASK_LIST";
     public static final String PROFILE_IMAGE = "PROFILE_IMAGE";
     public static final String IS_LOGIN = "IS_LOGIN";
+    public static final String STOCK_LIST="STOCK_LIST";
+    public static final String PRODUCT_DETAILS="PRODUCT_DETAILS";
+    public static final String PO_DETAILS="PO_DETAILS";
 
 }

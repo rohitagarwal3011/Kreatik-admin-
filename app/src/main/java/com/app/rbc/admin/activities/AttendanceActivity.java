@@ -46,6 +46,7 @@ public class AttendanceActivity extends AppCompatActivity {
   public  FloatingActionButton fab;
     private String TAG = "AttendanceActivity";
    RackMonthPicker rackMonthPicker;
+
     Toolbar toolbar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {

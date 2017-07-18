@@ -1,0 +1,272 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    tools:context="com.app.rbc.admin.fragments.Stock_po_details">
+
+   <LinearLayout
+       android:layout_width="match_parent"
+       android:layout_height="match_parent"
+       android:orientation="vertical">
+
+       <LinearLayout
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:orientation="vertical"
+           android:background="#87cad0"
+           android:padding="@dimen/_10sdp">
+
+           <TextView
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:text="Created by :"
+               android:textColor="@color/black"
+               android:textSize="@dimen/_14sdp"/>
+           <LinearLayout
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:orientation="horizontal">
+
+               <com.facebook.drawee.view.SimpleDraweeView
+                   android:id="@+id/profile_pic"
+                   android:layout_width="@dimen/_55sdp"
+                   android:layout_height="@dimen/_55sdp"
+                   android:layout_gravity="left"
+                   fresco:roundAsCircle="true"
+                   fresco:roundedCornerRadius="@dimen/_5sdp"
+                   fresco:roundWithOverlayColor="#ccc"
+                   fresco:roundBottomLeft="false"
+                   fresco:roundBottomRight="false"
+                   fresco:roundingBorderWidth="1dp"
+                   fresco:roundingBorderColor="#ccc"/>
+               <!--
+                app:civ_border_color="#ccc"
+
+                app:civ_border_width="@dimen/_1sdp"
+                app:civ_shadow="true"
+                app:civ_shadow_color="#ccc"
+                app:civ_shadow_radius="0" />-->
+
+               <LinearLayout
+                   android:layout_width="wrap_content"
+                   android:layout_height="match_parent"
+                   android:orientation="vertical"
+                   android:paddingLeft="@dimen/_20sdp"
+                   android:gravity="center_vertical">
+
+                   <TextView
+                       android:id="@+id/employee_name"
+                       android:layout_width="match_parent"
+                       android:layout_height="wrap_content"
+                       android:gravity="left|center_vertical"
+                       android:text="Rohit Agarwal"
+                       android:textColor="@color/black"
+                       android:textSize="@dimen/_12sdp" />
+                   <TextView
+                       android:id="@+id/role"
+                       android:layout_width="match_parent"
+                       android:layout_height="wrap_content"
+                       android:gravity="left|center_vertical"
+                       android:text="Manager"
+                       android:textStyle="italic"
+                       android:visibility="visible"
+                       android:textColor="#757575"
+                       android:textSize="@dimen/_10sdp" />
+
+                       <TextView
+                           android:id="@+id/PO_date"
+                           android:layout_width="match_parent"
+                           android:layout_height="wrap_content"
+                           android:gravity="center_vertical"
+                           android:text="06-10-17"
+                           android:visibility="visible"
+                           android:textColor="@color/black"
+                           android:textSize="@dimen/_12sdp" />
+
+
+
+
+               </LinearLayout>
+               <LinearLayout
+                   android:layout_width="match_parent"
+                   android:layout_height="match_parent"
+                   android:orientation="vertical"
+                   android:paddingLeft="@dimen/_20sdp"
+                   android:gravity="center_vertical">
+
+                   <TextView
+                       android:id="@+id/PO_amount"
+                       android:layout_width="match_parent"
+                       android:layout_height="wrap_content"
+                       android:gravity="right|center_vertical"
+                       android:text="Rs. 5,0000"
+                       android:textColor="@color/colorAccent"
+                       android:textSize="@dimen/_15sdp" />
+                   <TextView
+                       android:id="@+id/PO_pay_mode"
+                       android:layout_width="match_parent"
+                       android:layout_height="wrap_content"
+                       android:gravity="right|center_vertical"
+                       android:text="Cash"
+                       android:textStyle="italic"
+                       android:visibility="visible"
+                       android:textColor="@color/black"
+                       android:textSize="@dimen/_12sdp" />
+               </LinearLayout>
+
+           </LinearLayout>
+
+           <LinearLayout
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:orientation="horizontal"
+               android:layout_marginTop="@dimen/_10sdp"
+               android:paddingBottom="@dimen/_5sdp">
+
+               <TextView
+                   android:layout_width="wrap_content"
+                   android:layout_height="match_parent"
+                   android:gravity="center_vertical"
+                   android:text="Qty : "
+                   android:textColor="@color/black"
+                   android:textSize="@dimen/_12sdp" />
+
+               <TextView
+                   android:id="@+id/PO_quantity"
+                   android:layout_width="wrap_content"
+                   android:layout_height="match_parent"
+                   android:gravity="center_vertical"
+                   android:text="3000 bags"
+                   android:textColor="@color/black"
+                   android:textSize="@dimen/_12sdp" />
+
+               <TextView
+                   android:layout_width="match_parent"
+                   android:layout_height="match_parent"
+                   android:layout_weight=".8"
+                   android:gravity="right|center_vertical"
+                   android:text="Status : "
+                   android:textColor="@color/black"
+                   android:textSize="@dimen/_12sdp" />
+
+               <TextView
+                   android:layout_width="wrap_content"
+                   android:layout_height="match_parent"
+                   android:gravity="center_vertical"
+                   android:text="Assigned"
+                   android:id="@+id/PO_status"
+                   android:textColor="@color/holo_green_light"
+                   android:textSize="@dimen/_12sdp" />
+
+
+           </LinearLayout>
+       </LinearLayout>
+       <LinearLayout
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:orientation="vertical"
+           android:background="#FF1493"
+           android:padding="@dimen/_10sdp"
+           >
+
+           <TextView
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:text="Vendor's Information"
+               android:textStyle="bold"
+               android:textColor="@color/white"
+               android:textSize="@dimen/_14sdp"/>
+
+           <LinearLayout
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:orientation="horizontal">
+
+               <ImageView
+                   android:layout_width="@dimen/_50sdp"
+                   android:layout_height="@dimen/_50sdp"
+                   android:id="@+id/source_type"
+                   android:background="#000"
+                   android:layout_gravity="center_vertical"
+                   android:padding="@dimen/_5sdp"
+                   android:src="@drawable/user"
+                   />
+               <!--
+                app:civ_border_color="#ccc"
+
+                app:civ_border_width="@dimen/_1sdp"
+                app:civ_shadow="true"
+                app:civ_shadow_color="#ccc"
+                app:civ_shadow_radius="0" />-->
+
+               <LinearLayout
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:orientation="vertical"
+                   android:paddingLeft="@dimen/_20sdp"
+                   android:gravity="center_vertical">
+
+                   <TextView
+
+                       android:layout_width="match_parent"
+                       android:layout_height="wrap_content"
+                       android:gravity="left|center_vertical"
+                       android:id="@+id/vendor_name"
+                       android:text="Bihani Traders"
+                       android:textColor="@color/black"
+                       android:textSize="@dimen/_14sdp" />
+                   <TextView
+                       android:layout_width="match_parent"
+                       android:layout_height="wrap_content"
+                       android:id="@+id/vendor_address"
+                       android:gravity="left|center_vertical"
+                       android:text="B-3/5 Sector-11, Rohini\n New Delhi - 110085"
+                       android:visibility="visible"
+                       android:textColor="@color/mdtp_dark_gray"
+                       android:textSize="@dimen/_12sdp" />
+
+                   <TextView
+
+                       android:layout_width="match_parent"
+                       android:layout_height="wrap_content"
+                       android:gravity="center_vertical"
+                       android:id="@+id/vendor_phone"
+                       android:text="+91-9564145000"
+                       android:visibility="visible"
+                       android:textColor="@color/black"
+                       android:textSize="@dimen/_12sdp" />
+
+
+
+
+
+               </LinearLayout>
+               </LinearLayout>
+
+       </LinearLayout>
+
+       <TextView
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:text="Vehicle's Information"
+           android:textColor="@color/black"
+           android:textSize="@dimen/_14sdp"
+           android:padding="@dimen/_10sdp"
+           />
+
+       <android.support.v7.widget.RecyclerView
+           android:layout_width="match_parent"
+           android:layout_height="match_parent"
+           android:id="@+id/vehicle_info"
+           android:scrollbars="vertical"/>
+
+
+
+
+
+
+
+   </LinearLayout>
+
+</FrameLayout>
