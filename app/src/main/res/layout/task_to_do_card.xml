@@ -68,12 +68,20 @@
                 android:textSize="@dimen/_12sdp" />
             <TextView
                 android:id="@+id/to_user"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="start"
                 android:text="Employee Name"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_12sdp" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:id="@+id/unread_count"
+                android:text="2 new messages "
+                android:visibility="gone"
+                android:textColor="@color/color_primary"/>
         </LinearLayout>
 
         <LinearLayout

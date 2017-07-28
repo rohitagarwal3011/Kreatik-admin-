@@ -36,6 +36,7 @@ import com.app.rbc.admin.adapters.Task_log_adapter;
 import com.app.rbc.admin.interfaces.ApiServices;
 import com.app.rbc.admin.models.Employee;
 import com.app.rbc.admin.models.Tasklogs;
+import com.app.rbc.admin.services.DeadlineNotificationService;
 import com.app.rbc.admin.utils.AppUtil;
 import com.app.rbc.admin.utils.Compress;
 import com.app.rbc.admin.utils.Constant;
@@ -54,8 +55,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -73,6 +76,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static android.R.attr.data;
+import static android.R.attr.tabStripEnabled;
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 
@@ -98,6 +103,7 @@ public class Task_details extends Fragment {
     ImageView sendComment;
     // TODO: Rename and change types of parameters
     private String task_id ="task_id";
+    private String task_title = "task_title";
     private String mParam2;
 
     SweetAlertDialog pDialog;
@@ -107,6 +113,7 @@ public class Task_details extends Fragment {
     Image image;
     String current_status;
     Menu bar_menu =null;
+    DeadlineNotificationService alarm;
 
     Task_log_adapter task_log_adapter;
 
@@ -126,10 +133,11 @@ public class Task_details extends Fragment {
      * @return A new instance of fragment Task_details.
      */
     // TODO: Rename and change types and number of parameters
-    public static Task_details newInstance(String param1) {
+    public static Task_details newInstance(String param1,String param2) {
         Task_details fragment = new Task_details();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
+        args.putString(ARG_PARAM2,param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -140,9 +148,11 @@ public class Task_details extends Fragment {
         if (getArguments() != null) {
 
             task_id = getArguments().getString(ARG_PARAM1);
+            task_title = getArguments().getString(ARG_PARAM2);
         }
         context = getContext();
         setHasOptionsMenu(true);
+       alarm= new DeadlineNotificationService();
         AppUtil.logger(TAG, "Created");
     }
 
@@ -188,6 +198,8 @@ public class Task_details extends Fragment {
         item.setVisible(true);
         MenuItem item1 = menu.findItem(R.id.status);
         item1.setVisible(true);
+        MenuItem item2 = menu.findItem(R.id.completed);
+        item2.setVisible(false);
     }
 
     @Override
@@ -220,6 +232,9 @@ public class Task_details extends Fragment {
 
 
                     }
+                    else {
+                        update_order_and_count(intent.getStringExtra("task_id"),intent.getStringExtra("status"),Long.parseLong(intent.getStringExtra("unread_count")),true);
+                    }
 
                 }
                 // checking for type intent filter
@@ -232,7 +247,6 @@ public class Task_details extends Fragment {
         comment_text.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                AppUtil.showToast(context, "Text Selected");
                 taskChat.smoothScrollToPosition(taskChat.getAdapter().getItemCount());
                 //taskChat.scrollToPosition(logs.size() - 1);
                 return false;
@@ -268,9 +282,41 @@ public class Task_details extends Fragment {
                 update_status();
                 deadline=response.body().getData().get(0).getDeadline().replace('T',' ');
 
+                update_order_and_count(task_id,current_status, (long) 0,false);
 //                String date = deadline.substring(0,deadline.indexOf('T'));
 //                String time = deadline.substring(deadline.indexOf('T')+1);
 
+                if(!current_status.equalsIgnoreCase("Complete"))
+                {
+
+                    int unique_id = Integer.parseInt(task_id.substring(task_id.indexOf('_')+1));
+
+
+                    SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss");
+                    try {
+                        Date formated = fmt.parse(deadline);
+                        Calendar calendar =Calendar.getInstance();
+                        calendar.setTime(formated);
+                        calendar.set(Calendar.HOUR_OF_DAY,calendar.get(Calendar.HOUR_OF_DAY)-1);
+                        formated=calendar.getTime();
+
+                        AppUtil.logger("Deadline reminder time : ",fmt.format(formated));
+
+//                        if(new Timestamp(formated.getTime()).after(new Timestamp(new Date().getTime())))
+//                        {
+//                            AppUtil.logger("Set Alarm ","Date : "+formated+" Task : "+task_title);
+//                            alarm.setOnetimeTimer(context,formated,task_id,task_title,"task_update",unique_id);
+//                        }
+//                        else {
+//                            AppUtil.logger("Deadline crossed :","No reminder needed");
+//                        }
+//
+
+
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                }
                 SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
                 try {
@@ -381,6 +427,12 @@ public class Task_details extends Fragment {
         info.setStatus(task_id,current_status);
     }
 
+    public void update_order_and_count(String task_id,String status,Long count,Boolean update_order)
+    {
+        final Task_home info = (Task_home) getActivity().getSupportFragmentManager().findFragmentByTag(Task_home.TAG);
+        info.update_order(task_id,status,count,update_order);
+    }
+
     public void add_new_message(Tasklogs.Log log) {
         logs.add(log);
         AppUtil.logger("Logs : ", logs.toString());
@@ -389,6 +441,7 @@ public class Task_details extends Fragment {
         sendComment.setEnabled(true);
         current_status=log.getStatus();
         update_status();
+        update_order_and_count(task_id,current_status, (long) 0,true);
 //        if(log.getmLogtype().equalsIgnoreCase("Status_change"))
 //        {
 //            AppUtil.logger(TAG,"set status change");
@@ -415,7 +468,7 @@ public class Task_details extends Fragment {
         newlog1.setChangedBy(AppUtil.getString(getContext(), TagsPreferences.USER_ID));
         newlog1.setChangeTime(changed_time);
         newlog1.setDocs("null");
-        newlog1.setStatus("null");
+        newlog1.setStatus(current_status);
         newlog1.setTaskId(task_id);
         newlog1.setComment(comment_text.getText().toString());
         newlog1.setmLogtype("Comment");
@@ -428,7 +481,7 @@ public class Task_details extends Fragment {
         newlog1.setChangedBy(AppUtil.getString(getContext(), TagsPreferences.USER_ID));
         newlog1.setChangeTime(changed_time);
         newlog1.setDocs(docs_url);
-        newlog1.setStatus("null");
+        newlog1.setStatus(current_status);
         newlog1.setTaskId(task_id);
         newlog1.setComment("");
         newlog1.setmLogtype("Attachment");

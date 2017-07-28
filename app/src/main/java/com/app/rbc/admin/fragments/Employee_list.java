@@ -9,10 +9,14 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 
 import com.app.rbc.admin.R;
+import com.app.rbc.admin.activities.TaskActivity;
 import com.app.rbc.admin.adapters.Employee_list_adapter;
 import com.app.rbc.admin.models.Employee;
 import com.app.rbc.admin.utils.AppUtil;
@@ -27,21 +31,49 @@ import butterknife.Unbinder;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class Attendance_emp_list extends Fragment {
+public class Employee_list extends Fragment {
 
 
-    public static final String TAG = "Attendance_emp_list";
+    public static final String TAG = "TAG";
+    private static final String TASK_TYPE = "task_type";
     @BindView(R.id.select_employee)
     RecyclerView selectEmployee;
     Unbinder unbinder;
     Employee_list_adapter employee_list_adapter;
-    String user_id_selected;
+    String user_id_selected,tag,task_type;
 
 
-    public Attendance_emp_list() {
+    public Employee_list() {
         // Required empty public constructor
     }
 
+    public static Employee_list newInstance(String task_type,String tag) {
+        Employee_list fragment = new Employee_list();
+        Bundle args = new Bundle();
+        args.putString(TASK_TYPE, task_type);
+        args.putString(TAG,tag);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            task_type = getArguments().getString(TASK_TYPE);
+            tag=getArguments().getString(TAG);
+        }
+
+        setHasOptionsMenu(true);
+        AppUtil.logger(TAG, "Created");
+        TaskActivity.visible_fragment = "Employee_list";
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        TaskActivity.visible_fragment = "Employee_list";
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -58,6 +90,20 @@ public class Attendance_emp_list extends Fragment {
         set_employee_list();
 
     }
+    Menu bar_menu = null;
+
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        bar_menu=menu;
+        MenuItem item = menu.findItem(R.id.attachment);
+        item.setVisible(false);
+        MenuItem item1 = menu.findItem(R.id.status);
+        item1.setVisible(false);
+        MenuItem item2 = menu.findItem(R.id.completed);
+        item2.setVisible(false);
+    }
 
     @Override
     public void onDestroyView() {
@@ -69,7 +115,7 @@ public class Attendance_emp_list extends Fragment {
     {
         Employee employee = new Gson().fromJson(AppUtil.getString(getContext().getApplicationContext(), TagsPreferences.EMPLOYEE_LIST), Employee.class);
 
-        employee_list_adapter = new Employee_list_adapter(employee.getData(), getContext(),Attendance_emp_list.TAG);
+        employee_list_adapter = new Employee_list_adapter(employee.getData(), getContext(), tag);
         LinearLayoutManager gridLayoutManager = new LinearLayoutManager(getContext());
         gridLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         selectEmployee.setLayoutManager(gridLayoutManager);
@@ -84,7 +130,7 @@ public class Attendance_emp_list extends Fragment {
     {
         user_id_selected=id;
 
-
+        AppUtil.logger("Employee_selected : ",user_id_selected);
 
 
         new java.util.Timer().schedule(
@@ -96,14 +142,9 @@ public class Attendance_emp_list extends Fragment {
                                                         @Override
                                                         public void run() {
 
-//                                                            ((TaskActivity)getContext()).setToolbar(toolbar_string);
-//                                                            details_page=true;
-//                                                            selectEmployee.setVisibility(View.GONE);
-//                                                            taskDetailsPage.setVisibility(View.VISIBLE);
-//                                                            getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
-////stuff that updates ui
-
-                                                            ChangeFragment.changeFragment(getActivity().getSupportFragmentManager(),R.id.frame_main,new Attendance_emp_wise().newInstance(user_id_selected,"ROhit"),Attendance_emp_wise.TAG);
+                                                            ChangeFragment.changeFragment(getActivity().getSupportFragmentManager(),R.id.frame_main,Task_create.newInstance(task_type,user_id_selected),Task_create.TAG);
+                                                            getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+//stuff that updates ui
 
                                                         }
                                                     }
@@ -116,5 +157,6 @@ public class Attendance_emp_list extends Fragment {
         );
 
     }
+
 
 }

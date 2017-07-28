@@ -21,7 +21,6 @@ import android.widget.TextView;
 
 import com.app.rbc.admin.R;
 import com.app.rbc.admin.activities.AttendanceActivity;
-import com.app.rbc.admin.adapters.Attendance_mark_adapter;
 import com.app.rbc.admin.adapters.Employee_list_adapter;
 import com.app.rbc.admin.interfaces.ApiServices;
 import com.app.rbc.admin.models.DatewiseAttendance;
@@ -123,7 +122,7 @@ public class Attendance_all extends Fragment implements DatePickerDialog.OnDateS
         empWiseAttendance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ChangeFragment.changeFragment(getActivity().getSupportFragmentManager(), R.id.frame_main, new Attendance_emp_list(), Attendance_emp_list.TAG);
+                ChangeFragment.changeFragment(getActivity().getSupportFragmentManager(), R.id.frame_main, new Employee_list(), Employee_list.TAG);
             }
         });
         ((AttendanceActivity) getActivity()).fab.show();

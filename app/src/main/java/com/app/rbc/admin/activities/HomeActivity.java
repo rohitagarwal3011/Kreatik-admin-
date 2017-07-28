@@ -13,14 +13,18 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.app.rbc.admin.R;
+import com.app.rbc.admin.app.AppController;
 import com.app.rbc.admin.interfaces.ApiServices;
 import com.app.rbc.admin.models.Employee;
 import com.app.rbc.admin.models.Todolist;
+import com.app.rbc.admin.services.DeadlineNotificationService;
 import com.app.rbc.admin.utils.AppUtil;
 import com.app.rbc.admin.utils.RetrofitClient;
 import com.app.rbc.admin.utils.TagsPreferences;
+import com.crashlytics.android.Crashlytics;
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.squareup.picasso.Picasso;
 
@@ -45,7 +49,10 @@ public class HomeActivity extends AppCompatActivity
     LinearLayout moduleAttendance;
     @BindView(R.id.module_stocks)
     LinearLayout stocks;
+    @BindView(R.id.module_chat)
+    LinearLayout moduleChat;
 
+    DeadlineNotificationService alarm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +60,8 @@ public class HomeActivity extends AppCompatActivity
 
         setContentView(R.layout.activity_home);
         ButterKnife.bind(this);
+        alarm= new DeadlineNotificationService();
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("R. B. Corporation");
         setSupportActionBar(toolbar);
@@ -82,12 +91,20 @@ public class HomeActivity extends AppCompatActivity
 
 
         navigationView.setNavigationItemSelectedListener(this);
-
+        logUser();
 
         //   this.menu = navigationView.getMenu();
 
         //   updateMenuItems();
 
+    }
+
+    private void logUser() {
+        // TODO: Use the current user's information
+        // You can call any combination of these three methods
+        Crashlytics.setUserIdentifier(AppUtil.getString(getApplicationContext(), TagsPreferences.USER_ID));
+        Crashlytics.setUserEmail(AppUtil.getString(getApplicationContext(), TagsPreferences.EMAIL));
+        Crashlytics.setUserName(AppUtil.getString(getApplicationContext(), TagsPreferences.NAME));
     }
 
     //Open task module
@@ -117,6 +134,16 @@ public class HomeActivity extends AppCompatActivity
 
     }
 
+    @OnClick(R.id.module_chat)
+    public void open_chat(View view)
+    {
+//        Context context = this.getApplicationContext();
+//        if(alarm != null){
+//            alarm.setOnetimeTimer(context);
+//        }else{
+//            Toast.makeText(context, "Alarm is null", Toast.LENGTH_SHORT).show();
+//        }
+    }
 //
 //    @OnClick(R.id.delete_task)
 //    public void delete_task(View view)

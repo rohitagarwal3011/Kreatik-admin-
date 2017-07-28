@@ -10,6 +10,7 @@ import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.content.LocalBroadcastManager;
 
 import com.app.rbc.admin.R;
+import com.app.rbc.admin.activities.AttendanceActivity;
 import com.app.rbc.admin.activities.TaskActivity;
 import com.app.rbc.admin.utils.AppUtil;
 import com.app.rbc.admin.utils.Constant;
@@ -70,6 +71,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     pushNotification.putExtra("comment", data.getString("comment"));
                     pushNotification.putExtra("status", data.getString("status"));
                     pushNotification.putExtra("change_time",data.getString("change_time"));
+                    pushNotification.putExtra("unread_count",remoteMessage.getData().get("count"));
                     LocalBroadcastManager.getInstance(this).sendBroadcast(pushNotification);
 
 
@@ -85,6 +87,38 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
 
             }
+            else if(remoteMessage.getData().get("type").equalsIgnoreCase("mark_attendance"))
+            {
+
+                Intent intent = new Intent(this, AttendanceActivity.class);
+                PendingIntent pendingIntent = PendingIntent.getActivity(this,0/* Request code */, intent,
+                        PendingIntent.FLAG_UPDATE_CURRENT);
+
+                Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+
+                NotificationCompat.Builder builder =
+                        new NotificationCompat.Builder(this);
+
+                final NotificationCompat.BigTextStyle style = new NotificationCompat.BigTextStyle(builder);
+
+
+                Notification notification = builder
+                        .setSmallIcon(R.drawable.ic_ac_unit_black_24dp)
+                        .setContentTitle(remoteMessage.getNotification().getTitle())
+                        .setStyle(style.bigText(remoteMessage.getNotification().getBody()))
+
+                        .setAutoCancel(true)
+                        .setSound(defaultSoundUri)
+                        .setContentIntent(pendingIntent)
+                        .setContentText(remoteMessage.getNotification().getBody())
+                        .build();
+
+                NotificationManagerCompat notificationManager =
+                        NotificationManagerCompat.from(this);
+
+                notificationManager.notify(0, notification);
+
+            }
             if (/* Check if data needs to be processed by long running job */ true) {
                 // For long-running tasks (10 seconds or more) use Firebase Job Dispatcher.
                // scheduleJob();
@@ -94,6 +128,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             }
 
         }
+
 
         // Check if message contains a notification payload.
         if (remoteMessage.getNotification() != null) {
@@ -154,13 +189,16 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 //     */
     private void sendNotification(RemoteMessage remoteMessage , String task_id ,String title , String task_type) {
 
+
+        int unique_id = Integer.parseInt(task_id.substring(task_id.indexOf('_')+1));
+
         Intent intent = new Intent(this, TaskActivity.class);
         intent.putExtra("task_id",task_id);
         intent.putExtra("type",task_type);
         intent.putExtra("title",title);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
-                PendingIntent.FLAG_ONE_SHOT);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this,unique_id /* Request code */, intent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
 
         Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
@@ -184,7 +222,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         NotificationManagerCompat notificationManager =
                 NotificationManagerCompat.from(this);
 
-        notificationManager.notify(0x1234, notification);
+        notificationManager.notify(unique_id, notification);
 //
 //        NotificationCompat.BigTextStyle inboxStyle =
 //                new NotificationCompat.BigTextStyle();

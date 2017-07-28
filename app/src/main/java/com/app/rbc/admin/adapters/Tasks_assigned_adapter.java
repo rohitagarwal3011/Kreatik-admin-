@@ -15,6 +15,7 @@ import com.app.rbc.admin.activities.TaskActivity;
 import com.app.rbc.admin.fragments.Task_home;
 import com.app.rbc.admin.models.Employee;
 import com.app.rbc.admin.models.Todolist;
+import com.app.rbc.admin.services.DeadlineNotificationService;
 import com.app.rbc.admin.utils.AppUtil;
 import com.app.rbc.admin.utils.TagsPreferences;
 import com.google.gson.Gson;
@@ -36,6 +37,7 @@ public class Tasks_assigned_adapter extends RecyclerView.Adapter<Tasks_assigned_
     private Task_home task_home;
     private Animation shake ;
 
+    private DeadlineNotificationService alarm;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
@@ -54,6 +56,7 @@ public class Tasks_assigned_adapter extends RecyclerView.Adapter<Tasks_assigned_
         TextView by;
         ImageView task_delete_image;
 
+        TextView unread_count;
 
         public MyViewHolder(View view) {
 
@@ -65,8 +68,24 @@ public class Tasks_assigned_adapter extends RecyclerView.Adapter<Tasks_assigned_
             task_type_image = (ImageView) view.findViewById(R.id.task_type_icon);
             task_delete_image=(ImageView) view.findViewById(R.id.task_delete_icon);
             by = (TextView) view.findViewById(R.id.by);
+            unread_count = (TextView) view.findViewById(R.id.unread_count);
 
-
+//            for(int i = 0;i<data.size();i++)
+//            {
+//                if(!data.get(i).getStatus().equalsIgnoreCase("Complete"))
+//                {
+//                    String deadline = data.get(i).getDeadline().replace('T',' ');
+//                    SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss");
+//                    try {
+//                        Date formated = fmt.parse(deadline);
+//                        alarm.setOnetimeTimer(context,formated,data.get(i).getTask_id(),data.get(i).getTitle(),"task_update");
+//
+//
+//                    } catch (ParseException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            }
 
             task_delete_image.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -104,6 +123,7 @@ public class Tasks_assigned_adapter extends RecyclerView.Adapter<Tasks_assigned_
     public Tasks_assigned_adapter(List<Todolist.Data1> data ,Context context, Task_home task_home) {
         this.data = data;this.context =context;this.task_home=task_home;
         shake = AnimationUtils.loadAnimation(this.context.getApplicationContext(), R.anim.shake);
+        alarm= new DeadlineNotificationService();
     }
 
 
@@ -117,9 +137,19 @@ public class Tasks_assigned_adapter extends RecyclerView.Adapter<Tasks_assigned_
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
 
-
+//        if(data.get(position).getStatus().equalsIgnoreCase("Complete"))
+//            removeAt(position);
         holder.by.setText("To : ");
         holder.taskTitle.setText(data.get(position).getTitle());
+
+        if(data.get(position).getUnread_count()>0 && !data.get(position).getStatus().equalsIgnoreCase("Complete"))
+        {
+            holder.unread_count.setText(data.get(position).getUnread_count()+" new messages ");
+            holder.unread_count.setVisibility(View.VISIBLE);
+        }
+        else {
+            holder.unread_count.setVisibility(View.GONE);
+        }
         final Employee emp = new Gson().fromJson(AppUtil.getString(context, TagsPreferences.EMPLOYEE_LIST), Employee.class);
         for(int i = 0;i<emp.getData().size();i++)
         {
@@ -145,6 +175,7 @@ public class Tasks_assigned_adapter extends RecyclerView.Adapter<Tasks_assigned_
         } catch (ParseException e) {
             e.printStackTrace();
         }
+
 
 
         holder.taskStatus.setText(data.get(position).getStatus());

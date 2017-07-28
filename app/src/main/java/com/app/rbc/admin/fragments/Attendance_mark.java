@@ -339,7 +339,7 @@ public class Attendance_mark extends Fragment implements DatePickerDialog.OnDate
                             int f=0;
                             for(int j=0;j<remarks.length;j++)
                             {
-                                if(attendance_data.get(j).getRemarks().equalsIgnoreCase(remarks[j]))
+                                if(attendance_data.get(i).getRemarks().equalsIgnoreCase(remarks[j]))
                                 {
                                     f=1;
                                     Attendance_mark_adapter.remarks_grid.get(attendance_data.get(i).getEmployee()).put("Selected",attendance_data.get(i).getRemarks());

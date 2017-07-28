@@ -431,7 +431,7 @@ public class Task_log_adapter extends RecyclerView.Adapter<Task_log_adapter.MyVi
         }
 
        File file;
-        file = new File(Environment.getExternalStorageDirectory().getPath(), "Inizio/Recieved_Images"+ "/" +log.getDocs().substring(log.getDocs().lastIndexOf('/')+1));
+        file = new File(Environment.getExternalStorageDirectory().getPath(), "Kreatik/Recieved_Images"+ "/" +log.getDocs().substring(log.getDocs().lastIndexOf('/')+1));
         if(!file.exists()) {
 
 
@@ -490,10 +490,10 @@ public class Task_log_adapter extends RecyclerView.Adapter<Task_log_adapter.MyVi
         String[] user = AppUtil.get_employee_from_user_id(context,user_id);
         File file = null;
         if(sent){
-           file = new File(Environment.getExternalStorageDirectory().getPath(), "Inizio/Sent_Images");
+           file = new File(Environment.getExternalStorageDirectory().getPath(), "Kreatik/Sent_Images");
         }
         else {
-            file = new File(Environment.getExternalStorageDirectory().getPath(), "Inizio/Recieved_Images");
+            file = new File(Environment.getExternalStorageDirectory().getPath(), "Kreatik/Recieved_Images");
         }
         if (!file.exists()) {
             file.mkdirs();

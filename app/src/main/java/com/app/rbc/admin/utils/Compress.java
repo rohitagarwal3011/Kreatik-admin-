@@ -142,7 +142,7 @@ public class Compress {
     }
 
     public String getFilename() {
-        File file = new File(Environment.getExternalStorageDirectory().getPath(), "Inizio/Sent_Attachment_Images");
+        File file = new File(Environment.getExternalStorageDirectory().getPath(), "Kreatik/Sent_Attachment_Images");
         if (!file.exists()) {
             file.mkdirs();
         }

@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.app.rbc.admin.fragments.Attendance_emp_list">
+    tools:context="com.app.rbc.admin.fragments.Employee_list">
 
 
     <android.support.v7.widget.RecyclerView

@@ -17,7 +17,7 @@ import com.app.rbc.admin.R;
 import com.app.rbc.admin.activities.AttendanceActivity;
 import com.app.rbc.admin.activities.TaskActivity;
 import com.app.rbc.admin.fragments.Attendance_all;
-import com.app.rbc.admin.fragments.Attendance_emp_list;
+import com.app.rbc.admin.fragments.Employee_list;
 import com.app.rbc.admin.fragments.Task_create;
 import com.app.rbc.admin.models.Employee;
 import com.facebook.drawee.generic.RoundingParams;
@@ -123,7 +123,7 @@ public class Employee_list_adapter extends RecyclerView.Adapter<Employee_list_ad
             @Override
             public void onClick(View v) {
                 if(fragment.equalsIgnoreCase(Task_create.TAG)) {
-                    final Task_create info = (Task_create) ((TaskActivity) context).getSupportFragmentManager().findFragmentByTag(Task_create.TAG);
+                    final Employee_list info = (Employee_list) ((TaskActivity) context).getSupportFragmentManager().findFragmentByTag(Task_create.TAG);
                     info.set_employee_id(data.get(position).getUserId());
                 }
                 else if(fragment.equalsIgnoreCase(Attendance_all.TAG)||fragment.equalsIgnoreCase("MonthlyList")){

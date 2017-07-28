@@ -16,4 +16,8 @@
         android:orderInCategory="100"
         app:showAsAction="always"
         />
+    <item android:id="@+id/completed"
+        android:title="Completed Tasks"
+        app:showAsAction="never"
+        />
 </menu>

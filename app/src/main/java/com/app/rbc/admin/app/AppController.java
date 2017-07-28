@@ -2,7 +2,12 @@ package com.app.rbc.admin.app;
 
 import android.app.Application;
 
+import com.app.rbc.admin.activities.LoginActivity;
+import com.app.rbc.admin.utils.AppUtil;
+import com.app.rbc.admin.utils.TagsPreferences;
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.crashlytics.android.Crashlytics;
+import io.fabric.sdk.android.Fabric;
 
 /**
  * Created by rohit on 21/6/17.
@@ -21,7 +26,12 @@ public class AppController extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        Fabric.with(this, new Crashlytics());
 
         Fresco.initialize(this);
+
     }
+
+
+
 }

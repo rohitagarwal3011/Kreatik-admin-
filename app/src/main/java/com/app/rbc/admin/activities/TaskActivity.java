@@ -21,11 +21,13 @@ import android.view.View;
 import android.widget.FrameLayout;
 
 import com.app.rbc.admin.R;
+import com.app.rbc.admin.fragments.Employee_list;
 import com.app.rbc.admin.fragments.Task_create;
 import com.app.rbc.admin.fragments.Task_details;
 import com.app.rbc.admin.fragments.Task_home;
 import com.app.rbc.admin.interfaces.ApiServices;
 import com.app.rbc.admin.utils.AppUtil;
+import com.app.rbc.admin.utils.ChangeFragment;
 import com.app.rbc.admin.utils.FileDownloader;
 import com.app.rbc.admin.utils.RetrofitClient;
 import com.yalantis.contextmenu.lib.ContextMenuDialogFragment;
@@ -112,13 +114,15 @@ public class TaskActivity extends AppCompatActivity implements Task_home.OnTaskT
 
     @Override
     public void OnTaskSelected(String type) {
-        task_create = new Task_create();
-        Bundle args = new Bundle();
-        task_create = task_create.newInstance(type);
-        FragmentTransaction fm = getSupportFragmentManager().beginTransaction();
-        fm.replace(R.id.frame_main, task_create,task_create.TAG);
-        fm.addToBackStack("task_create");
-        fm.commit();
+
+        ChangeFragment.changeFragment(getSupportFragmentManager(),R.id.frame_main, Employee_list.newInstance(type,Task_create.TAG),Task_create.TAG);
+//        task_create = new Task_create();
+//        Bundle args = new Bundle();
+//        task_create = task_create.newInstance(type,Task_create.TAG);
+//        FragmentTransaction fm = getSupportFragmentManager().beginTransaction();
+//        fm.replace(R.id.frame_main, task_create,task_create.TAG);
+//        fm.addToBackStack("task_create");
+//        fm.commit();
     }
 
     public void setFragment(Fragment frag,String TAG) {
@@ -142,7 +146,7 @@ public class TaskActivity extends AppCompatActivity implements Task_home.OnTaskT
     public void show_task_details(String task_id, String task_title) {
         task_details = new Task_details();
         Bundle args = new Bundle();
-        task_details = task_details.newInstance(task_id);
+        task_details = task_details.newInstance(task_id,task_title);
         setToolbar(task_title);
         setFragment(task_details,Task_details.TAG);
 
@@ -261,23 +265,30 @@ public class TaskActivity extends AppCompatActivity implements Task_home.OnTaskT
 
 
         AppUtil.logger(TAG,"Visible :"+visible_fragment);
-        if(visible_fragment.equalsIgnoreCase("Task_create"))
+        if(visible_fragment.equalsIgnoreCase("Employee_list"))
         {
+//
+//            if(Task_create.details_page)
+//            {
+//                final Task_create info = (Task_create) getSupportFragmentManager().findFragmentByTag(Task_create.TAG);
+////                if(fragment.isAdded()){
+//                info.onBackPressed();
+////                }
+//            }
+//            else {
 
-            if(Task_create.details_page)
-            {
-                final Task_create info = (Task_create) getSupportFragmentManager().findFragmentByTag(Task_create.TAG);
-//                if(fragment.isAdded()){
-                info.onBackPressed();
-//                }
-            }
-            else {
                 setToolbar("Task");
                 task_home = new Task_home();
                 setFragment(task_home,Task_home.TAG);
-            }
+//            }
 
         }
+        else  if(visible_fragment.equalsIgnoreCase("Task_create"))
+        {
+            visible_fragment="Employee_list";
+            super.onBackPressed();
+        }
+
         else if(visible_fragment.equalsIgnoreCase("Task_details"))
         {
             getSupportActionBar().setTitle("Task");
@@ -294,7 +305,13 @@ public class TaskActivity extends AppCompatActivity implements Task_home.OnTaskT
             {
                 task_home.stop_animation();
             }
+            else if(Task_home.show_completed)
+            {
+                final Task_home info = (Task_home) getSupportFragmentManager().findFragmentByTag(Task_home.TAG);
+                info.show_tasks_assigned();
+            }
             else {
+
                 Intent intent = new Intent(TaskActivity.this, HomeActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -363,7 +380,7 @@ public class TaskActivity extends AppCompatActivity implements Task_home.OnTaskT
             String fileUrl = strings[0];   // -> http://maven.apache.org/maven-1.x/maven.pdf
             String fileName = strings[1];  // -> maven.pdf
             file_name = fileName;
-            File folder = new File(Environment.getExternalStorageDirectory().getPath(), "Inizio/Downloaded_Attachments");
+            File folder = new File(Environment.getExternalStorageDirectory().getPath(), "Kreatik/Downloaded_Attachments");
 
             if (!folder.exists()) {
                 folder.mkdirs();
@@ -386,7 +403,7 @@ public class TaskActivity extends AppCompatActivity implements Task_home.OnTaskT
             super.onPostExecute(aVoid);
 
             AppUtil.showToast(context,"File Downloaded");
-            File file = new File(Environment.getExternalStorageDirectory().getPath(), "Inizio/Downloaded_Attachments/"+file_name);
+            File file = new File(Environment.getExternalStorageDirectory().getPath(), "Kreatik/Downloaded_Attachments/"+file_name);
             show_pdf(file);
 
 

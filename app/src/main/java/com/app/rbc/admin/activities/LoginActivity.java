@@ -110,7 +110,10 @@ public class LoginActivity extends AppCompatActivity {
                             save_details(response.body().getData().getUsername(), response.body().getData().getMobile(), response.body().getData().getEmail(), response.body().getData().getRole(), response.body().getData().getUser_id() , response.body().getData().getmProfile_image());
 
                             Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             startActivity(intent);
+                            finish();
                             break;
                         case 3:
                             AppUtil.logger(TAG, "Invalid Password");
@@ -231,7 +234,10 @@ public class LoginActivity extends AppCompatActivity {
                                                 AppUtil.logger(TAG, "Logged in ");
 
                                                 Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                                 startActivity(intent);
+                                                finish();
                                             } else {
 
                                                 update_password(response.body().getData().getUser_id());

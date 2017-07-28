@@ -88,6 +88,12 @@ public class Splash extends AppCompatActivity {
                                     startActivity(intent);
                                     finish();
                                 }
+                                else if(type.equalsIgnoreCase("mark_attendance"))
+                                {
+                                    Intent intent = new Intent(Splash.this,AttendanceActivity.class);
+                                    startActivity(intent);
+                                    finish();
+                                }
 
                                 else {
                                     Intent intent = new Intent(Splash.this, HomeActivity.class);

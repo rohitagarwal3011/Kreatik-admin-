@@ -83,6 +83,17 @@ public class Todolist {
         @SerializedName("type")
         private String mTask_type;
 
+        @SerializedName("unread_count")
+        private Long mUnread_count;
+
+        public Long getUnread_count() {
+            return mUnread_count;
+        }
+
+        public void setUnread_count(Long mUnread_count) {
+            this.mUnread_count = mUnread_count;
+        }
+
         public String getTask_type() {
             return mTask_type;
         }
@@ -160,6 +171,17 @@ public class Todolist {
 
         @SerializedName("type")
         private String mTask_type;
+
+        @SerializedName("unread_count")
+        private Long mUnread_count;
+
+        public Long getUnread_count() {
+            return mUnread_count;
+        }
+
+        public void setUnread_count(Long mUnread_count) {
+            this.mUnread_count = mUnread_count;
+        }
 
         public String getTask_type() {
             return mTask_type;

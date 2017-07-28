@@ -82,7 +82,10 @@ public class AttendanceActivity extends AppCompatActivity {
     public void onBackPressed() {
         if(getSupportFragmentManager().findFragmentByTag(Attendance_all.TAG).isVisible()) {
             Intent intent = new Intent(AttendanceActivity.this, HomeActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
+            finish();
         }
         else
             super.onBackPressed();

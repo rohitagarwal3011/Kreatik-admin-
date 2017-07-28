@@ -1,12 +1,17 @@
 package com.app.rbc.admin.fragments;
 
 import android.app.Dialog;
+import android.app.NotificationManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -27,8 +32,11 @@ import com.app.rbc.admin.adapters.Tasks_assigned_adapter;
 import com.app.rbc.admin.adapters.Todo_list_adapter;
 import com.app.rbc.admin.interfaces.ApiServices;
 import com.app.rbc.admin.models.Employee;
+import com.app.rbc.admin.models.Tasklogs;
 import com.app.rbc.admin.models.Todolist;
 import com.app.rbc.admin.utils.AppUtil;
+import com.app.rbc.admin.utils.ChangeFragment;
+import com.app.rbc.admin.utils.Constant;
 import com.app.rbc.admin.utils.RetrofitClient;
 import com.app.rbc.admin.utils.TagsPreferences;
 import com.google.gson.Gson;
@@ -38,6 +46,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -68,6 +77,7 @@ public class Task_home extends Fragment implements Todo_list_adapter.OnItemLongC
     Filter_task_adapter filter_task_adapter;
     ArrayList<String> filter_list = new ArrayList<>();
 
+    private BroadcastReceiver mRegistrationBroadcastReceiver;
 
     Todo_list_adapter todo_list_adapter;
     Tasks_assigned_adapter tasks_assigned_adapter;
@@ -85,8 +95,11 @@ public class Task_home extends Fragment implements Todo_list_adapter.OnItemLongC
     public static Todolist todolist;
     private String getTaskId, getTaskTitle;
     final ApiServices apiServices = RetrofitClient.getApiService();
+    List<Todolist.Data1> completed_list = new ArrayList<>();
+    List<Todolist.Data1> non_completed_list = new ArrayList<>();
 
     public static boolean show_delete = false;
+    public static boolean show_completed = false;
 
     public Task_home() {
         // Required empty public constructor
@@ -144,8 +157,26 @@ public class Task_home extends Fragment implements Todo_list_adapter.OnItemLongC
         AppUtil.logger(TAG, "Resumed");
         TaskActivity.visible_fragment = TAG;
         show_delete=false;
+
+        LocalBroadcastManager.getInstance(getContext()).registerReceiver(mRegistrationBroadcastReceiver,
+                new IntentFilter(Constant.REGISTRATION_COMPLETE));
+
+        // register new push message receiver
+        // by doing this, the activity will be notified each time a new message arrives
+        LocalBroadcastManager.getInstance(getContext()).registerReceiver(mRegistrationBroadcastReceiver,
+                new IntentFilter(Constant.PUSH_NOTIFICATION));
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        // register GCM registration complete receiver
+        LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(mRegistrationBroadcastReceiver);
+        // register new push message receiver
+        // by doing this, the activity will be notified each time a new message arrives
+        LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(mRegistrationBroadcastReceiver);
+
+    }
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -157,6 +188,49 @@ public class Task_home extends Fragment implements Todo_list_adapter.OnItemLongC
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        mRegistrationBroadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (intent.getAction().equals(Constant.REGISTRATION_COMPLETE)) {
+                } else if (intent.getAction().equals(Constant.PUSH_NOTIFICATION)) {
+
+
+
+                    if (intent.getStringExtra("type").equalsIgnoreCase("task_update")) {
+
+
+
+
+
+//                        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+//                        notificationManager.cancelAll();
+
+                        update_order(intent.getStringExtra("task_id"),intent.getStringExtra("status"),Long.parseLong(intent.getStringExtra("unread_count")),true);
+//                        Tasklogs.Log newlog1 = new Tasklogs().new Log();
+//                        newlog1.setChangedBy(intent.getStringExtra("changed_by"));
+//                        newlog1.setChangeTime(intent.getStringExtra("change_time"));
+//                        newlog1.setDocs(intent.getStringExtra("docs"));
+//                        newlog1.setStatus(intent.getStringExtra("status"));
+//                        newlog1.setTaskId(intent.getStringExtra("task_id"));
+//                        newlog1.setComment(intent.getStringExtra("comment"));
+//                        newlog1.setmLogtype(intent.getStringExtra("log_type"));
+//                        add_new_message(newlog1);
+
+
+                    }
+//                    else {
+//                        update_order_and_count(intent.getStringExtra("task_id"),intent.getStringExtra("status"),Long.parseLong(intent.getStringExtra("unread_count")),true);
+//                    }
+
+                }
+                // checking for type intent filter
+
+            }
+        };
+
+
+
         get_todo_list();
         show_filter();
     }
@@ -168,6 +242,20 @@ public class Task_home extends Fragment implements Todo_list_adapter.OnItemLongC
         item.setVisible(false);
         MenuItem item1 = menu.findItem(R.id.status);
         item1.setVisible(false);
+        MenuItem item2 = menu.findItem(R.id.completed);
+        item2.setVisible(true);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId())
+        {
+            case R.id.completed:
+                show_completed_list();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     //    Override
@@ -210,6 +298,32 @@ public class Task_home extends Fragment implements Todo_list_adapter.OnItemLongC
 
     }
 
+    public void get_completed_list()
+    {
+//        if(completed_list!=null)
+//       completed_list.clear();
+        for(int i = 0 ;i<todolist.getData1().size();i++)
+        {
+            if(todolist.getData1().get(i).getStatus().equalsIgnoreCase("Complete"))
+            {
+                completed_list.add(todolist.getData1().get(i));
+            }
+        }
+
+    }
+
+    public void show_completed_list()
+    {
+        show_completed=true;
+        tasks_assigned_adapter = new Tasks_assigned_adapter(completed_list, getContext(),Task_home.this);
+        LinearLayoutManager gridLayoutManager = new LinearLayoutManager(getContext());
+        gridLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        tasksRecyclerView.setLayoutManager(gridLayoutManager);
+        tasksRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        //tasksRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
+        tasksRecyclerView.setAdapter(tasks_assigned_adapter);
+        tasks_assigned_adapter.notifyDataSetChanged();
+    }
 
 
     public void show_todo_list() {
@@ -226,24 +340,20 @@ public class Task_home extends Fragment implements Todo_list_adapter.OnItemLongC
         //tasksRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
         tasksRecyclerView.setAdapter(todo_list_adapter);
         todo_list_adapter.notifyDataSetChanged();
-        if (getArguments() != null) {
-            AppUtil.logger(TAG, "proceed to details");
 
-
-            proceed_to_details(getTaskId, getTaskTitle);
-        }
 
 
     }
 
 
     public void show_tasks_assigned() {
+        show_completed=false;
         assignedIndicator.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorAccent));
         todoIndicator.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
     //    Todolist todolist = new Gson().fromJson(AppUtil.getString(getContext().getApplicationContext(), TagsPreferences.TASK_LIST), Todolist.class);
         todolist= new Gson().fromJson(AppUtil.getString(getContext().getApplicationContext(), TagsPreferences.TASK_LIST), Todolist.class);
 
-        tasks_assigned_adapter = new Tasks_assigned_adapter(todolist.getData1(), getContext(),Task_home.this);
+        tasks_assigned_adapter = new Tasks_assigned_adapter(non_completed_list, getContext(),Task_home.this);
         LinearLayoutManager gridLayoutManager = new LinearLayoutManager(getContext());
         gridLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         tasksRecyclerView.setLayoutManager(gridLayoutManager);
@@ -251,6 +361,13 @@ public class Task_home extends Fragment implements Todo_list_adapter.OnItemLongC
         //tasksRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
         tasksRecyclerView.setAdapter(tasks_assigned_adapter);
         tasks_assigned_adapter.notifyDataSetChanged();
+
+        if (getArguments() != null) {
+            AppUtil.logger(TAG, "proceed to details");
+
+
+            proceed_to_details(getTaskId, getTaskTitle);
+        }
     }
 
 
@@ -275,8 +392,16 @@ public class Task_home extends Fragment implements Todo_list_adapter.OnItemLongC
                             @Override
                             public void run() {
 
-                                dialog.dismiss();
-                                ((OnTaskTypeSelectListener) getActivity()).OnTaskSelected("daily");
+                                getActivity().runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        dialog.dismiss();
+                                        ((OnTaskTypeSelectListener) getActivity()).OnTaskSelected("daily");
+
+                                    }
+
+                                }
+                                );
                             }
                         },
                         400
@@ -292,8 +417,15 @@ public class Task_home extends Fragment implements Todo_list_adapter.OnItemLongC
                             @Override
                             public void run() {
 
+                                getActivity().runOnUiThread(new Runnable() {
+                                                                @Override
+                                                                public void run() {
                                 dialog.dismiss();
                                 ((OnTaskTypeSelectListener) getActivity()).OnTaskSelected("letter");
+                                                                }
+
+                                                            }
+                                );
                             }
                         },
                         400
@@ -309,9 +441,15 @@ public class Task_home extends Fragment implements Todo_list_adapter.OnItemLongC
                         new java.util.TimerTask() {
                             @Override
                             public void run() {
+                                getActivity().runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
 
-                                dialog.dismiss();
-                                ((OnTaskTypeSelectListener) getActivity()).OnTaskSelected("meetings");
+                                        dialog.dismiss();
+                                        ((OnTaskTypeSelectListener) getActivity()).OnTaskSelected("meetings");
+                                    }
+                                }
+                                );
                             }
                         },
                         400
@@ -403,8 +541,8 @@ public class Task_home extends Fragment implements Todo_list_adapter.OnItemLongC
 
 
                // show_todo_list();
-                show_tasks_assigned();
-
+              //  show_tasks_assigned();
+                get_non_completed_task();
                 //  proceed();
             }
 
@@ -489,6 +627,25 @@ public class Task_home extends Fragment implements Todo_list_adapter.OnItemLongC
         });
     }
 
+    public void get_non_completed_task()
+    {
+
+        todolist= new Gson().fromJson(AppUtil.getString(getContext().getApplicationContext(), TagsPreferences.TASK_LIST), Todolist.class);
+
+        if(non_completed_list!=null)
+            non_completed_list.clear();
+        for(int i = 0 ;i<todolist.getData1().size();i++)
+        {
+            if(!todolist.getData1().get(i).getStatus().equalsIgnoreCase("Complete"))
+            {
+                non_completed_list.add(todolist.getData1().get(i));
+            }
+        }
+        get_completed_list();
+        show_tasks_assigned();
+
+
+    }
     public void setStatus(String task_id ,String status)
     {
         AppUtil.logger(TAG,"set status change");
@@ -504,17 +661,72 @@ public class Task_home extends Fragment implements Todo_list_adapter.OnItemLongC
 //        }
 //        if(flag==false)
 //        {
-            for(int i=0;i<todolist.getData1().size();i++)
+            for(int i=0;i<non_completed_list.size();i++)
             {
-                if(todolist.getData1().get(i).getTask_id().equalsIgnoreCase(task_id))
+                if(non_completed_list.get(i).getTask_id().equalsIgnoreCase(task_id))
                 {
 //                    flag=true;
-                    todolist.getData1().get(i).setStatus(status);
+                    non_completed_list.get(i).setStatus(status);
+                    if(status.equalsIgnoreCase("Complete"))
+                    {
+                        completed_list.add(0,non_completed_list.get(i));
+                        non_completed_list.remove(i);
+                    }
                     tasks_assigned_adapter.notifyDataSetChanged();
 
 
                 }
             }
+
+        for(int i=0;i<todolist.getData1().size();i++)
+        {
+            if(todolist.getData1().get(i).getTask_id().equalsIgnoreCase(task_id))
+            {
+//                    flag=true;
+                todolist.getData1().get(i).setStatus(status);
+
+
+            }
+        }
+
+        }
+
+        public void update_order(String task_id,String status,Long unread_count,Boolean update_order)
+        {
+            for(int i=0;i<non_completed_list.size();i++)
+            {
+                if(non_completed_list.get(i).getTask_id().equalsIgnoreCase(task_id))
+                {
+//                    flag=true;
+
+                    non_completed_list.get(i).setStatus(status);
+                    Todolist.Data1 task = non_completed_list.get(i);
+                    if(status.equalsIgnoreCase("Complete"))
+                    {
+                        non_completed_list.get(i).setUnread_count((long) 0);
+                        completed_list.add(non_completed_list.get(i));
+                        tasks_assigned_adapter.removeAt(i);
+                        break;
+                    }
+                    else {
+                        if(update_order) {
+                            tasks_assigned_adapter.removeAt(i);
+                            non_completed_list.add(0, task);
+                            non_completed_list.get(0).setUnread_count(unread_count);
+                            break;
+                        }
+                        else {
+                            non_completed_list.get(i).setUnread_count(unread_count);
+                            break;
+                        }
+                    }
+
+
+                }
+            }
+
+            tasks_assigned_adapter.notifyDataSetChanged();
+
 
         }
 

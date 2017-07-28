@@ -90,6 +90,7 @@ import static android.app.Activity.RESULT_OK;
 public class Task_create extends Fragment implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
 
     private static final String TASK_TYPE = "task_type";
+    private static final String TO_USER = "TO_USER";
     public static final String TAG = "Task_create";
     @BindView(R.id.emp_select)
     Spinner empSelect;
@@ -149,10 +150,11 @@ public class Task_create extends Fragment implements DatePickerDialog.OnDateSetL
     }
 
 
-    public static Task_create newInstance(String task_type) {
+    public static Task_create newInstance(String task_type,String to_user) {
         Task_create fragment = new Task_create();
         Bundle args = new Bundle();
         args.putString(TASK_TYPE, task_type);
+        args.putString(TO_USER,to_user);
         fragment.setArguments(args);
         return fragment;
     }
@@ -162,6 +164,7 @@ public class Task_create extends Fragment implements DatePickerDialog.OnDateSetL
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             task_type = getArguments().getString(TASK_TYPE);
+            to_user=getArguments().getString(TO_USER);
         }
 
         setHasOptionsMenu(true);
@@ -183,9 +186,10 @@ public class Task_create extends Fragment implements DatePickerDialog.OnDateSetL
         unbinder = ButterKnife.bind(this, rootview);
 
         submitTask.setMode(ActionProcessButton.Mode.ENDLESS);
-        taskDetailsPage.setVisibility(View.GONE);
-        selectEmployee.setVisibility(View.VISIBLE);
 
+        details_page=true;
+        selectEmployee.setVisibility(View.GONE);
+        taskDetailsPage.setVisibility(View.VISIBLE);
         updateview(task_type);
 
         return rootview;
@@ -217,6 +221,8 @@ public class Task_create extends Fragment implements DatePickerDialog.OnDateSetL
         item.setVisible(false);
         MenuItem item1 = menu.findItem(R.id.status);
         item1.setVisible(false);
+        MenuItem item2 = menu.findItem(R.id.completed);
+        item2.setVisible(false);
     }
 
 
@@ -393,6 +399,7 @@ public class Task_create extends Fragment implements DatePickerDialog.OnDateSetL
                         public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
 
                             // progress.dismiss();
+
                             submitTask.setEnabled(true);
                             submitTask.setProgress(0);
                             final SweetAlertDialog pDialog = new SweetAlertDialog(getContext(), SweetAlertDialog.SUCCESS_TYPE);
@@ -452,43 +459,7 @@ public class Task_create extends Fragment implements DatePickerDialog.OnDateSetL
 
 
     public void spinner_values() {
-        List<String> employee_list = new ArrayList<String>();
-        final Employee emp = new Gson().fromJson(AppUtil.getString(getContext(), TagsPreferences.EMPLOYEE_LIST), Employee.class);
-        for (int i = 0; i < emp.getData().size(); i++) {
-            employee_list.add(emp.getData().get(i).getUserName());
-        }
 
-        employee_list.add("Yash");
-        employee_list.add("Shubham");
-        employee_list.add("Manish");
-        employee_list.add("Piush");
-        employee_list.add("Rohan");
-        employee_list.add("Abhijeet");
-        employee_list.add("Himanshu");
-        employee_list.add("Ronak");
-        employee_list.add("Sarda");
-        employee_list.add("Manthan");
-        employee_list.add("Chika");
-
-
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, employee_list);
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        empSelect.setAdapter(dataAdapter);
-
-        to_user = emp.getData().get(0).getUserId();
-        empSelect.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-
-                to_user = emp.getData().get(position).getUserId();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
 
 
         String[] dates = {"Today ", "Tomorrow ", "Select Date"};
@@ -638,62 +609,27 @@ public class Task_create extends Fragment implements DatePickerDialog.OnDateSetL
                 cardAttachment.setVisibility(View.GONE);
                 break;
         }
-
-        set_employee_list();
-
-    }
-
-
-
-    public void set_employee_list()
-    {
-        Employee employee = new Gson().fromJson(AppUtil.getString(getContext().getApplicationContext(), TagsPreferences.EMPLOYEE_LIST), Employee.class);
-
-        employee_list_adapter = new Employee_list_adapter(employee.getData(), getContext(),Task_create.TAG);
-        LinearLayoutManager gridLayoutManager = new LinearLayoutManager(getContext());
-        gridLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        selectEmployee.setLayoutManager(gridLayoutManager);
-        selectEmployee.setItemAnimator(new DefaultItemAnimator());
-        selectEmployee.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
-        selectEmployee.setAdapter(employee_list_adapter);
-
-        employee_list_adapter.notifyDataSetChanged();
-    }
-
-    public void set_employee_id(String id) throws NullPointerException
-    {
-        to_user=id;
-
-
-
-
-        new java.util.Timer().schedule(
-                new java.util.TimerTask() {
-                    @Override
-                    public void run() {
-
-                        getActivity().runOnUiThread(new Runnable() {
-                                                        @Override
-                                                        public void run() {
-
-                                                            ((TaskActivity)getContext()).setToolbar(toolbar_string);
-                                                            details_page=true;
-                                                            selectEmployee.setVisibility(View.GONE);
-                                                            taskDetailsPage.setVisibility(View.VISIBLE);
-                                                            getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
-//stuff that updates ui
-
-                                                        }
-                                                    }
-
-                        );
-
-                    }
-                },
-                400
-        );
+        ((TaskActivity)getContext()).setToolbar(toolbar_string);
+       // set_employee_list();
 
     }
+
+
+
+//    public void set_employee_list()
+//    {
+//        Employee employee = new Gson().fromJson(AppUtil.getString(getContext().getApplicationContext(), TagsPreferences.EMPLOYEE_LIST), Employee.class);
+//
+//        employee_list_adapter = new Employee_list_adapter(employee.getData(), getContext(),Task_create.TAG);
+//        LinearLayoutManager gridLayoutManager = new LinearLayoutManager(getContext());
+//        gridLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+//        selectEmployee.setLayoutManager(gridLayoutManager);
+//        selectEmployee.setItemAnimator(new DefaultItemAnimator());
+//        selectEmployee.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
+//        selectEmployee.setAdapter(employee_list_adapter);
+//
+//        employee_list_adapter.notifyDataSetChanged();
+//    }
 
 
     @Override
@@ -807,7 +743,7 @@ public class Task_create extends Fragment implements DatePickerDialog.OnDateSetL
                     byte[] buffer = new byte[newfile.available()];
                     newfile.read(buffer);
 
-                    File file = new File(Environment.getExternalStorageDirectory().getPath(), "Inizio/Sent_Attachments");
+                    File file = new File(Environment.getExternalStorageDirectory().getPath(), "Kreatik/Sent_Attachments");
 
                     if (!file.exists()) {
                         file.mkdirs();
@@ -857,7 +793,7 @@ public class Task_create extends Fragment implements DatePickerDialog.OnDateSetL
 
             Document document = new Document();
             String dirpath = Environment.getExternalStorageDirectory().toString();
-            File file = new File(Environment.getExternalStorageDirectory().getPath(), "Inizio/Sent_Attachments");
+            File file = new File(Environment.getExternalStorageDirectory().getPath(), "Kreatik/Sent_Attachments");
 
             if (!file.exists()) {
                 file.mkdirs();
@@ -923,16 +859,16 @@ public class Task_create extends Fragment implements DatePickerDialog.OnDateSetL
 
 
 
-    public void onBackPressed()
-    {
-
-      taskDetailsPage.setVisibility(View.GONE);
-        selectEmployee.setVisibility(View.VISIBLE);
-        ((TaskActivity)getContext()).setToolbar("Select Employee");
-        details_page=false;
-        set_employee_list();
-
-    }
+//    public void onBackPressed()
+//    {
+//
+//      taskDetailsPage.setVisibility(View.GONE);
+//        selectEmployee.setVisibility(View.VISIBLE);
+//        ((TaskActivity)getContext()).setToolbar("Select Employee");
+//        details_page=false;
+//        set_employee_list();
+//
+//    }
 
 }
 
