@@ -47,10 +47,178 @@ public class StockPoDetails {
         mVendorDetails = vendorDetails;
     }
 
+    public class PoDetail {
+
+        @SerializedName("details")
+        private List<Detail> mDetails;
+        @SerializedName("po_id")
+        private String mPoId;
+        @SerializedName("products")
+        private List<Product> mProducts;
+
+        public List<Detail> getDetails() {
+            return mDetails;
+        }
+
+        public void setDetails(List<Detail> details) {
+            mDetails = details;
+        }
+
+        public String getPoId() {
+            return mPoId;
+        }
+
+        public void setPoId(String poId) {
+            mPoId = poId;
+        }
+
+        public List<Product> getProducts() {
+            return mProducts;
+        }
+
+        public void setProducts(List<Product> products) {
+            mProducts = products;
+        }
+
+        public class Detail {
+
+            @SerializedName("category")
+            private String mCategory;
+            @SerializedName("created_by")
+            private String mCreatedBy;
+            @SerializedName("creation_dt")
+            private String mCreationDt;
+            @SerializedName("fulfilled")
+            private Boolean mFulfilled;
+            @SerializedName("pay_mode")
+            private String mPayMode;
+            @SerializedName("po_img")
+            private String mPoImg;
+            @SerializedName("price")
+            private Long mPrice;
+            @SerializedName("status")
+            private String mStatus;
+            @SerializedName("title")
+            private String mTitle;
+
+            public String getCategory() {
+                return mCategory;
+            }
+
+            public void setCategory(String category) {
+                mCategory = category;
+            }
+
+            public String getCreatedBy() {
+                return mCreatedBy;
+            }
+
+            public void setCreatedBy(String createdBy) {
+                mCreatedBy = createdBy;
+            }
+
+            public String getCreationDt() {
+                return mCreationDt;
+            }
+
+            public void setCreationDt(String creationDt) {
+                mCreationDt = creationDt;
+            }
+
+            public Boolean getFulfilled() {
+                return mFulfilled;
+            }
+
+            public void setFulfilled(Boolean fulfilled) {
+                mFulfilled = fulfilled;
+            }
+
+            public String getPayMode() {
+                return mPayMode;
+            }
+
+            public void setPayMode(String payMode) {
+                mPayMode = payMode;
+            }
+
+            public String getPoImg() {
+                return mPoImg;
+            }
+
+            public void setPoImg(String poImg) {
+                mPoImg = poImg;
+            }
+
+            public Long getPrice() {
+                return mPrice;
+            }
+
+            public void setPrice(Long price) {
+                mPrice = price;
+            }
+
+            public String getStatus() {
+                return mStatus;
+            }
+
+            public void setStatus(String status) {
+                mStatus = status;
+            }
+
+            public String getTitle() {
+                return mTitle;
+            }
+
+            public void setTitle(String title) {
+                mTitle = title;
+            }
+
+        }
+
+        public class Product {
+
+            @SerializedName("for_product")
+            private String mForProduct;
+            @SerializedName("quantity")
+            private Long mQuantity;
+            @SerializedName("rem_quantity")
+            private Long mRemQuantity;
+
+            public String getForProduct() {
+                return mForProduct;
+            }
+
+            public void setForProduct(String forProduct) {
+                mForProduct = forProduct;
+            }
+
+            public Long getQuantity() {
+                return mQuantity;
+            }
+
+            public void setQuantity(Long quantity) {
+                mQuantity = quantity;
+            }
+
+            public Long getRemQuantity() {
+                return mRemQuantity;
+            }
+
+            public void setRemQuantity(Long remQuantity) {
+                mRemQuantity = remQuantity;
+            }
+
+        }
+
+
+    }
+
     public class VendorDetail {
 
         @SerializedName("vendor_add")
         private String mVendorAdd;
+        @SerializedName("vendor_id")
+        private String mVendorId;
         @SerializedName("vendor_name")
         private String mVendorName;
         @SerializedName("vendor_phone")
@@ -62,6 +230,14 @@ public class StockPoDetails {
 
         public void setVendorAdd(String vendorAdd) {
             mVendorAdd = vendorAdd;
+        }
+
+        public String getVendorId() {
+            return mVendorId;
+        }
+
+        public void setVendorId(String vendorId) {
+            mVendorId = vendorId;
         }
 
         public String getVendorName() {
@@ -81,216 +257,6 @@ public class StockPoDetails {
         }
 
     }
-    public class VehicleDetail {
-
-        @SerializedName("challan_num")
-        private String mChallanNum;
-        @SerializedName("dest_type")
-        private String mDestType;
-        @SerializedName("destination")
-        private String mDestination;
-        @SerializedName("dispatch_dt")
-        private String mDispatchDt;
-        @SerializedName("driver")
-        private String mDriver;
-        @SerializedName("product")
-        private String mProduct;
-        @SerializedName("quantity")
-        private Long mQuantity;
-        @SerializedName("source")
-        private String mSource;
-        @SerializedName("source_type")
-        private String mSourceType;
-        @SerializedName("status")
-        private String mStatus;
-        @SerializedName("vehicle_number")
-        private String mVehicleNumber;
-
-        public String getChallanNum() {
-            return mChallanNum;
-        }
-
-        public void setChallanNum(String challanNum) {
-            mChallanNum = challanNum;
-        }
-
-        public String getDestType() {
-            return mDestType;
-        }
-
-        public void setDestType(String destType) {
-            mDestType = destType;
-        }
-
-        public String getDestination() {
-            return mDestination;
-        }
-
-        public void setDestination(String destination) {
-            mDestination = destination;
-        }
-
-        public String getDispatchDt() {
-            return mDispatchDt;
-        }
-
-        public void setDispatchDt(String dispatchDt) {
-            mDispatchDt = dispatchDt;
-        }
-
-        public String getDriver() {
-            return mDriver;
-        }
-
-        public void setDriver(String driver) {
-            mDriver = driver;
-        }
-
-        public String getProduct() {
-            return mProduct;
-        }
-
-        public void setProduct(String product) {
-            mProduct = product;
-        }
-
-        public Long getQuantity() {
-            return mQuantity;
-        }
-
-        public void setQuantity(Long quantity) {
-            mQuantity = quantity;
-        }
-
-        public String getSource() {
-            return mSource;
-        }
-
-        public void setSource(String source) {
-            mSource = source;
-        }
-
-        public String getSourceType() {
-            return mSourceType;
-        }
-
-        public void setSourceType(String sourceType) {
-            mSourceType = sourceType;
-        }
-
-        public String getStatus() {
-            return mStatus;
-        }
-
-        public void setStatus(String status) {
-            mStatus = status;
-        }
-
-        public String getVehicleNumber() {
-            return mVehicleNumber;
-        }
-
-        public void setVehicleNumber(String vehicleNumber) {
-            mVehicleNumber = vehicleNumber;
-        }
-
-    }
-    public class PoDetail {
-
-        @SerializedName("created_by")
-        private String mCreatedBy;
-        @SerializedName("creation_dt")
-        private String mCreationDt;
-        @SerializedName("for_product")
-        private String mForProduct;
-        @SerializedName("pay_mode")
-        private String mPayMode;
-        @SerializedName("po_num")
-        private String mPoNum;
-        @SerializedName("price")
-        private Long mPrice;
-        @SerializedName("quantity")
-        private Long mQuantity;
-        @SerializedName("status")
-        private String mStatus;
-        @SerializedName("title")
-        private String mTitle;
-
-        public String getCreatedBy() {
-            return mCreatedBy;
-        }
-
-        public void setCreatedBy(String createdBy) {
-            mCreatedBy = createdBy;
-        }
-
-        public String getCreationDt() {
-            return mCreationDt;
-        }
-
-        public void setCreationDt(String creationDt) {
-            mCreationDt = creationDt;
-        }
-
-        public String getForProduct() {
-            return mForProduct;
-        }
-
-        public void setForProduct(String forProduct) {
-            mForProduct = forProduct;
-        }
-
-        public String getPayMode() {
-            return mPayMode;
-        }
-
-        public void setPayMode(String payMode) {
-            mPayMode = payMode;
-        }
-
-        public String getPoNum() {
-            return mPoNum;
-        }
-
-        public void setPoNum(String poNum) {
-            mPoNum = poNum;
-        }
-
-        public Long getPrice() {
-            return mPrice;
-        }
-
-        public void setPrice(Long price) {
-            mPrice = price;
-        }
-
-        public Long getQuantity() {
-            return mQuantity;
-        }
-
-        public void setQuantity(Long quantity) {
-            mQuantity = quantity;
-        }
-
-        public String getStatus() {
-            return mStatus;
-        }
-
-        public void setStatus(String status) {
-            mStatus = status;
-        }
-
-        public String getTitle() {
-            return mTitle;
-        }
-
-        public void setTitle(String title) {
-            mTitle = title;
-        }
-
-    }
-
-
 
 
 }

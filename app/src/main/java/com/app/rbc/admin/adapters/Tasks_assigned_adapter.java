@@ -1,6 +1,7 @@
 package com.app.rbc.admin.adapters;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -140,6 +141,8 @@ public class Tasks_assigned_adapter extends RecyclerView.Adapter<Tasks_assigned_
 //        if(data.get(position).getStatus().equalsIgnoreCase("Complete"))
 //            removeAt(position);
         holder.by.setText("To : ");
+        Typeface face= Typeface.createFromAsset(context.getAssets(),"fonts/roboto.regular.ttf");
+        holder.taskTitle.setTypeface(face);
         holder.taskTitle.setText(data.get(position).getTitle());
 
         if(data.get(position).getUnread_count()>0 && !data.get(position).getStatus().equalsIgnoreCase("Complete"))
@@ -203,6 +206,7 @@ public class Tasks_assigned_adapter extends RecyclerView.Adapter<Tasks_assigned_
                 case 'D':
                     holder.task_type_image.setImageDrawable(context.getResources().getDrawable(R.drawable.daily));
                     break;
+
             }
         }
 

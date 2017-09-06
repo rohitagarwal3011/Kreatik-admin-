@@ -57,22 +57,7 @@
             android:orientation="horizontal"
             android:paddingBottom="@dimen/_5sdp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:text="Qty : "
-                android:textColor="@color/purple_progress"
-                android:textSize="@dimen/_15sdp" />
 
-            <TextView
-                android:id="@+id/PO_quantity"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:text="3000 bags"
-                android:textColor="@color/purple_progress"
-                android:textSize="@dimen/_15sdp" />
 
             <TextView
                 android:layout_width="match_parent"

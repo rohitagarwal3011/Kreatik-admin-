@@ -14,13 +14,10 @@ import android.view.ViewGroup;
 
 import com.app.rbc.admin.R;
 import com.app.rbc.admin.activities.StockActivity;
-import com.app.rbc.admin.adapters.Stock_category_adapter;
 import com.app.rbc.admin.adapters.Stock_product_adapter;
 import com.app.rbc.admin.interfaces.ApiServices;
 import com.app.rbc.admin.models.StockCategories;
-import com.app.rbc.admin.models.StockProductDetails;
 import com.app.rbc.admin.utils.AppUtil;
-import com.app.rbc.admin.utils.ChangeFragment;
 import com.app.rbc.admin.utils.RetrofitClient;
 import com.app.rbc.admin.utils.TagsPreferences;
 import com.google.gson.Gson;
@@ -178,7 +175,7 @@ public class Stock_products extends Fragment {
 ////stuff that updates ui
                                                             FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
                                                             ft.hide(getActivity().getSupportFragmentManager().findFragmentByTag(Stock_products.TAG));
-                                                            ((StockActivity)getContext()).get_attendance_record(product_selected);
+                                                            ((StockActivity)getContext()).get_product_details(product_selected);
                                                             //ChangeFragment.changeFragment(getActivity().getSupportFragmentManager(), R.id.frame_main, new Stock_products().newInstance(product_selected), Stock_products.TAG);
 
                                                         }

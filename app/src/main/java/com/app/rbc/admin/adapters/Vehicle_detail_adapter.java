@@ -9,8 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.app.rbc.admin.R;
-import com.app.rbc.admin.models.StockPoDetails;
-import com.app.rbc.admin.models.StockProductDetails;
+import com.app.rbc.admin.models.VehicleDetail;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -19,11 +18,11 @@ import java.util.List;
  * Created by rohit on 17/7/17.
  */
 
-public class PO_vehicle_detail_adapter extends RecyclerView.Adapter<PO_vehicle_detail_adapter.MyViewHolder> {
+public class Vehicle_detail_adapter extends RecyclerView.Adapter<Vehicle_detail_adapter.MyViewHolder> {
 
 
 
-    private List<StockPoDetails.VehicleDetail> data;
+    private List<VehicleDetail> data;
     private Context context;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -65,33 +64,33 @@ public class PO_vehicle_detail_adapter extends RecyclerView.Adapter<PO_vehicle_d
     }
 
 
-    public PO_vehicle_detail_adapter(List<StockPoDetails.VehicleDetail> data, Context context) {
+    public Vehicle_detail_adapter(List<VehicleDetail> data, Context context) {
         this.data = data;
         this.context = context;
     }
 
 
     @Override
-    public PO_vehicle_detail_adapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public Vehicle_detail_adapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.stock_vehicle_info, parent, false);
-        return new PO_vehicle_detail_adapter.MyViewHolder(itemView);
+        return new Vehicle_detail_adapter.MyViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(PO_vehicle_detail_adapter.MyViewHolder holder, final int position) {
-        StockPoDetails.VehicleDetail vehicleDetail = data.get(position);
-        holder.source.setText(vehicleDetail.getSource());
-        holder.destination.setText(vehicleDetail.getDestination());
-        holder.transaction_status.setText(vehicleDetail.getStatus());
-        holder.vehicle_number.setText(vehicleDetail.getVehicleNumber());
-        holder.driver_name.setText(vehicleDetail.getDriver());
-        holder.challan_number.setText(vehicleDetail.getChallanNum());
-        holder.transactionQuantity.setText(vehicleDetail.getQuantity().toString());
-        holder.transaction_status.setText(vehicleDetail.getDispatchDt());
-        if (vehicleDetail.getSourceType().equalsIgnoreCase("Stock")) {
+    public void onBindViewHolder(Vehicle_detail_adapter.MyViewHolder holder, final int position) {
+        VehicleDetail vehicleDetail = data.get(position);
+        holder.source.setText(vehicleDetail.getDetails().get(0).getSource());
+        holder.destination.setText(vehicleDetail.getDetails().get(0).getDestination());
+        holder.transaction_status.setText(vehicleDetail.getDetails().get(0).getStatus());
+        holder.vehicle_number.setText(vehicleDetail.getDetails().get(0).getVehicleNumber());
+        holder.driver_name.setText(vehicleDetail.getDetails().get(0).getDriver());
+        holder.challan_number.setText(vehicleDetail.getDetails().get(0).getChallanNum());
+//        holder.transactionQuantity.setText(vehicleDetail.getQuantity().toString());
+//        holder..setText(vehicleDetail.getDispatchDt());
+        if (vehicleDetail.getDetails().get(0).getSourceType().equalsIgnoreCase("Stock")) {
             Picasso.with(context).load((R.drawable.stock)).into(holder.sourceType);
-        } else if(vehicleDetail.getSourceType().equalsIgnoreCase("Site")){
+        } else if(vehicleDetail.getDetails().get(0).getSourceType().equalsIgnoreCase("Site")){
 
             Picasso.with(context).load((R.drawable.site_overview)).into(holder.sourceType);
         }
@@ -99,9 +98,9 @@ public class PO_vehicle_detail_adapter extends RecyclerView.Adapter<PO_vehicle_d
             Picasso.with(context).load((R.drawable.user)).into(holder.sourceType);
         }
 
-        if (vehicleDetail.getDestType().equalsIgnoreCase("Stock")) {
+        if (vehicleDetail.getDetails().get(0).getDestType().equalsIgnoreCase("Stock")) {
             Picasso.with(context).load((R.drawable.stock)).into(holder.destinationType);
-        } else if(vehicleDetail.getDestType().equalsIgnoreCase("Site")){
+        } else if(vehicleDetail.getDetails().get(0).getDestType().equalsIgnoreCase("Site")){
 
             Picasso.with(context).load((R.drawable.site_overview)).into(holder.destinationType);
         }

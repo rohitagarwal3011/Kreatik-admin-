@@ -160,6 +160,8 @@ public class LoginActivity extends AppCompatActivity {
         AppUtil.putString(context, TagsPreferences.USER_ID, user_id);
         AppUtil.putString(context,TagsPreferences.PROFILE_IMAGE,profile_image);
 
+        AppUtil.logger("Pic url path : ", profile_image);
+
 
     }
 
@@ -216,7 +218,7 @@ public class LoginActivity extends AppCompatActivity {
                             send_otp.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    dialog.dismiss();
+                                    dialog.hide();
                                     progressBar.setVisibility(View.VISIBLE);
                                     Call<login> call2 = apiServices.verify_otp(user_id, phone.getText().toString(), phone_num);
                                     AppUtil.logger("Login Activity ", "Send Otp : " + call2.request().toString());
@@ -225,22 +227,32 @@ public class LoginActivity extends AppCompatActivity {
                                         public void onResponse(Call<login> call2, Response<login> response) {
 
                                             progressBar.setVisibility(View.GONE);
-                                            dialog.dismiss();
 
-                                            if (response.body().getMeta().getStatus() == 2)
-                                                save_details(response.body().getData().getUsername(), response.body().getData().getMobile(), response.body().getData().getEmail(), response.body().getData().getRole(), response.body().getData().getUser_id(),response.body().getData().getmProfile_image());
+                                            AppUtil.logger("Verify otp stattus : ",String.valueOf(response.body().getMeta().getStatus()));
 
-                                            if (flow.equalsIgnoreCase("registration")) {
-                                                AppUtil.logger(TAG, "Logged in ");
+                                            AppUtil.logger("Verify otp message : ",String.valueOf(response.body().getMeta().getMessage()));
 
-                                                Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-                                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                                startActivity(intent);
-                                                finish();
-                                            } else {
+                                            if (response.body().getMeta().getStatus() == 2) {
+                                                dialog.dismiss();
+                                                save_details(response.body().getData().getUsername(), response.body().getData().getMobile(), response.body().getData().getEmail(), response.body().getData().getRole(), response.body().getData().getUser_id(), response.body().getData().getmProfile_image());
 
-                                                update_password(response.body().getData().getUser_id());
+                                                if (flow.equalsIgnoreCase("registration")) {
+                                                    AppUtil.logger(TAG, "Logged in ");
+
+                                                    Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                                    startActivity(intent);
+                                                    finish();
+                                                } else {
+
+                                                    update_password(response.body().getData().getUser_id());
+                                                }
+                                            }
+                                            else{
+                                                dialog.show();
+                                                phone.setText("");
+                                                AppUtil.showToast(context,"Please enter correct OTP");
                                             }
 
 

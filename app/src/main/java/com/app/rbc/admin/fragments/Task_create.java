@@ -181,7 +181,7 @@ public class Task_create extends Fragment implements DatePickerDialog.OnDateSetL
 //        toolbar = (Toolbar)rootview.findViewById(R.id.toolbar);
 //        toolbar.setTitle("Select Employee ");
 
-        ((TaskActivity)getContext()).setToolbar("Select Employee");
+
 
         unbinder = ButterKnife.bind(this, rootview);
 

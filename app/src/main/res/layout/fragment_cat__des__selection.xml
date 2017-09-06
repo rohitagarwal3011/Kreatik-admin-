@@ -1,0 +1,114 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.app.rbc.admin.fragments.Cat_Des_Selection">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_gravity="center_vertical"
+        android:padding="@dimen/_10sdp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" 
+            android:text="Select Category"
+            android:gravity="center"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_15sdp"
+            android:layout_marginBottom="@dimen/_10sdp"
+            />
+
+        <Spinner
+            android:id="@+id/select_category"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_40sdp"
+            android:layout_marginLeft="@dimen/_15sdp"
+            android:layout_marginRight="@dimen/_15sdp"
+            android:layout_marginBottom="@dimen/_10sdp"
+            android:spinnerMode="dropdown"/>
+        
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Select Source"
+            android:gravity="center"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_15sdp"
+            android:layout_marginBottom="@dimen/_10sdp"
+            />
+
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/radiogroup"
+            android:orientation="horizontal"
+            android:layout_marginBottom="@dimen/_10sdp"
+            android:weightSum="2">
+
+            <RadioButton
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Vendor"
+                android:id="@+id/radio_vendor"
+                android:textColor="@color/black"
+                android:layout_weight="1"
+                />
+
+            <RadioButton
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Site/Stock"
+                android:layout_weight="1"
+                android:checked="true"
+                android:id="@+id/radio_site"
+                android:textColor="@color/black"
+                />
+        </RadioGroup>
+
+        <Spinner
+            android:id="@+id/select_source"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_40sdp"
+            android:layout_marginLeft="@dimen/_15sdp"
+            android:layout_marginRight="@dimen/_15sdp"
+            android:layout_marginBottom="@dimen/_10sdp"
+            android:spinnerMode="dropdown"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Select Destination"
+            android:gravity="center"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_15sdp"
+            android:layout_marginBottom="@dimen/_10sdp"
+            />
+
+        <Spinner
+            android:id="@+id/select_destination"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_40sdp"
+            android:layout_marginLeft="@dimen/_15sdp"
+            android:layout_marginRight="@dimen/_15sdp"
+            android:layout_marginBottom="@dimen/_10sdp"
+            android:spinnerMode="dropdown"/>
+
+
+        <Button
+            android:id="@+id/submit_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_25sdp"
+            android:text="proceed"
+            android:background="@drawable/login_button"/>
+    </LinearLayout>
+    </ScrollView>
+</FrameLayout>

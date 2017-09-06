@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.app.rbc.admin.R;
 import com.app.rbc.admin.activities.AttendanceActivity;
+import com.app.rbc.admin.activities.RequirementActivity;
 import com.app.rbc.admin.activities.StockActivity;
 import com.app.rbc.admin.fragments.Attendance_all;
 import com.app.rbc.admin.fragments.Stock_categories;
@@ -27,6 +28,7 @@ public class Stock_category_adapter  extends RecyclerView.Adapter<Stock_category
 
     private List<StockCategories.CategoryList> data;
     private Context context;
+    private String source_activity;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
@@ -42,8 +44,14 @@ public class Stock_category_adapter  extends RecyclerView.Adapter<Stock_category
                 @Override
                 public void onClick(View v) {
 
-                    final Stock_categories info = (Stock_categories) ((StockActivity) context).getSupportFragmentManager().findFragmentByTag(Stock_categories.TAG);
-                    info.set_product_type(getAdapterPosition());
+                    if(source_activity.equalsIgnoreCase("StockActivity")) {
+                        final Stock_categories info = (Stock_categories) ((StockActivity) context).getSupportFragmentManager().findFragmentByTag(Stock_categories.TAG);
+                        info.set_product_type(data.get(getAdapterPosition()).getCategory());
+                    }
+                    else {
+                        final Stock_categories info = (Stock_categories) ((RequirementActivity) context).getSupportFragmentManager().findFragmentByTag(Stock_categories.TAG);
+                        info.set_product_type(data.get(getAdapterPosition()).getCategory());
+                    }
 
                 }
             });
@@ -52,8 +60,8 @@ public class Stock_category_adapter  extends RecyclerView.Adapter<Stock_category
     }
 
 
-    public Stock_category_adapter(List<StockCategories.CategoryList> data , Context context  ) {
-        this.data = data; this.context = context;
+    public Stock_category_adapter(List<StockCategories.CategoryList> data , Context context ,String source_activity ) {
+        this.data = data; this.context = context;this.source_activity =source_activity;
     }
 
 

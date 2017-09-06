@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    >
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/requirement_card"
+        android:layout_marginTop="@dimen/_15sdp"
+        android:layout_width="match_parent"
+        card_view:cardBackgroundColor="@color/white"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/_5sdp"
+        card_view:cardCornerRadius="@dimen/_7sdp"
+        app:cardElevation="@dimen/_5sdp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/_10sdp"
+            android:paddingRight="@dimen/_10sdp"
+            android:paddingTop="@dimen/_5sdp"
+            android:orientation="vertical">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:orientation="horizontal"
+                >
+
+                <TextView
+                    android:id="@+id/requirement_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="left|center_vertical"
+                    android:paddingBottom="@dimen/_10sdp"
+                    android:text="Requirement Title"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_15sdp" />
+
+                <TextView
+                    android:id="@+id/requirement_site"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="Site A"
+                    android:gravity="right|center_vertical"
+                    android:textSize="@dimen/_15sdp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="visible"
+                android:orientation="horizontal"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Required for : "
+                    android:textStyle="bold"
+                    android:textColor="#c59f63"
+                    android:textSize="@dimen/_12sdp" />
+                <TextView
+                    android:id="@+id/purpose"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="start"
+                    android:text="Foundation"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_12sdp" />
+                </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/_5sdp"
+                android:gravity="center_vertical"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/requirement_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:visibility="visible"
+                    android:textColor="@color/green_complete"
+                    android:textSize="@dimen/_10sdp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:text="Created"
+
+                    />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="right|center_vertical"
+
+                    android:visibility="visible">
+
+                    <ImageView
+                        android:layout_width="@dimen/_20sdp"
+                        android:layout_height="@dimen/_20sdp"
+                        android:src="@drawable/sand_glass_brown"
+                        android:padding="@dimen/_2sdp"
+                        android:layout_gravity="center"/>
+
+                    <TextView
+                        android:id="@+id/created_on"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:text="7th August"
+                        android:textColor="@color/black"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:textSize="@dimen/_12sdp" />
+
+                </LinearLayout>
+            </LinearLayout>
+
+
+
+
+        </LinearLayout>
+
+        </android.support.v7.widget.CardView>
+
+
+
+
+</FrameLayout>

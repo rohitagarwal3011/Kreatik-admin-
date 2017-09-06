@@ -15,9 +15,13 @@ import android.widget.TextView;
 
 import com.app.rbc.admin.R;
 import com.app.rbc.admin.activities.AttendanceActivity;
+import com.app.rbc.admin.activities.RequirementDetailActivity;
+import com.app.rbc.admin.activities.StockActivity;
 import com.app.rbc.admin.activities.TaskActivity;
 import com.app.rbc.admin.fragments.Attendance_all;
 import com.app.rbc.admin.fragments.Employee_list;
+import com.app.rbc.admin.fragments.Requirement_fulfill_task;
+import com.app.rbc.admin.fragments.Stock_po_create_task;
 import com.app.rbc.admin.fragments.Task_create;
 import com.app.rbc.admin.models.Employee;
 import com.facebook.drawee.generic.RoundingParams;
@@ -124,11 +128,21 @@ public class Employee_list_adapter extends RecyclerView.Adapter<Employee_list_ad
             public void onClick(View v) {
                 if(fragment.equalsIgnoreCase(Task_create.TAG)) {
                     final Employee_list info = (Employee_list) ((TaskActivity) context).getSupportFragmentManager().findFragmentByTag(Task_create.TAG);
-                    info.set_employee_id(data.get(position).getUserId());
+                    info.set_employee_id(data.get(position).getUserId(),fragment);
                 }
                 else if(fragment.equalsIgnoreCase(Attendance_all.TAG)||fragment.equalsIgnoreCase("MonthlyList")){
                     final Attendance_all info = (Attendance_all) ((AttendanceActivity) context).getSupportFragmentManager().findFragmentByTag(Attendance_all.TAG);
                     info.set_employee_id(data.get(position).getUserId(),data.get(position).getUserName());
+                }
+                else if(fragment.equalsIgnoreCase(Stock_po_create_task.TAG))
+                {
+                    final Employee_list info = (Employee_list) ((StockActivity) context).getSupportFragmentManager().findFragmentByTag(Stock_po_create_task.TAG);
+                    info.set_employee_id(data.get(position).getUserId(),fragment);
+                }
+                else if(fragment.equalsIgnoreCase(Requirement_fulfill_task.TAG))
+                {
+                    final Employee_list info = (Employee_list) ((RequirementDetailActivity) context).getSupportFragmentManager().findFragmentByTag(Requirement_fulfill_task.TAG);
+                    info.set_employee_id(data.get(position).getUserId(),fragment);
                 }
             }
         });

@@ -1,17 +1,16 @@
 package com.app.rbc.admin.activities;
 
+import android.app.Dialog;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -25,19 +24,25 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import com.app.rbc.admin.R;
 import com.app.rbc.admin.adapters.PO_detail_adapter;
 import com.app.rbc.admin.adapters.Stock_detail_adapter;
-import com.app.rbc.admin.adapters.Stock_product_adapter;
 import com.app.rbc.admin.adapters.Transaction_detail_adapter;
+import com.app.rbc.admin.fragments.Employee_list;
+import com.app.rbc.admin.fragments.Product_selection;
+import com.app.rbc.admin.fragments.Stock_add_po_details;
 import com.app.rbc.admin.fragments.Stock_categories;
+import com.app.rbc.admin.fragments.Stock_po_create_task;
 import com.app.rbc.admin.fragments.Stock_po_details;
-import com.app.rbc.admin.fragments.Stock_products;
+import com.app.rbc.admin.fragments.Vendor_list;
 import com.app.rbc.admin.interfaces.ApiServices;
-import com.app.rbc.admin.models.StockCategories;
-import com.app.rbc.admin.models.StockProductDetails;
+import com.app.rbc.admin.models.StockCategoryDetails;
+import com.app.rbc.admin.models.Vendors;
 import com.app.rbc.admin.utils.AppUtil;
 import com.app.rbc.admin.utils.ChangeFragment;
 import com.app.rbc.admin.utils.RetrofitClient;
@@ -45,8 +50,6 @@ import com.app.rbc.admin.utils.TagsPreferences;
 import com.google.gson.Gson;
 
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -70,6 +73,8 @@ public class StockActivity extends AppCompatActivity {
     FrameLayout frameMain;
     @BindView(R.id.fab)
     FloatingActionButton fab;
+
+     String category_selected ="";
     /**
      * The {@link PagerAdapter} that will provide
      * fragments for each of the sections. We use a
@@ -85,7 +90,7 @@ public class StockActivity extends AppCompatActivity {
      */
     public ViewPager mViewPager;
 
-    StockProductDetails productDetails;
+    StockCategoryDetails productDetails;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,12 +116,59 @@ public class StockActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+
+//                ChangeFragment.changeFragment(getSupportFragmentManager(),R.id.frame_main, Employee_list.newInstance(category_selected,Stock_po_create_task.TAG),Stock_po_create_task.TAG);
+               // ChangeFragment.changeFragment(getSupportFragmentManager(),R.id.frame_main, Product_selection.newInstance(category_selected,Stock_po_create_task.TAG),Stock_po_create_task.TAG);
+                show_dialog();
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
             }
         });
-        changeFragment(getSupportFragmentManager(), R.id.frame_main, new Stock_categories(), Stock_categories.TAG);
+        hide_tablayout();
+        changeFragment(getSupportFragmentManager(), R.id.frame_main, new Stock_categories().newInstance("StockActivity"), Stock_categories.TAG);
     }
+
+    public void show_dialog()
+    {
+        final Dialog dialog = new Dialog(StockActivity.this);
+
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCanceledOnTouchOutside(true);
+        dialog.setCancelable(true);
+        dialog.setContentView(R.layout.dialog_attendance_mark_or_edit);
+        dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+
+        TextView add_po_details = (TextView) dialog.findViewById(R.id.mark_attendance);
+        add_po_details.setText("Add PO details");
+        TextView assign_po_task = (TextView) dialog.findViewById(R.id.modify_attendance);
+        assign_po_task.setText("Assign a PO task");
+
+        add_po_details.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                hide_tablayout();
+                ChangeFragment.changeFragment(getSupportFragmentManager(),R.id.frame_main, Vendor_list.newInstance(category_selected),Stock_add_po_details.TAG);
+
+            }
+        });
+
+        assign_po_task.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                hide_tablayout();
+                ChangeFragment.changeFragment(getSupportFragmentManager(),R.id.frame_main, Employee_list.newInstance(category_selected),Stock_po_create_task.TAG);
+            }
+        });
+
+
+
+        dialog.show();
+    }
+
+
+
 
 
     @Override
@@ -144,36 +196,36 @@ public class StockActivity extends AppCompatActivity {
     SweetAlertDialog pDialog;
 
 
-    public void get_attendance_record(String product) {
+    public void get_product_details(String category) {
         pDialog = new SweetAlertDialog(StockActivity.this, SweetAlertDialog.PROGRESS_TYPE);
         pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
         pDialog.setTitleText("Loading");
         pDialog.setCancelable(false);
         pDialog.show();
-
+        category_selected = category;
 
         final ApiServices apiServices = RetrofitClient.getApiService();
         // AppUtil.logger(TAG, "User id : " + user_id + " Pwd : " + new_password.getText().toString());
-        Call<StockProductDetails> call = apiServices.stock_product_list(product);
+        Call<StockCategoryDetails> call = apiServices.stock_category_list(category);
         //AppUtil.logger("Date :", String.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime())));
-        AppUtil.logger("Attendance Activity ", "Get Attendance for Employee : " + call.request().toString() + "Product :" + product);
-        call.enqueue(new Callback<StockProductDetails>() {
+        AppUtil.logger("Stock Activity ", "Get Product details : " + call.request().toString() + "Category :" + category);
+        call.enqueue(new Callback<StockCategoryDetails>() {
             @Override
-            public void onResponse(Call<StockProductDetails> call, Response<StockProductDetails> response) {
+            public void onResponse(Call<StockCategoryDetails> call, Response<StockCategoryDetails> response) {
                 pDialog.dismiss();
                 if (response.body().getMeta().getStatus() == 2) {
 
 
-                    AppUtil.putString(getApplicationContext(), TagsPreferences.PRODUCT_DETAILS, new Gson().toJson(response.body()));
-                    productDetails = new Gson().fromJson(AppUtil.getString(getApplicationContext(), TagsPreferences.PRODUCT_DETAILS), StockProductDetails.class);
-                    AppUtil.logger("Product Details : ", AppUtil.getString(getApplicationContext(), TagsPreferences.PRODUCT_DETAILS));
+                    AppUtil.putString(getApplicationContext(), TagsPreferences.CATEGORY_DETAILS, new Gson().toJson(response.body()));
+                    productDetails = new Gson().fromJson(AppUtil.getString(getApplicationContext(), TagsPreferences.CATEGORY_DETAILS), StockCategoryDetails.class);
+                    AppUtil.logger("Product Details : ", AppUtil.getString(getApplicationContext(), TagsPreferences.CATEGORY_DETAILS));
                     show_tablayout();
                 }
 
             }
 
             @Override
-            public void onFailure(Call<StockProductDetails> call1, Throwable t) {
+            public void onFailure(Call<StockCategoryDetails> call1, Throwable t) {
 
                 pDialog.dismiss();
 
@@ -188,6 +240,7 @@ public class StockActivity extends AppCompatActivity {
         tabLayout.setVisibility(View.VISIBLE);
         mViewPager.setVisibility(View.VISIBLE);
         frameMain.setVisibility(View.GONE);
+        fab.show();
 
         mViewPager.setAdapter(mSectionsPagerAdapter);
         tabLayout.setupWithViewPager(mViewPager);
@@ -279,7 +332,7 @@ public class StockActivity extends AppCompatActivity {
 
         public void show_stock_details() {
 
-            List<StockProductDetails.StockDetail> stockDetail = new Gson().fromJson(AppUtil.getString(getContext().getApplicationContext(), TagsPreferences.PRODUCT_DETAILS), StockProductDetails.class).getStockDetails();
+            List<StockCategoryDetails.StockDetail> stockDetail = new Gson().fromJson(AppUtil.getString(getContext().getApplicationContext(), TagsPreferences.CATEGORY_DETAILS), StockCategoryDetails.class).getStockDetails();
             recyclerView.setHasFixedSize(true);
             LinearLayoutManager gridLayoutManager = new LinearLayoutManager(getContext());
             gridLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -295,7 +348,7 @@ public class StockActivity extends AppCompatActivity {
         }
 
         public void show_transaction_details() {
-            List<StockProductDetails.TransactionDetail> transactionDetails = new Gson().fromJson(AppUtil.getString(getContext().getApplicationContext(), TagsPreferences.PRODUCT_DETAILS), StockProductDetails.class).getTransactionDetails();
+            List<StockCategoryDetails.TransactionDetail> transactionDetails = new Gson().fromJson(AppUtil.getString(getContext().getApplicationContext(), TagsPreferences.CATEGORY_DETAILS), StockCategoryDetails.class).getTransactionDetails();
             recyclerView.setHasFixedSize(true);
             LinearLayoutManager gridLayoutManager = new LinearLayoutManager(getContext());
             gridLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -310,7 +363,7 @@ public class StockActivity extends AppCompatActivity {
         }
 
         public void show_PO_details() {
-            List<StockProductDetails.PoDetail> poDetails = new Gson().fromJson(AppUtil.getString(getContext().getApplicationContext(), TagsPreferences.PRODUCT_DETAILS), StockProductDetails.class).getPoDetails();
+            List<StockCategoryDetails.PoDetail> poDetails = new Gson().fromJson(AppUtil.getString(getContext().getApplicationContext(), TagsPreferences.CATEGORY_DETAILS), StockCategoryDetails.class).getPoDetails();
             recyclerView.setHasFixedSize(true);
             LinearLayoutManager gridLayoutManager = new LinearLayoutManager(getContext());
             gridLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -322,43 +375,6 @@ public class StockActivity extends AppCompatActivity {
             PO_detail_adapter adapter = new PO_detail_adapter(poDetails,getContext());
             recyclerView.setAdapter(adapter);
             adapter.notifyDataSetChanged();
-        }
-
-        String po_selected;
-
-        public void set_product_type(final String po) throws NullPointerException {
-            po_selected = po;
-
-            ((StockActivity)getActivity()).get_attendance_record("Ambuja Cement");
-            changeFragment(getActivity().getSupportFragmentManager(), R.id.frame_main, new Stock_po_details().newInstance(po_selected), Stock_po_details.TAG);
-
-
-//            new Timer().schedule(
-//                    new TimerTask() {
-//                        @Override
-//                        public void run() {
-//
-//                            getActivity().runOnUiThread(new Runnable() {
-//                                                            @Override
-//                                                            public void run() {
-//
-////                                                            ((TaskActivity)getContext()).setToolbar(toolbar_string);
-////                                                            details_page=true;
-////                                                            selectEmployee.setVisibility(View.GONE);
-////                                                            taskDetailsPage.setVisibility(View.VISIBLE);
-////                                                            getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
-////////stuff that updates ui
-//
-//                                                            }
-//                                                        }
-//
-//                            );
-//
-//                        }
-//                    },
-//                    400
-//            );
-
         }
 
         @Override

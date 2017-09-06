@@ -126,6 +126,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_100sdp"
+                android:id="@+id/module_requirement"
                 android:layout_weight="1"
                 android:background="@color/colorPrimary"
                 android:gravity="center"
@@ -170,6 +171,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_100sdp"
                 android:layout_weight="1"
+                android:id="@+id/module_indents"
                 android:background="@color/colorPrimary"
                 android:gravity="center"
                 android:orientation="vertical">

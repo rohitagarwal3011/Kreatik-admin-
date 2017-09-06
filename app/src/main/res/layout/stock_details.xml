@@ -31,6 +31,12 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:id="@+id/stock_product"
+            android:text="Ambuja Cement"
+            android:textSize="@dimen/_12sdp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:id="@+id/stock_quantity"
             android:text="2000 bags"
             android:textSize="@dimen/_12sdp"/>

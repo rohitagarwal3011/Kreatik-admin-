@@ -19,7 +19,10 @@ public class TagsPreferences {
     public static final String PROFILE_IMAGE = "PROFILE_IMAGE";
     public static final String IS_LOGIN = "IS_LOGIN";
     public static final String STOCK_LIST="STOCK_LIST";
-    public static final String PRODUCT_DETAILS="PRODUCT_DETAILS";
+    public static final String CATEGORY_DETAILS="CATEGORY_DETAILS";
     public static final String PO_DETAILS="PO_DETAILS";
+    public static final String VENDORS_LIST = "VENDORS_LIST";
+    public static final String REQUIREMENT_LIST = "REQUIREMENT_LIST";
+    public static final String SITE_LIST = "SITE_LIST";
 
 }

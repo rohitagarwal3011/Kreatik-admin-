@@ -13,7 +13,7 @@ public class RetrofitClient {
 
     private static Retrofit getRetrofitInstance() {
         return new Retrofit.Builder()
-                .baseUrl("http://plethron.pythonanywhere.com/")
+                .baseUrl("http://plethron.pythonanywhere.com/eagle/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
     }

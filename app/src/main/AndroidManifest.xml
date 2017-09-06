@@ -56,11 +56,10 @@
             </intent-filter>
         </service>
 
-
         <!-- ./Firebase Notifications -->
 
-        <receiver android:name="com.app.rbc.admin.services.DeadlineNotificationService">
-        </receiver>
+        <receiver android:name=".services.DeadlineNotificationService" />
+
         <activity
             android:name=".activities.HomeActivity"
             android:label="@string/title_activity_home"
@@ -117,9 +116,25 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.app.rbc.admin.activities.HomeActivity" />
         </activity>
+
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="b185f59f90f92d9c9937c8887c88e9222dd7aef0" />
+
+        <activity
+            android:name=".activities.RequirementActivity"
+            android:label="@string/title_activity_requirement"
+            android:parentActivityName=".activities.HomeActivity"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.app.rbc.admin.activities.HomeActivity" />
+        </activity>
+        <activity android:name=".activities.RequirementDetailActivity" />
+        <activity
+            android:name=".activities.AddVehicleActivity"
+            android:label="@string/title_activity_add_vehicle"
+            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>

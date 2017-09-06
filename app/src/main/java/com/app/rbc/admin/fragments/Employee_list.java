@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 
 import com.app.rbc.admin.R;
+import com.app.rbc.admin.activities.StockActivity;
 import com.app.rbc.admin.activities.TaskActivity;
 import com.app.rbc.admin.adapters.Employee_list_adapter;
 import com.app.rbc.admin.models.Employee;
@@ -47,11 +48,10 @@ public class Employee_list extends Fragment {
         // Required empty public constructor
     }
 
-    public static Employee_list newInstance(String task_type,String tag) {
+    public static Employee_list newInstance(String task_type) {
         Employee_list fragment = new Employee_list();
         Bundle args = new Bundle();
         args.putString(TASK_TYPE, task_type);
-        args.putString(TAG,tag);
         fragment.setArguments(args);
         return fragment;
     }
@@ -61,18 +61,27 @@ public class Employee_list extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             task_type = getArguments().getString(TASK_TYPE);
-            tag=getArguments().getString(TAG);
+            tag=getTag();
         }
 
+        if(tag.equalsIgnoreCase(Task_create.TAG)){
+        ((TaskActivity)getContext()).setToolbar("Select Employee");
         setHasOptionsMenu(true);
         AppUtil.logger(TAG, "Created");
-        TaskActivity.visible_fragment = "Employee_list";
+        TaskActivity.visible_fragment = "Employee_list";}
+        else if(tag.equalsIgnoreCase(Stock_po_create_task.TAG))
+        {
+
+        }
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        TaskActivity.visible_fragment = "Employee_list";
+        if(tag.equalsIgnoreCase(Task_create.TAG)) {
+            TaskActivity.visible_fragment = "Employee_list";
+            ((TaskActivity) getContext()).setToolbar("Select Employee");
+        }
     }
 
     @Override
@@ -126,7 +135,7 @@ public class Employee_list extends Fragment {
         employee_list_adapter.notifyDataSetChanged();
     }
 
-    public void set_employee_id(String id) throws NullPointerException
+    public void set_employee_id(String id ,final String tag) throws NullPointerException
     {
         user_id_selected=id;
 
@@ -142,8 +151,18 @@ public class Employee_list extends Fragment {
                                                         @Override
                                                         public void run() {
 
-                                                            ChangeFragment.changeFragment(getActivity().getSupportFragmentManager(),R.id.frame_main,Task_create.newInstance(task_type,user_id_selected),Task_create.TAG);
-                                                            getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+                                                            if(tag.equalsIgnoreCase(Task_create.TAG)) {
+                                                                ChangeFragment.changeFragment(getActivity().getSupportFragmentManager(), R.id.frame_main, Task_create.newInstance(task_type, user_id_selected), Task_create.TAG);
+                                                                getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+                                                            }
+                                                            else if(tag.equalsIgnoreCase(Stock_po_create_task.TAG))
+                                                            {
+                                                                ChangeFragment.changeFragment(getActivity().getSupportFragmentManager(), R.id.frame_main, Product_selection.newInstance(task_type,user_id_selected ), Stock_po_create_task.TAG);
+                                                            }
+                                                            else if(tag.equalsIgnoreCase(Requirement_fulfill_task.TAG))
+                                                            {
+                                                                ChangeFragment.changeFragment(getActivity().getSupportFragmentManager(), R.id.frame_main, Product_selection.newInstance(task_type,user_id_selected ), Requirement_fulfill_task.TAG);
+                                                            }
 //stuff that updates ui
 
                                                         }
@@ -157,6 +176,8 @@ public class Employee_list extends Fragment {
         );
 
     }
+
+
 
 
 }

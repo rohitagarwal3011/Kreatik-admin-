@@ -9,12 +9,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.app.rbc.admin.R;
-import com.app.rbc.admin.models.StockProductDetails;
+import com.app.rbc.admin.models.StockCategoryDetails;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
-
-import butterknife.BindView;
 
 /**
  * Created by rohit on 15/7/17.
@@ -24,7 +22,7 @@ public class Transaction_detail_adapter extends RecyclerView.Adapter<Transaction
 
 
 
-    private List<StockProductDetails.TransactionDetail> data;
+    private List<StockCategoryDetails.TransactionDetail> data;
     private Context context;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -32,14 +30,12 @@ public class Transaction_detail_adapter extends RecyclerView.Adapter<Transaction
 
         ImageView sourceType;
         ImageView destinationType;
-        TextView transactionQuantity;
         TextView transactionDate;
         TextView source;
         TextView destination;
 
         public MyViewHolder(View view) {
             super(view);
-            transactionQuantity = (TextView) view.findViewById(R.id.transaction_quantity);
             sourceType = (ImageView) view.findViewById(R.id.source_type);
             transactionDate = (TextView) view.findViewById(R.id.transaction_date);
 
@@ -60,7 +56,7 @@ public class Transaction_detail_adapter extends RecyclerView.Adapter<Transaction
     }
 
 
-    public Transaction_detail_adapter(List<StockProductDetails.TransactionDetail> data, Context context) {
+    public Transaction_detail_adapter(List<StockCategoryDetails.TransactionDetail> data, Context context) {
         this.data = data;
         this.context = context;
     }
@@ -75,14 +71,13 @@ public class Transaction_detail_adapter extends RecyclerView.Adapter<Transaction
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, final int position) {
-        StockProductDetails.TransactionDetail transactionDetail = data.get(position);
-        holder.source.setText(transactionDetail.getSource());
-        holder.destination.setText(transactionDetail.getDestination());
-        holder.transactionQuantity.setText(transactionDetail.getQuantity().toString());
-        holder.transactionDate.setText(transactionDetail.getDispatchDt());
-        if (transactionDetail.getSource_type().equalsIgnoreCase("Stock")) {
+        StockCategoryDetails.TransactionDetail transactionDetail = data.get(position);
+        holder.source.setText(transactionDetail.getDetails().get(0).getSource());
+        holder.destination.setText(transactionDetail.getDetails().get(0).getDestination());
+        holder.transactionDate.setText(transactionDetail.getDetails().get(0).getDispatchDt());
+        if (transactionDetail.getDetails().get(0).getSourceType().equalsIgnoreCase("Stock")) {
             Picasso.with(context).load((R.drawable.stock)).into(holder.sourceType);
-        } else if(transactionDetail.getSource_type().equalsIgnoreCase("Site")){
+        } else if(transactionDetail.getDetails().get(0).getSourceType().equalsIgnoreCase("Site")){
 
             Picasso.with(context).load((R.drawable.site_overview)).into(holder.sourceType);
         }
@@ -90,9 +85,9 @@ public class Transaction_detail_adapter extends RecyclerView.Adapter<Transaction
             Picasso.with(context).load((R.drawable.user)).into(holder.sourceType);
         }
 
-        if (transactionDetail.getDestination_type().equalsIgnoreCase("Stock")) {
+        if (transactionDetail.getDetails().get(0).getDestType().equalsIgnoreCase("Stock")) {
             Picasso.with(context).load((R.drawable.stock)).into(holder.destinationType);
-        } else if(transactionDetail.getDestination_type().equalsIgnoreCase("Site")){
+        } else if(transactionDetail.getDetails().get(0).getDestType().equalsIgnoreCase("Site")){
 
             Picasso.with(context).load((R.drawable.site_overview)).into(holder.destinationType);
         }

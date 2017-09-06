@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/ripple_effect"
+    android:padding="@dimen/_15sdp">
+
+    <TextView
+        android:id="@+id/vendor_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_20sdp"
+        android:text="Bihani Traders"
+        />
+    <TextView
+        android:id="@+id/vendor_address"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/_15sdp"
+        android:text="Cooch Behar"/>
+</LinearLayout>

@@ -2,17 +2,23 @@ package com.app.rbc.admin.interfaces;
 
 
 
-import com.app.rbc.admin.fragments.Stock_categories;
+import com.app.rbc.admin.activities.RequirementDetailActivity;
+import com.app.rbc.admin.models.AllSiteList;
+import com.app.rbc.admin.models.CatDesRequirementList;
 import com.app.rbc.admin.models.DatewiseAttendance;
 import com.app.rbc.admin.models.Employee;
 import com.app.rbc.admin.models.EmployeewiseAttendance;
 import com.app.rbc.admin.models.Otp;
+import com.app.rbc.admin.models.RequirementDetails;
+import com.app.rbc.admin.models.RequirementList;
 import com.app.rbc.admin.models.StockCategories;
+import com.app.rbc.admin.models.StockListProductWise;
 import com.app.rbc.admin.models.StockPoDetails;
-import com.app.rbc.admin.models.StockProductDetails;
+import com.app.rbc.admin.models.StockCategoryDetails;
 import com.app.rbc.admin.models.Tasklogs;
 import com.app.rbc.admin.models.TodaysAbsentees;
 import com.app.rbc.admin.models.Todolist;
+import com.app.rbc.admin.models.Vendors;
 import com.app.rbc.admin.models.login;
 
 import org.json.JSONArray;
@@ -128,14 +134,74 @@ public interface ApiServices {
 
     /*Fetch Stock Products*/
     @FormUrlEncoded
-    @POST("stock_product_list/")
-    Call<StockProductDetails> stock_product_list(@Field("product") String product);
+    @POST("stock_category_list/")
+    Call<StockCategoryDetails> stock_category_list(@Field("category") String category);
 
 
     /*Fetch PO Details*/
     @FormUrlEncoded
     @POST("po_details/")
-    Call<StockPoDetails> po_details(@Field("po_num") String po_number);
+    Call<StockPoDetails> po_details(@Field("po_id") String po_number);
+
+    /*Create a task to create PO*/
+    @FormUrlEncoded
+    @POST("assign_po_task/")
+    Call<ResponseBody> assign_po_task(@Field("to_user") String to_user, @Field("from_user") String from_user,@Field("category") String category,@Field("prod_list") JSONArray prod_list , @Field("deadline") String deadline);
+
+
+    /*Add PO details*/
+    @FormUrlEncoded
+    @POST("add_po_detail/")
+    Call<ResponseBody> add_po_detail(@Field("title") String title, @Field("from_user") String from_user,@Field("pay_mode") String pay_mode,@Field("price") int price , @Field("vendor_id") String vendor_id, @Field("category") String category , @Field("rem_qty") int rem_qty , @Field("prod_list") JSONArray product_list);
+
+
+    /*Fetch stock categories*/
+    @GET("total_vendor_list")
+    Call<Vendors> total_vendor_list();
+
+    /*Create a requriement*/
+    @FormUrlEncoded
+    @POST("create_req/")
+    Call<ResponseBody> create_req(@Field("title") String title, @Field("raised_by") String from_user,@Field("purpose") String purpose, @Field("site") String site_id, @Field("category") String category ,  @Field("prod_list") JSONArray product_list);
+
+    /*Fetch Category Requirements*/
+    @FormUrlEncoded
+    @POST("req_list/")
+    Call<RequirementList> category_requirement_list(@Field("category") String category);
+
+
+    /*Fetch Requirement Details*/
+    @FormUrlEncoded
+    @POST("req_details/")
+    Call<RequirementDetails> req_details(@Field("rq_id") String req_id);
+
+    /*Fetch Product Wise Stock*/
+    @FormUrlEncoded
+    @POST("prod_wise_stock/")
+    Call<StockListProductWise> prod_wise_stock(@Field("productlist") JSONArray product_list);
+
+
+    /*Create a task to create PO*/
+    @FormUrlEncoded
+    @POST("fulfill_req/")
+    Call<ResponseBody> fulfill_req(@Field("rq_id") String rq_id,@Field("for_site") String for_site,@Field("from_site") String from_site,@Field("to_user") String to_user, @Field("from_user") String from_user,@Field("category") String category,@Field("prod_list") JSONArray prod_list ,@Field("comment") String comment, @Field("deadline") String deadline);
+
+    /*Fetch Category and Site Specific Requirements*/
+    @FormUrlEncoded
+    @POST("prod_req_list/")
+    Call<CatDesRequirementList> prod_req_list(@Field("destination") String destination ,@Field("category") String category);
+
+    /*Fetch stock categories*/
+    @GET("all_site_list")
+    Call<AllSiteList> all_site_list();
+
+
+    /*Create a task to create PO*/
+    @FormUrlEncoded
+    @POST("add_vehicle_info/")
+    Call<ResponseBody> add_vehicle_info(@Field("rq_id") String rq_id,@Field("destination") String destination,@Field("source") String source, @Field("parent_id") String parent_id,@Field("category") String category,@Field("prod_list") JSONArray prod_list ,@Field("vehicle_number") String vehicle_number, @Field("driver") String driver,@Field("challan") String challan);
+
+
 
 
 //

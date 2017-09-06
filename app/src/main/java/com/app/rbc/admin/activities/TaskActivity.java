@@ -115,7 +115,7 @@ public class TaskActivity extends AppCompatActivity implements Task_home.OnTaskT
     @Override
     public void OnTaskSelected(String type) {
 
-        ChangeFragment.changeFragment(getSupportFragmentManager(),R.id.frame_main, Employee_list.newInstance(type,Task_create.TAG),Task_create.TAG);
+        ChangeFragment.changeFragment(getSupportFragmentManager(),R.id.frame_main, Employee_list.newInstance(type),Task_create.TAG);
 //        task_create = new Task_create();
 //        Bundle args = new Bundle();
 //        task_create = task_create.newInstance(type,Task_create.TAG);
@@ -286,6 +286,7 @@ public class TaskActivity extends AppCompatActivity implements Task_home.OnTaskT
         else  if(visible_fragment.equalsIgnoreCase("Task_create"))
         {
             visible_fragment="Employee_list";
+            setToolbar("Select Employee");
             super.onBackPressed();
         }
 

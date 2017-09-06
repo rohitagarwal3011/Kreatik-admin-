@@ -13,10 +13,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.app.rbc.admin.R;
-import com.app.rbc.admin.app.AppController;
 import com.app.rbc.admin.interfaces.ApiServices;
 import com.app.rbc.admin.models.Employee;
 import com.app.rbc.admin.models.Todolist;
@@ -28,9 +26,19 @@ import com.crashlytics.android.Crashlytics;
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -53,6 +61,8 @@ public class HomeActivity extends AppCompatActivity
     LinearLayout moduleChat;
 
     DeadlineNotificationService alarm;
+    @BindView(R.id.module_requirement)
+    LinearLayout moduleRequirement;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +70,7 @@ public class HomeActivity extends AppCompatActivity
 
         setContentView(R.layout.activity_home);
         ButterKnife.bind(this);
-        alarm= new DeadlineNotificationService();
+        alarm = new DeadlineNotificationService();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("R. B. Corporation");
@@ -134,51 +144,29 @@ public class HomeActivity extends AppCompatActivity
 
     }
 
+
+    //Open requirement module
+    @OnClick(R.id.module_requirement)
+    public void open_requirement_module(View view) {
+
+        Intent intent = new Intent(HomeActivity.this, RequirementActivity.class);
+        startActivity(intent);
+
+    }
+
+
     @OnClick(R.id.module_chat)
-    public void open_chat(View view)
-    {
-//        Context context = this.getApplicationContext();
-//        if(alarm != null){
-//            alarm.setOnetimeTimer(context);
-//        }else{
-//            Toast.makeText(context, "Alarm is null", Toast.LENGTH_SHORT).show();
-//        }
+    public void open_chat(View view) {
+
+        Intent intent = new Intent(HomeActivity.this, AddVehicleActivity.class);
+        startActivity(intent);
+
     }
 //
 //    @OnClick(R.id.delete_task)
 //    public void delete_task(View view)
 //    {
-//        final ApiServices apiServices = RetrofitClient.getApiService();
-//       // AppUtil.logger(TAG, "User id : " + user_id + " Pwd : " + new_password.getText().toString());
-//        Call<ResponseBody> call = apiServices.delete_task("RO2323","TD_99");
-//        AppUtil.logger("Login Activity ", "Update Password : " + call.request().toString());
-//        call.enqueue(new Callback<ResponseBody>() {
-//            @Override
-//            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
 //
-//                try {
-//
-//                    try {
-//                        JSONObject obj = new JSONObject(response.body().string());
-//                        AppUtil.logger("Delete Task response : ", obj.toString());
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                    }
-//
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                }
-//
-//
-//            }
-//
-//
-//            @Override
-//            public void onFailure(Call<ResponseBody> call1, Throwable t) {
-//
-//                AppUtil.showToast(context, "Network Issue. Please check your connectivity and try again");
-//            }
-//        });
 //    }
 
 

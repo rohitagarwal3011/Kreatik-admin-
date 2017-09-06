@@ -17,8 +17,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.app.rbc.admin.R;
-import com.app.rbc.admin.adapters.PO_vehicle_detail_adapter;
-import com.app.rbc.admin.adapters.Stock_category_adapter;
+import com.app.rbc.admin.adapters.Vehicle_detail_adapter;
 import com.app.rbc.admin.interfaces.ApiServices;
 import com.app.rbc.admin.models.StockPoDetails;
 import com.app.rbc.admin.utils.AppUtil;
@@ -27,8 +26,6 @@ import com.app.rbc.admin.utils.TagsPreferences;
 import com.facebook.drawee.generic.RoundingParams;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.gson.Gson;
-
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -133,7 +130,7 @@ public class Stock_po_details extends Fragment {
         // AppUtil.logger(TAG, "User id : " + user_id + " Pwd : " + new_password.getText().toString());
         Call<StockPoDetails> call = apiServices.po_details(po_number);
         //AppUtil.logger("Date :", String.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime())));
-        AppUtil.logger("Stock PO details ", "Get PO details : " + call.request().toString());
+        AppUtil.logger("Stock PO details ", "Get PO details : " + call.request().toString() + "PO_ID : "+po_number);
         call.enqueue(new Callback<StockPoDetails>() {
             @Override
             public void onResponse(Call<StockPoDetails> call, Response<StockPoDetails> response) {
@@ -142,7 +139,7 @@ public class Stock_po_details extends Fragment {
 
 
                     AppUtil.putString(getContext().getApplicationContext(), TagsPreferences.PO_DETAILS, new Gson().toJson(response.body()));
-                    stockPoDetails = new Gson().fromJson(AppUtil.getString(getContext().getApplicationContext(), TagsPreferences.PO_DETAILS), StockPoDetails.class);
+                    stockPoDetails = new Gson().fromJson(AppUtil.getString(getContext(),TagsPreferences.PO_DETAILS), StockPoDetails.class);
                     AppUtil.logger("PO Details : ", AppUtil.getString(getContext().getApplicationContext(), TagsPreferences.PO_DETAILS));
                     set_data();
 
@@ -180,15 +177,16 @@ public class Stock_po_details extends Fragment {
     private void set_po_details() {
 
         StockPoDetails.PoDetail poDetail = stockPoDetails.getPoDetails().get(0);
-        String[] user = AppUtil.get_employee_from_user_id(getContext(),poDetail.getCreatedBy());
+        String[] user = AppUtil.get_employee_from_user_id(getContext(),poDetail.getDetails().get(0).getCreatedBy());
+        AppUtil.logger("User Details : ",poDetail.getDetails().get(0).getCreatedBy());
         show_profile_pic(user);
         employeeName.setText(user[0]);
         role.setText(user[2]);
-        PODate.setText(poDetail.getCreationDt());
-        POQuantity.setText(poDetail.getQuantity().toString());
-        POAmount.setText(poDetail.getPrice().toString());
-        POPayMode.setText(poDetail.getPayMode());
-        POStatus.setText(poDetail.getStatus());
+        PODate.setText(poDetail.getDetails().get(0).getCreationDt());
+       // POQuantity.setText(poDetail.getDetails().get(0)..toString());
+        POAmount.setText(poDetail.getDetails().get(0).getPrice().toString());
+        POPayMode.setText(poDetail.getDetails().get(0).getPayMode());
+        POStatus.setText(poDetail.getDetails().get(0).getStatus());
 
     }
 
@@ -222,7 +220,7 @@ public class Stock_po_details extends Fragment {
         vehicleInfo.setItemAnimator(new DefaultItemAnimator());
         vehicleInfo.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
 
-        PO_vehicle_detail_adapter adapter = new PO_vehicle_detail_adapter(stockPoDetails.getVehicleDetails(),getContext());
+        Vehicle_detail_adapter adapter = new Vehicle_detail_adapter(stockPoDetails.getVehicleDetails(),getContext());
         vehicleInfo.setAdapter(adapter);
         adapter.notifyDataSetChanged();
     }
