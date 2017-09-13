@@ -71,7 +71,14 @@
             android:label="@string/title_activity_task"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
-            android:windowSoftInputMode="stateHidden|adjustResize" />
+            android:windowSoftInputMode="stateHidden|adjustResize">
+
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/task_searchable" />
+
+
+        </activity>
 
         <provider
             android:name="android.support.v4.content.FileProvider"

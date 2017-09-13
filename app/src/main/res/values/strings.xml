@@ -22,4 +22,13 @@
     <string name="section_format">Hello World from section: %1$d</string>
     <string name="title_activity_requirement">Requirements</string>
     <string name="title_activity_add_vehicle">AddVehicleActivity</string>
+    <string name="status">Status</string>
+
+    <string-array name="task_status_filter">
+        <item>All</item>
+        <item>Created</item>
+        <item>In Progress</item>
+        <item>Check for Completion</item>
+        <item>Delayed</item>
+    </string-array>
 </resources>
