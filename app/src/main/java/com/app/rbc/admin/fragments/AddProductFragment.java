@@ -41,7 +41,9 @@ public class AddProductFragment extends Fragment implements View.OnClickListener
     private EditText product_name;
     private Categoryproduct categoryproduct;
     private SweetAlertDialog sweetAlertDialog;
-    private EditText category_title;
+    private EditText product_unit,product_category;
+    private Button update_category;
+    private Categoryproduct editProduct;
     final GestureDetector mGestureDetector = new GestureDetector(getContext(),
             new GestureDetector.SimpleOnGestureListener() {
 
@@ -58,7 +60,6 @@ public class AddProductFragment extends Fragment implements View.OnClickListener
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_add_product, container, false);
         ((IndentRegisterActivity)getActivity()).getSupportActionBar().setTitle(category);
         initializeUI();
@@ -72,17 +73,27 @@ public class AddProductFragment extends Fragment implements View.OnClickListener
     }
 
     private void initializeUI() {
-        category_title = (EditText) view.findViewById(R.id.category_title);
-        category_title.setText(category);
+
+        Categoryproduct categoryproduct = Categoryproduct.find(Categoryproduct.class,
+                "category = ?",category).get(0);
+        product_category = (EditText) view.findViewById(R.id.product_category);
+        product_unit = (EditText) view.findViewById(R.id.product_unit);
         recyclerView =  (RecyclerView) view.findViewById(R.id.recycler_view);
+        update_category = (Button) view.findViewById(R.id.update_category);
+        product_category.setText(categoryproduct.getCategory());
+        product_unit.setText(categoryproduct.getUnit());
+
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
+
+
         products = Categoryproduct.find(Categoryproduct.class,"category = ?",this.category);
         setRecyclerView(products);
 
         fab = (FloatingActionButton) view.findViewById(R.id.fab);
         fab.setOnClickListener(this);
+        update_category.setOnClickListener(this);
     }
 
 
@@ -128,6 +139,8 @@ public class AddProductFragment extends Fragment implements View.OnClickListener
             case R.id.fab:
                 setAddProductDialog();
                 break;
+            case R.id.update_category :
+                calUpdateCategoryAPI(93);
         }
     }
 
@@ -159,42 +172,57 @@ public class AddProductFragment extends Fragment implements View.OnClickListener
             });
         }
         else {
-            dialogView = getActivity().getLayoutInflater().inflate(R.layout.custom_dialog_add_category_poduct,
+            dialogView = getActivity().getLayoutInflater().inflate(R.layout.custom_dialog_add_product,
                     null);
-            TextView form_title = (TextView) dialogView.findViewById(R.id.form_title);
-            EditText category_name = (EditText) dialogView.findViewById(R.id.category_name);
-            EditText product_name = (EditText) dialogView.findViewById(R.id.product_name);
+
+            product_name = (EditText) dialogView.findViewById(R.id.product_name);
+            form_title = (TextView) dialogView.findViewById(R.id.form_title);
             Button save = (Button) dialogView.findViewById(R.id.save);
 
 
-            Categoryproduct editProduct = Categoryproduct.findById(Categoryproduct.class,(long)data[0]);
+            editProduct = Categoryproduct.findById(Categoryproduct.class,(long)data[0]);
 
 
             form_title.setText("Edit "+editProduct.getProduct());
             product_name.setText(editProduct.getProduct());
-            category_name.setText(editProduct.getCategory());
+
+
+            save.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    validateProductForm(92);
+                }
+            });
+
         }
         return dialogView;
     }
 
     private void validateProductForm(int code) {
-        error.setText("");
         int validate = 1;
         if(product_name.getText().toString().equals("") || product_name.getText().toString().length() < 5) {
             validate = 0;
-            error.setText("Product name must be atleast 5 character");
+            product_name.setError("Product name must be atleast 5 character");
+            product_name.requestFocus();
         }
 
         if(validate == 1) {
             addProductDialog.dismiss();
-            callAddCategoryProductAAPI(code);
+            if(code == 90) {
+
+                callAddCategoryProductAAPI(code);
+            }
+            else if(code == 92){
+                callUpdateCategoryProductAAPI(code);
+            }
         }
     }
 
     private void callAddCategoryProductAAPI(int code) {
         categoryproduct = new Categoryproduct();
-        categoryproduct.setCategory(this.category);
+        categoryproduct.setCategory(product_category.getText().toString());
         categoryproduct.setProduct(product_name.getText().toString());
+        categoryproduct.setUnit(product_unit.getText().toString());
 
         sweetAlertDialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.PROGRESS_TYPE);
         sweetAlertDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
@@ -206,11 +234,56 @@ public class AddProductFragment extends Fragment implements View.OnClickListener
         controller.addCategoryProduct(categoryproduct);
     }
 
+
+    private void callUpdateCategoryProductAAPI(int code) {
+
+
+        String old_prod = editProduct.getProduct();
+        editProduct.setCategory(this.category);
+        editProduct.setProduct(product_name.getText().toString());
+
+        sweetAlertDialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.PROGRESS_TYPE);
+        sweetAlertDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+        sweetAlertDialog.setTitleText("Processing");
+        sweetAlertDialog.setCancelable(false);
+        sweetAlertDialog.show();
+
+        APIController controller = new APIController(getContext(),code);
+        controller.updateProduct(editProduct,old_prod);
+    }
+
+    private void calUpdateCategoryAPI(int code) {
+
+        sweetAlertDialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.PROGRESS_TYPE);
+        sweetAlertDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+        sweetAlertDialog.setTitleText("Processing");
+        sweetAlertDialog.setCancelable(false);
+        sweetAlertDialog.show();
+
+        APIController controller = new APIController(getContext(),code);
+        controller.updateCategory(category,product_category.getText().toString(),
+                product_unit.getText().toString());
+    }
+
     public void publishAPIResponse(int status,int code,String... message) {
         sweetAlertDialog.dismiss();
         switch(status) {
             case 2:
-                adapter.refreshAdapter(Categoryproduct.find(Categoryproduct.class,"category = ?",this.category));
+                if(code == 90) {
+                    categoryproduct.save();
+                    adapter.refreshAdapter(Categoryproduct.find(Categoryproduct.class,"category = ?",this.category));
+                }
+                else if(code == 92) {
+                    editProduct.save();
+                    adapter.refreshAdapter(Categoryproduct.find(Categoryproduct.class,"category = ?",this.category));
+                }
+                else if(code == 93) {
+                    APIController controller = new APIController(getContext(),51);
+                    controller.fetchCategoriesProducts();
+
+                    ((IndentRegisterActivity)getActivity()).popBackStack();
+                }
+
                 break;
             case 1 :
                 addProductDialog.show();

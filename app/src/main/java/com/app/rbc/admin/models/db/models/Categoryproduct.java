@@ -23,6 +23,10 @@ public class Categoryproduct extends SugarRecord{
     @Expose
     private String product;
 
+    @SerializedName("unit")
+    @Expose
+    private String unit;
+
     public String getCategory() {
         return category;
     }
@@ -37,5 +41,13 @@ public class Categoryproduct extends SugarRecord{
 
     public void setProduct(String product) {
         this.product = product;
+    }
+
+    public String getUnit() {
+        return unit;
+    }
+
+    public void setUnit(String unit) {
+        this.unit = unit;
     }
 }

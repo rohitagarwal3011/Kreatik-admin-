@@ -23,6 +23,14 @@ public class Site extends SugarRecord{
     @Expose
     private String type;
 
+    @SerializedName("location")
+    @Expose
+    private String location;
+
+    @SerializedName("site_incharge")
+    @Expose
+    private String incharge;
+
     public String getName() {
         return name;
     }
@@ -38,4 +46,21 @@ public class Site extends SugarRecord{
     public void setType(String type) {
         this.type = type;
     }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public String getIncharge() {
+        return incharge;
+    }
+
+    public void setIncharge(String incharge) {
+        this.incharge = incharge;
+    }
+
 }

@@ -11,6 +11,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.app.rbc.admin.Manifest;
@@ -21,14 +22,16 @@ import com.app.rbc.admin.fragments.AddSiteFragment;
 import com.app.rbc.admin.fragments.AddVendorFragment;
 import com.app.rbc.admin.fragments.CategoriesProductFragment;
 import com.app.rbc.admin.fragments.EmployeesFragment;
+import com.app.rbc.admin.fragments.MyDetailsFragment;
 import com.app.rbc.admin.fragments.SettingsFragment;
 import com.app.rbc.admin.fragments.SitesFragment;
 import com.app.rbc.admin.fragments.VendorsFragment;
+import com.app.rbc.admin.utils.AppUtil;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.orm.SugarContext;
 
 public class IndentRegisterActivity extends AppCompatActivity {
-
+    private MyDetailsFragment myDetailsFragment;
     private AddEmployeeFragment addEmployeeFragment;
     private AddSiteFragment addSiteFragment;
     private AddVendorFragment addVendorFragment;
@@ -60,6 +63,12 @@ public class IndentRegisterActivity extends AppCompatActivity {
                     fm.beginTransaction()
                     .replace(R.id.fragment_container, new SettingsFragment())
                     .commit();
+                break;
+            case 1 :
+                myDetailsFragment = new MyDetailsFragment();
+                fm.beginTransaction()
+                        .replace(R.id.fragment_container, myDetailsFragment).addToBackStack(null)
+                        .commit();
                 break;
             case 2 :
                 employeesFragment = new EmployeesFragment();
@@ -113,6 +122,26 @@ public class IndentRegisterActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId())
+        {
+            case android.R.id.home :
+                onBackPressed();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+    }
+
     public void popBackStack() {
         getSupportFragmentManager().popBackStackImmediate();
     }
@@ -164,6 +193,9 @@ public class IndentRegisterActivity extends AppCompatActivity {
 
     public void publishAPIResponse(int status,int code,String... message) {
         switch (code) {
+            case 12:
+                myDetailsFragment.publishAPIResponse(status,code,message[0]);
+                break;
             case 20 :
                 employeesFragment.publishAPIResponse(status,code,message[0]);
                 break;
@@ -178,16 +210,22 @@ public class IndentRegisterActivity extends AppCompatActivity {
                 categoriesProductFragment.publishAPIResponse(status,code,message[0]);
                 break;
             case 60 :
-            case 61: addEmployeeFragment.publishAPIResponse(status,code,message[0]);
+            case 61:
+            case 62:
+                addEmployeeFragment.publishAPIResponse(status,code,message[0]);
                 break;
             case 70:
             case 71:
+            case 72:
                 addSiteFragment.publishAPIResponse(status,code,message[0]);
             case 80:
             case 81:
+            case 82:
                 addVendorFragment.publishAPIResponse(status,code,message[0]);
                 break;
             case 90:
+            case 92:
+            case 93:
                 addProductFragment.publishAPIResponse(status,code,message[0]);
 
 

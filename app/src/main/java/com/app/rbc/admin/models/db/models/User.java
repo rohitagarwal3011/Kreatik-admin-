@@ -16,6 +16,7 @@ public class User {
     private int file_present; // 1 : image present  , 0; not
     private String myfile;
     private String admin_user_id;
+    private String user_id;
 
     public String getName() {
         return name;
@@ -71,5 +72,13 @@ public class User {
 
     public void setAdmin_user_id(String admin_user_id) {
         this.admin_user_id = admin_user_id;
+    }
+
+    public String getUser_id() {
+        return user_id;
+    }
+
+    public void setUser_id(String user_id) {
+        this.user_id = user_id;
     }
 }

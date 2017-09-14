@@ -27,10 +27,31 @@ public interface APIInterface {
                          @Part("file_present") RequestBody file_present,
                          @Part MultipartBody.Part myfile,
                          @Part("admin_user_id") RequestBody admin_user_id);
+
+    @Multipart
+    @POST("update_user/")
+    Call<String> updateUser(@Part("name") String name,
+                         @Part("email") String email,
+                         @Part("user_id") String user_id,
+                         @Part("role") String role,
+                         @Part("file_present") String file_present,
+                         @Part MultipartBody.Part myfile);
+
     @FormUrlEncoded
     @POST("add_all_sites/")
     Call<String> addSite(@Field("name") String name,
-                         @Field("type") String type);
+                         @Field("type") String type,
+                         @Field("location") String location,
+                         @Field("site_incharge") String site_incharge);
+
+    @FormUrlEncoded
+    @POST("update_site/")
+    Call<String> updateSite(@Field("name") String name,
+                         @Field("type") String type,
+                         @Field("location") String location,
+                         @Field("site_incharge") String site_incharge,
+                            @Field("id") long id);
+
 
     @FormUrlEncoded
     @POST("add_vendor/")
@@ -39,9 +60,30 @@ public interface APIInterface {
                            @Field("phone") String phone);
 
     @FormUrlEncoded
+    @POST("update_vendor/")
+    Call<String> updateVendor(@Field("name") String name,
+                           @Field("address") String address,
+                           @Field("phone") String phone,
+                              @Field("vendor_id") String vendor_id);
+
+    @FormUrlEncoded
     @POST("add_category/")
     Call<String> addCategoryProduct(@Field("category") String category,
-                                    @Field("product") String product);
+                                    @Field("product") String product,
+                                    @Field("unit") String unit);
+
+    @FormUrlEncoded
+    @POST("update_category/")
+    Call<String> updateCategory(@Field("old_cat") String old_cat,
+                                    @Field("new_cat") String new_cat,
+                                @Field("unit") String unit);
+
+    @FormUrlEncoded
+    @POST("update_product/")
+    Call<String> updateProdut(@Field("category") String category,
+                                @Field("old_prod") String old_prod,
+                                @Field("new_prod") String new_prod);
+
 
     @FormUrlEncoded
     @POST("fetch_emp/")

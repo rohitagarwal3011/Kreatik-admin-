@@ -27,6 +27,7 @@ public class AddVendorFragment extends Fragment implements View.OnClickListener{
 
     private static boolean edit = false;
     private static long editId;
+    private Vendor editVendor;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -60,10 +61,17 @@ public class AddVendorFragment extends Fragment implements View.OnClickListener{
         save_add_another.setOnClickListener(this);
 
         if(edit == true) {
-            Vendor vendor = Vendor.findById(Vendor.class,editId);
-            vendor_name.setText(vendor.getName());
-            vendor_address.setText(vendor.getAddress());
-            vendor_phone.setText(vendor.getPhone());
+            editVendor = Vendor.findById(Vendor.class,editId);
+            vendor_name.setText(editVendor.getName());
+            vendor_address.setText(editVendor.getAddress());
+            vendor_phone.setText(editVendor.getPhone());
+
+            TextView title_or = (TextView) view.findViewById(R.id.title_or);
+            title_or.setText("");
+            ViewGroup.LayoutParams params = save_add_another.getLayoutParams();
+            params.height = 0;
+            save_add_another.setLayoutParams(params);
+
         }
     }
 
@@ -75,6 +83,9 @@ public class AddVendorFragment extends Fragment implements View.OnClickListener{
             case R.id.save:
                 if(edit != true) {
                     validateVendorAddForm(80);
+                }
+                else {
+                    validateVendorAddForm(82);
                 }
                 break;
             case R.id.save_add_another:
@@ -89,20 +100,29 @@ public class AddVendorFragment extends Fragment implements View.OnClickListener{
         error.setText("");
         int validate = 1;
         if(vendor_name.getText().toString().equals("") || vendor_name.getText().toString().length() < 5) {
-            error.setText(error.getText()+"\nName must be atleast 5 characters");
+            vendor_name.setError("Name must be atleast 5 characters");
+            vendor_name.requestFocus();
             validate = 0;
         }
         if(vendor_address.getText().toString().equals("") || vendor_address.getText().toString().length() < 5) {
             validate = 0;
-            error.setText(error.getText()+"\nEnter the full address");
+            vendor_address.setError("Enter the full address");
+            vendor_address.requestFocus();
         }
         if(vendor_phone.getText().toString().length() < 10 || vendor_phone.getText().toString().length() > 10 ||
                 vendor_phone.getText().equals("")) {
-            error.setText(error.getText()+"\nEnter a valid phone number");
+            vendor_phone.setError("Enter a valid phone number");
+            vendor_phone.requestFocus();
             validate = 0;
         }
         if(validate == 1) {
-            callVendorAddAPI(code);
+            if(edit != true) {
+                callVendorAddAPI(code);
+            }
+            else {
+                callVendorUpdateAPI(code);
+            }
+
         }
     }
 
@@ -121,6 +141,21 @@ public class AddVendorFragment extends Fragment implements View.OnClickListener{
 
         APIController controller = new APIController(getContext(),code);
         controller.addVendor(vendor);
+    }
+
+    private void callVendorUpdateAPI(int code) {
+        editVendor.setName(vendor_name.getText().toString());
+        editVendor.setAddress(vendor_address.getText().toString());
+        editVendor.setPhone(vendor_phone.getText().toString());
+
+        sweetAlertDialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.PROGRESS_TYPE);
+        sweetAlertDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+        sweetAlertDialog.setTitleText("Processing");
+        sweetAlertDialog.setCancelable(false);
+        sweetAlertDialog.show();
+
+        APIController controller = new APIController(getContext(),code);
+        controller.updateVendor(editVendor);
     }
 
     private void refreshUI() {
@@ -161,6 +196,10 @@ public class AddVendorFragment extends Fragment implements View.OnClickListener{
                 }
                 else if(code == 80){
                     callVendorsFetchApi();
+                    ((IndentRegisterActivity)getActivity()).popBackStack();
+                }
+                else if(code == 82) {
+                    editVendor.save();
                     ((IndentRegisterActivity)getActivity()).popBackStack();
                 }
                 break;

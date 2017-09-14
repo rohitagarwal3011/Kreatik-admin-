@@ -65,12 +65,36 @@
             android:textSize="14sp"
             android:hint="Product Name"
             android:id="@+id/product_name"/>
+        <TextView
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/form_product_title"
+            android:padding="15dp"
+            android:textSize="14sp"
+            android:id="@+id/form_unit_title"
+            android:background="@drawable/round_edittext_light"
+            android:text="Unit"
+            android:textColor="@color/dark_background"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/form_unit_title"
+            android:layout_below="@+id/product_name"
+            android:background="@drawable/round_edittext_light"
+            android:padding="15dp"
+            android:imeOptions="actionNext"
+            android:singleLine="true"
+            android:maxLines="1"
+            android:textSize="14sp"
+            android:hint="Unit"
+            android:id="@+id/category_unit"/>
 
         <Button
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:background="@color/colorPrimary"
-            android:layout_below="@id/form_product_title"
+            android:layout_below="@id/form_unit_title"
             android:layout_marginTop="25dp"
             android:layout_marginBottom="10dp"
             android:layout_marginLeft="15dp"

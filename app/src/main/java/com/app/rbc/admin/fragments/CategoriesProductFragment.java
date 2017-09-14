@@ -41,7 +41,7 @@ public class CategoriesProductFragment extends Fragment implements View.OnClickL
     private RecyclerView recyclerView;
     private List<String> categories;
     private FloatingActionButton fab;
-    private EditText category_name,product_name;
+    private EditText category_name,product_name,category_unit;
     private TextView error;
     private Dialog addCategoryProductDialog;
     private SweetAlertDialog sweetAlertDialog;
@@ -157,6 +157,9 @@ public class CategoriesProductFragment extends Fragment implements View.OnClickL
                 null);
         category_name = (EditText) dialogView.findViewById(R.id.category_name);
         product_name =(EditText) dialogView.findViewById(R.id.product_name);
+        category_unit = (EditText) dialogView.findViewById(R.id.category_unit);
+
+
         error = (TextView) dialogView.findViewById(R.id.error);
         Button save = (Button) dialogView.findViewById(R.id.save);
 
@@ -181,6 +184,10 @@ public class CategoriesProductFragment extends Fragment implements View.OnClickL
             validate = 0;
             error.setText(error.getText()+"\nProduct name must be atleast 3 characters");
         }
+        if(product_name.getText().toString().equals("")) {
+            validate = 0;
+            error.setText(error.getText()+"\nProduct name must be atleast 3 characters");
+        }
 
         if(validate  == 1) {
             addCategoryProductDialog.dismiss();
@@ -192,6 +199,7 @@ public class CategoriesProductFragment extends Fragment implements View.OnClickL
         categoryproduct = new Categoryproduct();
         categoryproduct.setCategory(category_name.getText().toString());
         categoryproduct.setProduct(product_name.getText().toString());
+        categoryproduct.setUnit(category_unit.getText().toString());
 
         sweetAlertDialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.PROGRESS_TYPE);
         sweetAlertDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));

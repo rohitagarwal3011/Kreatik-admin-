@@ -13,7 +13,7 @@ public class Employee extends SugarRecord{
 
     @SerializedName("user_id")
     @Expose
-    private String userId;
+    private String userid;
     @SerializedName("user_name")
     @Expose
     private String userName;
@@ -30,12 +30,12 @@ public class Employee extends SugarRecord{
     @Expose
     private String mobile;
 
-    public String getUserId() {
-        return userId;
+    public String getUserid() {
+        return userid;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setUserid(String userid) {
+        this.userid = userid;
     }
 
     public String getUserName() {

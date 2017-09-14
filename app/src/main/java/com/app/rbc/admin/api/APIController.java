@@ -120,9 +120,128 @@ public class APIController{
         }
     }
 
+    public void updateMe(User user) {
+        MultipartBody.Part myfile;
+        try {
+            File file;
+            if (user.getFile_present() == 0) {
+                myfile = null;
+            } else {
+                file = new File(user.getMyfile());
+                Log.e("file",file.getPath());
+                RequestBody filepart = RequestBody.create(MediaType.parse("image/*"), file);
+                myfile = MultipartBody.Part.createFormData("myfile",file.getName(), filepart);
+            }
+
+
+            Call<String> call = apiInterface.updateUser(user.getName(), user.getEmail(),
+                    user.getUser_id(), user.getRole(), user.getFile_present()+"" , myfile);
+            call.enqueue(new Callback<String>() {
+                @Override
+                public void onResponse(Call call, retrofit2.Response response) {
+                    try {
+                        if(response.errorBody() != null) {
+                            Log.e("Error",response.errorBody().string()+" "+response.code());
+                            sendAPIResult(0);
+                        }
+                        else {
+                            JSONObject body = new JSONObject(response.body().toString());
+                            int status = body.getJSONObject("meta").getInt("status");
+                            String message = body.getJSONObject("meta").getString("message");
+                            sendAPIResult(status,message);
+                        }
+                    } catch (Exception e) {
+                        Log.e("Add user res parsing", e.toString());
+                        sendAPIResult(0,"Parsing Error Encountered");
+                    }
+
+                }
+
+                @Override
+                public void onFailure(Call call, Throwable t) {
+                    Log.e("Error", t.toString());
+                    sendAPIResult(0);
+                }
+            });
+        } catch (Exception e) {
+            Log.e("Add User Exception",e.toString());
+        }
+    }
+
     public void addSite(Site site) {
         Call<String> call = apiInterface.addSite(site.getName(),
-                site.getType());
+                site.getType(),
+                site.getLocation(),
+                site.getIncharge());
+
+        call.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, retrofit2.Response<String> response) {
+                if(response.errorBody() == null) {
+                    try {
+                        JSONObject body = new JSONObject(response.body().toString());
+                        Log.e("Response",body.toString());
+                        int status = body.getJSONObject("meta").getInt("status");
+                        String message = body.getJSONObject("meta").getString("message");
+                        sendAPIResult(status,message);
+                    }catch (Exception e) {
+
+                    }
+                }
+                else {
+                    Log.e("Error",response.errorBody().toString());
+                    sendAPIResult(0);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                Log.e("Error",t.toString());
+                sendAPIResult(0);
+            }
+        });
+    }
+
+
+    public void updateSite(Site site) {
+        Call<String> call = apiInterface.updateSite(site.getName(),
+                site.getType(),
+                site.getLocation(),
+                site.getIncharge(),
+                site.getId());
+
+        call.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, retrofit2.Response<String> response) {
+                if(response.errorBody() == null) {
+                    try {
+                        JSONObject body = new JSONObject(response.body().toString());
+                        Log.e("Response",body.toString());
+                        int status = body.getJSONObject("meta").getInt("status");
+                        String message = body.getJSONObject("meta").getString("message");
+                        sendAPIResult(status,message);
+                    }catch (Exception e) {
+
+                    }
+                }
+                else {
+                    Log.e("Error",response.errorBody().toString());
+                    sendAPIResult(0);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                Log.e("Error",t.toString());
+                sendAPIResult(0);
+            }
+        });
+    }
+
+    public void updateProduct(Categoryproduct categoryproduct,String old_prod) {
+        Call<String> call = apiInterface.updateProdut(categoryproduct.getCategory(),
+                old_prod,
+                categoryproduct.getProduct());
 
         call.enqueue(new Callback<String>() {
             @Override
@@ -185,9 +304,82 @@ public class APIController{
         });
     }
 
+    public void updateUser(Employee employee) {
+        Call<String> call = apiInterface.updateUser(employee.getUserName(),
+                employee.getEmail(),
+                employee.getUserid(),
+                employee.getRole(),
+                "0",
+                null);
+
+        call.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, retrofit2.Response<String> response) {
+                if(response.errorBody() == null) {
+                    try {
+                        JSONObject body = new JSONObject(response.body().toString());
+                        Log.e("Response",body.toString());
+                        int status = body.getJSONObject("meta").getInt("status");
+                        String message = body.getJSONObject("meta").getString("message");
+                        sendAPIResult(status,message);
+                    }catch (Exception e) {
+
+                    }
+                }
+                else {
+                    Log.e("Error",response.errorBody().toString());
+                    sendAPIResult(0);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                Log.e("Error",t.toString());
+                sendAPIResult(0);
+            }
+        });
+    }
+
+
+
+    public void updateVendor(Vendor vendor) {
+        Call<String> call = apiInterface.updateVendor(vendor.getName(),
+                vendor.getAddress(),
+                vendor.getPhone(),
+                vendor.getVendor_id());
+
+        call.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, retrofit2.Response<String> response) {
+                if(response.errorBody() == null) {
+                    try {
+                        JSONObject body = new JSONObject(response.body().toString());
+                        Log.e("Response",body.toString());
+                        int status = body.getJSONObject("meta").getInt("status");
+                        String message = body.getJSONObject("meta").getString("message");
+                        sendAPIResult(status,message);
+                    }catch (Exception e) {
+
+                    }
+                }
+                else {
+                    Log.e("Error",response.errorBody().toString());
+                    sendAPIResult(0);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                Log.e("Error",t.toString());
+                sendAPIResult(0);
+            }
+        });
+    }
+
     public void addCategoryProduct(Categoryproduct categoryproduct) {
         Call<String> call = apiInterface.addCategoryProduct(categoryproduct.getCategory(),
-                categoryproduct.getProduct());
+                categoryproduct.getProduct(),
+                categoryproduct.getUnit());
 
         call.enqueue(new Callback<String>() {
             @Override
@@ -201,6 +393,40 @@ public class APIController{
                         sendAPIResult(status,message);
                     }catch (Exception e) {
                         Log.e("Error Add Category",e.toString());
+                    }
+                }
+                else {
+                    Log.e("Error",response.errorBody().toString());
+                    sendAPIResult(0);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                Log.e("Error",t.toString());
+                sendAPIResult(0);
+            }
+        });
+    }
+
+
+    public void updateCategory(String old_cat,String new_cat,String unit) {
+        Call<String> call = apiInterface.updateCategory(old_cat,
+                new_cat,
+                unit);
+
+        call.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, retrofit2.Response<String> response) {
+                if(response.errorBody() == null) {
+                    try {
+                        JSONObject body = new JSONObject(response.body().toString());
+                        Log.e("Response",body.toString());
+                        int status = body.getJSONObject("meta").getInt("status");
+                        String message = body.getJSONObject("meta").getString("message");
+                        sendAPIResult(status,message);
+                    }catch (Exception e) {
+                        Log.e("Error Update Category",e.toString());
                     }
                 }
                 else {
@@ -369,6 +595,7 @@ public class APIController{
                             for(int i = 0 ; i < data.length() ; i++) {
                                 JSONObject categoryObj = data.getJSONObject(i);
                                 String category = categoryObj.getString("category");
+                                String unit = categoryObj.getString("unit");
                                 JSONArray products = categoryObj.getJSONArray("products");
 
                                 for(int j = 0 ; j < products.length() ; j++) {
@@ -378,6 +605,7 @@ public class APIController{
                                     Categoryproduct categoryproduct = new Categoryproduct();
                                     categoryproduct.setProduct(product);
                                     categoryproduct.setCategory(category);
+                                    categoryproduct.setUnit(unit);
                                     categoryproducts.add(categoryproduct);
                                 }
                             }

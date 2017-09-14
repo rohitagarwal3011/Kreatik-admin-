@@ -16,26 +16,31 @@ import android.widget.TextView;
 import com.app.rbc.admin.R;
 import com.app.rbc.admin.activities.IndentRegisterActivity;
 import com.app.rbc.admin.api.APIController;
+import com.app.rbc.admin.models.db.models.Employee;
 import com.app.rbc.admin.models.db.models.Site;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 
 public class AddSiteFragment extends Fragment implements View.OnClickListener{
 
-    private EditText site_name;
-    private Spinner site_type_spinner;
+    private EditText site_name,site_location;
+    private Spinner site_type_spinner,site_incharge_spinner;
     private TextView error;
     private String[] site_types;
     private SweetAlertDialog sweetAlertDialog;
 
     private static boolean edit =false;
     private static long editId;
+    private Site editSite;
     private View view;
+    private List<String> incharge_names,incharge_ids;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_add_site, container, false);
         if(edit) {
             ((IndentRegisterActivity) getActivity()).getSupportActionBar().setTitle("Edit");
@@ -49,7 +54,9 @@ public class AddSiteFragment extends Fragment implements View.OnClickListener{
 
     private void initializeUI() {
         site_name = (EditText) view.findViewById(R.id.form_site_name);
+        site_location = (EditText) view.findViewById(R.id.form_site_location);
         site_type_spinner = (Spinner) view.findViewById(R.id.form_site_type_spinner);
+        site_incharge_spinner = (Spinner) view.findViewById(R.id.form_site_incharge_spinner);
 
         Button save = (Button) view.findViewById(R.id.save);
         Button save_add_another = (Button) view.findViewById(R.id.save_add_another);
@@ -58,24 +65,55 @@ public class AddSiteFragment extends Fragment implements View.OnClickListener{
         // Setting data
 
         site_types = getActivity().getResources().getStringArray(R.array.site_types);
-        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(getContext(),
+        ArrayAdapter<String> site_type_spinner_adapter = new ArrayAdapter<>(getContext(),
                 android.R.layout.simple_expandable_list_item_1,
                 site_types);
-        site_type_spinner.setAdapter(spinnerAdapter);
+        site_type_spinner.setAdapter(site_type_spinner_adapter);
+
+        List<Employee> employees = Employee.find(Employee.class,
+                "role = ?","Site Incharge");
+        incharge_names = new ArrayList<>();
+        incharge_ids = new ArrayList<>();
+        for(int i = 0 ; i < employees.size() ; i++) {
+            incharge_names.add(employees.get(i).getUserName());
+            incharge_ids.add(employees.get(i).getUserid());
+        }
+
+        ArrayAdapter<String> site_incharge_spinner_adapter = new ArrayAdapter<String>(getContext(),
+                android.R.layout.simple_expandable_list_item_1,
+                incharge_names);
+
+        site_incharge_spinner.setAdapter(site_incharge_spinner_adapter);
 
         // Listeners
         save.setOnClickListener(this);
         save_add_another.setOnClickListener(this);
 
         if(edit == true) {
-            Site site = Site.findById(Site.class,editId);
-            site_name.setText(site.getName());
+            editSite = Site.findById(Site.class,editId);
+            site_name.setText(editSite.getName());
+            site_location.setText(editSite.getLocation());
             for(int i = 0 ; i < site_types.length ; i++) {
-                if(site_types[i].equals(site.getType())) {
+                if(site_types[i].equals(editSite.getType())) {
                     site_type_spinner.setSelection(i);
                     break;
                 }
             }
+
+            for(int i = 0 ; i < employees.size() ; i++) {
+                if(employees.get(i).getUserid().equalsIgnoreCase(editSite.getIncharge())) {
+                    site_incharge_spinner.setSelection(i);
+                    break;
+                }
+            }
+
+
+            TextView title_or = (TextView) view.findViewById(R.id.title_or);
+            title_or.setText("");
+            ViewGroup.LayoutParams params = save_add_another.getLayoutParams();
+            params.height = 0;
+            save_add_another.setLayoutParams(params);
+
 
         }
     }
@@ -89,11 +127,12 @@ public class AddSiteFragment extends Fragment implements View.OnClickListener{
                 if(edit != true) {
                     validateSiteAddForm(70);
                 }
+                else {
+                    validateSiteAddForm(72);
+                }
                 break;
             case R.id.save_add_another:
-                if(edit != true) {
-                    validateSiteAddForm(71);
-                }
+                validateSiteAddForm(71);
                 break;
         }
     }
@@ -103,10 +142,21 @@ public class AddSiteFragment extends Fragment implements View.OnClickListener{
         int validate = 1;
         if(site_name.getText().equals("") || site_name.getText().toString().length() < 5) {
             validate = 0;
-            error.setText("Site name must atleast be 5 characters");
+            site_name.setError("Site name must atleast be 5 characters");
+            site_name.requestFocus();
+        }
+        if (site_location.getText().toString().equals("")) {
+            validate = 0;
+            site_location.setError("Please input a valid location");
+            site_location.requestFocus();
         }
         if(validate == 1) {
-            callSiteAddAPI(code);
+            if(edit != true) {
+                callSiteAddAPI(code);
+            }
+            else {
+                callUpdateSiteAPI(code);
+            }
         }
     }
 
@@ -115,6 +165,8 @@ public class AddSiteFragment extends Fragment implements View.OnClickListener{
         Site site = new Site();
         site.setName(site_name.getText().toString());
         site.setType(site_types[site_type_spinner.getSelectedItemPosition()]);
+        site.setLocation(site_location.getText().toString());
+        site.setIncharge(incharge_ids.get(site_incharge_spinner.getSelectedItemPosition()));
 
         sweetAlertDialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.PROGRESS_TYPE);
         sweetAlertDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
@@ -124,6 +176,22 @@ public class AddSiteFragment extends Fragment implements View.OnClickListener{
 
         APIController controller = new APIController(getContext(),code);
         controller.addSite(site);
+    }
+
+    private void callUpdateSiteAPI(int code) {
+        editSite.setName(site_name.getText().toString());
+        editSite.setType(site_types[site_type_spinner.getSelectedItemPosition()]);
+        editSite.setLocation(site_location.getText().toString());
+        editSite.setIncharge(incharge_ids.get(site_incharge_spinner.getSelectedItemPosition()));
+
+        sweetAlertDialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.PROGRESS_TYPE);
+        sweetAlertDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+        sweetAlertDialog.setTitleText("Processing");
+        sweetAlertDialog.setCancelable(false);
+        sweetAlertDialog.show();
+
+        APIController controller = new APIController(getContext(),code);
+        controller.updateSite(editSite);
     }
 
     private void refreshUI() {
@@ -163,6 +231,10 @@ public class AddSiteFragment extends Fragment implements View.OnClickListener{
                 }
                 else if(code == 70){
                     callSitesFetchApi();
+                    ((IndentRegisterActivity)getActivity()).popBackStack();
+                }
+                else if(code == 72) {
+                    editSite.save();
                     ((IndentRegisterActivity)getActivity()).popBackStack();
                 }
             break;
