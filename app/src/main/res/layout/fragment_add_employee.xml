@@ -1,0 +1,132 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+   >
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:id="@+id/add_employee_form_cardview">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:id="@+id/form_employee_image"
+                android:background="@drawable/image_placeholder"/>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_toRightOf="@+id/form_employee_image"
+                android:background="@drawable/round_edittext_light"
+                android:hint="Full Name"
+                android:singleLine="true"
+                android:imeOptions="actionNext"
+                android:textSize="15sp"
+                android:paddingLeft="10dp"
+                android:id="@+id/form_employee_fullname"/>
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:imeOptions="actionNext"
+                android:singleLine="true"
+                android:layout_toRightOf="@+id/form_employee_image"
+                android:layout_below="@+id/form_employee_fullname"
+                android:background="@drawable/round_edittext_light"
+                android:hint="Password"
+                android:inputType="textPassword"
+                android:textSize="15sp"
+                android:paddingLeft="10dp"
+                android:id="@+id/form_employee_password"/>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@drawable/round_edittext_light"
+                android:hint="Email Address"
+                android:singleLine="true"
+                android:textSize="15sp"
+                android:inputType="textEmailAddress"
+                android:layout_below="@+id/form_employee_password"
+                android:paddingLeft="10dp"
+                android:id="@+id/form_employee_email"/>
+
+            <TextView
+                android:layout_width="100dp"
+                android:layout_height="50dp"
+                android:text="Role"
+                android:textSize="15sp"
+                android:gravity="center"
+                android:id="@+id/role_title"
+                android:layout_below="@id/form_employee_email"
+                android:background="@drawable/round_edittext_light"/>
+
+            <Spinner
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:id="@+id/form_employee_role_spinner"
+                android:layout_toRightOf="@+id/role_title"
+                android:layout_alignTop="@id/role_title" />
+
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:id="@+id/submit_container"
+            android:layout_below="@+id/add_employee_form_cardview"
+            android:layout_margin="10dp">
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/colorAccent"
+                android:text="Save"
+                android:id="@+id/save"
+                android:textColor="@color/background" />
+        </android.support.v7.widget.CardView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Or"
+            android:layout_below="@+id/submit_container"
+            android:id="@+id/title_or"
+            android:textStyle="italic"
+            android:layout_centerHorizontal="true"/>
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:id="@+id/save_add_another_container"
+            android:layout_below="@+id/title_or"
+            android:layout_margin="10dp">
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/colorAccentRed"
+                android:text="Save &amp; Add another"
+                android:id="@+id/save_add_another"
+                android:textColor="@color/background" />
+        </android.support.v7.widget.CardView>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/error"
+            android:textColor="@color/colorAccentRed"
+            android:textAlignment="center"
+            android:layout_below="@id/save_add_another_container"
+            android:padding="10dp"/>
+
+
+    </RelativeLayout>
+</FrameLayout>
