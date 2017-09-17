@@ -131,6 +131,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/save_me"
                 android:padding="5dp"
+                android:textColor="@color/colorAccentRed"
                 android:textAlignment="center"
                 android:id="@id/error"/>
 

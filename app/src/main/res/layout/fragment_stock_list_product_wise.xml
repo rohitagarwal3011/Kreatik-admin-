@@ -4,6 +4,7 @@
     android:layout_height="match_parent"
     tools:context="com.app.rbc.admin.fragments.Stock_list_product_wise">
 
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/stock_list"
         android:layout_width="match_parent"

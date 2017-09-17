@@ -65,6 +65,8 @@ public class HomeActivity extends AppCompatActivity
     DeadlineNotificationService alarm;
     @BindView(R.id.module_requirement)
     LinearLayout moduleRequirement;
+    @BindView(R.id.module_reports)
+    LinearLayout module_reports;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -142,6 +144,15 @@ public class HomeActivity extends AppCompatActivity
     public void open_attendance_module(View view) {
 
         Intent intent = new Intent(HomeActivity.this, AttendanceActivity.class);
+        startActivity(intent);
+
+    }
+
+
+    @OnClick(R.id.module_reports)
+    public void open_reports_module(View view) {
+
+        Intent intent = new Intent(HomeActivity.this, ReportActivity.class);
         startActivity(intent);
 
     }

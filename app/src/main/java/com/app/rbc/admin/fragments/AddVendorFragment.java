@@ -139,7 +139,7 @@ public class AddVendorFragment extends Fragment implements View.OnClickListener{
         sweetAlertDialog.setCancelable(false);
         sweetAlertDialog.show();
 
-        APIController controller = new APIController(getContext(),code);
+        APIController controller = new APIController(getContext(),code,IndentRegisterActivity.ACTIVITY);
         controller.addVendor(vendor);
     }
 
@@ -154,7 +154,7 @@ public class AddVendorFragment extends Fragment implements View.OnClickListener{
         sweetAlertDialog.setCancelable(false);
         sweetAlertDialog.show();
 
-        APIController controller = new APIController(getContext(),code);
+        APIController controller = new APIController(getContext(),code,IndentRegisterActivity.ACTIVITY);
         controller.updateVendor(editVendor);
     }
 
@@ -167,7 +167,7 @@ public class AddVendorFragment extends Fragment implements View.OnClickListener{
     private void callVendorsFetchApi() {
         new Thread() {
             public void run() {
-                APIController controller = new APIController(getContext(),40);
+                APIController controller = new APIController(getContext(),40,IndentRegisterActivity.ACTIVITY);
                 controller.fetchVendors();
             }
         }.start();
@@ -192,6 +192,7 @@ public class AddVendorFragment extends Fragment implements View.OnClickListener{
         switch(status) {
             case 2 :
                 if(code == 81) {
+                    callVendorsFetchApi();
                     refreshUI();
                 }
                 else if(code == 80){

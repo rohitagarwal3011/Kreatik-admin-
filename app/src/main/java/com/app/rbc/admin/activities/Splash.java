@@ -8,6 +8,7 @@ import android.os.Bundle;
 import com.app.rbc.admin.R;
 import com.app.rbc.admin.utils.AppUtil;
 import com.app.rbc.admin.utils.TagsPreferences;
+import com.viksaa.sssplash.lib.activity.AwesomeSplash;
 
 import org.json.JSONArray;
 
@@ -16,7 +17,7 @@ public class Splash extends AppCompatActivity {
     String type,task_id,title;
     Intent intent;
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 

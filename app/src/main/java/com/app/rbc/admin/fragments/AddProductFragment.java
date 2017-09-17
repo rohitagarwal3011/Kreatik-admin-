@@ -230,7 +230,7 @@ public class AddProductFragment extends Fragment implements View.OnClickListener
         sweetAlertDialog.setCancelable(false);
         sweetAlertDialog.show();
 
-        APIController controller = new APIController(getContext(),code);
+        APIController controller = new APIController(getContext(),code,IndentRegisterActivity.ACTIVITY);
         controller.addCategoryProduct(categoryproduct);
     }
 
@@ -248,7 +248,7 @@ public class AddProductFragment extends Fragment implements View.OnClickListener
         sweetAlertDialog.setCancelable(false);
         sweetAlertDialog.show();
 
-        APIController controller = new APIController(getContext(),code);
+        APIController controller = new APIController(getContext(),code,IndentRegisterActivity.ACTIVITY);
         controller.updateProduct(editProduct,old_prod);
     }
 
@@ -260,7 +260,7 @@ public class AddProductFragment extends Fragment implements View.OnClickListener
         sweetAlertDialog.setCancelable(false);
         sweetAlertDialog.show();
 
-        APIController controller = new APIController(getContext(),code);
+        APIController controller = new APIController(getContext(),code,IndentRegisterActivity.ACTIVITY);
         controller.updateCategory(category,product_category.getText().toString(),
                 product_unit.getText().toString());
     }
@@ -278,7 +278,7 @@ public class AddProductFragment extends Fragment implements View.OnClickListener
                     adapter.refreshAdapter(Categoryproduct.find(Categoryproduct.class,"category = ?",this.category));
                 }
                 else if(code == 93) {
-                    APIController controller = new APIController(getContext(),51);
+                    APIController controller = new APIController(getContext(),51,IndentRegisterActivity.ACTIVITY);
                     controller.fetchCategoriesProducts();
 
                     ((IndentRegisterActivity)getActivity()).popBackStack();

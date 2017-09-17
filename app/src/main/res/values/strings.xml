@@ -47,7 +47,7 @@
     <string-array name="emp_roles">
         <item>Manager</item>
         <item>Staff</item>
-        <item>Site-Incharge</item>
+        <item>Site Incharge</item>
         <item>Others</item>
     </string-array>
 

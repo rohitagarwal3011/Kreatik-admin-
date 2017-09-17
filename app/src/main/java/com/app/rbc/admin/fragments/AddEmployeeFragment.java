@@ -103,8 +103,14 @@ public class AddEmployeeFragment extends Fragment implements View.OnClickListene
 
             if(editEmployee != null) {
                 fullname.setText(editEmployee.getUserName());
-                password.setText(editEmployee.getMobile());
                 password.setInputType(InputType.TYPE_CLASS_NUMBER);
+                if(editEmployee.getMobile().equals("0")) {
+                    password.setText("Not Registered");
+                }
+                else {
+                    password.setText(editEmployee.getMobile());
+
+                }
                 email.setText(editEmployee.getEmail());
 
                 email.setBackground(getResources().getDrawable(R.drawable.round_edittext_unselectable));
@@ -243,7 +249,7 @@ public class AddEmployeeFragment extends Fragment implements View.OnClickListene
             }
         }
         if(validate == 1) {
-            if(code == 60) {
+            if(code == 60 || code == 61) {
                 callUserAddAPI(code);
             }
             else if(code == 62) {
@@ -285,7 +291,7 @@ public class AddEmployeeFragment extends Fragment implements View.OnClickListene
         sweetAlertDialog.setCancelable(false);
         sweetAlertDialog.show();
 
-        APIController controller = new APIController(getContext(),code);
+        APIController controller = new APIController(getContext(),code,IndentRegisterActivity.ACTIVITY);
         controller.addUser(user);
     }
 
@@ -300,7 +306,7 @@ public class AddEmployeeFragment extends Fragment implements View.OnClickListene
         sweetAlertDialog.setCancelable(false);
         sweetAlertDialog.show();
 
-        APIController controller = new APIController(getContext(),code);
+        APIController controller = new APIController(getContext(),code,IndentRegisterActivity.ACTIVITY);
         controller.updateUser(editEmployee);
     }
 
@@ -315,7 +321,7 @@ public class AddEmployeeFragment extends Fragment implements View.OnClickListene
     private void callEmployeeFetchApi() {
         new Thread() {
             public void run() {
-                APIController controller = new APIController(getContext(),20);
+                APIController controller = new APIController(getContext(),20,IndentRegisterActivity.ACTIVITY);
                 controller.fetchEmp();
             }
         }.start();
@@ -346,6 +352,7 @@ public class AddEmployeeFragment extends Fragment implements View.OnClickListene
                 ((IndentRegisterActivity)getActivity()).popBackStack();
             }
             else if(code == 62) {
+                callEmployeeFetchApi();
                 editEmployee.save();
                 ((IndentRegisterActivity)getActivity()).popBackStack();
             }

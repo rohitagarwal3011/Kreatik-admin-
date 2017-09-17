@@ -150,7 +150,7 @@ public class EmployeesFragment extends Fragment implements View.OnClickListener{
 
 
     private void callEmployeeFetchApi() {
-        APIController controller = new APIController(getContext(),20);
+        APIController controller = new APIController(getContext(),20,IndentRegisterActivity.ACTIVITY);
         controller.fetchEmp();
     }
 

@@ -26,6 +26,8 @@
 
     <color name="dark_text">#212121</color>
     <color name="light_text">#9E9E9E</color>
+
+    <color name="verified">#81C784</color>
 </resources>
 
 

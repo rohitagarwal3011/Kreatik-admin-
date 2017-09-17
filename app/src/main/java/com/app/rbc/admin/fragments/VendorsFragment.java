@@ -148,7 +148,7 @@ public class VendorsFragment extends Fragment implements View.OnClickListener {
     }
 
     private void callVendorsFetchApi() {
-        APIController controller = new APIController(getContext(),40);
+        APIController controller = new APIController(getContext(),40,IndentRegisterActivity.ACTIVITY);
         controller.fetchVendors();
     }
 

@@ -207,14 +207,14 @@ public class CategoriesProductFragment extends Fragment implements View.OnClickL
         sweetAlertDialog.setCancelable(false);
         sweetAlertDialog.show();
 
-        APIController controller = new APIController(getContext(),code);
+        APIController controller = new APIController(getContext(),code,IndentRegisterActivity.ACTIVITY);
         controller.addCategoryProduct(categoryproduct);
     }
 
 
     private void callCategoriesProductsFetchApi() {
         swipeRefreshLayout.setRefreshing(true);
-        APIController controller = new APIController(getContext(),51);
+        APIController controller = new APIController(getContext(),51,IndentRegisterActivity.ACTIVITY);
         controller.fetchCategoriesProducts();
     }
 

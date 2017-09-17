@@ -1,6 +1,7 @@
 package com.app.rbc.admin.fragments;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -23,6 +24,7 @@ import android.widget.Toast;
 import com.app.rbc.admin.R;
 import com.app.rbc.admin.activities.IndentRegisterActivity;
 import com.app.rbc.admin.api.APIController;
+import com.app.rbc.admin.models.db.models.Employee;
 import com.app.rbc.admin.models.db.models.User;
 import com.app.rbc.admin.utils.AppUtil;
 import com.app.rbc.admin.utils.TagsPreferences;
@@ -43,8 +45,13 @@ public class MyDetailsFragment extends Fragment implements View.OnClickListener{
     private final int PICK_FROM_GALLERY = 1;
     private String profilePath = null;
     private TextView error;
-
     private SweetAlertDialog sweetAlertDialog;
+
+    public final int OTP_API = 14;
+    public final int VERIFY_OTP = 15;
+    public final int UPDATE_ME_API = 12;
+
+    private Employee employee;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -82,7 +89,7 @@ public class MyDetailsFragment extends Fragment implements View.OnClickListener{
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.save_me:
-                validateUser(12);
+                validateUser();
                 break;
             case R.id.form_employee_pic:
                 startImageGalleryIntent();
@@ -157,7 +164,7 @@ public class MyDetailsFragment extends Fragment implements View.OnClickListener{
         }
     }
 
-    private void validateUser(int code) {
+    private void validateUser() {
         int validate = 1;
 
         if(me_mobile.getText().toString().length() != 10 || me_mobile.getText().toString().equals("")) {
@@ -172,15 +179,42 @@ public class MyDetailsFragment extends Fragment implements View.OnClickListener{
         }
 
         if(validate == 1) {
-            callUpdateMe(code);
+            checkMobileChanged();
         }
     }
 
+    private void checkMobileChanged() {
+        if(!(me_mobile.getText().toString().equalsIgnoreCase(
+                AppUtil.getLong(getContext(), TagsPreferences.MOBILE).toString()
+        ))) {
+            callOtpAPI(OTP_API);
+        }
+        else {
+            callUpdateMe(UPDATE_ME_API);
+        }
+    }
+
+    private void callOtpAPI(int code) {
+        employee = new Employee();
+        employee.setUserid(AppUtil.getString(getActivity(), TagsPreferences.USER_ID));
+        employee.setMobile(me_mobile.getText().toString());
+
+        sweetAlertDialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.PROGRESS_TYPE);
+        sweetAlertDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+        sweetAlertDialog.setTitleText("Processing");
+        sweetAlertDialog.setCancelable(false);
+        sweetAlertDialog.show();
+
+        APIController controller = new APIController(getContext(),code,IndentRegisterActivity.ACTIVITY);
+        controller.sendOTP(employee);
+    }
+
+
     private void callUpdateMe(int code) {
         User user = new User();
-        user.setName(me_fullname.getText().toString());
-        user.setEmail(me_email.getText().toString());
-        user.setRole(me_role.getText().toString());
+        user.setName(AppUtil.getString(getContext(), TagsPreferences.NAME));
+        user.setEmail(AppUtil.getString(getContext(), TagsPreferences.EMAIL));
+        user.setRole(AppUtil.getString(getContext(), TagsPreferences.ROLE));
         user.setUser_id(AppUtil.getString(getActivity(), TagsPreferences.USER_ID));
 
 
@@ -196,11 +230,37 @@ public class MyDetailsFragment extends Fragment implements View.OnClickListener{
         sweetAlertDialog.setCancelable(false);
         sweetAlertDialog.show();
 
-        APIController controller = new APIController(getContext(),code);
+        APIController controller = new APIController(getContext(),code,IndentRegisterActivity.ACTIVITY);
         controller.updateMe(user);
     }
+    private void inflateOTPDialog() {
+        final Dialog dialog = new Dialog(getActivity());
+        View otpDialog = getActivity().getLayoutInflater().inflate(R.layout.dialog_mobile,null);
+        TextView enter_otp = (TextView) otpDialog.findViewById(R.id.enter_phone_text);
+        final EditText otp = (EditText) otpDialog.findViewById(R.id.phone);
+        Button send_otp = (Button) otpDialog.findViewById(R.id.send_otp);
+
+        // Setting values
+        enter_otp.setText("Enter OTP");
+        send_otp.setText("Verify OTP");
 
 
+        // Listeners
+        send_otp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                APIController controller = new APIController(getActivity(),VERIFY_OTP,IndentRegisterActivity.ACTIVITY);
+                controller.verifyOTP(employee,otp.getText().toString());
+                dialog.dismiss();
+                sweetAlertDialog.show();
+            }
+        });
+
+
+
+        dialog.setContentView(otpDialog);
+        dialog.show();
+    }
     public void publishAPIResponse(int status,int code,String... message) {
         sweetAlertDialog.dismiss();
         switch(status) {
@@ -208,6 +268,13 @@ public class MyDetailsFragment extends Fragment implements View.OnClickListener{
                 if(code == 12) {
                     ((IndentRegisterActivity)getActivity()).popBackStack();
                 }
+                else if(code == 14) {
+                    inflateOTPDialog();
+                }
+                else if(code == 15) {
+                    callUpdateMe(UPDATE_ME_API);
+                }
+                break;
             case 1 : error.setText(message[0]);
                 break;
             case 0: error.setText("Request Failed");

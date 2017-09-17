@@ -41,6 +41,7 @@ public class IndentRegisterActivity extends AppCompatActivity {
     private SitesFragment sitesFragment;
     private VendorsFragment vendorsFragment;
     private Toolbar toolbar;
+    public static final int ACTIVITY = 5;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -194,6 +195,8 @@ public class IndentRegisterActivity extends AppCompatActivity {
     public void publishAPIResponse(int status,int code,String... message) {
         switch (code) {
             case 12:
+            case 14:
+            case 15:
                 myDetailsFragment.publishAPIResponse(status,code,message[0]);
                 break;
             case 20 :

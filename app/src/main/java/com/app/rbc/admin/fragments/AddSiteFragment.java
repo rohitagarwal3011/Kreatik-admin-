@@ -174,7 +174,7 @@ public class AddSiteFragment extends Fragment implements View.OnClickListener{
         sweetAlertDialog.setCancelable(false);
         sweetAlertDialog.show();
 
-        APIController controller = new APIController(getContext(),code);
+        APIController controller = new APIController(getContext(),code,IndentRegisterActivity.ACTIVITY);
         controller.addSite(site);
     }
 
@@ -190,19 +190,21 @@ public class AddSiteFragment extends Fragment implements View.OnClickListener{
         sweetAlertDialog.setCancelable(false);
         sweetAlertDialog.show();
 
-        APIController controller = new APIController(getContext(),code);
+        APIController controller = new APIController(getContext(),code,IndentRegisterActivity.ACTIVITY);
         controller.updateSite(editSite);
     }
 
     private void refreshUI() {
         site_name.setText("");
+        site_location.setText("");
         site_type_spinner.setSelection(0);
+        site_incharge_spinner.setSelection(0);
     }
 
     private void callSitesFetchApi() {
         new Thread(){
             public void run() {
-                APIController controller = new APIController(getContext(),30);
+                APIController controller = new APIController(getContext(),30,IndentRegisterActivity.ACTIVITY);
                 controller.fetchSites();
             }
         }.start();
@@ -227,6 +229,7 @@ public class AddSiteFragment extends Fragment implements View.OnClickListener{
         switch(status) {
             case 2 :
                 if(code == 71) {
+                    callSitesFetchApi();
                     refreshUI();
                 }
                 else if(code == 70){

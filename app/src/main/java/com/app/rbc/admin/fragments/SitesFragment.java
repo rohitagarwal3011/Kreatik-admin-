@@ -145,7 +145,7 @@ public class SitesFragment extends Fragment implements View.OnClickListener{
     }
 
     private void callSitesFetchApi() {
-        APIController controller = new APIController(getContext(),30);
+        APIController controller = new APIController(getContext(),30,IndentRegisterActivity.ACTIVITY);
         controller.fetchSites();
     }
 

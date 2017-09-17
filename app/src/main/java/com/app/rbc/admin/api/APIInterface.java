@@ -45,6 +45,21 @@ public interface APIInterface {
                          @Field("site_incharge") String site_incharge);
 
     @FormUrlEncoded
+    @POST("send_otp/")
+    Call<String> sendOTP(@Field("user_id") String user_id,
+                         @Field("phone") String phone);
+
+
+
+    @FormUrlEncoded
+    @POST("verify_otp/")
+    Call<String> verifyOTP(@Field("user_id") String user_id,
+                           @Field("otp") String otp,
+                         @Field("phone") String phone);
+
+
+
+    @FormUrlEncoded
     @POST("update_site/")
     Call<String> updateSite(@Field("name") String name,
                          @Field("type") String type,
@@ -84,6 +99,18 @@ public interface APIInterface {
                                 @Field("old_prod") String old_prod,
                                 @Field("new_prod") String new_prod);
 
+    @Multipart
+    @POST("receive_vehicle/")
+    Call<String> receiveVehicle(@Part("trans_id") RequestBody trans_id,
+                         @Part("challan_num") RequestBody challan_num,
+                         @Part MultipartBody.Part challan_img,
+                                @Part MultipartBody.Part invoice_img,
+                                @Part MultipartBody.Part onreceive_img,
+                                @Part MultipartBody.Part unloaded_img);
+
+    @FormUrlEncoded
+    @POST("vehicle_list/")
+    Call<String> vehicleList(@Field("site") int site);
 
     @FormUrlEncoded
     @POST("fetch_emp/")
