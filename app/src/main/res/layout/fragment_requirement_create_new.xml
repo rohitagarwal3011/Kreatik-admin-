@@ -5,153 +5,197 @@
     xmlns:custom="http://schemas.android.com/apk/res-auto"
     tools:context="com.app.rbc.admin.fragments.Stock_po_create_task">
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="@dimen/_15sdp"
-            android:orientation="vertical">
+            android:layout_height="match_parent">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Title"
-                android:gravity="center_vertical"
-                android:textColor="@color/black"
-                android:layout_marginBottom="@dimen/_5sdp"
-                android:textSize="@dimen/_15sdp"/>
-
-            <LinearLayout
+            <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:orientation="horizontal">
-                <EditText
-                    android:id="@+id/requirement_title"
+                android:layout_margin="@dimen/_10sdp"
+                android:id="@+id/form">
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/edit_text_with_border"
-                    android:maxLength="25"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/_15sdp"
-                    android:padding="@dimen/_5sdp"
-                    android:hint="Enter Title for Requirement"/>
+                    android:layout_height="wrap_content">
 
-            </LinearLayout>
+                    <TextView
+                        android:layout_width="@dimen/_80sdp"
+                        android:layout_height="@dimen/_40sdp"
+                        android:text="Title"
+                        android:padding="@dimen/_4sdp"
+                        android:id="@+id/requirement_title_title"
+                        android:gravity="center_vertical"
+                        android:background="@drawable/round_edittext_light"
+                        android:textSize="@dimen/_12sdp"/>
+                    <EditText
+                        android:id="@+id/requirement_title"
+                        android:layout_width="match_parent"
+                        android:layout_alignTop="@id/requirement_title_title"
+                        android:layout_toRightOf="@id/requirement_title_title"
+                        android:layout_height="@dimen/_40sdp"
+                        android:background="@drawable/round_edittext_light"
+                        android:maxLength="25"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_12sdp"
+                        android:padding="@dimen/_5sdp"
+                        android:hint="Enter Title for Requirement"/>
 
-            <LinearLayout
+                    <TextView
+                        android:layout_width="@dimen/_80sdp"
+                        android:layout_height="@dimen/_40sdp"
+                        android:id="@+id/purpose_title"
+                        android:padding="@dimen/_4sdp"
+                        android:gravity="center_vertical"
+                        android:background="@drawable/round_edittext_light"
+                        android:layout_below="@id/requirement_title"
+                        android:text="Purpose"
+                        android:textSize="@dimen/_12sdp"/>
+
+                    <EditText
+                        android:id="@+id/purpose"
+                        android:layout_toRightOf="@id/purpose_title"
+                        android:layout_alignTop="@id/purpose_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_40sdp"
+                        android:background="@drawable/round_edittext_light"
+                        android:inputType="text"
+                        android:textSize="@dimen/_12sdp"
+                        android:hint="Why do you need it?"
+                        android:padding="@dimen/_5sdp"
+                        android:maxLength="20"/>
+
+                </RelativeLayout>
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_10sdp"
-                android:layout_gravity="center_horizontal"
-                android:orientation="horizontal">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Category : "
-                    android:gravity="center_vertical"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/_15sdp"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/requirement_category"
-                    android:text="Cement"
-                    android:gravity="center_vertical"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/_12sdp"/>
+                android:id="@+id/details"
+                android:layout_below="@id/form"
+                android:layout_margin="@dimen/_10sdp">
 
-            </LinearLayout>
-
-            <TableLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/product_table"
-                >
-                <TableRow
-                    android:id="@+id/rowheading"
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_5sdp"
-                    android:layout_marginBottom="@dimen/_5sdp"
-                    android:padding="@dimen/_3sdp"
-                    >
+                    android:layout_height="wrap_content">
+
                     <TextView
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/_15sdp"
-                        android:layout_weight="1"
-                        android:gravity="left"
-                        android:textColor="@color/black"
-                        android:text="Product"/>
+                        android:layout_height="@dimen/_30sdp"
+                        android:id="@+id/details_title"
+                        android:text="Details"
+                        android:textColor="@color/dark_text"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="@dimen/_5sdp"
+                        android:background="@color/backgroundcolor"/>
+                    <TextView
+                        android:layout_below="@id/details_title"
+                        android:layout_width="@dimen/_80sdp"
+                        android:layout_height="@dimen/_40sdp"
+                        android:text="Category"
+                        android:paddingLeft="@dimen/_5sdp"
+                        android:id="@+id/category_title"
+                        android:background="@drawable/round_edittext_light"
+                        android:gravity="center_vertical"
+                        android:textSize="@dimen/_12sdp"/>
+
                     <TextView
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/_15sdp"
-                        android:text="Quantity"
-                        android:gravity="left"
+                        android:layout_height="@dimen/_40sdp"
+                        android:id="@+id/requirement_category"
+                        android:text="Cement"
+                        android:layout_toRightOf="@id/category_title"
+                        android:layout_alignTop="@id/category_title"
+                        android:gravity="center_vertical"
                         android:textColor="@color/black"
-                        android:layout_weight="1"/>
-                </TableRow>
-            </TableLayout>
+                        android:background="@drawable/round_edittext_light"
+                        android:paddingLeft="@dimen/_5sdp"
+                        android:textSize="@dimen/_12sdp"/>
 
+                    <TextView
+                        android:layout_width="@dimen/_80sdp"
+                        android:layout_height="@dimen/_40sdp"
+                        android:id="@+id/site_title"
+                        android:layout_below="@id/category_title"
+                        android:text="Site"
+                        android:gravity="center_vertical"
+                        android:background="@drawable/round_edittext_light"
+                        android:paddingLeft="@dimen/_5sdp"
+                        android:textSize="@dimen/_12sdp"/>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_25sdp"
-                android:layout_marginTop="@dimen/_25sdp"
-                android:orientation="horizontal">
+                    <TextView
+                        android:id="@+id/site_id"
+                        android:text="Site A"
+                        android:layout_toRightOf="@id/site_title"
+                        android:layout_alignTop="@id/site_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_40sdp"
+                        android:textColor="@color/black"
+                        android:gravity="center_vertical"
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:text="Purpose : "/>
-                <EditText
-                    android:id="@+id/purpose"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="@dimen/_10sdp"
-                    android:layout_marginRight="@dimen/_25sdp"
-                    android:background="@drawable/edit_text_with_border"
-                    android:inputType="text"
-                    android:hint="Why do you need it?"
-                    android:padding="@dimen/_3sdp"
-                    android:maxLength="20"
+                        android:background="@drawable/round_edittext_light"
+                        android:paddingLeft="@dimen/_5sdp"
+                        android:textSize="@dimen/_12sdp"
                     />
 
-            </LinearLayout>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_30sdp"
+                        android:id="@+id/products_title"
+                        android:text="Product Requirement"
+                        android:layout_below="@id/site_title"
+                        android:textColor="@color/dark_text"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="@dimen/_5sdp"
+                        android:background="@color/backgroundcolor"/>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_25sdp"
-                android:layout_marginTop="@dimen/_25sdp"
-                android:orientation="horizontal">
+                    <TableLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/product_table"
+                        android:layout_below="@id/products_title">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:text="Requirement for Site : "/>
-                <TextView
-                    android:id="@+id/site_id"
-                    android:text="Site A"
-                    android:textColor="@color/black"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:textSize="@dimen/_15sdp"
-                    />
+                        <TableRow
+                        android:id="@+id/rowheading"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
 
-            </LinearLayout>
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/_40sdp"
+                                android:layout_weight="1"
+                                android:gravity="center_vertical"
+                                android:paddingLeft="@dimen/_5sdp"
+                                android:background="@drawable/round_edittext_light"
+                                android:text="Product"
+                                android:textSize="@dimen/_12sdp"/>
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/_40sdp"
+                                android:text="Quantity"
+                                android:textSize="@dimen/_12sdp"
+                                android:gravity="center_vertical"
+                                android:paddingLeft="@dimen/_5sdp"
+                                android:background="@drawable/round_edittext_light"
+                                android:layout_weight="1"/>
+                        </TableRow>
+                    </TableLayout>
 
+
+                </RelativeLayout>
+
+
+            </android.support.v7.widget.CardView>
 
 
             <com.dd.processbutton.iml.ActionProcessButton
                 android:id="@+id/submit_task"
+                android:layout_below="@id/details"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_45sdp"
-                android:layout_marginTop="@dimen/_25sdp"
+                android:layout_height="@dimen/_40sdp"
+                android:layout_marginTop="@dimen/_8sdp"
                 android:layout_marginBottom="@dimen/_8sdp"
-                android:layout_marginLeft="@dimen/_16sdp"
-                android:layout_marginRight="@dimen/_16sdp"
+                android:layout_marginLeft="@dimen/_10sdp"
+                android:layout_marginRight="@dimen/_10sdp"
                 android:text="submit"
                 android:textColor="@android:color/white"
                 android:textSize="18sp"
@@ -165,7 +209,6 @@
                 custom:pb_textProgress="Uploading"
                 android:layout_marginStart="@dimen/_16sdp"
                 android:layout_marginEnd="@dimen/_16sdp" />
-        </LinearLayout>
-    </FrameLayout>
+        </RelativeLayout>
 
 </ScrollView>

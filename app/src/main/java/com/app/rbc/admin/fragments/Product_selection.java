@@ -14,6 +14,8 @@ import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -270,49 +272,13 @@ public class Product_selection extends Fragment {
         product_grid.put(product, quantity);
         AppUtil.logger("Product_selection", " Product : " + product + " Quantity : " + quantity);
 
+        View tr = getActivity().getLayoutInflater().inflate(R.layout.custom_requirement_table_row,null);
 
+        TextView productText = (TextView) tr.findViewById(R.id.product);
+        TextView quantityText = (TextView) tr.findViewById(R.id.quantity);
 
-//         <TableRow
-//        android:id="@+id/rowheading"
-//        android:layout_width="match_parent"
-//        android:layout_height="wrap_content"
-//        android:layout_marginTop="@dimen/_5sdp"
-//        android:layout_marginBottom="@dimen/_5sdp"
-//        android:padding="@dimen/_3sdp"
-//                >
-//                <TextView
-//        android:layout_width="match_parent"
-//        android:layout_height="@dimen/_15sdp"
-//        android:layout_weight="1"
-//        android:gravity="center"
-//        android:text="Product"/>
-//                <TextView
-//        android:layout_width="match_parent"
-//        android:layout_height="@dimen/_15sdp"
-//        android:text="Quantity"
-//        android:gravity="center"
-//        android:layout_weight="1"/>
-//            </TableRow>
-        TableRow tr = new TableRow(getContext());
-        TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
-
-        layoutParams.setMargins(0, (int) getResources().getDimension(R.dimen._5sdp), 0, (int) getResources().getDimensionPixelSize(R.dimen._5sdp));
-        tr.setLayoutParams(layoutParams);
-        tr.setPadding((int) getResources().getDimension(R.dimen._3sdp), (int) getResources().getDimension(R.dimen._3sdp), (int) getResources().getDimension(R.dimen._3sdp), (int) getResources().getDimension(R.dimen._3sdp));
-
-        TextView tv = new TextView(getContext());
-        tv.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 1f));
-        tv.setGravity(Gravity.CENTER);
-        tv.setText(product);
-
-        tr.addView(tv, 0);
-
-        TextView tv1 = new TextView(getContext());
-        tv1.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 1f));
-        tv1.setGravity(Gravity.CENTER);
-        tv1.setText(quantity);
-
-        tr.addView(tv1, 1);
+        productText.setText(product);
+        quantityText.setText(quantity);
 
         productTable.addView(tr, count);
         count++;
