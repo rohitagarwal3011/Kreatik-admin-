@@ -5,19 +5,31 @@
     <item android:id="@+id/attachment"
         android:title="attachment"
         android:visible="true"
-        android:icon="@drawable/ic_attach_file_black_24dp"
+        android:icon="@drawable/ic_attachment"
         app:showAsAction="always"/>
 
 
     <item android:id="@+id/status"
         android:title="Status"
         android:visible="true"
-        android:icon="@drawable/status_change"
+        android:icon="@drawable/ic_icon"
         android:orderInCategory="100"
         app:showAsAction="always"
         />
     <item android:id="@+id/completed"
         android:title="Completed Tasks"
         app:showAsAction="never"
+        />
+    <item android:id="@+id/search"
+        android:icon="@drawable/search_icon"
+        android:title="Search Tasks"
+        app:showAsAction="collapseActionView|ifRoom"
+        android:actionViewClass="android.support.v7.widget.SearchView"
+        app:actionViewClass="android.support.v7.widget.SearchView"
+        />
+    <item android:id="@+id/filter"
+        android:icon="@drawable/filter_icon"
+        android:title="Filter Tasks"
+        app:showAsAction="always"
         />
 </menu>

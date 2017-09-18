@@ -10,8 +10,11 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.app.rbc.admin.R;
@@ -19,6 +22,7 @@ import com.app.rbc.admin.adapters.Vehicle_detail_adapter;
 import com.app.rbc.admin.fragments.Requirement_fulfill_task;
 import com.app.rbc.admin.fragments.Stock_list_product_wise;
 import com.app.rbc.admin.interfaces.ApiServices;
+import com.app.rbc.admin.models.Product;
 import com.app.rbc.admin.models.RequirementDetails;
 import com.app.rbc.admin.models.VehicleDetail;
 import com.app.rbc.admin.utils.AppUtil;
@@ -70,7 +74,12 @@ public class RequirementDetailActivity extends AppCompatActivity {
     FrameLayout frameMain;
     @BindView(R.id.vehicle_info)
     RecyclerView vehicleInfo;
+    @BindView(R.id.rowheading)
+    TableRow rowheading;
+    @BindView(R.id.product_table)
+    TableLayout productTable;
     private String category_selected;
+    int count;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +93,7 @@ public class RequirementDetailActivity extends AppCompatActivity {
         Intent intent = getIntent();
         rq_id = intent.getStringExtra("rq_id");
         category_selected = intent.getStringExtra("category_selected");
+        count =1;
         get_data();
     }
 
@@ -149,6 +159,8 @@ public class RequirementDetailActivity extends AppCompatActivity {
     }
 
     private void setData() {
+        AppUtil.logger("RequirementDetails : ", "Show Details");
+
         RequirementDetails.ReqDetail.Detail reqDetail = requirementDetails.getReqDetails().get(0).getDetails().get(0);
         requirementDate.setText(reqDetail.getmTitle());
         purpose.setText(reqDetail.getmPurpose());
@@ -165,11 +177,49 @@ public class RequirementDetailActivity extends AppCompatActivity {
         product_list.clear();
         for (int i = 0; i < requirementDetails.getReqDetails().get(0).getProducts().size(); i++) {
             product_list.add(requirementDetails.getReqDetails().get(0).getProducts().get(i).getProduct());
+            Product  reqDetail = requirementDetails.getReqDetails().get(0).getProducts().get(i);
+            addrow(reqDetail.getProduct(),reqDetail.getQuantity().toString(),reqDetail.getRemQuantity().toString());
         }
+
+    }
+
+    private void addrow(String product, String quantity,String rem_quantity) {
+        TableRow tr = new TableRow(RequirementDetailActivity.this);
+        TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
+
+        layoutParams.setMargins(0, (int) getResources().getDimension(R.dimen._5sdp), 0, (int) getResources().getDimensionPixelSize(R.dimen._5sdp));
+        tr.setLayoutParams(layoutParams);
+        tr.setPadding((int) getResources().getDimension(R.dimen._3sdp), (int) getResources().getDimension(R.dimen._3sdp), (int) getResources().getDimension(R.dimen._3sdp), (int) getResources().getDimension(R.dimen._3sdp));
+
+        TextView tv = new TextView(RequirementDetailActivity.this);
+        tv.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 1f));
+        tv.setGravity(Gravity.CENTER_HORIZONTAL);
+        tv.setTextColor(Color.parseColor("#000000"));
+        tv.setText(product);
+
+        tr.addView(tv, 0);
+
+        TextView tv1 = new TextView(RequirementDetailActivity.this);
+        tv1.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 1f));
+        tv1.setGravity(Gravity.CENTER_HORIZONTAL);
+        tv1.setTextColor(Color.parseColor("#000000"));
+        tv1.setText(quantity);
+
+        tr.addView(tv1, 1);
+
+        TextView tv2 = new TextView(RequirementDetailActivity.this);
+        tv2.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 1f));
+        tv2.setGravity(Gravity.CENTER_HORIZONTAL);
+        tv2.setTextColor(Color.parseColor("#000000"));
+        tv2.setText(rem_quantity);
+
+        tr.addView(tv2, 2);
+        productTable.addView(tr, count);
+        count++;
     }
 
     private void set_vehicle_info() {
-
+        AppUtil.logger("RequirementDetails : ", "Show Vehicle Details");
         List<VehicleDetail> vehicleDetails = new ArrayList<>(requirementDetails.getVehicleDetails());
         vehicleDetails.addAll(requirementDetails.getPoReqVehicleDetails());
         vehicleInfo.setHasFixedSize(true);
@@ -179,7 +229,7 @@ public class RequirementDetailActivity extends AppCompatActivity {
         vehicleInfo.setItemAnimator(new DefaultItemAnimator());
         vehicleInfo.addItemDecoration(new DividerItemDecoration(RequirementDetailActivity.this, LinearLayoutManager.VERTICAL));
 
-        Vehicle_detail_adapter adapter = new Vehicle_detail_adapter(vehicleDetails,RequirementDetailActivity.this);
+        Vehicle_detail_adapter adapter = new Vehicle_detail_adapter(vehicleDetails, RequirementDetailActivity.this);
         vehicleInfo.setAdapter(adapter);
         adapter.notifyDataSetChanged();
     }

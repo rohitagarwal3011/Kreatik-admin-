@@ -5,6 +5,9 @@
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
     tools:context="com.app.rbc.admin.fragments.Stock_po_details">
 
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
    <LinearLayout
        android:layout_width="match_parent"
        android:layout_height="match_parent"
@@ -92,7 +95,6 @@
                    android:layout_width="match_parent"
                    android:layout_height="match_parent"
                    android:orientation="vertical"
-                   android:paddingLeft="@dimen/_20sdp"
                    android:gravity="center_vertical">
 
                    <TextView
@@ -113,55 +115,96 @@
                        android:visibility="visible"
                        android:textColor="@color/black"
                        android:textSize="@dimen/_12sdp" />
+                   <LinearLayout
+                       android:layout_width="match_parent"
+                       android:layout_height="wrap_content"
+                       android:orientation="horizontal"
+                       >
+
+
+                       <TextView
+                           android:layout_width="match_parent"
+                           android:layout_height="match_parent"
+                           android:layout_weight=".8"
+                           android:gravity="right|center_vertical"
+                           android:text="Status : "
+                           android:visibility="gone"
+                           android:textColor="@color/black"
+                           android:textSize="@dimen/_12sdp" />
+
+                       <TextView
+                           android:layout_width="match_parent"
+                           android:layout_height="match_parent"
+                           android:gravity="right|center_vertical"
+                           android:text="Created"
+                           android:id="@+id/PO_status"
+                           android:textColor="@color/black"
+                           android:textSize="@dimen/_12sdp" />
+
+
+                   </LinearLayout>
                </LinearLayout>
 
            </LinearLayout>
 
-           <LinearLayout
-               android:layout_width="match_parent"
-               android:layout_height="wrap_content"
-               android:orientation="horizontal"
-               android:layout_marginTop="@dimen/_10sdp"
-               android:paddingBottom="@dimen/_5sdp">
 
-               <TextView
-                   android:layout_width="wrap_content"
-                   android:layout_height="match_parent"
-                   android:gravity="center_vertical"
-                   android:text="Qty : "
-                   android:textColor="@color/black"
-                   android:textSize="@dimen/_12sdp" />
-
-               <TextView
-                   android:id="@+id/PO_quantity"
-                   android:layout_width="wrap_content"
-                   android:layout_height="match_parent"
-                   android:gravity="center_vertical"
-                   android:text="3000 bags"
-                   android:textColor="@color/black"
-                   android:textSize="@dimen/_12sdp" />
-
-               <TextView
-                   android:layout_width="match_parent"
-                   android:layout_height="match_parent"
-                   android:layout_weight=".8"
-                   android:gravity="right|center_vertical"
-                   android:text="Status : "
-                   android:textColor="@color/black"
-                   android:textSize="@dimen/_12sdp" />
-
-               <TextView
-                   android:layout_width="wrap_content"
-                   android:layout_height="match_parent"
-                   android:gravity="center_vertical"
-                   android:text="Assigned"
-                   android:id="@+id/PO_status"
-                   android:textColor="@color/holo_green_light"
-                   android:textSize="@dimen/_12sdp" />
-
-
-           </LinearLayout>
        </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="#eee"
+        android:padding="@dimen/_10sdp"
+        >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Products Information"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_14sdp"/>
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/product_table"
+            >
+            <TableRow
+                android:id="@+id/rowheading"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:layout_marginBottom="@dimen/_5sdp"
+                android:padding="@dimen/_3sdp"
+                >
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_15sdp"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:textColor="@color/black"
+                    android:text="Product"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_15sdp"
+                    android:text="Quantity"
+                    android:gravity="center_horizontal"
+                    android:textColor="@color/black"
+                    android:layout_weight="1"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_15sdp"
+                    android:text="Remainig Qty"
+                    android:gravity="center_horizontal"
+                    android:textColor="@color/black"
+                    android:layout_weight="1"/>
+            </TableRow>
+        </TableLayout>
+
+    </LinearLayout>
+
+
        <LinearLayout
            android:layout_width="match_parent"
            android:layout_height="wrap_content"
@@ -255,12 +298,15 @@
            android:padding="@dimen/_10sdp"
            />
 
+       <android.support.v4.widget.NestedScrollView
+           android:layout_width="match_parent"
+           android:layout_height="match_parent">
        <android.support.v7.widget.RecyclerView
            android:layout_width="match_parent"
            android:layout_height="match_parent"
            android:id="@+id/vehicle_info"
            android:scrollbars="vertical"/>
-
+        </android.support.v4.widget.NestedScrollView>
 
 
 
@@ -268,5 +314,5 @@
 
 
    </LinearLayout>
-
+</android.support.v4.widget.NestedScrollView>
 </FrameLayout>

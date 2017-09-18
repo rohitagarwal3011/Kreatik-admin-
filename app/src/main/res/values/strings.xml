@@ -6,7 +6,7 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_logout">Logout</string>
-    <string name="title_activity_task">Task</string>
+    <string name="title_activity_task">Tasks</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -19,7 +19,50 @@
     <string name="title_activity_attendance">Attendance</string>
     <string name="title_activity_stock">Stocks</string>
     <string name="action_settings">Settings</string>
+
     <string name="section_format">Hello World from section: %1$d</string>
     <string name="title_activity_requirement">Requirements</string>
     <string name="title_activity_add_vehicle">AddVehicleActivity</string>
+    <string name="title_activity_indents">Indents &amp; Registers</string>
+    <string name="status">Status</string>
+
+    <string-array name="task_status_filter">
+        <item>All</item>
+        <item>Created</item>
+        <item>In Progress</item>
+        <item>Check for Completion</item>
+        <item>Delayed</item>
+    </string-array>
+
+
+    <string-array name="settings_titles">
+        <item>My Details</item>
+        <item>Employees</item>
+        <item>Sites</item>
+        <item>Vendors</item>
+        <item>Category &amp; Products</item>
+    </string-array>
+
+
+    <string-array name="emp_roles">
+        <item>Manager</item>
+        <item>Staff</item>
+        <item>Site Incharge</item>
+        <item>Others</item>
+    </string-array>
+
+    <string name="spinner_prompt">Select</string>
+
+    <string name="admin_user_id">SA2323</string>
+
+    <string-array name="api_responses">
+        <item>60 - save add user</item>
+        <item>61 - save add another user</item>
+    </string-array>
+
+    <string-array name="site_types">
+        <item>Stock</item>
+        <item>Site</item>
+    </string-array>
+
 </resources>

@@ -48,7 +48,7 @@
             android:paddingLeft="@dimen/_10sdp"
             android:text="Rohit Agarwal"
             android:textColor="@color/black"
-            android:textSize="@dimen/_14sdp" />
+            android:textSize="@dimen/_13sdp" />
     </LinearLayout>
 
     <CheckBox
@@ -87,15 +87,18 @@
             android:textColor="@color/black"
             />
     </LinearLayout>
+
     <EditText
         android:id="@+id/remarks_other"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/_80sdp"
+        android:layout_marginRight="@dimen/_10sdp"
         android:hint="Other(Specify)"
-        android:visibility="gone"
-        android:textSize="@dimen/_14sdp"
+        android:maxLength="20"
         android:maxLines="1"
-        android:maxLength="40"
-        android:layout_marginRight="@dimen/_10sdp"/>
+        android:selectAllOnFocus="false"
+        android:singleLine="false"
+        android:textSize="@dimen/_11sdp"
+        android:visibility="gone" />
 </LinearLayout>

@@ -1,5 +1,9 @@
 package com.app.rbc.admin.activities;
 
+import android.app.DatePickerDialog;
+import android.app.Dialog;
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -12,20 +16,27 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.FrameLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.app.rbc.admin.R;
@@ -35,14 +46,20 @@ import com.app.rbc.admin.fragments.Requirement_create_new;
 import com.app.rbc.admin.fragments.Stock_categories;
 import com.app.rbc.admin.interfaces.ApiServices;
 import com.app.rbc.admin.models.RequirementList;
+import com.app.rbc.admin.models.StockCategoryDetails;
 import com.app.rbc.admin.utils.AppUtil;
 import com.app.rbc.admin.utils.ChangeFragment;
 import com.app.rbc.admin.utils.RetrofitClient;
 import com.app.rbc.admin.utils.TagsPreferences;
 import com.google.gson.Gson;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -54,7 +71,7 @@ import retrofit2.Response;
 
 import static com.app.rbc.admin.utils.ChangeFragment.changeFragment;
 
-public class RequirementActivity extends AppCompatActivity {
+public class RequirementActivity extends AppCompatActivity implements SearchView.OnQueryTextListener{
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -69,7 +86,7 @@ public class RequirementActivity extends AppCompatActivity {
     @BindView(R.id.frame_main)
     FrameLayout frameMain;
 
-    String category_selected;
+    public String category_selected;
     /**
      * The {@link PagerAdapter} that will provide
      * fragments for each of the sections. We use a
@@ -84,6 +101,7 @@ public class RequirementActivity extends AppCompatActivity {
      * The {@link ViewPager} that will host the section contents.
      */
     private ViewPager mViewPager;
+    private Menu menu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,25 +147,44 @@ public class RequirementActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_requirement, menu);
+        getMenuInflater().inflate(R.menu.menu_stock, menu);
+        this.menu = menu;
+        SearchManager searchManager =
+                (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView)
+                MenuItemCompat.getActionView(menu.findItem(R.id.search));
+
+        searchView.setSearchableInfo(
+                searchManager.getSearchableInfo(getComponentName()));
+        searchView.setSubmitButtonEnabled(true);
+        searchView.setOnQueryTextListener(this);
+
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
+        }
+        if(id == R.id.filter) {
+            RequirementActivity.PlaceholderFragment placeholderFragment = (RequirementActivity.PlaceholderFragment) mSectionsPagerAdapter
+                    .getFragment(mViewPager.getCurrentItem());
+            switch (mViewPager.getCurrentItem()) {
+                case 0:placeholderFragment.setRequirementFilter(placeholderFragment.latest);
+                    break;
+                case 1:placeholderFragment.setRequirementFilter(placeholderFragment.ongoing);
+                    break;
+                case 2:placeholderFragment.setRequirementFilter(placeholderFragment.complete);
+                    break;
+            }
         }
 
         return super.onOptionsItemSelected(item);
     }
-
     public void show_tablayout() {
 
         tabLayout.setVisibility(View.VISIBLE);
@@ -219,6 +256,54 @@ public class RequirementActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        RequirementActivity.PlaceholderFragment placeholderFragment = (RequirementActivity.PlaceholderFragment) mSectionsPagerAdapter
+                .getFragment(mViewPager.getCurrentItem());
+        switch (mViewPager.getCurrentItem()) {
+            case 0 :
+               List<RequirementList.ReqList> search = new ArrayList<>();
+                for(int i = 0 ; i < placeholderFragment.latest.size()  ; i++) {
+                    RequirementList.ReqList.Detail detail = placeholderFragment.latest.get(i).getDetails().get(0);
+                    if(detail.getTitle().toLowerCase().contains(newText.toLowerCase())) {
+                        search.add(placeholderFragment.latest.get(i));
+                    }
+                }
+                placeholderFragment.set_requirement_list(search);
+                break;
+
+            case 1:
+                List<RequirementList.ReqList> search_ongoing = new ArrayList<>();
+                for(int i = 0 ; i < placeholderFragment.ongoing.size()  ; i++) {
+                    RequirementList.ReqList.Detail detail = placeholderFragment.ongoing.get(i).getDetails().get(0);
+                    if(detail.getTitle().toLowerCase().contains(newText.toLowerCase())) {
+                        search_ongoing.add(placeholderFragment.ongoing.get(i));
+                    }
+                }
+                placeholderFragment.set_requirement_list(search_ongoing);
+                break;
+
+            case 2 :
+                List<RequirementList.ReqList> search_complete = new ArrayList<>();
+                for(int i = 0 ; i < placeholderFragment.complete.size()  ; i++) {
+                    RequirementList.ReqList.Detail detail = placeholderFragment.complete.get(i).getDetails().get(0);
+                    if(detail.getTitle().toLowerCase().contains(newText.toLowerCase())) {
+                        search_complete.add(placeholderFragment.complete.get(i));
+                    }
+                }
+                placeholderFragment.set_requirement_list(search_complete);
+                break;
+        }
+
+        return true;
+
+    }
+
     /**
      * A placeholder fragment containing a simple view.
      */
@@ -231,6 +316,13 @@ public class RequirementActivity extends AppCompatActivity {
         @BindView(R.id.recycler_view)
         RecyclerView recyclerView;
         Unbinder unbinder;
+        private Button created_on;
+        private Calendar myCalendar;
+        SwipeRefreshLayout swipeRefreshLayout;
+
+        public List<RequirementList.ReqList> latest =  new ArrayList<>(),
+                ongoing = new ArrayList<>(),
+                complete = new ArrayList<>();
 
         public PlaceholderFragment() {
         }
@@ -256,6 +348,15 @@ public class RequirementActivity extends AppCompatActivity {
             unbinder = ButterKnife.bind(this, rootView);
             position = getArguments().getInt(ARG_SECTION_NUMBER);
             AppUtil.logger("Position for adapter : ",String.valueOf(position));
+            swipeRefreshLayout = (SwipeRefreshLayout)rootView.findViewById(R.id.swiperefresh);
+            swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                @Override
+                public void onRefresh() {
+                    ((RequirementActivity)getActivity()).get_category_requirements(
+                            ((RequirementActivity)getActivity()).category_selected);
+                    recyclerView.invalidate();
+                }
+            });
             return rootView;
         }
 
@@ -265,7 +366,9 @@ public class RequirementActivity extends AppCompatActivity {
 
             List<RequirementList.ReqList> reqLists = new Gson().fromJson(AppUtil.getString(getContext().getApplicationContext(), TagsPreferences.REQUIREMENT_LIST), RequirementList.class).getReqList();
 
-            List<RequirementList.ReqList> latest = new ArrayList<>(),ongoing = new ArrayList<>(),complete= new ArrayList<>();
+            latest.clear();
+            complete.clear();
+            ongoing.clear();
 
             for(int i=0;i<reqLists.size();i++)
             {
@@ -315,6 +418,150 @@ public class RequirementActivity extends AppCompatActivity {
 
         }
 
+        public void set_requirement_list(List<RequirementList.ReqList> reqLists) {
+
+
+            Requirement_list_adapter adapter = new Requirement_list_adapter(reqLists, getContext());
+            recyclerView.setAdapter(adapter);
+            adapter.notifyDataSetChanged();
+
+        }
+
+        public void setRequirementFilter(final List<RequirementList.ReqList> requirements) {
+            final Dialog dialog = new Dialog(getActivity());
+
+            View dialogView= getActivity().getLayoutInflater().inflate(R.layout.dialog_filter_requirement_list,null);
+
+            final Spinner category_spinner = (Spinner) dialogView.findViewById(R.id.category_spinner);
+            final Spinner site_spinner = (Spinner) dialogView.findViewById(R.id.site_spinner);
+            created_on = (Button) dialogView.findViewById(R.id.created_on_button);
+            Button submit = (Button) dialogView.findViewById(R.id.submit);
+
+
+            final List<String> categories = new ArrayList<>();
+            final List<String> sites = new ArrayList<>();
+
+            categories.add(0,"All");
+            sites.add(0,"All");
+
+            created_on.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    myCalendar = Calendar.getInstance();
+                    new DatePickerDialog(getContext(), date, myCalendar
+                            .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                            myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+                }
+            });
+
+            for(int i = 0 ; i < requirements.size() ; i++) {
+                RequirementList.ReqList.Detail detail = requirements.get(i).getDetails().get(0);
+                int j;
+                for(j = 0 ; j < categories.size() ; j++) {
+
+
+                    if(categories.get(j).equalsIgnoreCase(detail.getCategory())) {
+                        break;
+                    }
+                }
+                if(j == categories.size()) {
+                    categories.add(detail.getCategory());
+                }
+
+                for(j = 0 ; j < sites.size() ; j++) {
+                    if(sites.get(j).equalsIgnoreCase(detail.getSite())) {
+                        break;
+                    }
+                }
+                if(j == sites.size()) {
+                    sites.add(detail.getSite());
+                }
+
+
+            }
+
+            ArrayAdapter<String> category_adapter = new ArrayAdapter<>(getActivity(),
+                    android.R.layout.simple_expandable_list_item_1,
+                    categories);
+            category_spinner.setAdapter(category_adapter);
+
+            ArrayAdapter<String> site_adapter = new ArrayAdapter<>(getActivity(),
+                    android.R.layout.simple_expandable_list_item_1,
+                    sites);
+            site_spinner.setAdapter(site_adapter);
+
+
+
+            submit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                    List<RequirementList.ReqList> filtered = new ArrayList<>();
+
+                    for(int i = 0 ; i < requirements.size() ; i++) {
+                        RequirementList.ReqList.Detail detail = requirements.get(i).getDetails().get(0);
+                        if(category_spinner.getSelectedItemPosition() != 0) {
+                            if(!(detail.getCategory().equalsIgnoreCase(categories
+                                    .get(category_spinner.getSelectedItemPosition()))))  {
+                                continue;
+                            }
+                        }
+                        if(site_spinner.getSelectedItemPosition() != 0) {
+                            if(!(detail.getSite().equalsIgnoreCase(sites
+                                    .get(site_spinner.getSelectedItemPosition()))))  {
+                                continue;
+                            }
+                        }
+                        if(!(created_on.getText().toString().equals(""))) {
+                            try {
+                                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+                                format.setTimeZone(TimeZone.getTimeZone("UTC"));
+
+                                Date date = format.parse(detail.getCreatedOn());
+                                long millisTodo = date.getTime();
+
+                                date = format.parse(created_on.getText().toString());
+                                long millisFilter = date.getTime();
+
+                                if (!(millisTodo <= millisFilter)) {
+                                    continue;
+                                }
+
+                            } catch (Exception e) {
+                                AppUtil.logger("Date Parse", e.toString());
+                            }
+                        }
+
+                        filtered.add(requirements.get(i));
+
+                    }
+                    set_requirement_list(filtered);
+                }
+            });
+
+
+            dialog.setContentView(dialogView);
+            dialog.show();
+        }
+
+
+
+        DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
+
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear,
+                                  int dayOfMonth) {
+                // TODO Auto-generated method stub
+                myCalendar.set(Calendar.YEAR, year);
+                myCalendar.set(Calendar.MONTH, monthOfYear);
+                myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                String myFormat = "yyyy-MM-dd";
+                SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
+
+                created_on.setText(sdf.format(myCalendar.getTime()));
+            }
+
+        };
 
         @Override
         public void onDestroyView() {
@@ -323,15 +570,12 @@ public class RequirementActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
-     * one of the sections/tabs/pages.
-     */
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
         }
+        private List<Fragment> fragments = new ArrayList<>();
 
         String tag1, tag2, tag3;
 
@@ -347,10 +591,16 @@ public class RequirementActivity extends AppCompatActivity {
             // Show 3 total pages.
             return 3;
         }
+        public Fragment getFragment(int position) {
+            return fragments.get(position);
+        }
+
 
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
             Fragment createdFragment = (Fragment) super.instantiateItem(container, position);
+            fragments.add(position,createdFragment);
+
             // get the tags set by FragmentPagerAdapter
             switch (position) {
                 case 0:

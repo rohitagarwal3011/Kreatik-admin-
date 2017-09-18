@@ -15,6 +15,71 @@
         android:layout_gravity="center_vertical"
         android:padding="@dimen/_10sdp">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="@dimen/_10sdp"
+            android:layout_gravity="center_vertical"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:textColor="@color/black"
+                android:text="Is it related to PO ? "/>
+
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/radiogroup"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Yes"
+                    android:layout_weight="1"
+                    android:id="@+id/radio_po"
+                    android:textColor="@color/black"
+                    />
+
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="No"
+                    android:layout_weight="1"
+                    android:checked="true"
+                    android:id="@+id/radio_site"
+                    android:textColor="@color/black"
+                    />
+            </RadioGroup>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            android:id="@+id/po_number_layout"
+            android:layout_marginBottom="@dimen/_10sdp"
+            android:padding="@dimen/_5sdp"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="PO Number : "/>
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/edit_text_with_border"
+                android:padding="@dimen/_5sdp"
+                android:id="@+id/PO_number"/>
+
+        </LinearLayout>
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content" 
@@ -45,33 +110,7 @@
             android:layout_marginBottom="@dimen/_10sdp"
             />
 
-        <RadioGroup
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/radiogroup"
-            android:orientation="horizontal"
-            android:layout_marginBottom="@dimen/_10sdp"
-            android:weightSum="2">
 
-            <RadioButton
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Vendor"
-                android:id="@+id/radio_vendor"
-                android:textColor="@color/black"
-                android:layout_weight="1"
-                />
-
-            <RadioButton
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Site/Stock"
-                android:layout_weight="1"
-                android:checked="true"
-                android:id="@+id/radio_site"
-                android:textColor="@color/black"
-                />
-        </RadioGroup>
 
         <Spinner
             android:id="@+id/select_source"

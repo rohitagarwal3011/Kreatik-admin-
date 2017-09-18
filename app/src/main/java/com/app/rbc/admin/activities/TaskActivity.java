@@ -1,5 +1,6 @@
 package com.app.rbc.admin.activities;
 
+import android.app.SearchManager;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
@@ -12,7 +13,9 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -29,6 +32,7 @@ import com.app.rbc.admin.interfaces.ApiServices;
 import com.app.rbc.admin.utils.AppUtil;
 import com.app.rbc.admin.utils.ChangeFragment;
 import com.app.rbc.admin.utils.FileDownloader;
+import com.app.rbc.admin.utils.FileUtils;
 import com.app.rbc.admin.utils.RetrofitClient;
 import com.yalantis.contextmenu.lib.ContextMenuDialogFragment;
 import com.yalantis.contextmenu.lib.MenuObject;
@@ -45,7 +49,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
-public class TaskActivity extends AppCompatActivity implements Task_home.OnTaskTypeSelectListener,OnMenuItemClickListener, OnMenuItemLongClickListener {
+public class TaskActivity extends AppCompatActivity implements Task_home.OnTaskTypeSelectListener,OnMenuItemClickListener,
+        OnMenuItemLongClickListener, SearchView.OnQueryTextListener {
 
     @BindView(R.id.frame_main)
     FrameLayout frameMain;
@@ -59,6 +64,7 @@ public class TaskActivity extends AppCompatActivity implements Task_home.OnTaskT
     final ApiServices apiServices = RetrofitClient.getApiService();
     public static String visible_fragment;
     private ContextMenuDialogFragment mMenuDialogFragment;
+    private Menu menu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,6 +112,16 @@ public class TaskActivity extends AppCompatActivity implements Task_home.OnTaskT
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.task, menu);
+        this.menu = menu;
+        SearchManager searchManager =
+                (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView)
+                MenuItemCompat.getActionView(menu.findItem(R.id.search));
+
+        searchView.setSearchableInfo(
+                searchManager.getSearchableInfo(getComponentName()));
+        searchView.setSubmitButtonEnabled(true);
+        searchView.setOnQueryTextListener(this);
 
         return true;
     }
@@ -177,6 +193,8 @@ public class TaskActivity extends AppCompatActivity implements Task_home.OnTaskT
             case R.id.add_attachment:
 
                 return true;
+            case R.id.search :
+
 
             default:
                 return super.onOptionsItemSelected(item);
@@ -277,7 +295,7 @@ public class TaskActivity extends AppCompatActivity implements Task_home.OnTaskT
 //            }
 //            else {
 
-                setToolbar("Task");
+                setToolbar("Tasks");
                 task_home = new Task_home();
                 setFragment(task_home,Task_home.TAG);
 //            }
@@ -346,31 +364,17 @@ public class TaskActivity extends AppCompatActivity implements Task_home.OnTaskT
         new DownloadFile().execute(url, file_name);
     }
 
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        AppUtil.logger(TAG,newText);
+        task_home.setRecyclerSearch(newText);
+        return true;
+    }
 
 
     private class DownloadFile extends AsyncTask<String, Void, Void> {

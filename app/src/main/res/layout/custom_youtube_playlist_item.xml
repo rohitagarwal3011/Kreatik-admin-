@@ -1,0 +1,50 @@
+<android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/tools"
+    android:id="@+id/card_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    card_view:cardCornerRadius="2dp"
+    android:elevation="2dp"
+    android:layout_marginBottom="3dp">
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/native_padding"
+        android:background="@color/itemGradient">
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:padding="1dp"
+            android:background="@color/dark_text"
+            android:layout_width="120dp"
+            android:layout_height="60dp"
+            android:id="@+id/playlist_icon"
+            fresco:actualImageScaleType="centerCrop"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:layout_marginRight="@dimen/native_padding"
+            android:layout_toRightOf="@+id/playlist_icon"
+            android:layout_marginLeft="@dimen/native_padding"
+            android:text="Employees"
+            android:textColor="@color/dark_text"
+            android:id="@+id/playlist_title"
+            android:layout_alignTop="@id/playlist_icon"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/playlist_title"
+            android:layout_marginTop="5dp"
+            android:textSize="14sp"
+            android:text="2 videos"
+            android:id="@+id/item_count"
+            android:textColor="@color/light_text"
+            android:layout_marginRight="@dimen/native_padding"
+            android:layout_toRightOf="@+id/playlist_icon"
+            android:layout_marginLeft="@dimen/native_padding"/>
+    </RelativeLayout>
+</android.support.v7.widget.CardView>

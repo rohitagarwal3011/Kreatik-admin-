@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/card_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    card_view:cardCornerRadius="2dp"
+    android:elevation="2dp"
+    android:layout_marginBottom="3dp">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/native_padding"
+    android:background="@color/itemGradient">
+    
+    <ImageView
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:id="@+id/item_icon"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:layout_marginRight="@dimen/native_padding"
+        android:layout_toRightOf="@+id/item_icon"
+        android:layout_marginLeft="@dimen/native_padding"
+        android:text="Employees"
+        android:id="@+id/item_title"
+        android:layout_centerVertical="true"/>
+    
+    <Button
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:id="@+id/item_click"
+        android:background="@drawable/next"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"/>
+</RelativeLayout>
+</android.support.v7.widget.CardView>

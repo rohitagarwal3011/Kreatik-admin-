@@ -200,6 +200,10 @@ public class Task_details extends Fragment {
         item1.setVisible(true);
         MenuItem item2 = menu.findItem(R.id.completed);
         item2.setVisible(false);
+        MenuItem search = menu.findItem(R.id.search);
+        search.setVisible(false);
+        MenuItem filter = menu.findItem(R.id.filter);
+        filter.setVisible(false);
     }
 
     @Override

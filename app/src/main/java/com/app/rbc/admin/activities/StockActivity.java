@@ -1,6 +1,10 @@
 package com.app.rbc.admin.activities;
 
 import android.app.Dialog;
+import android.content.Intent;
+import android.app.SearchManager;
+import android.content.Context;
+
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -11,30 +15,40 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.app.rbc.admin.R;
 import com.app.rbc.admin.adapters.PO_detail_adapter;
 import com.app.rbc.admin.adapters.Stock_detail_adapter;
 import com.app.rbc.admin.adapters.Transaction_detail_adapter;
+import com.app.rbc.admin.fragments.Attendance_all;
 import com.app.rbc.admin.fragments.Employee_list;
 import com.app.rbc.admin.fragments.Product_selection;
+import com.app.rbc.admin.fragments.Requirement_fulfill_task;
 import com.app.rbc.admin.fragments.Stock_add_po_details;
 import com.app.rbc.admin.fragments.Stock_categories;
 import com.app.rbc.admin.fragments.Stock_po_create_task;
@@ -42,13 +56,13 @@ import com.app.rbc.admin.fragments.Stock_po_details;
 import com.app.rbc.admin.fragments.Vendor_list;
 import com.app.rbc.admin.interfaces.ApiServices;
 import com.app.rbc.admin.models.StockCategoryDetails;
-import com.app.rbc.admin.models.Vendors;
 import com.app.rbc.admin.utils.AppUtil;
 import com.app.rbc.admin.utils.ChangeFragment;
 import com.app.rbc.admin.utils.RetrofitClient;
 import com.app.rbc.admin.utils.TagsPreferences;
 import com.google.gson.Gson;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -61,7 +75,7 @@ import retrofit2.Response;
 
 import static com.app.rbc.admin.utils.ChangeFragment.changeFragment;
 
-public class StockActivity extends AppCompatActivity {
+public class StockActivity extends AppCompatActivity implements SearchView.OnQueryTextListener{
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -74,7 +88,7 @@ public class StockActivity extends AppCompatActivity {
     @BindView(R.id.fab)
     FloatingActionButton fab;
 
-     String category_selected ="";
+     public String category_selected ="";
     /**
      * The {@link PagerAdapter} that will provide
      * fragments for each of the sections. We use a
@@ -91,6 +105,11 @@ public class StockActivity extends AppCompatActivity {
     public ViewPager mViewPager;
 
     StockCategoryDetails productDetails;
+    private Menu menu;
+
+
+
+    public static Boolean show_tabs = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,6 +119,7 @@ public class StockActivity extends AppCompatActivity {
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -110,8 +130,6 @@ public class StockActivity extends AppCompatActivity {
 
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         // tabLayout.setupWithViewPager(mViewPager);
-
-
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -167,31 +185,99 @@ public class StockActivity extends AppCompatActivity {
         dialog.show();
     }
 
+    public void setToolbar(String title)
+    {
+        toolbar.setTitle(title);
+    }
 
 
 
+
+    @Override
+    public void onBackPressed() {
+//        super.onBackPressed();
+
+        if(tabLayout.getVisibility() == View.VISIBLE)
+        {
+            hide_tablayout();
+            //changeFragment(getSupportFragmentManager(), R.id.frame_main, new Stock_categories().newInstance("StockActivity"), Stock_categories.TAG);
+        }
+        else {
+
+            if(getSupportFragmentManager().findFragmentByTag(Stock_categories.TAG).isVisible())
+            {
+                getSupportFragmentManager().popBackStackImmediate();
+                Intent intent = new Intent(StockActivity.this, HomeActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                finish();
+            }
+            else if (show_tabs)
+            {
+                show_tablayout();
+                getSupportFragmentManager().popBackStackImmediate();
+            }
+
+//            else if(getSupportFragmentManager()..isVisible())
+//            {
+//                show_tablayout();
+//            }
+//            else if(getSupportFragmentManager().findFragmentByTag(Stock_add_po_details.TAG).isVisible())
+//            {
+//                show_tablayout();
+//            }
+            else {
+                getSupportFragmentManager().popBackStackImmediate();
+               // super.onBackPressed();
+
+            }
+        }
+
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_stock, menu);
+        this.menu = menu;
+        SearchManager searchManager =
+                (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView)
+                MenuItemCompat.getActionView(menu.findItem(R.id.search));
+
+        searchView.setSearchableInfo(
+                searchManager.getSearchableInfo(getComponentName()));
+        searchView.setSubmitButtonEnabled(true);
+        searchView.setOnQueryTextListener(this);
+
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
+        }
+        if(id == R.id.filter) {
+            PlaceholderFragment placeholderFragment = (PlaceholderFragment) mSectionsPagerAdapter.getFragment(
+                    mViewPager.getCurrentItem());
+           switch (mViewPager.getCurrentItem()) {
+               case 0:placeholderFragment.setStockDetailFilter();
+                   break;
+               case 1:placeholderFragment.setStockPOFilter();
+                   break;
+               case 2:placeholderFragment.setStockTransFilter();
+                   break;
+           }
         }
 
         return super.onOptionsItemSelected(item);
     }
+
 
     SweetAlertDialog pDialog;
 
@@ -258,13 +344,76 @@ public class StockActivity extends AppCompatActivity {
 
     public void show_po_details(String po)
     {
+
         changeFragment(getSupportFragmentManager(), R.id.frame_main, new Stock_po_details().newInstance(po), Stock_po_details.TAG);
         hide_tablayout();
     }
 
-    /**
-     * A placeholder fragment containing a simple view.
-     */
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        PlaceholderFragment placeholderFragment = (PlaceholderFragment) mSectionsPagerAdapter
+                .getFragment(mViewPager.getCurrentItem());
+        switch (mViewPager.getCurrentItem()) {
+            case 0 :
+                List<StockCategoryDetails.StockDetail> stockDetail = new Gson().
+                        fromJson(AppUtil.getString(this.getApplicationContext(), TagsPreferences.CATEGORY_DETAILS),
+                                StockCategoryDetails.class).getStockDetails();
+                List<StockCategoryDetails.StockDetail> searchDetails = new ArrayList<>();
+
+                for(int i = 0 ; i < stockDetail.size() ; i++) {
+                    if(stockDetail.get(i).getProduct().toLowerCase().contains(newText.toLowerCase()) || stockDetail.get(i)
+                            .getWhere().toLowerCase().contains(newText.toLowerCase())) {
+                        searchDetails.add(stockDetail.get(i));
+                    }
+                }
+                placeholderFragment.set_show_stock_recycler(searchDetails);
+                break;
+
+            case 1 :
+                List<StockCategoryDetails.PoDetail> poDetails = new Gson().
+                        fromJson(AppUtil.getString(this .getApplicationContext(),
+                                TagsPreferences.CATEGORY_DETAILS), StockCategoryDetails.class).getPoDetails();
+                List<StockCategoryDetails.PoDetail> searchPO = new ArrayList<>();
+
+                for(int i = 0 ; i < poDetails.size() ; i++) {
+                    StockCategoryDetails.PoDetail.Detail detail = poDetails.get(i).getDetails().get(0);
+
+                    if(detail.getTitle().toLowerCase().contains(newText.toLowerCase()) || detail.getStatus()
+                            .toLowerCase().contains(newText.toLowerCase()) ||
+                            detail.getCreatedBy().toLowerCase().equals(newText.toLowerCase())) {
+                        searchPO.add(poDetails.get(i));
+                    }
+                }
+                placeholderFragment.set_show_PO_recycler(searchPO);
+                break;
+
+            case 2 :
+                List<StockCategoryDetails.TransactionDetail> transactionDetails = new Gson().
+                        fromJson(AppUtil.getString(this.getApplicationContext(), TagsPreferences.CATEGORY_DETAILS),
+                                StockCategoryDetails.class).getTransactionDetails();
+
+                List<StockCategoryDetails.TransactionDetail> searchTrans = new ArrayList<>();
+
+                for(int i = 0 ; i < transactionDetails.size() ; i++) {
+                    StockCategoryDetails.TransactionDetail.Detail detail = transactionDetails.get(i).getDetails().get(0);
+                    if(detail.getChallanNum().toLowerCase().contains(newText.toLowerCase())
+                            || detail.getDestination().toLowerCase().contains(newText.toLowerCase())
+                            || detail.getSource().toLowerCase().contains(newText.toLowerCase())) {
+                        searchTrans.add(transactionDetails.get(i));
+                    }
+                }
+                placeholderFragment.set_show_transaction_recycler(searchTrans);
+                break;
+        }
+
+        return true;
+    }
+
     public static class PlaceholderFragment extends Fragment {
         /**
          * The fragment argument representing the section number for this
@@ -275,6 +424,12 @@ public class StockActivity extends AppCompatActivity {
         @BindView(R.id.recycler_view)
         RecyclerView recyclerView;
         Unbinder unbinder;
+        private View view;
+        private List<StockCategoryDetails.StockDetail> stockDetail;
+        private List<StockCategoryDetails.TransactionDetail> transactionDetails;
+        private List<StockCategoryDetails.PoDetail> poDetails;
+
+
 
         public PlaceholderFragment() {
         }
@@ -285,6 +440,7 @@ public class StockActivity extends AppCompatActivity {
          */
 
         int position;
+        SwipeRefreshLayout swipeRefreshLayout;
 
         public static PlaceholderFragment newInstance(int sectionNumber) {
             PlaceholderFragment fragment = new PlaceholderFragment();
@@ -293,6 +449,8 @@ public class StockActivity extends AppCompatActivity {
             fragment.setArguments(args);
             return fragment;
         }
+
+
 
         @Override
         public void onCreate(Bundle savedInstanceState) {
@@ -306,11 +464,20 @@ public class StockActivity extends AppCompatActivity {
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_stock_details, container, false);
+            view = inflater.inflate(R.layout.fragment_stock_details, container, false);
 //            TextView textView = (TextView) rootView.findViewById(R.id.section_label);
 //            textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
-            unbinder = ButterKnife.bind(this, rootView);
-            return rootView;
+            unbinder = ButterKnife.bind(this, view);
+            swipeRefreshLayout = (SwipeRefreshLayout)view.findViewById(R.id.swiperefresh);
+            swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                @Override
+                public void onRefresh() {
+                    ((StockActivity)getActivity()).get_product_details(
+                            ((StockActivity)getActivity()).category_selected);
+                    recyclerView.invalidate();
+                }
+            });
+            return view;
         }
 
         @Override
@@ -330,9 +497,10 @@ public class StockActivity extends AppCompatActivity {
             }
         }
 
+
         public void show_stock_details() {
 
-            List<StockCategoryDetails.StockDetail> stockDetail = new Gson().fromJson(AppUtil.getString(getContext().getApplicationContext(), TagsPreferences.CATEGORY_DETAILS), StockCategoryDetails.class).getStockDetails();
+            stockDetail = new Gson().fromJson(AppUtil.getString(getContext().getApplicationContext(), TagsPreferences.CATEGORY_DETAILS), StockCategoryDetails.class).getStockDetails();
             recyclerView.setHasFixedSize(true);
             LinearLayoutManager gridLayoutManager = new LinearLayoutManager(getContext());
             gridLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -347,8 +515,14 @@ public class StockActivity extends AppCompatActivity {
 
         }
 
+        private void set_show_stock_recycler(List<StockCategoryDetails.StockDetail> stockDetail) {
+            Stock_detail_adapter adapter = new Stock_detail_adapter(stockDetail,getContext());
+            recyclerView.setAdapter(adapter);
+            adapter.notifyDataSetChanged();
+        }
+
         public void show_transaction_details() {
-            List<StockCategoryDetails.TransactionDetail> transactionDetails = new Gson().fromJson(AppUtil.getString(getContext().getApplicationContext(), TagsPreferences.CATEGORY_DETAILS), StockCategoryDetails.class).getTransactionDetails();
+            transactionDetails = new Gson().fromJson(AppUtil.getString(getContext().getApplicationContext(), TagsPreferences.CATEGORY_DETAILS), StockCategoryDetails.class).getTransactionDetails();
             recyclerView.setHasFixedSize(true);
             LinearLayoutManager gridLayoutManager = new LinearLayoutManager(getContext());
             gridLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -362,19 +536,340 @@ public class StockActivity extends AppCompatActivity {
             adapter.notifyDataSetChanged();
         }
 
+        private void set_show_transaction_recycler(List<StockCategoryDetails.TransactionDetail> transactionDetails) {
+            Transaction_detail_adapter adapter = new Transaction_detail_adapter(transactionDetails,getContext());
+            recyclerView.setAdapter(adapter);
+            adapter.notifyDataSetChanged();
+        }
+
         public void show_PO_details() {
-            List<StockCategoryDetails.PoDetail> poDetails = new Gson().fromJson(AppUtil.getString(getContext().getApplicationContext(), TagsPreferences.CATEGORY_DETAILS), StockCategoryDetails.class).getPoDetails();
+            poDetails = new Gson().fromJson(AppUtil.getString(getContext().getApplicationContext(), TagsPreferences.CATEGORY_DETAILS), StockCategoryDetails.class).getPoDetails();
             recyclerView.setHasFixedSize(true);
             LinearLayoutManager gridLayoutManager = new LinearLayoutManager(getContext());
             gridLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
             recyclerView.setLayoutManager(gridLayoutManager);
             recyclerView.setItemAnimator(new DefaultItemAnimator());
-            recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
+           // recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
 
 
             PO_detail_adapter adapter = new PO_detail_adapter(poDetails,getContext());
             recyclerView.setAdapter(adapter);
             adapter.notifyDataSetChanged();
+        }
+
+        private void set_show_PO_recycler(List<StockCategoryDetails.PoDetail> poDetails) {
+            PO_detail_adapter adapter = new PO_detail_adapter(poDetails,getContext());
+            recyclerView.setAdapter(adapter);
+            adapter.notifyDataSetChanged();
+        }
+
+        public void setStockDetailFilter() {
+            final Dialog dialog = new Dialog(getActivity());
+
+            View dialogView= getActivity().getLayoutInflater().inflate(R.layout.dialog_filter_stock_detail,null);
+
+            final Spinner product_spinner = (Spinner) dialogView.findViewById(R.id.product_spinner);
+            final Spinner site_spinner = (Spinner) dialogView.findViewById(R.id.site_spinner);
+            final Spinner stock_type_spinner = (Spinner) dialogView.findViewById(R.id.stock_type_spinner);
+            Button submit = (Button) dialogView.findViewById(R.id.submit);
+
+
+            final List<String> products = new ArrayList<>();
+            final List<String> sites = new ArrayList<>();
+            final List<String> stock_types = new ArrayList<>();
+
+            products.add(0,"All");
+            sites.add(0,"All");
+            stock_types.add(0,"All");
+
+
+            for(int i = 0 ; i < stockDetail.size() ; i++) {
+                int j;
+                for(j = 0 ; j < products.size() ; j++) {
+                    if(products.get(j).equalsIgnoreCase(stockDetail.get(i).getProduct())) {
+                        break;
+                    }
+                }
+                if(j == products.size()) {
+                    products.add(stockDetail.get(i).getProduct());
+                }
+
+                for(j = 0 ; j < sites.size() ; j++) {
+                    if(sites.get(j).equalsIgnoreCase(stockDetail.get(i).getWhere())) {
+                        break;
+                    }
+                }
+                if(j == sites.size()) {
+                    sites.add(stockDetail.get(i).getWhere());
+                }
+
+                for(j = 0 ; j < stock_types.size() ; j++) {
+                    if(stock_types.get(j).equalsIgnoreCase(stockDetail.get(i).getMstock_type())) {
+                        break;
+                    }
+                }
+                if(j == stock_types.size()) {
+                    stock_types.add(stockDetail.get(i).getMstock_type());
+                }
+            }
+
+            ArrayAdapter<String> product_adapter = new ArrayAdapter<String>(getActivity(),
+                    android.R.layout.simple_expandable_list_item_1,
+                    products);
+            product_spinner.setAdapter(product_adapter);
+
+            ArrayAdapter<String> site_adapter = new ArrayAdapter<String>(getActivity(),
+                    android.R.layout.simple_expandable_list_item_1,
+                    sites);
+            site_spinner.setAdapter(site_adapter);
+
+            ArrayAdapter<String> stock_type_adapter = new ArrayAdapter<String>(getActivity(),
+                    android.R.layout.simple_expandable_list_item_1,
+                    stock_types);
+            stock_type_spinner.setAdapter(stock_type_adapter);
+
+            submit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                    List<StockCategoryDetails.StockDetail> filtered = new ArrayList<>();
+
+                    for(int i = 0 ; i < stockDetail.size() ; i++) {
+                        if(product_spinner.getSelectedItemPosition() != 0) {
+                            if(!(stockDetail.get(i).getProduct().equalsIgnoreCase(products
+                                    .get(product_spinner.getSelectedItemPosition()))))  {
+                                continue;
+                            }
+                        }
+                        if(site_spinner.getSelectedItemPosition() != 0) {
+                            if(!(stockDetail.get(i).getWhere().equalsIgnoreCase(sites
+                                    .get(site_spinner.getSelectedItemPosition()))))  {
+                                continue;
+                            }
+                        }
+                        if(stock_type_spinner.getSelectedItemPosition() != 0) {
+                            if(!(stockDetail.get(i).getMstock_type().equalsIgnoreCase(stock_types
+                                    .get(stock_type_spinner.getSelectedItemPosition()))))  {
+                                continue;
+                            }
+                        }
+                        filtered.add(stockDetail.get(i));
+                    }
+                    set_show_stock_recycler(filtered);
+                }
+            });
+
+
+            dialog.setContentView(dialogView);
+            dialog.show();
+        }
+
+        public void setStockPOFilter() {
+            final Dialog dialog = new Dialog(getActivity());
+
+            View dialogView= getActivity().getLayoutInflater().inflate(R.layout.dialog_filter_stock_po,null);
+
+            final Spinner category_spinner = (Spinner) dialogView.findViewById(R.id.category_spinner);
+            final Spinner status_spinner = (Spinner) dialogView.findViewById(R.id.status_spinner);
+            final Spinner created_by_spinner = (Spinner) dialogView.findViewById(R.id.created_by_spinner);
+            Button submit = (Button) dialogView.findViewById(R.id.submit);
+
+
+            final List<String> categories = new ArrayList<>();
+            final List<String> statuses = new ArrayList<>();
+            final List<String> created_bys = new ArrayList<>();
+
+            categories.add(0,"All");
+            statuses.add(0,"All");
+            created_bys.add(0,"All");
+
+
+            for(int i = 0 ; i < poDetails.size() ; i++) {
+                StockCategoryDetails.PoDetail.Detail detail = poDetails.get(i).getDetails().get(0);
+                int j;
+                for(j = 0 ; j < categories.size() ; j++) {
+
+
+                    if(categories.get(j).equalsIgnoreCase(detail.getCategory())) {
+                        break;
+                    }
+                }
+                if(j == categories.size()) {
+                    categories.add(detail.getCategory());
+                }
+
+                for(j = 0 ; j < statuses.size() ; j++) {
+                    if(statuses.get(j).equalsIgnoreCase(detail.getStatus())) {
+                        break;
+                    }
+                }
+                if(j == statuses.size()) {
+                    statuses.add(detail.getStatus());
+                }
+
+                for(j = 0 ; j < created_bys.size() ; j++) {
+                    if(created_bys.get(j).equalsIgnoreCase(detail.getCreatedBy())) {
+                        break;
+                    }
+                }
+                if(j == created_bys.size()) {
+                    created_bys.add(detail.getCreatedBy());
+                }
+            }
+
+            ArrayAdapter<String> category_adapter = new ArrayAdapter<String>(getActivity(),
+                    android.R.layout.simple_expandable_list_item_1,
+                    categories);
+            category_spinner.setAdapter(category_adapter);
+
+            ArrayAdapter<String> statuses_adapter = new ArrayAdapter<String>(getActivity(),
+                    android.R.layout.simple_expandable_list_item_1,
+                    statuses);
+            status_spinner.setAdapter(statuses_adapter);
+
+            ArrayAdapter<String> created_bys_adapter = new ArrayAdapter<String>(getActivity(),
+                    android.R.layout.simple_expandable_list_item_1,
+                    created_bys);
+            created_by_spinner.setAdapter(created_bys_adapter);
+
+            submit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                    List<StockCategoryDetails.PoDetail> filtered = new ArrayList<>();
+
+                    for(int i = 0 ; i < poDetails.size() ; i++) {
+                        StockCategoryDetails.PoDetail.Detail detail = poDetails.get(i).getDetails().get(0);
+                        if(category_spinner.getSelectedItemPosition() != 0) {
+                            if(!(detail.getCategory().equalsIgnoreCase(categories
+                                    .get(category_spinner.getSelectedItemPosition()))))  {
+                                continue;
+                            }
+                        }
+                        if(status_spinner.getSelectedItemPosition() != 0) {
+                            if(!(detail.getStatus().equalsIgnoreCase(statuses
+                                    .get(status_spinner.getSelectedItemPosition()))))  {
+                                continue;
+                            }
+                        }
+                        if(created_by_spinner.getSelectedItemPosition() != 0) {
+                            if(!(detail.getCreatedBy().equalsIgnoreCase(created_bys
+                                    .get(created_by_spinner.getSelectedItemPosition()))))  {
+                                continue;
+                            }
+                        }
+                        filtered.add(poDetails.get(i));
+                    }
+                    set_show_PO_recycler(filtered);
+                }
+            });
+
+
+            dialog.setContentView(dialogView);
+            dialog.show();
+        }
+
+        public void setStockTransFilter() {
+            final Dialog dialog = new Dialog(getActivity());
+
+            View dialogView= getActivity().getLayoutInflater().inflate(R.layout.dialog_stock_trans_filter,null);
+
+            final Spinner vehicle_number_spinner = (Spinner) dialogView.findViewById(R.id.vehicle_number_spinner);
+            final Spinner destination_type_spinner = (Spinner) dialogView.findViewById(R.id.destination_type_spinner);
+            final Spinner status_spinner = (Spinner) dialogView.findViewById(R.id.status_spinner);
+            Button submit = (Button) dialogView.findViewById(R.id.submit);
+
+
+            final List<String> vehicle_numbers = new ArrayList<>();
+            final List<String> destination_types = new ArrayList<>();
+            final List<String> statuses = new ArrayList<>();
+
+            vehicle_numbers.add(0,"All");
+            statuses.add(0,"All");
+            destination_types.add(0,"All");
+
+
+            for(int i = 0 ; i < transactionDetails.size() ; i++) {
+                StockCategoryDetails.TransactionDetail.Detail detail = transactionDetails.get(i).getDetails().get(0);
+                int j;
+                for(j = 0 ; j < vehicle_numbers.size() ; j++) {
+                    if(vehicle_numbers.get(j).equalsIgnoreCase(detail.getVehicleNumber())) {
+                        break;
+                    }
+                }
+                if(j == vehicle_numbers.size()) {
+                    vehicle_numbers.add(detail.getVehicleNumber());
+                }
+
+                for(j = 0 ; j < statuses.size() ; j++) {
+                    if(statuses.get(j).equalsIgnoreCase(detail.getStatus())) {
+                        break;
+                    }
+                }
+                if(j == statuses.size()) {
+                    statuses.add(detail.getStatus());
+                }
+
+                for(j = 0 ; j < destination_types.size() ; j++) {
+                    if(destination_types.get(j).equalsIgnoreCase(detail.getDestType())) {
+                        break;
+                    }
+                }
+                if(j == destination_types.size()) {
+                    destination_types.add(detail.getDestType());
+                }
+            }
+
+            ArrayAdapter<String> vehicle_number_adapter = new ArrayAdapter<String>(getActivity(),
+                    android.R.layout.simple_expandable_list_item_1,
+                    vehicle_numbers);
+            vehicle_number_spinner.setAdapter(vehicle_number_adapter);
+
+            ArrayAdapter<String> statuses_adapter = new ArrayAdapter<String>(getActivity(),
+                    android.R.layout.simple_expandable_list_item_1,
+                    statuses);
+            status_spinner.setAdapter(statuses_adapter);
+
+            ArrayAdapter<String> destination_type_adapter = new ArrayAdapter<String>(getActivity(),
+                    android.R.layout.simple_expandable_list_item_1,
+                    destination_types);
+            destination_type_spinner.setAdapter(destination_type_adapter);
+
+            submit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                    List<StockCategoryDetails.TransactionDetail> filtered = new ArrayList<>();
+
+                    for(int i = 0 ; i < transactionDetails.size() ; i++) {
+                        StockCategoryDetails.TransactionDetail.Detail detail = transactionDetails.get(i).getDetails().get(0);
+                        if(vehicle_number_spinner.getSelectedItemPosition() != 0) {
+                            if(!(detail.getVehicleNumber().equalsIgnoreCase(vehicle_numbers
+                                    .get(vehicle_number_spinner.getSelectedItemPosition()))))  {
+                                continue;
+                            }
+                        }
+                        if(status_spinner.getSelectedItemPosition() != 0) {
+                            if(!(detail.getStatus().equalsIgnoreCase(statuses
+                                    .get(status_spinner.getSelectedItemPosition()))))  {
+                                continue;
+                            }
+                        }
+                        if(destination_type_spinner.getSelectedItemPosition() != 0) {
+                            if(!(detail.getDestType().equalsIgnoreCase(destination_types
+                                    .get(destination_type_spinner.getSelectedItemPosition()))))  {
+                                continue;
+                            }
+                        }
+                        filtered.add(transactionDetails.get(i));
+                    }
+                    set_show_transaction_recycler(filtered);
+                }
+            });
+
+
+            dialog.setContentView(dialogView);
+            dialog.show();
         }
 
         @Override
@@ -384,39 +879,38 @@ public class StockActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
-     * one of the sections/tabs/pages.
-     */
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
         String tag1,tag2,tag3;
-
+        private List<Fragment> fragments = new ArrayList<>();
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
         }
 
         @Override
         public Fragment getItem(int position) {
-            // getItem is called to instantiate the fragment for the given page.
-            // Return a PlaceholderFragment (defined as a static inner class below).
+
             return PlaceholderFragment.newInstance(position);
 
         }
 
+        public Fragment getFragment(int position) {
+            return fragments.get(position);
+        }
+
         @Override
         public int getCount() {
-            // Show 3 total pages.
             return 3;
         }
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
             Fragment createdFragment = (Fragment) super.instantiateItem(container, position);
-            // get the tags set by FragmentPagerAdapter
+            fragments.add(position,createdFragment);
             switch (position) {
                 case 0:
                     String firstTag = createdFragment.getTag();
                     tag1=firstTag;
+
                     break;
                 case 1:
                     String secondTag = createdFragment.getTag();

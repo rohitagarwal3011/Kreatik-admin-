@@ -90,7 +90,7 @@ public class Stock_detail_adapter  extends RecyclerView.Adapter<Stock_detail_ada
         }
         else {
 
-            Picasso.with(context).load((R.drawable.site_overview)).into(holder.stock_type);
+            Picasso.with(context).load((R.drawable.crane)).into(holder.stock_type);
         }
 
     }
