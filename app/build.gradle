@@ -20,7 +20,7 @@ android {
     buildToolsVersion '25.0.2'
     defaultConfig {
         applicationId 'com.app.rbc.admin'
-        minSdkVersion 19
+        minSdkVersion 21
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
@@ -72,6 +72,7 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:25.3.1'
     compile 'com.github.PhilJay:MPAndroidChart:v3.0.2'
     compile 'com.android.support:multidex:1.0.0'
+    compile 'com.github.ViksaaSkool:AwesomeSplash:v1.0.0'
     testCompile 'junit:junit:4.12'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
 }

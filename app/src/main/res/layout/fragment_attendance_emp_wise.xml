@@ -24,8 +24,8 @@
 
           <com.facebook.drawee.view.SimpleDraweeView
               android:id="@+id/profile_pic"
-              android:layout_width="@dimen/_55sdp"
-              android:layout_height="@dimen/_55sdp"
+              android:layout_width="@dimen/_50sdp"
+              android:layout_height="@dimen/_50sdp"
               android:layout_gravity="left"
               fresco:roundAsCircle="true"
               fresco:roundedCornerRadius="@dimen/_5sdp"
@@ -38,27 +38,27 @@
                android:layout_width="match_parent"
                android:layout_height="wrap_content"
                android:paddingLeft="@dimen/_18sdp"
-               android:layout_gravity="center"
+               android:layout_gravity="center_vertical"
                android:orientation="vertical">
 
                <TextView
                    android:layout_width="match_parent"
                    android:layout_height="wrap_content"
                    android:text="Today's Status"
-                   android:textSize="@dimen/_15sdp"
+                   android:textSize="@dimen/_13sdp"
                    android:textColor="@color/black"/>
                <TextView
                    android:id="@+id/attendance_status"
                    android:layout_width="match_parent"
                    android:layout_height="wrap_content"
-                   android:textSize="@dimen/_12sdp"
+                   android:textSize="@dimen/_11sdp"
                    android:textColor="#757575"
                    android:text="You were marked Absent."/>
                <TextView
                    android:id="@+id/attendance_remarks"
                    android:layout_width="match_parent"
                    android:layout_height="wrap_content"
-                   android:textSize="@dimen/_12sdp"
+                   android:textSize="@dimen/_11sdp"
                    android:visibility="gone"
                    android:textColor="#757575"
                    android:text="Remarks :  "/>
@@ -109,7 +109,7 @@
                android:paddingRight="@dimen/_15sdp"
 
                android:textColor="@color/black"
-               android:textSize="@dimen/_15sdp"/>
+               android:textSize="@dimen/_13sdp"/>
            
            <LinearLayout
                android:id="@+id/legends_layout"
@@ -127,7 +127,7 @@
                    android:layout_height="wrap_content"
                    android:textColor="#757575"
                    android:visibility="visible"
-                   android:textSize="@dimen/_12sdp"
+                   android:textSize="@dimen/_11sdp"
                    android:text=""/>
 
                <TextView
@@ -136,7 +136,7 @@
                    android:layout_height="wrap_content"
                    android:textColor="#757575"
                    android:visibility="visible"
-                   android:textSize="@dimen/_12sdp"
+                   android:textSize="@dimen/_11sdp"
                    android:text=""/>
 
                <TextView
@@ -144,7 +144,7 @@
                    android:layout_width="match_parent"
                    android:layout_height="wrap_content"
                    android:textColor="#757575"
-                   android:textSize="@dimen/_12sdp"
+                   android:textSize="@dimen/_11sdp"
                    android:text=""/>
 
 
@@ -194,7 +194,7 @@
                android:paddingRight="@dimen/_15sdp"
 
                android:textColor="@color/black"
-               android:textSize="@dimen/_15sdp"/>
+               android:textSize="@dimen/_13sdp"/>
 
            <LinearLayout
                android:id="@+id/months_legend_layout"
@@ -212,7 +212,7 @@
                    android:layout_height="wrap_content"
                    android:text=""
                    android:textColor="#757575"
-                   android:textSize="@dimen/_12sdp" />
+                   android:textSize="@dimen/_11sdp" />
 
                <TextView
                    android:id="@+id/month_absent"
@@ -220,7 +220,7 @@
                    android:layout_height="wrap_content"
                    android:text=""
                    android:textColor="#757575"
-                   android:textSize="@dimen/_12sdp" />
+                   android:textSize="@dimen/_11sdp" />
 
                <TextView
                    android:id="@+id/month_present"
@@ -228,7 +228,7 @@
                    android:layout_height="wrap_content"
                    android:text=""
                    android:textColor="#757575"
-                   android:textSize="@dimen/_12sdp" />
+                   android:textSize="@dimen/_11sdp" />
 
 
            </LinearLayout>

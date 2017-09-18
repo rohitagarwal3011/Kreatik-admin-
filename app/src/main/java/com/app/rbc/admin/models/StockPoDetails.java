@@ -175,40 +175,40 @@ public class StockPoDetails {
 
         }
 
-        public class Product {
-
-            @SerializedName("for_product")
-            private String mForProduct;
-            @SerializedName("quantity")
-            private Long mQuantity;
-            @SerializedName("rem_quantity")
-            private Long mRemQuantity;
-
-            public String getForProduct() {
-                return mForProduct;
-            }
-
-            public void setForProduct(String forProduct) {
-                mForProduct = forProduct;
-            }
-
-            public Long getQuantity() {
-                return mQuantity;
-            }
-
-            public void setQuantity(Long quantity) {
-                mQuantity = quantity;
-            }
-
-            public Long getRemQuantity() {
-                return mRemQuantity;
-            }
-
-            public void setRemQuantity(Long remQuantity) {
-                mRemQuantity = remQuantity;
-            }
-
-        }
+//        public class Product {
+//
+//            @SerializedName("for_product")
+//            private String mForProduct;
+//            @SerializedName("quantity")
+//            private Long mQuantity;
+//            @SerializedName("rem_quantity")
+//            private Long mRemQuantity;
+//
+//            public String getForProduct() {
+//                return mForProduct;
+//            }
+//
+//            public void setForProduct(String forProduct) {
+//                mForProduct = forProduct;
+//            }
+//
+//            public Long getQuantity() {
+//                return mQuantity;
+//            }
+//
+//            public void setQuantity(Long quantity) {
+//                mQuantity = quantity;
+//            }
+//
+//            public Long getRemQuantity() {
+//                return mRemQuantity;
+//            }
+//
+//            public void setRemQuantity(Long remQuantity) {
+//                mRemQuantity = remQuantity;
+//            }
+//
+//        }
 
 
     }

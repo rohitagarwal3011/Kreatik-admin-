@@ -34,6 +34,7 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.http.Field;
 
 
 public class Dispatch_Vehicle extends Fragment {
@@ -56,6 +57,9 @@ public class Dispatch_Vehicle extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    String rq_id, destination,source,  parent_id, category;
+    String vehicle_number, driver, challan;
 
 
     public Dispatch_Vehicle() {
@@ -101,6 +105,7 @@ public class Dispatch_Vehicle extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        setData();
 
     }
     JSONArray prod_list = new JSONArray();
@@ -142,16 +147,23 @@ public class Dispatch_Vehicle extends Fragment {
 
         submitButton.setProgress(1);
         submitButton.setEnabled(false);
-//        from_user = AppUtil.getString(getContext(), TagsPreferences.USER_ID);
-//        deadline = deadline_date + " " + deadline_time;
-//        to_user = user_selected;
-//        product = category_selected;
+        if(Cat_Des_Selection.vehicle_for_po) {
+            parent_id = Cat_Des_Selection.po_number;
+            rq_id = mParam2;
+        }
+        else {
+            parent_id = mParam2;
+            rq_id = "";
+        }
+        source = Cat_Des_Selection.source.toString();
+        destination = Cat_Des_Selection.destination.toString();
+        category = mParam1;
 
-//            qty = Integer.parseInt(quantityForPo.getText().toString());
 
 
         final ApiServices apiServices = RetrofitClient.getApiService();
-        Call<ResponseBody> call = apiServices.add_vehicle_info("",Cat_Des_Selection.destination.toString(),Cat_Des_Selection.source.toString(),mParam2,mParam1,prod_list,vehicleNumber.getText().toString(),driverName.getText().toString(),challanNo.getText().toString());
+
+        Call<ResponseBody> call = apiServices.add_vehicle_info(rq_id,destination,source,parent_id,category,prod_list,vehicleNumber.getText().toString(),driverName.getText().toString(),challanNo.getText().toString());
 
      //   AppUtil.logger(TAG, "Creation Request : " + call.request().toString() + " Product :" + prod_list + " \n " + " Employee ID  :" + to_user + " \n " + "Assigned by :" + from_user + " \n " + "Deadline :" + deadline + " \n ");
         call.enqueue(new Callback<ResponseBody>() {
@@ -164,6 +176,7 @@ public class Dispatch_Vehicle extends Fragment {
                 try {
 
                     try {
+
                         JSONObject obj = new JSONObject(response.body().string());
                         AppUtil.logger(TAG, obj.toString());
                         status= obj.getJSONObject("meta").getInt("status");

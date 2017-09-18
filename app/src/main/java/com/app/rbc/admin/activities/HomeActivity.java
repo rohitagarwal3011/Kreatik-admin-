@@ -73,7 +73,7 @@ public class HomeActivity extends AppCompatActivity
         alarm = new DeadlineNotificationService();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("R. B. Corporation");
+        toolbar.setTitle("Kreatik");
         setSupportActionBar(toolbar);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
