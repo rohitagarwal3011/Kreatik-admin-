@@ -13,6 +13,22 @@
     <color name="home_background">#2a2840</color>
 
     <color name="black_overlay">#66000000</color>
+
+
+
+    <color name="background">#FAFAFA</color>
+    <color name="colorAccentRed">#FF6E40</color>
+    <color name="colorAccentPink">#EC407A</color>
+
+    <color name="itemGradient">#EEEEEE</color>
+    <color name="dark_background">#546E7A</color>
+
+    <color name="divider">#B0BEC5</color>
+
+    <color name="dark_text">#212121</color>
+    <color name="light_text">#9E9E9E</color>
+
+    <color name="verified">#81C784</color>
 </resources>
 
 

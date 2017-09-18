@@ -23,6 +23,7 @@ import android.webkit.MimeTypeMap;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Comparator;
@@ -52,6 +53,7 @@ public class FileUtils {
 
     public static final String HIDDEN_PREFIX = ".";
 
+    public static String mCurrentPhotoPath;
     /**
      * Gets the extension of a file name, like ".png" or ".jpg".
      *
@@ -69,10 +71,27 @@ public class FileUtils {
         return Uri.fromFile(getOutputMediaFile(type));
     }
 
+    public static File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = new File(Environment.getExternalStorageDirectory().getPath(), "Inizio/Images Clicked");
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        mCurrentPhotoPath = image.getAbsolutePath();
+        return image;
+    }
+
+
     /**
      * returning image / video
      */
-    private static File getOutputMediaFile(int type) {
+    public static File getOutputMediaFile(int type) {
 
         // External sdcard location
         File file = new File(Environment.getExternalStorageDirectory().getPath(), "Inizio/Images Clicked");

@@ -1,5 +1,6 @@
 package com.app.rbc.admin.fragments;
 
+import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
@@ -12,9 +13,11 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,8 +25,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 
 import com.app.rbc.admin.R;
 import com.app.rbc.admin.activities.TaskActivity;
@@ -45,8 +51,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -59,7 +70,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
-public class Task_home extends Fragment implements Todo_list_adapter.OnItemLongClickListener {
+public class Task_home extends Fragment implements Todo_list_adapter.OnItemLongClickListener{
 
     public static final String TASK_ID = "TASK_ID";
     public static final String TASK_TITLE = "TASK_TITLE";
@@ -98,8 +109,13 @@ public class Task_home extends Fragment implements Todo_list_adapter.OnItemLongC
     List<Todolist.Data1> completed_list = new ArrayList<>();
     List<Todolist.Data1> non_completed_list = new ArrayList<>();
 
+    List<Todolist.Data1> todo_list = new ArrayList<>();
     public static boolean show_delete = false;
     public static boolean show_completed = false;
+
+    // Filter Dialog
+    private Button deadline_button;
+    private Calendar myCalendar;
 
     public Task_home() {
         // Required empty public constructor
@@ -244,6 +260,10 @@ public class Task_home extends Fragment implements Todo_list_adapter.OnItemLongC
         item1.setVisible(false);
         MenuItem item2 = menu.findItem(R.id.completed);
         item2.setVisible(true);
+        MenuItem search = menu.findItem(R.id.search);
+        search.setVisible(true);
+        MenuItem filter = menu.findItem(R.id.filter);
+        filter.setVisible(true);
     }
 
     @Override
@@ -253,18 +273,15 @@ public class Task_home extends Fragment implements Todo_list_adapter.OnItemLongC
             case R.id.completed:
                 show_completed_list();
                 return true;
+            case R.id.filter :
+                setFilterDialog();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
-    //    Override
-//    public void onPrepareOptionsMenu(Menu menu) {
-//        MenuItem item = menu.findItem(R.id.attachment);
-//        item.setVisible(false);
-//        MenuItem item1 = menu.findItem(R.id.search);
-//        item1.setVisible(false);
-//    }
+
 
     @OnClick(R.id.todo_list)
     public void setTodo_list(View view) {
@@ -330,7 +347,7 @@ public class Task_home extends Fragment implements Todo_list_adapter.OnItemLongC
 
         todoIndicator.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorAccent));
         assignedIndicator.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
-         todolist= new Gson().fromJson(AppUtil.getString(getContext().getApplicationContext(), TagsPreferences.TASK_LIST), Todolist.class);
+        todolist= new Gson().fromJson(AppUtil.getString(getContext().getApplicationContext(), TagsPreferences.TASK_LIST), Todolist.class);
 
         todo_list_adapter = new Todo_list_adapter(todolist.getData(), getContext(), Task_home.this);
         LinearLayoutManager gridLayoutManager = new LinearLayoutManager(getContext());
@@ -542,6 +559,7 @@ public class Task_home extends Fragment implements Todo_list_adapter.OnItemLongC
 
                // show_todo_list();
               //  show_tasks_assigned();
+                set_todo_list();
                 get_non_completed_task();
                 //  proceed();
             }
@@ -576,6 +594,9 @@ public class Task_home extends Fragment implements Todo_list_adapter.OnItemLongC
         tasks_assigned_adapter.notifyDataSetChanged();
 
     }
+
+
+
 
     public interface OnTaskTypeSelectListener {
         public void OnTaskSelected(String type);
@@ -646,6 +667,195 @@ public class Task_home extends Fragment implements Todo_list_adapter.OnItemLongC
 
 
     }
+
+    public void set_todo_list()
+    {
+
+        todolist= new Gson().fromJson(AppUtil.getString(getContext().getApplicationContext(), TagsPreferences.TASK_LIST), Todolist.class);
+
+        if(todo_list!=null)
+            todo_list.clear();
+        for(int i = 0 ;i<todolist.getData1().size();i++)
+        {
+            todo_list.add(todolist.getData1().get(i));
+        }
+
+
+
+    }
+
+    public void setRecyclerSearch(String titleQuery) {
+        AppUtil.logger(TAG,titleQuery);
+        List<Todolist.Data1> searchList = new ArrayList<>();
+        for(int i = 0 ; i < todo_list.size() ; i++) {
+            if(todo_list.get(i).getTitle().toLowerCase().contains(titleQuery.toLowerCase())) {
+                searchList.add(todo_list.get(i));
+            }
+        }
+        AppUtil.logger(TAG,searchList.size()+"");
+        setTodoListRecycler(searchList);
+
+    }
+
+    private void setTodoListRecycler(List<Todolist.Data1> list) {
+        tasks_assigned_adapter = new Tasks_assigned_adapter(list, getContext(),Task_home.this);
+        LinearLayoutManager gridLayoutManager = new LinearLayoutManager(getContext());
+        gridLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        tasksRecyclerView.setLayoutManager(gridLayoutManager);
+        tasksRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        //tasksRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
+        tasksRecyclerView.setAdapter(tasks_assigned_adapter);
+        tasks_assigned_adapter.notifyDataSetChanged();
+
+    }
+
+    DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
+
+        @Override
+        public void onDateSet(DatePicker view, int year, int monthOfYear,
+                              int dayOfMonth) {
+            // TODO Auto-generated method stub
+            myCalendar.set(Calendar.YEAR, year);
+            myCalendar.set(Calendar.MONTH, monthOfYear);
+            myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            String myFormat = "yyyy-MM-dd";
+            SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
+
+            deadline_button.setText(sdf.format(myCalendar.getTime()));
+        }
+
+    };
+
+    private void setFilterDialog() {
+
+        final Dialog filterDialog = new Dialog(getActivity());
+        View filterDialogView = getActivity().getLayoutInflater().inflate(R.layout.dialog_filter_todolist,null);
+
+        // initializing dialog view
+
+        // Status
+        final Spinner status_spinner = (Spinner) filterDialogView.findViewById(R.id.status_spinner);
+        final String[] status_types = getActivity().getResources().getStringArray(R.array.task_status_filter);
+        ArrayAdapter<String> status_adapter = new ArrayAdapter<String>(getActivity(),
+                android.R.layout.simple_expandable_list_item_1,
+                status_types);
+        status_spinner.setAdapter(status_adapter);
+
+
+        // Employee
+        final List<String> employees = new ArrayList<>();
+        final List<String> employeeIds = new ArrayList<>();
+        employees.add("All");
+        employeeIds.add("All");
+        for(int i = 0 ; i < todo_list.size() ; i++) {
+            int j;
+            for(j = 0 ; j < employeeIds.size() ; j++) {
+                if(todo_list.get(i).getToUser().equals(employeeIds.get(j))) {
+                    break;
+                }
+            }
+            if(j != employeeIds.size()) {
+                continue;
+            }
+            for(j = 0 ; j < employee_list.getData().size() ; j++) {
+                if(todo_list.get(i).getToUser().equals(employee_list.getData().get(j).getUserId())) {
+                    employees.add(employee_list.getData().get(j).getUserName());
+                    employeeIds.add(employee_list.getData().get(j).getUserId());
+                    break;
+                }
+            }
+        }
+        final Spinner employee_spinner = (Spinner) filterDialogView.findViewById(R.id.employee_spinner);
+        ArrayAdapter<String> employee_adapter = new ArrayAdapter<String>(getActivity(),
+                android.R.layout.simple_expandable_list_item_1,
+                employees);
+        employee_spinner.setAdapter(employee_adapter);
+
+
+        // Deadline Date
+        deadline_button = (Button) filterDialogView.findViewById(R.id.deadline_button);
+
+        deadline_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                myCalendar = Calendar.getInstance();
+                new DatePickerDialog(getContext(), date, myCalendar
+                        .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                        myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+            }
+        });
+
+        //Submit
+        Button submit_filters = (Button) filterDialogView.findViewById(R.id.submit_filters);
+
+        submit_filters.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String status = null,employee = null,deadline = null;
+                if(!(status_spinner.getSelectedItemPosition() == 0)) {
+                    status = status_types[status_spinner.getSelectedItemPosition()];
+                }
+                if(!(employee_spinner.getSelectedItemPosition() == 0)) {
+                    employee = employeeIds.get(employee_spinner.getSelectedItemPosition());
+                }
+
+                if(deadline_button.getText().toString().length() > 1 && (!deadline_button.getText().toString()
+                        .equalsIgnoreCase("Select Date"))) {
+                    deadline = deadline_button.getText().toString();
+                }
+                filterDialog.dismiss();
+                applyFilters(status,employee,deadline);
+            }
+        });
+
+
+        // setting dialog view
+        filterDialog.setContentView(filterDialogView);
+        filterDialog.show();
+    }
+
+    private void applyFilters(String status,String emplopyee, String deadline) {
+        List<Todolist.Data1> filtered_list = new ArrayList<>();
+        for(int i = 0 ; i < todo_list.size() ; i++) {
+
+            if(status != null) {
+                if(!(todo_list.get(i).getStatus().equalsIgnoreCase(status))) {
+                    continue;
+                }
+            }
+            if(emplopyee != null) {
+                if(!(todo_list.get(i).getToUser().equalsIgnoreCase(emplopyee))) {
+                    continue;
+                }
+            }
+            if(deadline != null ) {
+                try {
+                    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US);
+                    format.setTimeZone(TimeZone.getTimeZone("UTC"));
+
+                    Date date = format.parse(todo_list.get(i).getDeadline());
+                    long millisTodo = date.getTime();
+
+                    format = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+
+                    date = format.parse(deadline);
+                    long millisFilter = date.getTime();
+
+                    if(!(millisTodo <= millisFilter)) {
+                        continue;
+                    }
+
+                }catch (Exception e) {
+                    AppUtil.logger(TAG,e.toString());
+                }
+                AppUtil.logger(TAG,todo_list.get(i).getDeadline());
+            }
+            AppUtil.logger(TAG,"HIT");
+            filtered_list.add(todo_list.get(i));
+        }
+        setTodoListRecycler(filtered_list);
+    }
+
     public void setStatus(String task_id ,String status)
     {
         AppUtil.logger(TAG,"set status change");
