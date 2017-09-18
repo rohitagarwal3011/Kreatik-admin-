@@ -102,7 +102,7 @@
             android:name=".activities.HomeActivity"
             android:label="@string/title_activity_home"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.Transparent"
+            android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
             android:name=".activities.TaskActivity"
