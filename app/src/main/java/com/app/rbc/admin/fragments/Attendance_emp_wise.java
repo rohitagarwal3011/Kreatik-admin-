@@ -530,11 +530,12 @@ public class Attendance_emp_wise extends Fragment implements DatePickerDialog.On
                 } catch (ParseException e1) {
                     e1.printStackTrace();
                 }
-                SimpleDateFormat fmtout = new SimpleDateFormat("dd MMMM , EEEE");
+                SimpleDateFormat fmtout = new SimpleDateFormat("dd MMMM : ");
 
                 AppUtil.logger("Final date : ", fmtout.format(formated));
 
-                textView.setText(fmtout.format(formated));
+                textView.setText(fmtout.format(formated)+  employeewiseAttendance.getWeekData().get(i).getRemarks());
+                textView.setTextSize(getResources().getDimension(R.dimen._4sdp));
                 dates.addView(textView);
 
                 remarks.setLayoutParams(tv_params);
@@ -542,7 +543,7 @@ public class Attendance_emp_wise extends Fragment implements DatePickerDialog.On
                 remarks.setPadding(50, 0, 10, 10);
                 remarks.setText("Remarks : " + employeewiseAttendance.getWeekData().get(i).getRemarks());
 
-                dates.addView(remarks);
+              //  dates.addView(remarks);
 
 
             }
@@ -796,18 +797,20 @@ public class Attendance_emp_wise extends Fragment implements DatePickerDialog.On
                 } catch (ParseException e1) {
                     e1.printStackTrace();
                 }
-                SimpleDateFormat fmtout = new SimpleDateFormat("dd MMMM , EEEE");
+                SimpleDateFormat fmtout = new SimpleDateFormat("dd MMMM : ");
 
                 AppUtil.logger("Final date : ", fmtout.format(formated));
 
-                textView.setText(fmtout.format(formated));
+                textView.setText(fmtout.format(formated) + employeewiseAttendance.getMonthData().get(i).getRemarks());
+                textView.setTextSize(getResources().getDimension(R.dimen._4sdp));
                 dates.addView(textView);
 
                 remarks.setLayoutParams(tv_params);
                 remarks.setGravity(Gravity.LEFT);
                 remarks.setPadding(50, 0, 10, 10);
+                remarks.setTextSize(getResources().getDimension(R.dimen._11sdp));
                 remarks.setText("Remarks : " + employeewiseAttendance.getMonthData().get(i).getRemarks());
-                dates.addView(remarks);
+                //dates.addView(remarks);
 
 
             }

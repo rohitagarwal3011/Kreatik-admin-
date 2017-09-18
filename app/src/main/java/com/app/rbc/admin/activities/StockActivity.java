@@ -1,8 +1,10 @@
 package com.app.rbc.admin.activities;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.app.SearchManager;
 import android.content.Context;
+
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -43,7 +45,10 @@ import com.app.rbc.admin.R;
 import com.app.rbc.admin.adapters.PO_detail_adapter;
 import com.app.rbc.admin.adapters.Stock_detail_adapter;
 import com.app.rbc.admin.adapters.Transaction_detail_adapter;
+import com.app.rbc.admin.fragments.Attendance_all;
 import com.app.rbc.admin.fragments.Employee_list;
+import com.app.rbc.admin.fragments.Product_selection;
+import com.app.rbc.admin.fragments.Requirement_fulfill_task;
 import com.app.rbc.admin.fragments.Stock_add_po_details;
 import com.app.rbc.admin.fragments.Stock_categories;
 import com.app.rbc.admin.fragments.Stock_po_create_task;
@@ -104,6 +109,8 @@ public class StockActivity extends AppCompatActivity implements SearchView.OnQue
 
 
 
+    public static Boolean show_tabs = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -112,6 +119,7 @@ public class StockActivity extends AppCompatActivity implements SearchView.OnQue
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -177,9 +185,56 @@ public class StockActivity extends AppCompatActivity implements SearchView.OnQue
         dialog.show();
     }
 
+    public void setToolbar(String title)
+    {
+        toolbar.setTitle(title);
+    }
 
 
 
+
+    @Override
+    public void onBackPressed() {
+//        super.onBackPressed();
+
+        if(tabLayout.getVisibility() == View.VISIBLE)
+        {
+            hide_tablayout();
+            //changeFragment(getSupportFragmentManager(), R.id.frame_main, new Stock_categories().newInstance("StockActivity"), Stock_categories.TAG);
+        }
+        else {
+
+            if(getSupportFragmentManager().findFragmentByTag(Stock_categories.TAG).isVisible())
+            {
+                getSupportFragmentManager().popBackStackImmediate();
+                Intent intent = new Intent(StockActivity.this, HomeActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                finish();
+            }
+            else if (show_tabs)
+            {
+                show_tablayout();
+                getSupportFragmentManager().popBackStackImmediate();
+            }
+
+//            else if(getSupportFragmentManager()..isVisible())
+//            {
+//                show_tablayout();
+//            }
+//            else if(getSupportFragmentManager().findFragmentByTag(Stock_add_po_details.TAG).isVisible())
+//            {
+//                show_tablayout();
+//            }
+            else {
+                getSupportFragmentManager().popBackStackImmediate();
+               // super.onBackPressed();
+
+            }
+        }
+
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -289,6 +344,7 @@ public class StockActivity extends AppCompatActivity implements SearchView.OnQue
 
     public void show_po_details(String po)
     {
+
         changeFragment(getSupportFragmentManager(), R.id.frame_main, new Stock_po_details().newInstance(po), Stock_po_details.TAG);
         hide_tablayout();
     }
@@ -493,7 +549,7 @@ public class StockActivity extends AppCompatActivity implements SearchView.OnQue
             gridLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
             recyclerView.setLayoutManager(gridLayoutManager);
             recyclerView.setItemAnimator(new DefaultItemAnimator());
-            recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
+           // recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
 
 
             PO_detail_adapter adapter = new PO_detail_adapter(poDetails,getContext());

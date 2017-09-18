@@ -1,9 +1,21 @@
 package com.app.rbc.admin.activities;
 
+import android.animation.Animator;
 import android.content.BroadcastReceiver;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
+import android.os.Looper;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.content.res.ResourcesCompat;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.View;
+import android.view.ViewAnimationUtils;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.app.rbc.admin.R;
 import com.app.rbc.admin.utils.AppUtil;
@@ -12,28 +24,57 @@ import com.viksaa.sssplash.lib.activity.AwesomeSplash;
 
 import org.json.JSONArray;
 
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.logging.Handler;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 public class Splash extends AppCompatActivity {
 
-    String type,task_id,title;
+
+    String type, task_id, title;
     Intent intent;
+    ImageView kreatik_icon;
+
     @Override
-    protected void onCreate(Bundle savedInstanceState){
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+        ButterKnife.bind(this);
 
-         intent = getIntent();
+        intent = getIntent();
         type = intent.getStringExtra("type");
-        task_id=intent.getStringExtra("task_id");
-        title=intent.getStringExtra("title");
+        task_id = intent.getStringExtra("task_id");
+        title = intent.getStringExtra("title");
+
+        kreatik_icon = (ImageView) findViewById(R.id.kreatik_icon);
     }
 
+//    public void presentActivity(View view) {
+//        ActivityOptionsCompat options = ActivityOptionsCompat.
+//                makeSceneTransitionAnimation(this, view, "transition");
+//        int revealX = (int) (view.getX() + view.getWidth() / 2);
+//        int revealY = (int) (view.getY() + view.getHeight() / 2);
+//
+//        Intent intent = new Intent(this, SecondActivity.class);
+//        intent.putExtra(SecondActivity.EXTRA_CIRCULAR_REVEAL_X, revealX);
+//        intent.putExtra(SecondActivity.EXTRA_CIRCULAR_REVEAL_Y, revealY);
+//
+//        ActivityCompat.startActivity(this, intent, options.toBundle());
+//    }
+
+    //
     private BroadcastReceiver mRegistrationBroadcastReceiver;
+
 
     @Override
     protected void onResume() {
         super.onResume();
-        new java.util.Timer().schedule(
-                new java.util.TimerTask() {
+        new Timer().schedule(
+                new TimerTask() {
                     @Override
                     public void run() {
 //                        mRegistrationBroadcastReceiver = new BroadcastReceiver() {
@@ -65,8 +106,11 @@ public class Splash extends AppCompatActivity {
 //                            }
 //                        };
 
+
+
+
                         if (AppUtil.getBoolean(Splash.this, TagsPreferences.IS_LOGIN)) {
-                        try {
+                            try {
 
                                 if (type.equalsIgnoreCase("task_update")) {
                                     AppUtil.logger("Intent : ", intent.getExtras().toString());
@@ -78,39 +122,39 @@ public class Splash extends AppCompatActivity {
                                     intent.putExtra("task_id", arr.getJSONObject(0).getString("task_id"));
                                     startActivity(intent);
                                     finish();
-                                }
-
-                                else if (type.equalsIgnoreCase("new_task"))
-                                {
+                                } else if (type.equalsIgnoreCase("new_task")) {
                                     Intent intent = new Intent(Splash.this, TaskActivity.class);
                                     intent.putExtra("type", "new_task");
                                     intent.putExtra("title", title);
-                                    intent.putExtra("task_id",task_id);
+                                    intent.putExtra("task_id", task_id);
                                     startActivity(intent);
                                     finish();
-                                }
-                                else if(type.equalsIgnoreCase("mark_attendance"))
-                                {
-                                    Intent intent = new Intent(Splash.this,AttendanceActivity.class);
+                                } else if (type.equalsIgnoreCase("mark_attendance")) {
+                                    Intent intent = new Intent(Splash.this, AttendanceActivity.class);
                                     startActivity(intent);
                                     finish();
-                                }
+                                } else {
 
-                                else {
+
+
                                     Intent intent = new Intent(Splash.this, HomeActivity.class);
-                                    startActivity(intent);
+
+
+                                   startActivity(intent);
                                     finish();
                                 }
-                            }
-                        catch(Exception e)
-                            {
-                                AppUtil.logger("Splash", e.toString());
+                            } catch (Exception e) {
+
+
+
+
                                 Intent intent = new Intent(Splash.this, HomeActivity.class);
+
+
                                 startActivity(intent);
                                 finish();
                             }
-                        }
-                       else {
+                        } else {
                             Intent intent = new Intent(Splash.this, LoginActivity.class);
                             startActivity(intent);
                             finish();
@@ -120,4 +164,9 @@ public class Splash extends AppCompatActivity {
                 3000
         );
     }
+
+//    @OnClick(R.id.fab)
+//    public void onViewClicked() {
+//        showbackground();
+//    }
 }

@@ -295,7 +295,7 @@ public class TaskActivity extends AppCompatActivity implements Task_home.OnTaskT
 //            }
 //            else {
 
-                setToolbar("Task");
+                setToolbar("Tasks");
                 task_home = new Task_home();
                 setFragment(task_home,Task_home.TAG);
 //            }

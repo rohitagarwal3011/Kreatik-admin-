@@ -49,8 +49,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/transaction_quantity"
-            android:text="300 bags"
+            android:id="@+id/transaction_date"
+            android:text=""
             android:textSize="@dimen/_15sdp"
             android:textColor="#FF1493"
             android:layout_gravity="center_horizontal"/>
@@ -85,6 +85,55 @@
 
 
     </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginBottom="@dimen/_10sdp"
+        android:background="#eee"
+        android:padding="@dimen/_10sdp"
+        >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Products Information"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_14sdp"/>
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/product_table"
+            >
+            <TableRow
+                android:id="@+id/rowheading"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:layout_marginBottom="@dimen/_5sdp"
+                android:padding="@dimen/_3sdp"
+                >
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_15sdp"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:textColor="@color/black"
+                    android:text="Product"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_15sdp"
+                    android:text="Quantity"
+                    android:gravity="center_horizontal"
+                    android:textColor="@color/black"
+                    android:layout_weight="1"/>
+            </TableRow>
+        </TableLayout>
+
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -126,21 +175,13 @@
                 android:text="WB 29 2C 1984"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_14sdp" />
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/driver_name"
-                android:gravity="left|center_vertical"
-                android:text="B-3/5 Sector-11, Rohini\n New Delhi - 110085"
-                android:visibility="gone"
-                android:textColor="@color/mdtp_dark_gray"
-                android:textSize="@dimen/_12sdp" />
 
             <TextView
 
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
+                android:id="@+id/driver_name"
                 android:text="Driver : Dinesh Kartik"
                 android:visibility="visible"
                 android:layout_marginTop="@dimen/_5sdp"

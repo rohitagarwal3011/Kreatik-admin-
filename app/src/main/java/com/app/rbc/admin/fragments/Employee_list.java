@@ -71,6 +71,7 @@ public class Employee_list extends Fragment {
         TaskActivity.visible_fragment = "Employee_list";}
         else if(tag.equalsIgnoreCase(Stock_po_create_task.TAG))
         {
+            StockActivity.show_tabs=true;
 
         }
     }
@@ -81,6 +82,11 @@ public class Employee_list extends Fragment {
         if(tag.equalsIgnoreCase(Task_create.TAG)) {
             TaskActivity.visible_fragment = "Employee_list";
             ((TaskActivity) getContext()).setToolbar("Select Employee");
+        }
+        else if(tag.equalsIgnoreCase(Stock_po_create_task.TAG))
+        {
+            StockActivity.show_tabs=true;
+
         }
     }
 
@@ -157,6 +163,7 @@ public class Employee_list extends Fragment {
                                                             }
                                                             else if(tag.equalsIgnoreCase(Stock_po_create_task.TAG))
                                                             {
+                                                                StockActivity.show_tabs=false;
                                                                 ChangeFragment.changeFragment(getActivity().getSupportFragmentManager(), R.id.frame_main, Product_selection.newInstance(task_type,user_id_selected ), Stock_po_create_task.TAG);
                                                             }
                                                             else if(tag.equalsIgnoreCase(Requirement_fulfill_task.TAG))
