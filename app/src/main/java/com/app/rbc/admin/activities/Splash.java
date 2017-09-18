@@ -5,12 +5,16 @@ import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
+import android.os.Looper;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.ViewAnimationUtils;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.app.rbc.admin.R;
@@ -22,6 +26,7 @@ import org.json.JSONArray;
 
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.logging.Handler;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -30,106 +35,12 @@ import butterknife.OnClick;
 public class Splash extends AppCompatActivity {
 
 
-//    private FloatingActionButton fab;
-//    private RelativeLayout layoutMain;
-//    private RelativeLayout layoutButtons;
-//    private RelativeLayout layoutContent;
-//    private boolean isOpen = false;
-//
-//    @Override
-//    protected void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_splash);
-//
-//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
-//
-//        layoutMain = (RelativeLayout) findViewById(R.id.layoutMain);
-//        layoutButtons = (RelativeLayout) findViewById(R.id.layoutButtons);
-//        layoutContent = (RelativeLayout) findViewById(R.id.layoutContent);
-//
-//        fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                viewMenu();
-//            }
-//        });
-//    }
-//
-//    private void viewMenu() {
-//
-//        if (!isOpen) {
-//            int cx = layoutButtons.getWidth() ;
-//            int cy = layoutButtons.getHeight();
-//
-//            // get the final radius for the clipping circle
-//            float finalRadius = (float) Math.hypot( layoutButtons.getWidth(),layoutButtons.getHeight());
-//
-//            // create the animator for this view (the start radius is zero)
-//            Animator anim =
-//                    ViewAnimationUtils.createCircularReveal(layoutButtons, cx, cy, 0, finalRadius);
-//            anim.setDuration(120000);
-//
-//            // make the view visible and start the animation
-//            layoutButtons.setVisibility(View.VISIBLE);
-//            anim.start();
-//            isOpen=true ;
-//
-//        } else {
-//
-//            int x = layoutButtons.getRight();
-//            int y = layoutButtons.getBottom();
-//
-//            int startRadius = Math.max(layoutContent.getWidth(), layoutContent.getHeight());
-//            int endRadius = 0;
-//
-//            fab.setBackgroundTintList(ColorStateList.valueOf(ResourcesCompat.getColor(getResources(),R.color.colorAccent,null)));
-//           // fab.setImageResource(R.drawable.ic_plus_white);
-//
-//            Animator anim = ViewAnimationUtils.createCircularReveal(layoutButtons, x, y, startRadius, endRadius);
-//            anim.setDuration(120000);
-//            anim.addListener(new Animator.AnimatorListener() {
-//                @Override
-//                public void onAnimationStart(Animator animator) {
-//
-//                }
-//
-//                @Override
-//                public void onAnimationEnd(Animator animator) {
-//                    layoutButtons.setVisibility(View.GONE);
-//                }
-//
-//                @Override
-//                public void onAnimationCancel(Animator animator) {
-//
-//                }
-//
-//                @Override
-//                public void onAnimationRepeat(Animator animator) {
-//
-//                }
-//            });
-//            anim.start();
-//
-//            isOpen = false;
-//        }
-//    }
-
-
     String type, task_id, title;
     Intent intent;
-    @BindView(R.id.layoutContent)
-    RelativeLayout layoutContent;
-    @BindView(R.id.fab)
-    FloatingActionButton fab;
-    @BindView(R.id.layoutMain)
-    RelativeLayout layoutMain;
-    @BindView(R.id.layoutButtons)
-    RelativeLayout layoutButtons;
+    ImageView kreatik_icon;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState){
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         ButterKnife.bind(this);
@@ -139,24 +50,25 @@ public class Splash extends AppCompatActivity {
         task_id = intent.getStringExtra("task_id");
         title = intent.getStringExtra("title");
 
+        kreatik_icon = (ImageView) findViewById(R.id.kreatik_icon);
     }
+
+//    public void presentActivity(View view) {
+//        ActivityOptionsCompat options = ActivityOptionsCompat.
+//                makeSceneTransitionAnimation(this, view, "transition");
+//        int revealX = (int) (view.getX() + view.getWidth() / 2);
+//        int revealY = (int) (view.getY() + view.getHeight() / 2);
+//
+//        Intent intent = new Intent(this, SecondActivity.class);
+//        intent.putExtra(SecondActivity.EXTRA_CIRCULAR_REVEAL_X, revealX);
+//        intent.putExtra(SecondActivity.EXTRA_CIRCULAR_REVEAL_Y, revealY);
+//
+//        ActivityCompat.startActivity(this, intent, options.toBundle());
+//    }
 
     //
     private BroadcastReceiver mRegistrationBroadcastReceiver;
 
-
-    private void showbackground() {
-        int x = layoutContent.getRight();
-        int y = layoutContent.getBottom();
-
-        int startRadius = 0;
-        int endRadius = (int) Math.hypot(layoutMain.getWidth(), layoutMain.getHeight());
-
-        Animator anim = ViewAnimationUtils.createCircularReveal(layoutButtons, x, y, startRadius, endRadius);
-
-        layoutButtons.setVisibility(View.VISIBLE);
-        anim.start();
-    }
 
     @Override
     protected void onResume() {
@@ -194,6 +106,9 @@ public class Splash extends AppCompatActivity {
 //                            }
 //                        };
 
+
+
+
                         if (AppUtil.getBoolean(Splash.this, TagsPreferences.IS_LOGIN)) {
                             try {
 
@@ -219,13 +134,23 @@ public class Splash extends AppCompatActivity {
                                     startActivity(intent);
                                     finish();
                                 } else {
+
+
+
                                     Intent intent = new Intent(Splash.this, HomeActivity.class);
-                                    startActivity(intent);
+
+
+                                   startActivity(intent);
                                     finish();
                                 }
                             } catch (Exception e) {
-                                AppUtil.logger("Splash", e.toString());
+
+
+
+
                                 Intent intent = new Intent(Splash.this, HomeActivity.class);
+
+
                                 startActivity(intent);
                                 finish();
                             }

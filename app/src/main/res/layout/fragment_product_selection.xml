@@ -5,6 +5,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.app.rbc.admin.fragments.Product_selection">
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -22,44 +25,52 @@
                 android:id="@+id/rowheading"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_5sdp"
                 android:layout_marginBottom="@dimen/_5sdp"
                 android:padding="@dimen/_3sdp"
+
                 >
                 <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/_15sdp"
+                    android:layout_height="@dimen/_25sdp"
                     android:layout_weight="1"
                     android:gravity="center"
+                    android:padding="@dimen/_5sdp"
+                    android:background="@color/backgroundcolor"
                     android:text="Product"/>
                 <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/_15sdp"
+                    android:layout_height="@dimen/_25sdp"
                     android:text="Quantity"
                     android:gravity="center"
+                    android:background="@color/backgroundcolor"
                     android:layout_weight="1"/>
             </TableRow>
         </TableLayout>
-
+        </LinearLayout>
+    </ScrollView>
             <Button
                 android:id="@+id/proceed_button"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_20sdp"
+                android:layout_height="@dimen/_40sdp"
                 android:visibility="gone"
-                android:background="@drawable/login_button"
-                android:text="Procced"/>
+                android:textColor="@color/white"
+                android:background="@color/colorAccent"
+                android:text="Next"
+                android:layout_margin="@dimen/_15sdp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"/>
 
-        </LinearLayout>
 
-    </ScrollView>
+
+    </RelativeLayout>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
+        android:layout_marginBottom="@dimen/_70sdp"
+        android:layout_marginRight="@dimen/_15sdp"
         app:backgroundTint="@color/colorAccent"
         app:srcCompat="@drawable/ic_add_black_24dp"
         tools:ignore="VectorDrawableCompat" />
