@@ -27,6 +27,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.transition.Explode;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -103,12 +104,12 @@ public class RequirementActivity extends AppCompatActivity implements SearchView
     private ViewPager mViewPager;
     private Menu menu;
 
+    public static boolean show_tabs = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_requirement);
         ButterKnife.bind(this);
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -137,12 +138,67 @@ public class RequirementActivity extends AppCompatActivity implements SearchView
             }
         });
 
-        hide_tablayout();
-        changeFragment(getSupportFragmentManager(), R.id.frame_main, new Stock_categories().newInstance("RequirementActivity"), Stock_categories.TAG);
+
 
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (show_tabs)
+        {
+            show_tablayout();
+        }
+        else {
+            hide_tablayout();
+            changeFragment(getSupportFragmentManager(), R.id.frame_main, new Stock_categories().newInstance("RequirementActivity"), Stock_categories.TAG);
+
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        if(tabLayout.getVisibility() == View.VISIBLE)
+        {
+            hide_tablayout();
+            changeFragment(getSupportFragmentManager(), R.id.frame_main, new Stock_categories().newInstance("RequirementActivity"), Stock_categories.TAG);
+        }
+        else {
+
+            if(getSupportFragmentManager().findFragmentByTag(Stock_categories.TAG).isVisible())
+            {
+                show_tabs = false;
+                getSupportFragmentManager().popBackStackImmediate();
+                Intent intent = new Intent(RequirementActivity.this, HomeActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                finish();
+            }
+            else if (show_tabs)
+            {
+                getSupportFragmentManager().popBackStackImmediate();
+                show_tablayout();
+
+            }
+
+//            else if(getSupportFragmentManager()..isVisible())
+//            {
+//                show_tablayout();
+//            }
+//            else if(getSupportFragmentManager().findFragmentByTag(Stock_add_po_details.TAG).isVisible())
+//            {
+//                show_tablayout();
+//            }
+            else {
+                getSupportFragmentManager().popBackStackImmediate();
+                // super.onBackPressed();
+            }
+        }
+
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -250,9 +306,11 @@ public class RequirementActivity extends AppCompatActivity implements SearchView
 
     public void show_req_details(String req_id)
     {
+        getSupportFragmentManager().popBackStackImmediate();
         Intent intent = new Intent(RequirementActivity.this,RequirementDetailActivity.class);
         intent.putExtra("rq_id",req_id);
         intent.putExtra("category_selected",category_selected);
+
         startActivity(intent);
     }
 

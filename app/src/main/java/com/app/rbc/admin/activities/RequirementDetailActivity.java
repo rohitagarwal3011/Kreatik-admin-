@@ -13,6 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -78,6 +79,8 @@ public class RequirementDetailActivity extends AppCompatActivity {
     TableRow rowheading;
     @BindView(R.id.product_table)
     TableLayout productTable;
+    @BindView(R.id.requirement_details_layout)
+    LinearLayout requirementDetailsLayout;
     private String category_selected;
     int count;
 
@@ -93,19 +96,26 @@ public class RequirementDetailActivity extends AppCompatActivity {
         Intent intent = getIntent();
         rq_id = intent.getStringExtra("rq_id");
         category_selected = intent.getStringExtra("category_selected");
-        count =1;
+        count = 1;
+        RequirementActivity.show_tabs = true;
         get_data();
     }
 
     @OnClick(R.id.fab)
     public void onViewClicked() {
 
+        requirementDetailsLayout.setVisibility(View.GONE);
         frameMain.setVisibility(View.VISIBLE);
         ChangeFragment.changeFragment(getSupportFragmentManager(), R.id.frame_main, Stock_list_product_wise.newInstance(category_selected), Requirement_fulfill_task.TAG);
 
-
     }
 
+    @Override
+    public void onBackPressed() {
+
+        super.onBackPressed();
+
+    }
 
     SweetAlertDialog pDialog;
 
@@ -177,13 +187,13 @@ public class RequirementDetailActivity extends AppCompatActivity {
         product_list.clear();
         for (int i = 0; i < requirementDetails.getReqDetails().get(0).getProducts().size(); i++) {
             product_list.add(requirementDetails.getReqDetails().get(0).getProducts().get(i).getProduct());
-            Product  reqDetail = requirementDetails.getReqDetails().get(0).getProducts().get(i);
-            addrow(reqDetail.getProduct(),reqDetail.getQuantity().toString(),reqDetail.getRemQuantity().toString());
+            Product reqDetail = requirementDetails.getReqDetails().get(0).getProducts().get(i);
+            addrow(reqDetail.getProduct(), reqDetail.getQuantity().toString(), reqDetail.getRemQuantity().toString());
         }
 
     }
 
-    private void addrow(String product, String quantity,String rem_quantity) {
+    private void addrow(String product, String quantity, String rem_quantity) {
         TableRow tr = new TableRow(RequirementDetailActivity.this);
         TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
 

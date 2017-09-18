@@ -20,6 +20,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.app.rbc.admin.R;
+import com.app.rbc.admin.activities.RequirementActivity;
 import com.app.rbc.admin.activities.RequirementDetailActivity;
 import com.app.rbc.admin.models.StockCategories;
 import com.app.rbc.admin.utils.AppUtil;
@@ -98,6 +99,17 @@ public class Product_selection extends Fragment {
             user_selected = getArguments().getString(ARG_PARAM2);
             TAG = getTag();
         }
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(TAG.equalsIgnoreCase(Requirement_create_new.TAG))
+        {
+            RequirementActivity.show_tabs=true;
+
+        }
     }
 
     @Override
@@ -122,8 +134,10 @@ public class Product_selection extends Fragment {
                     ChangeFragment.changeFragment(getActivity().getSupportFragmentManager(),R.id.frame_main, Stock_po_create_task.newInstance(category_selected,user_selected),TAG);
                 else if(TAG.equalsIgnoreCase(Stock_add_po_details.TAG))
                     ChangeFragment.changeFragment(getActivity().getSupportFragmentManager(),R.id.frame_main, Stock_add_po_details.newInstance(category_selected,user_selected),TAG);
-                else if(TAG.equalsIgnoreCase(Requirement_create_new.TAG))
-                    ChangeFragment.changeFragment(getActivity().getSupportFragmentManager(),R.id.frame_main, Requirement_create_new.newInstance(category_selected,TAG),TAG);
+                else if(TAG.equalsIgnoreCase(Requirement_create_new.TAG)) {
+                    RequirementActivity.show_tabs=false;
+                    ChangeFragment.changeFragment(getActivity().getSupportFragmentManager(), R.id.frame_main, Requirement_create_new.newInstance(category_selected, TAG), TAG);
+                }
                 else if(TAG.equalsIgnoreCase(Requirement_fulfill_task.TAG))
                     ChangeFragment.changeFragment(getActivity().getSupportFragmentManager(),R.id.frame_main, Requirement_fulfill_task.newInstance(category_selected,user_selected),TAG);
                 else if(TAG.equalsIgnoreCase(Dispatch_Vehicle.TAG))
