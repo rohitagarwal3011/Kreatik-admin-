@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="10dp">
+
+    <TextView
+        android:layout_width="70dp"
+        android:layout_height="50dp"
+        android:id="@+id/status_title"
+        android:paddingTop="15dp"
+        android:text="@string/status"
+        android:textColor="@color/cardview_dark_background"/>
+
+    <Spinner
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/round_edittext_light"
+        android:layout_toRightOf="@+id/status_title"
+        android:id="@+id/status_spinner"/>
+
+    <TextView
+        android:layout_below="@+id/status_title"
+        android:layout_width="70dp"
+        android:layout_height="50dp"
+        android:id="@+id/employee_title"
+        android:paddingTop="15dp"
+        android:text="Employee"
+        android:textColor="@color/cardview_dark_background"/>
+
+    <Spinner
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@id/status_title"
+        android:background="@drawable/round_edittext_light"
+        android:layout_toRightOf="@+id/employee_title"
+        android:id="@+id/employee_spinner"/>
+
+    <TextView
+        android:layout_below="@+id/employee_title"
+        android:layout_width="70dp"
+        android:layout_height="50dp"
+        android:id="@+id/deadline_title"
+        android:paddingTop="15dp"
+        android:text="Deadline"
+        android:textColor="@color/cardview_dark_background"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="Select Date"
+        android:layout_below="@id/employee_title"
+        android:background="@drawable/round_edittext_light"
+        android:layout_toRightOf="@+id/deadline_title"
+        android:id="@+id/deadline_button"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp"
+        android:layout_below="@id/deadline_title"
+        android:background="@color/mdtp_accent_color"
+        android:text="Submit"
+        android:id="@+id/submit_filters"
+        android:textColor="#ffffff"/>
+
+
+
+</RelativeLayout>

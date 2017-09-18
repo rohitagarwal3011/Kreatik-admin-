@@ -10,15 +10,21 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.app.rbc.admin.R;
+import com.app.rbc.admin.activities.RequirementDetailActivity;
+import com.app.rbc.admin.activities.StockActivity;
 import com.app.rbc.admin.adapters.Vehicle_detail_adapter;
 import com.app.rbc.admin.interfaces.ApiServices;
+import com.app.rbc.admin.models.Product;
 import com.app.rbc.admin.models.StockPoDetails;
 import com.app.rbc.admin.utils.AppUtil;
 import com.app.rbc.admin.utils.RetrofitClient;
@@ -58,8 +64,6 @@ public class Stock_po_details extends Fragment {
     TextView POAmount;
     @BindView(R.id.PO_pay_mode)
     TextView POPayMode;
-    @BindView(R.id.PO_quantity)
-    TextView POQuantity;
     @BindView(R.id.PO_status)
     TextView POStatus;
     @BindView(R.id.source_type)
@@ -73,6 +77,10 @@ public class Stock_po_details extends Fragment {
     @BindView(R.id.vehicle_info)
     RecyclerView vehicleInfo;
     Unbinder unbinder;
+    @BindView(R.id.product_table)
+    TableLayout productTable;
+
+    int count;
 
     // TODO: Rename and change types of parameters
     private String po_number;
@@ -100,6 +108,7 @@ public class Stock_po_details extends Fragment {
             po_number = getArguments().getString(PO_NUMBER);
 
         }
+        StockActivity.show_tabs=true;
     }
 
     @Override
@@ -114,6 +123,7 @@ public class Stock_po_details extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        count=1;
         get_data();
     }
 
@@ -130,7 +140,7 @@ public class Stock_po_details extends Fragment {
         // AppUtil.logger(TAG, "User id : " + user_id + " Pwd : " + new_password.getText().toString());
         Call<StockPoDetails> call = apiServices.po_details(po_number);
         //AppUtil.logger("Date :", String.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime())));
-        AppUtil.logger("Stock PO details ", "Get PO details : " + call.request().toString() + "PO_ID : "+po_number);
+        AppUtil.logger("Stock PO details ", "Get PO details : " + call.request().toString() + "PO_ID : " + po_number);
         call.enqueue(new Callback<StockPoDetails>() {
             @Override
             public void onResponse(Call<StockPoDetails> call, Response<StockPoDetails> response) {
@@ -139,7 +149,7 @@ public class Stock_po_details extends Fragment {
 
 
                     AppUtil.putString(getContext().getApplicationContext(), TagsPreferences.PO_DETAILS, new Gson().toJson(response.body()));
-                    stockPoDetails = new Gson().fromJson(AppUtil.getString(getContext(),TagsPreferences.PO_DETAILS), StockPoDetails.class);
+                    stockPoDetails = new Gson().fromJson(AppUtil.getString(getContext(), TagsPreferences.PO_DETAILS), StockPoDetails.class);
                     AppUtil.logger("PO Details : ", AppUtil.getString(getContext().getApplicationContext(), TagsPreferences.PO_DETAILS));
                     set_data();
 
@@ -172,18 +182,19 @@ public class Stock_po_details extends Fragment {
         set_po_details();
         set_vendor_details();
         set_vehicle_info();
+        set_product_details();
     }
 
     private void set_po_details() {
 
         StockPoDetails.PoDetail poDetail = stockPoDetails.getPoDetails().get(0);
-        String[] user = AppUtil.get_employee_from_user_id(getContext(),poDetail.getDetails().get(0).getCreatedBy());
-        AppUtil.logger("User Details : ",poDetail.getDetails().get(0).getCreatedBy());
+        String[] user = AppUtil.get_employee_from_user_id(getContext(), poDetail.getDetails().get(0).getCreatedBy().toString().trim());
+        AppUtil.logger("User Details : ", poDetail.getDetails().get(0).getCreatedBy());
         show_profile_pic(user);
         employeeName.setText(user[0]);
         role.setText(user[2]);
         PODate.setText(poDetail.getDetails().get(0).getCreationDt());
-       // POQuantity.setText(poDetail.getDetails().get(0)..toString());
+        // POQuantity.setText(poDetail.getDetails().get(0)..toString());
         POAmount.setText(poDetail.getDetails().get(0).getPrice().toString());
         POPayMode.setText(poDetail.getDetails().get(0).getPayMode());
         POStatus.setText(poDetail.getDetails().get(0).getStatus());
@@ -220,9 +231,53 @@ public class Stock_po_details extends Fragment {
         vehicleInfo.setItemAnimator(new DefaultItemAnimator());
         vehicleInfo.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
 
-        Vehicle_detail_adapter adapter = new Vehicle_detail_adapter(stockPoDetails.getVehicleDetails(),getContext());
+        Vehicle_detail_adapter adapter = new Vehicle_detail_adapter(stockPoDetails.getVehicleDetails(), getContext());
         vehicleInfo.setAdapter(adapter);
         adapter.notifyDataSetChanged();
+    }
+
+    private void set_product_details() {
+
+        for (int i = 0; i < stockPoDetails.getPoDetails().get(0).getProducts().size(); i++) {
+
+            Product reqDetail = stockPoDetails.getPoDetails().get(0).getProducts().get(i);
+            addrow(reqDetail.getProduct(),reqDetail.getQuantity().toString(),reqDetail.getRemQuantity().toString());
+        }
+    }
+
+    private void addrow(String product, String quantity, String rem_quantity) {
+        TableRow tr = new TableRow(getContext());
+        TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
+
+        layoutParams.setMargins(0, (int) getResources().getDimension(R.dimen._5sdp), 0, (int) getResources().getDimensionPixelSize(R.dimen._5sdp));
+        tr.setLayoutParams(layoutParams);
+        tr.setPadding((int) getResources().getDimension(R.dimen._3sdp), (int) getResources().getDimension(R.dimen._3sdp), (int) getResources().getDimension(R.dimen._3sdp), (int) getResources().getDimension(R.dimen._3sdp));
+
+        TextView tv = new TextView(getContext());
+        tv.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 1f));
+        tv.setGravity(Gravity.CENTER_HORIZONTAL);
+        tv.setTextColor(Color.parseColor("#000000"));
+        tv.setText(product);
+
+        tr.addView(tv, 0);
+
+        TextView tv1 = new TextView(getContext());
+        tv1.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 1f));
+        tv1.setGravity(Gravity.CENTER_HORIZONTAL);
+        tv1.setTextColor(Color.parseColor("#000000"));
+        tv1.setText(quantity);
+
+        tr.addView(tv1, 1);
+
+        TextView tv2 = new TextView(getContext());
+        tv2.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 1f));
+        tv2.setGravity(Gravity.CENTER_HORIZONTAL);
+        tv2.setTextColor(Color.parseColor("#000000"));
+        tv2.setText(rem_quantity);
+
+        tr.addView(tv2, 2);
+        productTable.addView(tr, count);
+        count++;
     }
 
     @Override

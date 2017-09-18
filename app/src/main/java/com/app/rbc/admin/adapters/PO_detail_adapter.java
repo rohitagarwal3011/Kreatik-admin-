@@ -47,6 +47,7 @@ public class PO_detail_adapter extends RecyclerView.Adapter<PO_detail_adapter.My
 //                    info.set_product_type(data.get(getAdapterPosition()).getPoNum());
 
                     ((StockActivity)context).hide_tablayout();
+                    ((StockActivity)context).setToolbar(data.get(getAdapterPosition()).getDetails().get(0).getTitle());
                   //  Fragment fragment= ((StockActivity) context).getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.pager + ":" + ((StockActivity)context).mViewPager.getCurrentItem());
                     ((StockActivity)context).mSectionsPagerAdapter.onclick_method(data.get(getAdapterPosition()).getPoId());
 
@@ -73,9 +74,9 @@ public class PO_detail_adapter extends RecyclerView.Adapter<PO_detail_adapter.My
     @Override
     public void onBindViewHolder(PO_detail_adapter.MyViewHolder holder, final int position) {
         StockCategoryDetails.PoDetail poDetail = data.get(position);
-        holder.PO_number.setText(poDetail.getPoId());
+        holder.PO_number.setText("Purchase Order : "+poDetail.getPoId());
         holder.PO_date.setText(poDetail.getDetails().get(0).getCreationDt());
-        holder.PO_amount.setText(poDetail.getDetails().get(0).getPrice().toString());
+        holder.PO_amount.setText("Rs. "+poDetail.getDetails().get(0).getPrice().toString());
         holder.PO_status.setText(poDetail.getDetails().get(0).getStatus());
 
 

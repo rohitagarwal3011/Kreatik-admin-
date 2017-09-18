@@ -223,6 +223,10 @@ public class Task_create extends Fragment implements DatePickerDialog.OnDateSetL
         item1.setVisible(false);
         MenuItem item2 = menu.findItem(R.id.completed);
         item2.setVisible(false);
+        MenuItem search = menu.findItem(R.id.search);
+        search.setVisible(false);
+        MenuItem filter = menu.findItem(R.id.filter);
+        filter.setVisible(false);
     }
 
 
@@ -414,7 +418,7 @@ public class Task_create extends Fragment implements DatePickerDialog.OnDateSetL
                                 public void onClick(SweetAlertDialog sweetAlertDialog) {
                                     pDialog.dismiss();
                                     Task_home task_home = new Task_home();
-                                    ((TaskActivity)getContext()).setToolbar("Task");
+                                    ((TaskActivity)getContext()).setToolbar("Tasks");
                                     ((TaskActivity)getContext()).setFragment(task_home,Task_home.TAG);
 
                                 }

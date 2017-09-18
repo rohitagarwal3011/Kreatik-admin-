@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 
 import com.app.rbc.admin.R;
+import com.app.rbc.admin.activities.StockActivity;
 import com.app.rbc.admin.adapters.Stock_category_adapter;
 import com.app.rbc.admin.adapters.Vendor_list_adapter;
 import com.app.rbc.admin.interfaces.ApiServices;
@@ -77,6 +78,11 @@ public class Vendor_list extends Fragment {
         if (getArguments() != null) {
             category_selected = getArguments().getString(ARG_PARAM1);
             TAG = getTag();
+        }
+        if(TAG.equalsIgnoreCase(Stock_add_po_details.TAG))
+        {
+            StockActivity.show_tabs=true;
+
         }
     }
 
@@ -178,6 +184,7 @@ public class Vendor_list extends Fragment {
 
                                                              if(TAG.equalsIgnoreCase(Stock_add_po_details.TAG))
                                                             {
+                                                                StockActivity.show_tabs=false;
                                                                 ChangeFragment.changeFragment(getActivity().getSupportFragmentManager(), R.id.frame_main, Product_selection.newInstance(category_selected,user_id_selected ), Stock_add_po_details.TAG);
                                                             }
 //stuff that updates ui

@@ -35,6 +35,7 @@ import java.io.IOException;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.fabric.sdk.android.Fabric;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -59,10 +60,13 @@ public class HomeActivity extends AppCompatActivity
     LinearLayout stocks;
     @BindView(R.id.module_chat)
     LinearLayout moduleChat;
-
+    @BindView(R.id.module_indents)
+    LinearLayout moduleIndents;
     DeadlineNotificationService alarm;
     @BindView(R.id.module_requirement)
     LinearLayout moduleRequirement;
+    @BindView(R.id.module_reports)
+    LinearLayout module_reports;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,9 +77,9 @@ public class HomeActivity extends AppCompatActivity
         alarm = new DeadlineNotificationService();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("R. B. Corporation");
+        toolbar.setTitle("Kreatik");
         setSupportActionBar(toolbar);
-
+        Fabric.with(this, new Crashlytics());
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -145,6 +149,15 @@ public class HomeActivity extends AppCompatActivity
     }
 
 
+    @OnClick(R.id.module_reports)
+    public void open_reports_module(View view) {
+
+        Intent intent = new Intent(HomeActivity.this, ReportActivity.class);
+        startActivity(intent);
+
+    }
+
+
     //Open requirement module
     @OnClick(R.id.module_requirement)
     public void open_requirement_module(View view) {
@@ -159,6 +172,14 @@ public class HomeActivity extends AppCompatActivity
     public void open_chat(View view) {
 
         Intent intent = new Intent(HomeActivity.this, AddVehicleActivity.class);
+        startActivity(intent);
+
+    }
+
+    @OnClick(R.id.module_indents)
+    public void open_indents_module(View view) {
+
+        Intent intent = new Intent(HomeActivity.this, IndentRegisterActivity.class);
         startActivity(intent);
 
     }

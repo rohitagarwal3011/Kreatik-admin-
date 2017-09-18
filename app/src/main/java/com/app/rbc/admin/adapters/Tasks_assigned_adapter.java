@@ -2,6 +2,7 @@ package com.app.rbc.admin.adapters;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.app.rbc.admin.R;
@@ -19,6 +21,8 @@ import com.app.rbc.admin.models.Todolist;
 import com.app.rbc.admin.services.DeadlineNotificationService;
 import com.app.rbc.admin.utils.AppUtil;
 import com.app.rbc.admin.utils.TagsPreferences;
+import com.facebook.drawee.generic.RoundingParams;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.gson.Gson;
 
 import java.text.ParseException;
@@ -38,10 +42,13 @@ public class Tasks_assigned_adapter extends RecyclerView.Adapter<Tasks_assigned_
     private Task_home task_home;
     private Animation shake ;
 
+
     private DeadlineNotificationService alarm;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
+        public SimpleDraweeView profile_pic;
+        LinearLayout unread_msgs;
         TextView taskTitle;
 
         TextView toUser;
@@ -62,6 +69,7 @@ public class Tasks_assigned_adapter extends RecyclerView.Adapter<Tasks_assigned_
         public MyViewHolder(View view) {
 
             super(view);
+            profile_pic=(SimpleDraweeView) view.findViewById(R.id.profile_pic);
             taskTitle= (TextView)view.findViewById(R.id.task_title);
             toUser= (TextView)view.findViewById(R.id.to_user);
             deadLine= (TextView)view.findViewById(R.id.dead_line);
@@ -70,6 +78,7 @@ public class Tasks_assigned_adapter extends RecyclerView.Adapter<Tasks_assigned_
             task_delete_image=(ImageView) view.findViewById(R.id.task_delete_icon);
             by = (TextView) view.findViewById(R.id.by);
             unread_count = (TextView) view.findViewById(R.id.unread_count);
+            unread_msgs = (LinearLayout) view.findViewById(R.id.unread_msgs);
 
 //            for(int i = 0;i<data.size();i++)
 //            {
@@ -147,18 +156,30 @@ public class Tasks_assigned_adapter extends RecyclerView.Adapter<Tasks_assigned_
 
         if(data.get(position).getUnread_count()>0 && !data.get(position).getStatus().equalsIgnoreCase("Complete"))
         {
-            holder.unread_count.setText(data.get(position).getUnread_count()+" new messages ");
+            holder.unread_count.setText(data.get(position).getUnread_count().toString());
             holder.unread_count.setVisibility(View.VISIBLE);
+            holder.unread_msgs.setVisibility(View.VISIBLE);
         }
         else {
-            holder.unread_count.setVisibility(View.GONE);
+            holder.unread_count.setVisibility(View.INVISIBLE);
+            holder.unread_msgs.setVisibility(View.INVISIBLE);
         }
+        int color = context.getResources().getColor(R.color.black_overlay);
+        RoundingParams roundingParams = RoundingParams.fromCornersRadius(7f);
+        roundingParams.setBorder(color, 1.0f);
+        roundingParams.setRoundAsCircle(true);
+        holder.profile_pic.getHierarchy().setRoundingParams(roundingParams);
+
+
+
         final Employee emp = new Gson().fromJson(AppUtil.getString(context, TagsPreferences.EMPLOYEE_LIST), Employee.class);
         for(int i = 0;i<emp.getData().size();i++)
         {
             if(emp.getData().get(i).getUserId().equalsIgnoreCase(data.get(position).getToUser()))
             {
                 holder.toUser.setText(emp.getData().get(i).getUserName());
+                holder.profile_pic.setImageURI(Uri.parse(emp.getData().get(i).getMpic_url()));
+
                 break;
             }
         }
@@ -194,8 +215,11 @@ public class Tasks_assigned_adapter extends RecyclerView.Adapter<Tasks_assigned_
         else {
             holder.itemView.clearAnimation();
 
+
+
+           // holder.profile_pic.setImageURI(Uri.parse("http://plethron.pythonanywhere.com/media/profile.jpg"));
             holder.task_delete_image.setVisibility(View.GONE);
-            holder.task_type_image.setVisibility(View.VISIBLE);
+          //  holder.task_type_image.setVisibility(View.VISIBLE);
             switch (type) {
                 case 'L':
                     holder.task_type_image.setImageDrawable(context.getResources().getDrawable(R.drawable.mailbox));

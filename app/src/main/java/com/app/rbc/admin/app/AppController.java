@@ -7,6 +7,8 @@ import com.app.rbc.admin.utils.AppUtil;
 import com.app.rbc.admin.utils.TagsPreferences;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.crashlytics.android.Crashlytics;
+import com.orm.SugarContext;
+
 import io.fabric.sdk.android.Fabric;
 
 /**
@@ -29,9 +31,15 @@ public class AppController extends Application {
         Fabric.with(this, new Crashlytics());
 
         Fresco.initialize(this);
+        SugarContext.init(this);
 
     }
 
+    @Override
+    public void onTerminate() {
+        super.onTerminate();
+        SugarContext.terminate();
+    }
 
 
 }
