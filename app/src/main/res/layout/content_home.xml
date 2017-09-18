@@ -267,6 +267,7 @@
 
 
             <LinearLayout
+                android:id="@+id/module_reports"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_100sdp"
                 android:layout_weight="1"
