@@ -94,6 +94,10 @@ public interface APIInterface {
                                 @Field("unit") String unit);
 
     @FormUrlEncoded
+    @POST("site_overview/")
+    Call<String> siteOverview(@Field("site") String site);
+
+    @FormUrlEncoded
     @POST("update_product/")
     Call<String> updateProdut(@Field("category") String category,
                                 @Field("old_prod") String old_prod,

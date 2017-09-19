@@ -98,5 +98,15 @@
         android:layout_above="@id/kreatik_title"
         android:layout_marginBottom="@dimen/_10sdp"/>
 
+    <ImageView
+        android:layout_alignParentBottom="true"
+        android:layout_width="10dp"
+        android:layout_alignParentEnd="true"
+        android:layout_centerHorizontal="true"
+        android:layout_height="10dp"
+        android:layout_centerInParent="true"
+        android:background="@drawable/reveal"
+        android:id="@+id/reveal"/>
+
 
 </RelativeLayout>

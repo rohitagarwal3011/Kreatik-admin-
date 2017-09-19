@@ -9,12 +9,16 @@ import android.util.Log;
 import com.app.rbc.admin.R;
 import com.app.rbc.admin.activities.IndentRegisterActivity;
 import com.app.rbc.admin.activities.ReportActivity;
+import com.app.rbc.admin.activities.SiteOverviewActivity;
 import com.app.rbc.admin.models.db.models.Categoryproduct;
 import com.app.rbc.admin.models.db.models.Employee;
 import com.app.rbc.admin.models.db.models.Site;
 import com.app.rbc.admin.models.db.models.User;
 import com.app.rbc.admin.models.db.models.Vehicle;
 import com.app.rbc.admin.models.db.models.Vendor;
+import com.app.rbc.admin.models.db.models.site_overview.Requirement;
+import com.app.rbc.admin.models.db.models.site_overview.Stock;
+import com.app.rbc.admin.models.db.models.site_overview.Trans;
 import com.app.rbc.admin.utils.AppUtil;
 import com.app.rbc.admin.utils.TagsPreferences;
 import com.google.gson.Gson;
@@ -544,7 +548,7 @@ public class APIController{
         Call<String> call = apiInterface.updateVendor(vendor.getName(),
                 vendor.getAddress(),
                 vendor.getPhone(),
-                vendor.getVendor_id());
+                vendor.getVendorid());
 
         call.enqueue(new Callback<String>() {
             @Override
@@ -558,6 +562,183 @@ public class APIController{
                         sendAPIResult(status,message);
                     }catch (Exception e) {
 
+                    }
+                }
+                else {
+                    Log.e("Error",response.errorBody().toString());
+                    sendAPIResult(0);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                Log.e("Error",t.toString());
+                sendAPIResult(0);
+            }
+        });
+    }
+
+    public void siteOverview(final long site) {
+        Call<String> call = apiInterface.siteOverview(site+"");
+
+        call.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, retrofit2.Response<String> response) {
+                if(response.errorBody() == null) {
+                    try {
+                        JSONObject body = new JSONObject(response.body().toString());
+                        Log.e("Response",body.toString());
+                        int status = body.getJSONObject("meta").getInt("status");
+                        String message = body.getJSONObject("meta").getString("message");
+
+                        JSONArray stock_details_array = body.getJSONArray("stock_details");
+
+                        List<Stock> stocks = Stock.find(Stock.class,"site = ?",site+"");
+                        Stock.deleteInTx(stocks);
+
+
+                        for(int i = 0 ; i < stock_details_array.length() ; i++) {
+                            JSONObject stockObj = stock_details_array.getJSONObject(i);
+                            Stock stock = new Stock();
+                            stock.setSite(site+"");
+                            Log.e("Site",stock.getSite());
+                            stock.setWheresite(stockObj.getString("where"));
+                            stock.setProduct(stockObj.getString("product"));
+                            stock.setQuantity(stockObj.getString("quantity"));
+                            stock.setStocktype(stockObj.getString("stock_type"));
+
+                            stock.save();
+                        }
+
+                        List<Requirement> requirements = Requirement.find(Requirement.class,"site = ?",site+"");
+                        Requirement.deleteInTx(requirements);
+
+                        JSONArray req_details_array = body.getJSONArray("req_details");
+
+                        for(int i = 0 ; i < req_details_array.length() ; i++) {
+                            Requirement requirement = new Requirement();
+
+                            JSONObject requirementObj = req_details_array.getJSONObject(i);
+                            requirement.setReqid(requirementObj.getString("rq_id"));
+
+                            JSONObject detailsObj = requirementObj.getJSONArray("details").getJSONObject(0);
+
+                            requirement.setTitle(detailsObj.getString("title"));
+                            requirement.setCreatedon(detailsObj.getString("created_on"));
+                            requirement.setStatus(detailsObj.getString("status"));
+                            requirement.setPurpose(detailsObj.getString("purpose"));
+                            requirement.setRaisedby(detailsObj.getString("raised_by"));
+                            requirement.setFulfilled(detailsObj.getString("fulfilled"));
+                            requirement.setSite(detailsObj.getString("site"));
+                            requirement.setCategory(detailsObj.getString("category"));
+                            requirement.setDesc(detailsObj.getString("desc"));
+
+                            JSONArray product_array = requirementObj.getJSONArray("products");
+
+                            for(int j = 0 ; j < product_array.length() ; j++) {
+                                JSONObject productObj = product_array.getJSONObject(i);
+
+                                requirement.setProducts(productObj.getString("product")+" ");
+                                requirement.setQuantities(productObj.getString("quantity")+" ");
+                                requirement.setRemquantities(productObj.getString("rem_quantity")+" ");
+                            }
+                            requirement.save();
+                        }
+
+                        List<Trans> transactions = Trans.find(Trans.class,"source = ? or destination = ?",site+"",site+"");
+                        Trans.deleteInTx(transactions);
+
+
+                        JSONArray trans_from_site_array = body.getJSONArray("trans_fromsite");
+
+                        for(int i = 0 ; i < trans_from_site_array.length() ; i++) {
+                            Trans transaction = new Trans();
+
+                            JSONObject transactionObj = trans_from_site_array.getJSONObject(i);
+
+                            transaction.setTransid(transactionObj.getString("trans_id"));
+
+                            JSONObject detailsObj = transactionObj.getJSONArray("details").getJSONObject(0);
+
+                            transaction.setStatus(detailsObj.getString("status"));
+                            transaction.setVehiclenumber(detailsObj.getString("vehicle_number"));
+                            transaction.setDriver(detailsObj.getString("driver"));
+                            transaction.setSource(detailsObj.getString("source"));
+                            transaction.setDispatchdt(detailsObj.getString("dispatch_dt"));
+                            transaction.setSourcetype(detailsObj.getString("source_type"));
+                            transaction.setDestination(detailsObj.getString("destination"));
+                            transaction.setDesttype(detailsObj.getString("dest_type"));
+                            transaction.setChallannum(detailsObj.getString("challan_num"));
+                            transaction.setChallanimg(detailsObj.getString("challan_img"));
+
+                            JSONArray products_array = transactionObj.getJSONArray("products");
+                            String products = "",quantities = "";
+                            for(int j = 0 ; j < products_array.length() ; j++) {
+                                JSONObject productObj = products_array.getJSONObject(j);
+                                if(j == products_array.length() -1) {
+                                    products = products + productObj.getString("product");
+                                    quantities = quantities + productObj.getString("quantity");
+                                }
+                                else {
+                                    products = products + productObj.getString("product") + "|";
+                                    quantities = quantities + productObj.getString("quantity") + "|";
+                                }
+
+                            }
+                            Log.e("Products",products);
+                            Log.e("Quantities",quantities);
+                            transaction.setProducts(products);
+                            transaction.setQuantites(quantities);
+                            transaction.save();
+
+                        }
+
+                        JSONArray trans_to_site_array = body.getJSONArray("trans_tosite");
+
+                        for(int i = 0 ; i < trans_to_site_array.length() ; i++) {
+                            Trans transaction = new Trans();
+
+                            JSONObject transactionObj = trans_to_site_array.getJSONObject(i);
+
+                            transaction.setTransid(transactionObj.getString("trans_id"));
+
+                            JSONObject detailsObj = transactionObj.getJSONArray("details").getJSONObject(0);
+
+                            transaction.setStatus(detailsObj.getString("status"));
+                            transaction.setVehiclenumber(detailsObj.getString("vehicle_number"));
+                            transaction.setDriver(detailsObj.getString("driver"));
+                            transaction.setSource(detailsObj.getString("source"));
+                            transaction.setDispatchdt(detailsObj.getString("dispatch_dt"));
+                            transaction.setSourcetype(detailsObj.getString("source_type"));
+                            transaction.setDestination(detailsObj.getString("destination"));
+                            transaction.setDesttype(detailsObj.getString("dest_type"));
+                            transaction.setChallannum(detailsObj.getString("challan_num"));
+                            transaction.setChallanimg(detailsObj.getString("challan_img"));
+
+                            JSONArray products_array = transactionObj.getJSONArray("products");
+                            String products = "",quantities = "";
+                            for (int j = 0; j < products_array.length(); j++) {
+                                JSONObject productObj = products_array.getJSONObject(j);
+                                if(j == products_array.length() -1) {
+                                    products = products + productObj.getString("product");
+                                    quantities = quantities + productObj.getString("quantity");
+                                }
+                                else {
+                                    products = products + productObj.getString("product") + "|";
+                                    quantities = quantities + productObj.getString("quantity") + "|";
+                                }
+
+                            }
+                            Log.e("Products",products);
+                            Log.e("Quantities",quantities);
+                            transaction.setProducts(products);
+                            transaction.setQuantites(quantities);
+                            transaction.save();
+                        }
+
+                        sendAPIResult(status,message);
+                    }catch (Exception e) {
+                        Log.e("Error Site Overview",e.toString());
                     }
                 }
                 else {
@@ -838,6 +1019,8 @@ public class APIController{
 
     private void sendAPIResult(int status,String... message) {
         switch (activity) {
+            case 2 : ((SiteOverviewActivity) context).publishAPIResponse(status, code, message[0]);
+                break;
             case 5: ((IndentRegisterActivity) context).publishAPIResponse(status, code, message[0]);
                 break;
             case 8 : ((ReportActivity) context).publishAPIResponse(status, code, message[0]);

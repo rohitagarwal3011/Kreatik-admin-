@@ -8,146 +8,331 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         >
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_gravity="center_vertical"
-        android:padding="@dimen/_10sdp">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="@dimen/_10sdp"
-            android:layout_gravity="center_vertical"
-            >
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:textColor="@color/black"
-                android:text="Is it related to PO ? "/>
+            android:layout_height="wrap_content">
 
-            <RadioGroup
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/radiogroup"
-                android:orientation="horizontal"
-                android:weightSum="2">
-
-                <RadioButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Yes"
-                    android:layout_weight="1"
-                    android:id="@+id/radio_po"
-                    android:textColor="@color/black"
-                    />
-
-                <RadioButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="No"
-                    android:layout_weight="1"
-                    android:checked="true"
-                    android:id="@+id/radio_site"
-                    android:textColor="@color/black"
-                    />
-            </RadioGroup>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:visibility="gone"
-            android:id="@+id/po_number_layout"
-            android:layout_marginBottom="@dimen/_10sdp"
-            android:padding="@dimen/_5sdp"
-            >
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="PO Number : "/>
-            <EditText
+            <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/edit_text_with_border"
-                android:padding="@dimen/_5sdp"
-                android:id="@+id/PO_number"/>
+                android:id="@+id/po_details_card"
+                android:layout_margin="@dimen/_10sdp">
 
-        </LinearLayout>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/round_edittext_light">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" 
-            android:text="Select Category"
-            android:gravity="center"
-            android:textColor="@color/black"
-            android:textSize="@dimen/_15sdp"
-            android:layout_marginBottom="@dimen/_10sdp"
-            />
+                     <TextView
+                         android:layout_width="wrap_content"
+                         android:layout_height="@dimen/_40sdp"
+                         android:gravity="center_vertical"
+                         android:id="@+id/po_relation_title"
+                         android:padding="@dimen/_5sdp"
+                         android:text="Is it related to PO ? "/>
 
-        <Spinner
-            android:id="@+id/select_category"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/_40sdp"
-            android:layout_marginLeft="@dimen/_15sdp"
-            android:layout_marginRight="@dimen/_15sdp"
-            android:layout_marginBottom="@dimen/_10sdp"
-            android:spinnerMode="dropdown"/>
-        
+                    <RadioGroup
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_40sdp"
+                        android:id="@+id/radiogroup"
+                        android:layout_marginLeft="@dimen/_5sdp"
+                        android:gravity="center_vertical"
+                        android:layout_toRightOf="@id/po_relation_title"
+                        android:orientation="horizontal"
+                        android:weightSum="2">
 
-        <TextView
+                        <RadioButton
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Yes"
+                            android:checked="true"
+                            android:layout_weight="1"
+                            android:id="@+id/radio_po"
+                            android:textColor="@color/black"
+                            />
+
+                        <RadioButton
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="No"
+                            android:layout_weight="1"
+                            android:id="@+id/radio_site"
+                            android:textColor="@color/black"
+                            />
+                    </RadioGroup>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/po_relation_title"
+                        android:id="@+id/po_number_layout">
+                        <TextView
+                            android:layout_width="@dimen/_80sdp"
+                            android:id="@+id/po_number_title"
+                            android:layout_height="@dimen/_40sdp"
+                            android:padding="@dimen/_5sdp"
+                            android:gravity="center_vertical"
+                            android:background="@drawable/round_edittext_light"
+                            android:text="PO Number : "/>
+                        <EditText
+                            android:layout_alignTop="@id/po_number_title"
+                            android:layout_toRightOf="@id/po_number_title"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/_40sdp"
+                            android:textSize="@dimen/_12sdp"
+                            android:background="@drawable/round_edittext_light"
+                            android:padding="@dimen/_5sdp"
+                            android:id="@+id/PO_number"/>
+
+
+                    </RelativeLayout>
+
+
+
+
+                </RelativeLayout>
+
+
+
+
+            </android.support.v7.widget.CardView>
+
+
+        <android.support.v7.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Select Source"
-            android:gravity="center"
-            android:textColor="@color/black"
-            android:textSize="@dimen/_15sdp"
-            android:layout_marginBottom="@dimen/_10sdp"
-            />
+            android:id="@+id/vehicle_details_card"
+            android:layout_below="@id/po_details_card"
+            android:layout_margin="@dimen/_10sdp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/round_edittext_light">
+
+                <TextView
+                    android:layout_width="@dimen/_80sdp"
+                    android:layout_height="@dimen/_40sdp"
+                    android:text="Category"
+                    android:padding="@dimen/_5sdp"
+                    android:gravity="center_vertical"                    android:background="@drawable/round_edittext_light"
+                    android:id="@+id/select_category_title"
+                    android:textSize="@dimen/_12sdp"
+                    />
+
+                <Spinner
+                    android:layout_toRightOf="@id/select_category_title"
+                    android:layout_alignTop="@id/select_category_title"
+                    android:id="@+id/select_category"
+                    android:layout_width="match_parent"
+                    android:background="@drawable/round_edittext_light"
+                    android:layout_height="@dimen/_40sdp"
+                    android:spinnerMode="dropdown"/>
+
+
+                <TextView
+                    android:layout_below="@id/select_category_title"
+                    android:layout_width="@dimen/_80sdp"
+                    android:layout_height="@dimen/_40sdp"
+                    android:text="Source"
+                    android:padding="@dimen/_5sdp"
+                    android:background="@drawable/round_edittext_light"
+                    android:gravity="center_vertical"
+                    android:id="@+id/select_source_title"
+                    android:textSize="@dimen/_12sdp"
+                    />
 
 
 
-        <Spinner
-            android:id="@+id/select_source"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/_40sdp"
-            android:layout_marginLeft="@dimen/_15sdp"
-            android:layout_marginRight="@dimen/_15sdp"
-            android:layout_marginBottom="@dimen/_10sdp"
-            android:spinnerMode="dropdown"/>
+                <Spinner
+                    android:layout_toRightOf="@id/select_source_title"
+                    android:layout_alignTop="@id/select_source_title"
+                    android:id="@+id/select_source"
+                    android:background="@drawable/round_edittext_light"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_40sdp"
+                    android:spinnerMode="dropdown"/>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Select Destination"
-            android:gravity="center"
-            android:textColor="@color/black"
-            android:textSize="@dimen/_15sdp"
-            android:layout_marginBottom="@dimen/_10sdp"
-            />
+                <TextView
+                    android:layout_width="@dimen/_80sdp"
+                    android:layout_height="@dimen/_40sdp"
+                    android:text="Destination"
+                    android:padding="@dimen/_5sdp"
+                    android:gravity="center_vertical"
+                    android:id="@+id/select_destination_title"
+                    android:textSize="@dimen/_12sdp"
+                    android:layout_below="@id/select_source_title"
+                    android:background="@drawable/round_edittext_light"
+                    />
 
-        <Spinner
-            android:id="@+id/select_destination"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/_40sdp"
-            android:layout_marginLeft="@dimen/_15sdp"
-            android:layout_marginRight="@dimen/_15sdp"
-            android:layout_marginBottom="@dimen/_10sdp"
-            android:spinnerMode="dropdown"/>
+                <Spinner
+                    android:layout_toRightOf="@id/select_destination_title"
+                    android:id="@+id/select_destination"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_40sdp"
+                    android:background="@drawable/round_edittext_light"
+                    android:layout_alignTop="@id/select_destination_title"
+                    android:spinnerMode="dropdown"/>
 
 
-        <Button
-            android:id="@+id/submit_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_25sdp"
-            android:text="proceed"
-            android:background="@drawable/login_button"/>
-    </LinearLayout>
+
+            </RelativeLayout>
+        </android.support.v7.widget.CardView>
+
+            <Button
+                android:layout_below="@id/vehicle_details_card"
+                android:id="@+id/submit_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/_10sdp"
+                android:text="proceed"
+                android:textColor="@color/white"
+                android:background="@color/colorAccent"/>
+
+
+
+        </RelativeLayout>
+    <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:orientation="vertical"-->
+        <!--android:layout_gravity="center_vertical"-->
+        <!--android:padding="@dimen/_10sdp">-->
+
+        <!--<LinearLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:orientation="horizontal"-->
+            <!--android:layout_marginBottom="@dimen/_10sdp"-->
+            <!--android:layout_gravity="center_vertical"-->
+            <!--&gt;-->
+            <!--<TextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:gravity="center_vertical"-->
+                <!--android:textColor="@color/black"-->
+                <!--android:text="Is it related to PO ? "/>-->
+
+            <!--<RadioGroup-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:id="@+id/radiogroup"-->
+                <!--android:orientation="horizontal"-->
+                <!--android:weightSum="2">-->
+
+                <!--<RadioButton-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:text="Yes"-->
+                    <!--android:layout_weight="1"-->
+                    <!--android:id="@+id/radio_po"-->
+                    <!--android:textColor="@color/black"-->
+                    <!--/>-->
+
+                <!--<RadioButton-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:text="No"-->
+                    <!--android:layout_weight="1"-->
+                    <!--android:checked="true"-->
+                    <!--android:id="@+id/radio_site"-->
+                    <!--android:textColor="@color/black"-->
+                    <!--/>-->
+            <!--</RadioGroup>-->
+
+        <!--</LinearLayout>-->
+
+        <!--<LinearLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:orientation="horizontal"-->
+            <!--android:visibility="gone"-->
+            <!--android:id="@+id/po_number_layout"-->
+            <!--android:layout_marginBottom="@dimen/_10sdp"-->
+            <!--android:padding="@dimen/_5sdp"-->
+            <!--&gt;-->
+            <!--<TextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="PO Number : "/>-->
+            <!--<EditText-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:background="@drawable/edit_text_with_border"-->
+                <!--android:padding="@dimen/_5sdp"-->
+                <!--android:id="@+id/PO_number"/>-->
+
+        <!--</LinearLayout>-->
+
+        <!--<TextView-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content" -->
+            <!--android:text="Select Category"-->
+            <!--android:gravity="center"-->
+            <!--android:textColor="@color/black"-->
+            <!--android:textSize="@dimen/_15sdp"-->
+            <!--android:layout_marginBottom="@dimen/_10sdp"-->
+            <!--/>-->
+
+        <!--<Spinner-->
+            <!--android:id="@+id/select_category"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="@dimen/_40sdp"-->
+            <!--android:layout_marginLeft="@dimen/_15sdp"-->
+            <!--android:layout_marginRight="@dimen/_15sdp"-->
+            <!--android:layout_marginBottom="@dimen/_10sdp"-->
+            <!--android:spinnerMode="dropdown"/>-->
+        <!---->
+
+        <!--<TextView-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="Select Source"-->
+            <!--android:gravity="center"-->
+            <!--android:textColor="@color/black"-->
+            <!--android:textSize="@dimen/_15sdp"-->
+            <!--android:layout_marginBottom="@dimen/_10sdp"-->
+            <!--/>-->
+
+
+
+        <!--<Spinner-->
+            <!--android:id="@+id/select_source"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="@dimen/_40sdp"-->
+            <!--android:layout_marginLeft="@dimen/_15sdp"-->
+            <!--android:layout_marginRight="@dimen/_15sdp"-->
+            <!--android:layout_marginBottom="@dimen/_10sdp"-->
+            <!--android:spinnerMode="dropdown"/>-->
+
+        <!--<TextView-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="Select Destination"-->
+            <!--android:gravity="center"-->
+            <!--android:textColor="@color/black"-->
+            <!--android:textSize="@dimen/_15sdp"-->
+            <!--android:layout_marginBottom="@dimen/_10sdp"-->
+            <!--/>-->
+
+        <!--<Spinner-->
+            <!--android:id="@+id/select_destination"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="@dimen/_40sdp"-->
+            <!--android:layout_marginLeft="@dimen/_15sdp"-->
+            <!--android:layout_marginRight="@dimen/_15sdp"-->
+            <!--android:layout_marginBottom="@dimen/_10sdp"-->
+            <!--android:spinnerMode="dropdown"/>-->
+
+
+        <!--<Button-->
+            <!--android:id="@+id/submit_button"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginTop="@dimen/_25sdp"-->
+            <!--android:text="proceed"-->
+            <!--android:background="@drawable/login_button"/>-->
+    <!--</LinearLayout>-->
     </ScrollView>
 </FrameLayout>

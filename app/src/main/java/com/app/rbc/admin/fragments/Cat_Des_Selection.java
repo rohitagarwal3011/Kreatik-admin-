@@ -15,6 +15,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 
 import com.app.rbc.admin.R;
@@ -74,7 +75,7 @@ public class Cat_Des_Selection extends Fragment {
     @BindView(R.id.PO_number)
     EditText PONumber;
     @BindView(R.id.po_number_layout)
-    LinearLayout poNumberLayout;
+    RelativeLayout poNumberLayout;
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
