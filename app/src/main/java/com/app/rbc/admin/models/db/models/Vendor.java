@@ -15,7 +15,7 @@ public class Vendor extends SugarRecord{
     }
     @SerializedName("vendor_id")
     @Expose
-    private String vendor_id;
+    private String vendorid;
 
     @SerializedName("vendor_name")
     @Expose
@@ -51,11 +51,11 @@ public class Vendor extends SugarRecord{
         this.phone = phone;
     }
 
-    public String getVendor_id() {
-        return vendor_id;
+    public String getVendorid() {
+        return vendorid;
     }
 
-    public void setVendor_id(String vendor_id) {
-        this.vendor_id = vendor_id;
+    public void setVendorid(String vendorid) {
+        this.vendorid = vendorid;
     }
 }

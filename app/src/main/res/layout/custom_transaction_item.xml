@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_margin="@dimen/_5sdp"
+    android:background="@drawable/round_edittext_light"
+    >
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:padding="@dimen/_15sdp"
+        android:layout_height="@dimen/_100sdp">
+
+
+        <ImageView
+            android:layout_width="@dimen/_50sdp"
+            android:layout_height="@dimen/_50sdp"
+            android:id="@+id/source_type"
+            android:background="#000"
+            android:padding="@dimen/_5sdp"
+            android:src="@drawable/site_overview"
+            />
+        <ImageView
+            android:layout_width="@dimen/_50sdp"
+            android:layout_height="@dimen/_50sdp"
+            android:id="@+id/destination_type"
+            android:background="#000"
+            android:layout_gravity="right"
+            android:padding="@dimen/_5sdp"
+            android:src="@drawable/site_overview"
+            />
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_5sdp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginBottom="@dimen/_12sdp"
+            android:layout_marginLeft="@dimen/_55sdp"
+            android:layout_marginRight="@dimen/_65sdp"
+            android:src="@drawable/dotted_line"/>
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|right"
+            android:layout_marginRight="@dimen/_50sdp"
+            android:layout_marginBottom="@dimen/_12sdp"
+            android:src="@drawable/ic_chevron_right_black_24dp" />
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/transaction_quantity"
+            android:text="300 bags"
+            android:textSize="@dimen/_15sdp"
+            android:textColor="#FF1493"
+            android:layout_gravity="center_horizontal"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/transaction_date"
+            android:text="06-07-2017"
+            android:textSize="@dimen/_12sdp"
+            android:textColor="@color/mdtp_dark_gray"
+            android:layout_gravity="center_horizontal|center_vertical"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/source"
+            android:text="Site A"
+            android:textSize="@dimen/_12sdp"
+            android:textColor="@color/black"
+            android:layout_gravity="bottom"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/destination"
+            android:text="Site B"
+            android:textSize="@dimen/_12sdp"
+            android:textColor="@color/black"
+            android:layout_gravity="bottom|right"/>
+
+
+
+
+    </FrameLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:id="@+id/tablelinear"
+        android:layout_marginBottom="@dimen/_10sdp"
+        >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Products Information"
+            android:textStyle="bold"
+            android:padding="@dimen/_5sdp"
+            android:background="#eee"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_14sdp"/>
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                >
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:padding="@dimen/_8sdp"
+                    android:background="@drawable/round_edittext_light"
+                    android:gravity="center_horizontal"
+                    android:textColor="@color/black"
+                    android:text="Product"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Quantity"
+                    android:padding="@dimen/_8sdp"
+                    android:background="@drawable/round_edittext_light"
+                    android:gravity="center_horizontal"
+                    android:textColor="@color/black"
+                    android:layout_weight="1"/>
+            </TableRow>
+        </TableLayout>
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/product_table"
+            >
+        </TableLayout>
+
+    </LinearLayout>
+</LinearLayout>

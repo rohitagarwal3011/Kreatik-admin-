@@ -188,6 +188,7 @@
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity android:name=".activities.ReportActivity" />
+        <activity android:name=".activities.SiteOverviewActivity"></activity>
     </application>
 
 </manifest>
