@@ -27,6 +27,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.transition.Explode;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -73,6 +74,7 @@ import static com.app.rbc.admin.utils.ChangeFragment.changeFragment;
 
 public class RequirementActivity extends AppCompatActivity implements SearchView.OnQueryTextListener{
 
+    private String TAG = RequirementActivity.class.getCanonicalName();
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.tabs)
@@ -103,12 +105,12 @@ public class RequirementActivity extends AppCompatActivity implements SearchView
     private ViewPager mViewPager;
     private Menu menu;
 
+    public static boolean show_tabs = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_requirement);
         ButterKnife.bind(this);
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -128,6 +130,7 @@ public class RequirementActivity extends AppCompatActivity implements SearchView
             @Override
             public void onClick(View view) {
 
+                getSupportFragmentManager().popBackStackImmediate();
                 hide_tablayout();
                 ChangeFragment.changeFragment(getSupportFragmentManager(), R.id.frame_main, Product_selection.newInstance(category_selected, AppUtil.getString(RequirementActivity.this,TagsPreferences.USER_ID)), Requirement_create_new.TAG);
 
@@ -137,18 +140,107 @@ public class RequirementActivity extends AppCompatActivity implements SearchView
             }
         });
 
-        hide_tablayout();
-        changeFragment(getSupportFragmentManager(), R.id.frame_main, new Stock_categories().newInstance("RequirementActivity"), Stock_categories.TAG);
+
 
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (show_tabs)
+        {
+            show_tablayout();
+        }
+        else {
+            hide_tablayout();
+            changeFragment(getSupportFragmentManager(), R.id.frame_main, new Stock_categories().newInstance("RequirementActivity"), Stock_categories.TAG);
+
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        AppUtil.logger(TAG,"Back Pressed");
+        if(tabLayout.getVisibility() == View.VISIBLE)
+        {
+            AppUtil.logger(TAG,"Tabs Visible");
+            hide_tablayout();
+            show_tabs=false;
+            changeFragment(getSupportFragmentManager(), R.id.frame_main, new Stock_categories().newInstance("RequirementActivity"), Stock_categories.TAG);
+        }
+        else {
+            AppUtil.logger(TAG,"Tabs Invisible");
+
+            if (show_tabs)
+            {
+                AppUtil.logger(TAG,"Show Tabs True");
+                getSupportFragmentManager().popBackStackImmediate();
+                show_tablayout();
+
+            }
+
+           // else if(getSupportFragmentManager().findFragmentByTag(Stock_categories.TAG).isVisible())
+            else
+            {
+                AppUtil.logger(TAG,"Show Tabs false");
+                try {
+
+                    Fragment mFragment = getSupportFragmentManager().findFragmentById(R.id.frame_main);
+                    if (mFragment instanceof Requirement_create_new)
+                    {
+                        AppUtil.logger(TAG," Requirement create new ");
+                        super.onBackPressed();
+                    }
+                    else if(mFragment instanceof Stock_categories)
+                    {
+                        AppUtil.logger(TAG,"Stock Categories");
+                        show_tabs = false;
+                        getSupportFragmentManager().popBackStackImmediate();
+                        Intent intent = new Intent(RequirementActivity.this, HomeActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                        finish();
+
+                    }
+
+                }
+                catch (Exception e)
+                {
+                    AppUtil.logger("Exception ",e.toString());
+                }
+
+            }
+
+//            else if(getSupportFragmentManager()..isVisible())
+//            {
+//                show_tablayout();
+//            }
+//            else if(getSupportFragmentManager().findFragmentByTag(Stock_add_po_details.TAG).isVisible())
+//            {
+//                show_tablayout();
+//            }
+//            else {
+//                getSupportFragmentManager().popBackStackImmediate();
+//                // super.onBackPressed();
+//            }
+        }
+
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_stock, menu);
+        getMenuInflater().inflate(R.menu.menu_requirement, menu);
         this.menu = menu;
+        if(!show_tabs)
+        {
+            menu.findItem(R.id.search).setVisible(false);
+            menu.findItem(R.id.filter).setVisible(false);
+
+        }
         SearchManager searchManager =
                 (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView = (SearchView)
@@ -167,9 +259,6 @@ public class RequirementActivity extends AppCompatActivity implements SearchView
 
         int id = item.getItemId();
 
-        if (id == R.id.action_settings) {
-            return true;
-        }
         if(id == R.id.filter) {
             RequirementActivity.PlaceholderFragment placeholderFragment = (RequirementActivity.PlaceholderFragment) mSectionsPagerAdapter
                     .getFragment(mViewPager.getCurrentItem());
@@ -181,6 +270,11 @@ public class RequirementActivity extends AppCompatActivity implements SearchView
                 case 2:placeholderFragment.setRequirementFilter(placeholderFragment.complete);
                     break;
             }
+        }
+       else if(id == android.R.id.home)
+        {
+            AppUtil.logger(TAG,"Home Pressed");
+            onBackPressed();
         }
 
         return super.onOptionsItemSelected(item);
@@ -195,6 +289,9 @@ public class RequirementActivity extends AppCompatActivity implements SearchView
         mViewPager.setAdapter(mSectionsPagerAdapter);
         tabLayout.setupWithViewPager(mViewPager);
 
+        menu.findItem(R.id.search).setVisible(true);
+        menu.findItem(R.id.filter).setVisible(true);
+
 
     }
 
@@ -202,8 +299,17 @@ public class RequirementActivity extends AppCompatActivity implements SearchView
         tabLayout.setVisibility(View.GONE);
         mViewPager.setVisibility(View.GONE);
         frameMain.setVisibility(View.VISIBLE);
+
         fab.hide();
+        if(menu != null)
+        {
+            menu.findItem(R.id.search).setVisible(false);
+            menu.findItem(R.id.filter).setVisible(false);
+
+        }
+
     }
+
 
 
     SweetAlertDialog pDialog;
@@ -250,9 +356,11 @@ public class RequirementActivity extends AppCompatActivity implements SearchView
 
     public void show_req_details(String req_id)
     {
+        getSupportFragmentManager().popBackStackImmediate();
         Intent intent = new Intent(RequirementActivity.this,RequirementDetailActivity.class);
         intent.putExtra("rq_id",req_id);
         intent.putExtra("category_selected",category_selected);
+
         startActivity(intent);
     }
 
@@ -409,8 +517,6 @@ public class RequirementActivity extends AppCompatActivity implements SearchView
             linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
             recyclerView.setLayoutManager(linearLayoutManager);
             recyclerView.setItemAnimator(new DefaultItemAnimator());
-            recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
-
 
             Requirement_list_adapter adapter = new Requirement_list_adapter(reqLists, getContext());
             recyclerView.setAdapter(adapter);
