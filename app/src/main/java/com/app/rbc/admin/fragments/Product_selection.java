@@ -30,6 +30,9 @@ import com.app.rbc.admin.utils.ChangeFragment;
 import com.app.rbc.admin.utils.TagsPreferences;
 import com.google.gson.Gson;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -101,6 +104,7 @@ public class Product_selection extends Fragment {
             user_selected = getArguments().getString(ARG_PARAM2);
             TAG = getTag();
         }
+        product_grid.clear();
 
     }
 
@@ -120,7 +124,6 @@ public class Product_selection extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_product_selection, container, false);
         unbinder = ButterKnife.bind(this, view);
-        product_grid.clear();
         count = 1;
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -129,22 +132,27 @@ public class Product_selection extends Fragment {
             }
         });
 
+
         proceedButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(TAG.equalsIgnoreCase(Stock_po_create_task.TAG))
-                    ChangeFragment.changeFragment(getActivity().getSupportFragmentManager(),R.id.frame_main, Stock_po_create_task.newInstance(category_selected,user_selected),TAG);
-                else if(TAG.equalsIgnoreCase(Stock_add_po_details.TAG))
-                    ChangeFragment.changeFragment(getActivity().getSupportFragmentManager(),R.id.frame_main, Stock_add_po_details.newInstance(category_selected,user_selected),TAG);
-                else if(TAG.equalsIgnoreCase(Requirement_create_new.TAG)) {
-                    RequirementActivity.show_tabs=false;
-                    ChangeFragment.changeFragment(getActivity().getSupportFragmentManager(), R.id.frame_main, Requirement_create_new.newInstance(category_selected, TAG), TAG);
+                if(count>1) {
+                    if (TAG.equalsIgnoreCase(Stock_po_create_task.TAG))
+                        ChangeFragment.changeFragment(getActivity().getSupportFragmentManager(), R.id.frame_main, Stock_po_create_task.newInstance(category_selected, user_selected), TAG);
+                    else if (TAG.equalsIgnoreCase(Stock_add_po_details.TAG))
+                        ChangeFragment.changeFragment(getActivity().getSupportFragmentManager(), R.id.frame_main, Stock_add_po_details.newInstance(category_selected, user_selected), TAG);
+                    else if (TAG.equalsIgnoreCase(Requirement_create_new.TAG)) {
+                        RequirementActivity.show_tabs = false;
+                        ChangeFragment.changeFragment(getActivity().getSupportFragmentManager(), R.id.frame_main, Requirement_create_new.newInstance(category_selected, TAG), TAG);
+                    } else if (TAG.equalsIgnoreCase(Requirement_fulfill_task.TAG))
+                        ChangeFragment.changeFragment(getActivity().getSupportFragmentManager(), R.id.frame_main, Requirement_fulfill_task.newInstance(category_selected, user_selected), TAG);
+                    else if (TAG.equalsIgnoreCase(Dispatch_Vehicle.TAG))
+                        ChangeFragment.changeFragment(getActivity().getSupportFragmentManager(), R.id.frame_main, Dispatch_Vehicle.newInstance(category_selected, user_selected), TAG);
                 }
-                else if(TAG.equalsIgnoreCase(Requirement_fulfill_task.TAG))
-                    ChangeFragment.changeFragment(getActivity().getSupportFragmentManager(),R.id.frame_main, Requirement_fulfill_task.newInstance(category_selected,user_selected),TAG);
-                else if(TAG.equalsIgnoreCase(Dispatch_Vehicle.TAG))
-                    ChangeFragment.changeFragment(getActivity().getSupportFragmentManager(),R.id.frame_main, Dispatch_Vehicle.newInstance(category_selected,user_selected),TAG);
-
+                else
+                {
+                 AppUtil.showToast(getContext(),"Add a product to proceed");
+                }
 
             }
         });
@@ -155,11 +163,25 @@ public class Product_selection extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-
-
-        get_product_list();
-        show_select_product_dialog();
+        if(product_grid.isEmpty()) {
+            get_product_list();
+            show_select_product_dialog();
+        }
+        else
+        {
+            set_data();
+        }
     }
+
+    private void set_data() {
+
+            for (String key :product_grid.keySet()) {
+
+                show_data(key,product_grid.get(key));
+            }
+
+    }
+
 
     public void get_product_list() {
         if(getTag().equalsIgnoreCase(Requirement_fulfill_task.TAG))
@@ -245,6 +267,7 @@ public class Product_selection extends Fragment {
 
         if(product_grid.containsKey(product))
         {
+            AppUtil.logger(TAG,"Product already selected");
             for(int i=0;i<productTable.getChildCount();i++)
             {
                 View view = productTable.getChildAt(i);
@@ -252,8 +275,9 @@ public class Product_selection extends Fragment {
                     // then, you can remove the the row you want...
                     // for instance...
                     TableRow row = (TableRow) view;
-                    if( row.getChildAt(0) instanceof TextView  ) {
-                       TextView tv = (TextView) row.getChildAt(0);
+
+                    if( row.getChildAt(1) instanceof TextView  ) {
+                       TextView tv = (TextView) row.getChildAt(1);
                         if(tv.getText().toString().equalsIgnoreCase(product))
                         {
                             productTable.removeViewAt(i);
@@ -270,12 +294,41 @@ public class Product_selection extends Fragment {
 
 
         product_grid.put(product, quantity);
+
+        show_data(product,quantity);
+
+    }
+
+    private void show_data(String product , String quantity)
+    {
         AppUtil.logger("Product_selection", " Product : " + product + " Quantity : " + quantity);
 
         View tr = getActivity().getLayoutInflater().inflate(R.layout.custom_requirement_table_row,null);
 
         TextView productText = (TextView) tr.findViewById(R.id.product);
         TextView quantityText = (TextView) tr.findViewById(R.id.quantity);
+        ImageView delete = (ImageView) tr.findViewById(R.id.delete_icon);
+        delete.setId(count);
+
+        delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                View view = productTable.getChildAt(v.getId());
+                if (view instanceof TableRow) {
+                    // then, you can remove the the row you want...
+                    // for instance...
+                    TableRow row = (TableRow) view;
+
+                    if( row.getChildAt(1) instanceof TextView  ) {
+                        TextView tv = (TextView) row.getChildAt(1);
+                        productTable.removeViewAt(v.getId());
+                        count--;
+                        product_grid.remove(tv.getText().toString());
+
+                    }
+                }
+            }
+        });
 
         productText.setText(product);
         quantityText.setText(quantity);
@@ -283,8 +336,8 @@ public class Product_selection extends Fragment {
         productTable.addView(tr, count);
         count++;
 
-        if(count>1)
-            proceedButton.setVisibility(View.VISIBLE );
+
+
         AppUtil.logger("Product_selection", "Row has been added");
     }
 

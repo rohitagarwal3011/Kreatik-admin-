@@ -52,6 +52,7 @@
         <activity
             android:name=".activities.LoginActivity"
             android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize|stateHidden" />
 
         <meta-data
@@ -102,7 +103,7 @@
             android:name=".activities.HomeActivity"
             android:label="@string/title_activity_home"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.Transparent"
+            android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
             android:name=".activities.TaskActivity"
@@ -153,16 +154,13 @@
         <activity
             android:name=".activities.StockActivity"
             android:label="@string/title_activity_stock"
-            android:parentActivityName=".activities.HomeActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateHidden|adjustPan">
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/task_searchable" />
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.app.rbc.admin.activities.HomeActivity" />
+
         </activity>
 
         <meta-data
@@ -172,14 +170,11 @@
         <activity
             android:name=".activities.RequirementActivity"
             android:label="@string/title_activity_requirement"
-            android:parentActivityName=".activities.HomeActivity"
+            android:windowSoftInputMode="stateHidden|adjustPan"
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/task_searchable" />
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.app.rbc.admin.activities.HomeActivity" />
         </activity>
         <activity android:name=".activities.RequirementDetailActivity" />
         <activity

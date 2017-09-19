@@ -52,6 +52,7 @@ public class RequirementList {
             mProducts = products;
         }
 
+
         public String getRqId() {
             return mRqId;
         }

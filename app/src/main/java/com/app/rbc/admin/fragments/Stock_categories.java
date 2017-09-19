@@ -108,28 +108,31 @@ public class Stock_categories extends Fragment {
 
 
     private void get_data() {
-        pDialog = new SweetAlertDialog(getContext(), SweetAlertDialog.PROGRESS_TYPE);
-        pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
-        pDialog.setTitleText("Loading");
-        pDialog.setCancelable(false);
-        pDialog.show();
-
-        final ApiServices apiServices = RetrofitClient.getApiService();
-        // AppUtil.logger(TAG, "User id : " + user_id + " Pwd : " + new_password.getText().toString());
-        Call<StockCategories> call = apiServices.stock_category();
-        //AppUtil.logger("Date :", String.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime())));
-        AppUtil.logger("Stock Category ", "Get Categories : " + call.request().toString());
-        call.enqueue(new Callback<StockCategories>() {
-            @Override
-            public void onResponse(Call<StockCategories> call, Response<StockCategories> response) {
-                pDialog.dismiss();
-                if (response.body().getMeta().getStatus() == 2) {
 
 
-                    AppUtil.putString(getContext().getApplicationContext(), TagsPreferences.STOCK_LIST, new Gson().toJson(response.body()));
-                    stockCategories = new Gson().fromJson(AppUtil.getString(getContext().getApplicationContext(), TagsPreferences.STOCK_LIST), StockCategories.class);
-                    AppUtil.logger("Stock List : ", AppUtil.getString(getContext().getApplicationContext(), TagsPreferences.STOCK_LIST));
-                    set_category_list();
+        if(AppUtil.getString(getContext(),TagsPreferences.STOCK_LIST).isEmpty())
+        {
+            pDialog = new SweetAlertDialog(getContext(), SweetAlertDialog.PROGRESS_TYPE);
+            pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+            pDialog.setTitleText("Loading");
+            pDialog.setCancelable(false);
+            pDialog.show();
+            final ApiServices apiServices = RetrofitClient.getApiService();
+            // AppUtil.logger(TAG, "User id : " + user_id + " Pwd : " + new_password.getText().toString());
+            Call<StockCategories> call = apiServices.stock_category();
+            //AppUtil.logger("Date :", String.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime())));
+            AppUtil.logger("Stock Category ", "Get Categories : " + call.request().toString());
+            call.enqueue(new Callback<StockCategories>() {
+                @Override
+                public void onResponse(Call<StockCategories> call, Response<StockCategories> response) {
+                    pDialog.dismiss();
+                    if (response.body().getMeta().getStatus() == 2) {
+
+
+                        AppUtil.putString(getContext().getApplicationContext(), TagsPreferences.STOCK_LIST, new Gson().toJson(response.body()));
+                        stockCategories = new Gson().fromJson(AppUtil.getString(getContext().getApplicationContext(), TagsPreferences.STOCK_LIST), StockCategories.class);
+                        AppUtil.logger("Stock List : ", AppUtil.getString(getContext().getApplicationContext(), TagsPreferences.STOCK_LIST));
+                        set_category_list();
 
 //                    SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
 //                    Date formated = null;
@@ -140,19 +143,25 @@ public class Stock_categories extends Fragment {
 //                    }
 
 
+                    }
+
                 }
 
-            }
+                @Override
+                public void onFailure(Call<StockCategories> call1, Throwable t) {
 
-            @Override
-            public void onFailure(Call<StockCategories> call1, Throwable t) {
-
-                pDialog.dismiss();
+                    pDialog.dismiss();
 
 
-                AppUtil.showToast(getContext(), "Network Issue. Please check your connectivity and try again");
-            }
-        });
+                    AppUtil.showToast(getContext(), "Network Issue. Please check your connectivity and try again");
+                }
+            });
+        }
+        else {
+            stockCategories = new Gson().fromJson(AppUtil.getString(getContext().getApplicationContext(), TagsPreferences.STOCK_LIST), StockCategories.class);
+            set_category_list();
+        }
+
     }
 
     public void set_category_list() {

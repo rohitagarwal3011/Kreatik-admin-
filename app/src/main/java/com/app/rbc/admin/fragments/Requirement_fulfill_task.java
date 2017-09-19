@@ -23,6 +23,7 @@ import com.app.rbc.admin.activities.StockActivity;
 import com.app.rbc.admin.interfaces.ApiServices;
 import com.app.rbc.admin.utils.AdapterWithCustomItem;
 import com.app.rbc.admin.utils.AppUtil;
+import com.app.rbc.admin.utils.ChangeFragment;
 import com.app.rbc.admin.utils.MySpinner;
 import com.app.rbc.admin.utils.RetrofitClient;
 import com.app.rbc.admin.utils.TagsPreferences;
@@ -203,6 +204,7 @@ public class Requirement_fulfill_task extends Fragment implements DatePickerDial
     }
     private Boolean check_length(EditText field) {
         if (field.getText().toString().length() == 0) {
+            desc.setError("Enter Task Description");
             return false;
         } else
             return true;
@@ -441,7 +443,8 @@ public class Requirement_fulfill_task extends Fragment implements DatePickerDial
                         @Override
                         public void onClick(SweetAlertDialog sweetAlertDialog) {
                             pDialog.dismiss();
-                            ((RequirementDetailActivity) getContext()).get_data();
+                            ChangeFragment.changeFragment(getActivity().getSupportFragmentManager(), R.id.frame_main, com.app.rbc.admin.fragments.RequirementDetails.newInstance(category_selected), com.app.rbc.admin.fragments.RequirementDetails.TAG);
+
 
                         }
                     });
