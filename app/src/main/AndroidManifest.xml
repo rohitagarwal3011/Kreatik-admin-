@@ -39,7 +39,7 @@
     </provider>
 
     <application
-        android:name=".app.AppController"
+        android:name="com.orm.SugarApp"
         android:allowBackup="true"
         android:hardwareAccelerated="false"
         android:icon="@mipmap/ic_launcher1"
