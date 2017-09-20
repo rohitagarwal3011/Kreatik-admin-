@@ -183,6 +183,7 @@ public class Stock_list_product_wise extends Fragment {
     }
 
     public static String site_selected;
+    public static String site_name;
 
     public void set_site_selected(String site ) throws NullPointerException
     {

@@ -1,7 +1,10 @@
 package com.app.rbc.admin.activities;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -11,6 +14,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewAnimationUtils;
+import android.view.ViewTreeObserver;
+import android.view.animation.AccelerateInterpolator;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -26,11 +32,6 @@ import com.crashlytics.android.Crashlytics;
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.squareup.picasso.Picasso;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -43,6 +44,10 @@ import retrofit2.Response;
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+
+    public static final String EXTRA_CIRCULAR_REVEAL_X = "EXTRA_CIRCULAR_REVEAL_X";
+    public static final String EXTRA_CIRCULAR_REVEAL_Y = "EXTRA_CIRCULAR_REVEAL_Y";
 
 
     @BindView(R.id.module_task)
@@ -68,11 +73,19 @@ public class HomeActivity extends AppCompatActivity
     @BindView(R.id.module_reports)
     LinearLayout module_reports;
 
+
+    View rootLayout;
+
+    private int revealX;
+    private int revealY;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_home);
+
+
         ButterKnife.bind(this);
         alarm = new DeadlineNotificationService();
 
@@ -104,6 +117,10 @@ public class HomeActivity extends AppCompatActivity
         Picasso.with(context).load(AppUtil.getString(context, TagsPreferences.PROFILE_IMAGE)).into(imageView);
 
 
+
+//        Animation
+
+
         navigationView.setNavigationItemSelectedListener(this);
         logUser();
 
@@ -112,6 +129,7 @@ public class HomeActivity extends AppCompatActivity
         //   updateMenuItems();
 
     }
+
 
     private void logUser() {
         // TODO: Use the current user's information
@@ -180,6 +198,14 @@ public class HomeActivity extends AppCompatActivity
     public void open_indents_module(View view) {
 
         Intent intent = new Intent(HomeActivity.this, IndentRegisterActivity.class);
+        startActivity(intent);
+
+    }
+
+    @OnClick(R.id.module_site_overview)
+    public void open_site_overview_module(View view) {
+
+        Intent intent = new Intent(HomeActivity.this, SiteOverviewActivity.class);
         startActivity(intent);
 
     }

@@ -241,6 +241,13 @@ public class StockActivity extends AppCompatActivity implements SearchView.OnQue
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_stock, menu);
         this.menu = menu;
+
+        if(!show_tabs)
+        {
+            menu.findItem(R.id.search).setVisible(false);
+            menu.findItem(R.id.filter).setVisible(false);
+
+        }
         SearchManager searchManager =
                 (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView = (SearchView)
@@ -273,6 +280,10 @@ public class StockActivity extends AppCompatActivity implements SearchView.OnQue
                case 2:placeholderFragment.setStockTransFilter();
                    break;
            }
+        }
+        if(id == android.R.id.home)
+        {
+            onBackPressed();
         }
 
         return super.onOptionsItemSelected(item);
@@ -332,6 +343,9 @@ public class StockActivity extends AppCompatActivity implements SearchView.OnQue
         tabLayout.setupWithViewPager(mViewPager);
 
 
+        menu.findItem(R.id.search).setVisible(true);
+        menu.findItem(R.id.filter).setVisible(true);
+
     }
 
     public void hide_tablayout()
@@ -340,6 +354,13 @@ public class StockActivity extends AppCompatActivity implements SearchView.OnQue
         mViewPager.setVisibility(View.GONE);
         frameMain.setVisibility(View.VISIBLE);
         fab.hide();
+
+        if(menu != null)
+        {
+            menu.findItem(R.id.search).setVisible(false);
+            menu.findItem(R.id.filter).setVisible(false);
+
+        }
     }
 
     public void show_po_details(String po)

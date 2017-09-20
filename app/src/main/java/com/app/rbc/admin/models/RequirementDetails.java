@@ -55,6 +55,16 @@ public class RequirementDetails {
         private List<Detail> mDetails;
         @SerializedName("products")
         private List<Product> mProducts;
+        @SerializedName("site_details")
+        private List<SiteDetail> siteDetails;
+
+        public List<SiteDetail> getSiteDetails() {
+            return siteDetails;
+        }
+
+        public void setSiteDetails(List<SiteDetail> siteDetails) {
+            this.siteDetails = siteDetails;
+        }
         @SerializedName("rq_id")
         private String mRqId;
 
@@ -103,16 +113,7 @@ public class RequirementDetails {
             @SerializedName("title")
             private String mTitle;
 
-            @SerializedName("site_details")
-            private List<SiteDetail> siteDetails;
 
-            public List<SiteDetail> getSiteDetails() {
-                return siteDetails;
-            }
-
-            public void setSiteDetails(List<SiteDetail> siteDetails) {
-                this.siteDetails = siteDetails;
-            }
 
             public String getmCategory() {
                 return mCategory;

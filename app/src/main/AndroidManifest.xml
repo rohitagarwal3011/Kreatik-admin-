@@ -19,7 +19,7 @@
 
     <uses-permission android:name="android.permission.CAMERA" />
 
-    <permission android:name="android.permission.CAMERA"/>
+    <permission android:name="android.permission.CAMERA" />
 
     <uses-permission-sdk-23 android:name="android.permission.CAMERA" />
     <uses-permission-sdk-23 android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -35,11 +35,11 @@
         android:grantUriPermissions="true">
         <meta-data
             android:name="android.support.FILE_PROVIDER_PATHS"
-            android:resource="@xml/file_paths"></meta-data>
+            android:resource="@xml/file_paths" />
     </provider>
 
     <application
-        android:name="com.app.rbc.admin.app.AppController"
+        android:name=".app.AppController"
         android:allowBackup="true"
         android:hardwareAccelerated="false"
         android:icon="@mipmap/ic_launcher1"
@@ -52,6 +52,7 @@
         <activity
             android:name=".activities.LoginActivity"
             android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize|stateHidden" />
 
         <meta-data
@@ -117,7 +118,7 @@
         <activity
             android:name=".activities.IndentRegisterActivity"
             android:label="@string/title_activity_indents"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"
@@ -132,8 +133,7 @@
         <activity
             android:name=".activities.Splash"
             android:screenOrientation="portrait"
-            android:theme="@style/AwesomeSplashTheme"
-            >
+            android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -154,7 +154,6 @@
         <activity
             android:name=".activities.StockActivity"
             android:label="@string/title_activity_stock"
-            android:parentActivityName=".activities.HomeActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateHidden|adjustPan">
@@ -162,9 +161,6 @@
                 android:name="android.app.searchable"
                 android:resource="@xml/task_searchable" />
 
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.app.rbc.admin.activities.HomeActivity" />
         </activity>
 
         <meta-data
@@ -174,25 +170,20 @@
         <activity
             android:name=".activities.RequirementActivity"
             android:label="@string/title_activity_requirement"
-            android:parentActivityName=".activities.HomeActivity"
+            android:windowSoftInputMode="stateHidden|adjustPan"
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/task_searchable" />
-
-
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.app.rbc.admin.activities.HomeActivity" />
         </activity>
         <activity android:name=".activities.RequirementDetailActivity" />
         <activity
             android:name=".activities.AddVehicleActivity"
             android:label="@string/title_activity_add_vehicle"
             android:theme="@style/AppTheme"
-            android:windowSoftInputMode="stateHidden|adjustPan"></activity>
-
-        <activity android:name=".activities.ReportActivity"></activity>
+            android:windowSoftInputMode="stateHidden|adjustPan" />
+        <activity android:name=".activities.ReportActivity" />
+        <activity android:name=".activities.SiteOverviewActivity"></activity>
     </application>
 
 </manifest>
