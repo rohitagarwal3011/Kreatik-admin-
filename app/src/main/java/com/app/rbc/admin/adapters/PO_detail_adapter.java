@@ -10,7 +10,11 @@ import android.widget.TextView;
 import com.app.rbc.admin.R;
 import com.app.rbc.admin.activities.StockActivity;
 import com.app.rbc.admin.models.StockCategoryDetails;
+import com.app.rbc.admin.utils.AppUtil;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -75,10 +79,22 @@ public class PO_detail_adapter extends RecyclerView.Adapter<PO_detail_adapter.My
     public void onBindViewHolder(PO_detail_adapter.MyViewHolder holder, final int position) {
         StockCategoryDetails.PoDetail poDetail = data.get(position);
         holder.PO_number.setText("Purchase Order : "+poDetail.getPoId());
-        holder.PO_date.setText(poDetail.getDetails().get(0).getCreationDt());
         holder.PO_amount.setText("Rs. "+poDetail.getDetails().get(0).getPrice().toString());
         holder.PO_status.setText(poDetail.getDetails().get(0).getStatus());
 
+        String date = poDetail.getDetails().get(0).getCreationDt();
+        AppUtil.logger("Date substring: ",date);
+        SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            Date formated = fmt.parse(date);
+            SimpleDateFormat fmtout = new SimpleDateFormat("EEE, MMM dd");
+            AppUtil.logger("Final date : ", fmtout.format(formated));
+
+            holder.PO_date.setText(fmtout.format(formated));
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
     }
 
