@@ -43,10 +43,11 @@ public class CusotmRequirementsAdapter extends RecyclerView.Adapter<CusotmRequir
     @Override
     public void onBindViewHolder(MyViewHolder holder, final int position) {
         Log.e("Setting",position+"");
-        holder.requirementTitle.setText(requirements.get(position).getTitle());
+        holder.total_quantity.setText(requirements.get(position).getQuantities());
         holder.requirementSite.setText(requirements.get(position).getSite());
         holder.purpose.setText(requirements.get(position).getPurpose());
         holder.requirementStatus.setText(requirements.get(position).getStatus());
+        holder.remaining_quantity.setText(requirements.get(position).getRemquantities());
         holder.createdOn.setText(requirements.get(position).getCreatedon());
 
     }
@@ -57,19 +58,22 @@ public class CusotmRequirementsAdapter extends RecyclerView.Adapter<CusotmRequir
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder{
-        TextView requirementTitle;
+        TextView total_quantity;
         TextView requirementSite;
         TextView purpose;
         TextView requirementStatus;
         TextView createdOn;
+        TextView remaining_quantity;
 
         public MyViewHolder(View itemView) {
             super(itemView);
-            requirementTitle = (TextView) itemView.findViewById(R.id.requirement_title);
+            total_quantity = (TextView) itemView.findViewById(R.id.total_quantity);
             requirementSite = (TextView) itemView.findViewById(R.id.requirement_site);
             purpose = (TextView) itemView.findViewById(R.id.purpose);
             requirementStatus = (TextView) itemView.findViewById(R.id.requirement_status);
             createdOn = (TextView) itemView.findViewById(R.id.created_on);
+            remaining_quantity = (TextView) itemView.findViewById(R.id.remaining_quantity);
+
 
         }
     }

@@ -29,6 +29,7 @@
     <color name="light_text">#9E9E9E</color>
 
     <color name="verified">#81C784</color>
+    <color name="heading">#EEEEEE</color>
     <color name="unselectedtext">#EEEEEE</color>
 </resources>
 
