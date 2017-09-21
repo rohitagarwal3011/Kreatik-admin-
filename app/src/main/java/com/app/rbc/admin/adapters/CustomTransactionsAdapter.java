@@ -17,14 +17,21 @@ import android.widget.TextView;
 import com.app.rbc.admin.R;
 
 import com.app.rbc.admin.activities.SiteOverviewActivity;
+import com.app.rbc.admin.models.db.models.Categoryproduct;
 import com.app.rbc.admin.models.db.models.Site;
 import com.app.rbc.admin.models.db.models.Vendor;
 import com.app.rbc.admin.models.db.models.site_overview.Trans;
+import com.app.rbc.admin.utils.AppUtil;
 import com.squareup.picasso.Picasso;
 
 import java.lang.reflect.Array;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by jeet on 19/9/17.
@@ -54,8 +61,19 @@ public class CustomTransactionsAdapter extends RecyclerView.Adapter<CustomTransa
     public void onBindViewHolder(MyViewHolder holder, final int position) {
 
 
+        String date = transactions.get(position).getDispatchdt();
+        SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            Date formated = fmt.parse(date);
+            SimpleDateFormat fmtout = new SimpleDateFormat("EEE, MMM dd");
+            AppUtil.logger("Final date : ", fmtout.format(formated));
 
-        holder.transactionDate.setText(transactions.get(position).getDispatchdt());
+            holder.transactionDate.setText(fmtout.format(formated));
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
 
 
         if (transactions.get(position).getSourcetype().equalsIgnoreCase("Stock")) {
@@ -84,10 +102,17 @@ public class CustomTransactionsAdapter extends RecyclerView.Adapter<CustomTransa
             .getDestination()).get(0).getName());
             Picasso.with(context).load((R.drawable.user)).into(holder.destinationType);
         }
-
+        float quantity = 0;
+        String unit = "";
         if(transactions.get(position).getProducts() != null && !(transactions.get(position).getProducts().equals(""))) {
             String[] products = transactions.get(position).getProducts().split("\\|");
             String[] quantities = transactions.get(position).getQuantites().split("\\|");
+
+                List<Categoryproduct> categoryproducts = Categoryproduct.find(Categoryproduct.class,
+                        "product = ?", products[0]+"");
+            if(categoryproducts.size() != 0) {
+                unit = categoryproducts.get(0).getUnit();
+            }
             Log.e("Products", Arrays.toString(products));
             Log.e("Quantities",Arrays.toString(quantities));
 
@@ -102,14 +127,17 @@ public class CustomTransactionsAdapter extends RecyclerView.Adapter<CustomTransa
                 TextView quantityText = (TextView) tr.findViewById(R.id.quantity);
 
                 productText.setText(products[i]);
-                quantityText.setText(quantities[i]);
+                quantityText.setText(quantities[i]+" "+unit);
 
                 holder.productTable.addView(tr);
+                quantity += Float.valueOf(quantities[i]);
             }
         }
         else {
             holder.tablelinear.setVisibility(View.GONE);
         }
+
+        holder.transaction_quantity.setText(quantity+" "+unit);
 
     }
 
@@ -126,6 +154,7 @@ public class CustomTransactionsAdapter extends RecyclerView.Adapter<CustomTransa
         TextView destination;
         TableLayout productTable;
         LinearLayout tablelinear;
+        TextView transaction_quantity;
 
 
         public MyViewHolder(View itemView) {
@@ -138,6 +167,7 @@ public class CustomTransactionsAdapter extends RecyclerView.Adapter<CustomTransa
             destination = (TextView) itemView.findViewById(R.id.destination);
             productTable = (TableLayout) itemView.findViewById(R.id.product_table);
             tablelinear = (LinearLayout) itemView.findViewById(R.id.tablelinear);
+            transaction_quantity = (TextView) itemView.findViewById(R.id.transaction_quantity);
 
 
         }

@@ -633,15 +633,27 @@ public class APIController{
                             requirement.setCategory(detailsObj.getString("category"));
                             requirement.setDesc(detailsObj.getString("desc"));
 
-                            JSONArray product_array = requirementObj.getJSONArray("products");
+                            JSONArray products_array = requirementObj.getJSONArray("products");
 
-                            for(int j = 0 ; j < product_array.length() ; j++) {
-                                JSONObject productObj = product_array.getJSONObject(i);
+                            String products = "",quantities = "",rem_quantity="";
+                            for(int j = 0 ; j < products_array.length() ; j++) {
+                                JSONObject productObj = products_array.getJSONObject(j);
+                                if(j == products_array.length() -1) {
+                                    products = products + productObj.getString("product");
+                                    quantities = quantities + productObj.getString("quantity");
+                                    rem_quantity = rem_quantity + productObj.getString("rem_quantity");
+                                }
+                                else {
+                                    products = products + productObj.getString("product") + "|";
+                                    quantities = quantities + productObj.getString("quantity") + "|";
+                                    rem_quantity = rem_quantity + productObj.getString("rem_quantity") + "|";
+                                }
 
-                                requirement.setProducts(productObj.getString("product")+" ");
-                                requirement.setQuantities(productObj.getString("quantity")+" ");
-                                requirement.setRemquantities(productObj.getString("rem_quantity")+" ");
                             }
+
+                            requirement.setProducts(products);
+                            requirement.setQuantities(quantities);
+                            requirement.setRemquantities(rem_quantity);
                             requirement.save();
                         }
 
