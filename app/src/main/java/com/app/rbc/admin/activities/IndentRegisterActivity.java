@@ -3,6 +3,7 @@ package com.app.rbc.admin.activities;
 
 
 
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.multidex.MultiDex;
@@ -11,6 +12,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -131,10 +134,26 @@ public class IndentRegisterActivity extends AppCompatActivity {
             case android.R.id.home :
                 onBackPressed();
                 return true;
+            case R.id.playlist:
+                startYoutubeIntent();
+                return true;
 
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.indent_register_menu, menu);
+        return true;
+    }
+
+
+    private void startYoutubeIntent() {
+        Intent intent = new Intent(IndentRegisterActivity.this, YoutubeActivity.class);
+        startActivity(intent);
     }
 
     @Override

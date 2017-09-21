@@ -33,6 +33,9 @@ public class SiteOverviewPlaceholderFragment extends Fragment {
     private List<Trans> transactions;
     public long site;
     public int position;
+    private CustomStockDetailsAdapter stockDetailsAdapter;
+    private CusotmRequirementsAdapter requirementsAdapter;
+    private CustomTransactionsAdapter transactionsAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -49,7 +52,7 @@ public class SiteOverviewPlaceholderFragment extends Fragment {
                 recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
                 RecyclerView.LayoutManager layoutManagerSite = new LinearLayoutManager(getContext());
                 recyclerView.setLayoutManager(layoutManagerSite);
-                CustomStockDetailsAdapter stockDetailsAdapter = new CustomStockDetailsAdapter(getActivity(), stocks);
+                stockDetailsAdapter = new CustomStockDetailsAdapter(getActivity(), stocks);
                 recyclerView.setAdapter(stockDetailsAdapter);
                 break;
             case 1:
@@ -58,7 +61,7 @@ public class SiteOverviewPlaceholderFragment extends Fragment {
                 RecyclerView.LayoutManager layoutManagerRequirement = new LinearLayoutManager(getContext());
                 recyclerView.setLayoutManager(layoutManagerRequirement);
                 Log.e("layout","manager");
-                CusotmRequirementsAdapter requirementsAdapter = new CusotmRequirementsAdapter(getActivity(), requirements);
+                requirementsAdapter = new CusotmRequirementsAdapter(getActivity(), requirements);
                 recyclerView.setAdapter(requirementsAdapter);
                 Log.e("adapter","set");
                 break;
@@ -69,7 +72,7 @@ public class SiteOverviewPlaceholderFragment extends Fragment {
                 RecyclerView.LayoutManager layoutManagerTransaction = new LinearLayoutManager(getContext());
                 recyclerView.setLayoutManager(layoutManagerTransaction);
                 Log.e("layout","manager");
-                CustomTransactionsAdapter transactionsAdapter = new CustomTransactionsAdapter(getActivity(), transactions);
+                transactionsAdapter = new CustomTransactionsAdapter(getActivity(), transactions);
                 recyclerView.setAdapter(transactionsAdapter);
                 Log.e("adapter","set");
                 break;

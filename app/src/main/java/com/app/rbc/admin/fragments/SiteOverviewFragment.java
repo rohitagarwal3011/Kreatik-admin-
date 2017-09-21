@@ -41,6 +41,7 @@ public class SiteOverviewFragment extends Fragment {
     private NestedScrollView nestedScrollView;
     private Site s;
     private TextView site_type,site_location,site_incharge;
+    private CustomSiteOverviewPagerAdapter customSiteOverviewPagerAdapter;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -78,31 +79,35 @@ public class SiteOverviewFragment extends Fragment {
                 ContextCompat.getColor(getContext(), R.color.white)
         );
 
-        SiteOverviewPlaceholderFragment stocks = new SiteOverviewPlaceholderFragment();
-        stocks.site = site;
-        stocks.position = 0;
-        fragments.add(0,stocks);
 
-        SiteOverviewPlaceholderFragment requirements = new SiteOverviewPlaceholderFragment();
-        requirements.site = site;
-        requirements.position = 1;
-        fragments.add(1,requirements);
-
-        SiteOverviewPlaceholderFragment transactions = new SiteOverviewPlaceholderFragment();
-        transactions.site = site;
-        transactions.position = 2;
-        fragments.add(2,transactions);
+        setCustomOverviewPagerAdapter();
 
         callSiteOverviewApi();
-        setCustomOverviewPagerAdapter();
 
     }
 
     private void setCustomOverviewPagerAdapter() {
-        CustomSiteOverviewPagerAdapter customSiteOverviewPagerAdapter = new CustomSiteOverviewPagerAdapter(
+        customSiteOverviewPagerAdapter = new CustomSiteOverviewPagerAdapter(
                 getChildFragmentManager(),viewPager,tabLayout,fragments);
+
+        SiteOverviewPlaceholderFragment stocks = new SiteOverviewPlaceholderFragment();
+        stocks.site = site;
+        stocks.position = 0;
+        customSiteOverviewPagerAdapter.addFragment(stocks,0);
+
+        SiteOverviewPlaceholderFragment requirements = new SiteOverviewPlaceholderFragment();
+        requirements.site = site;
+        requirements.position = 1;
+        customSiteOverviewPagerAdapter.addFragment(requirements,1);
+
+        SiteOverviewPlaceholderFragment transactions = new SiteOverviewPlaceholderFragment();
+        transactions.site = site;
+        transactions.position = 2;
+        customSiteOverviewPagerAdapter.addFragment(transactions,2);
+
+
         viewPager.setAdapter(customSiteOverviewPagerAdapter);
-        viewPager.invalidate();
+        customSiteOverviewPagerAdapter.notifyDataSetChanged();
     }
 
 
@@ -121,7 +126,7 @@ public class SiteOverviewFragment extends Fragment {
         sweetAlertDialog.dismiss();
         switch(status) {
             case 2 :
-                viewPager.invalidate();
+                setCustomOverviewPagerAdapter();
                 break;
             case 0:
                 Toast.makeText(getContext(),
@@ -130,4 +135,5 @@ public class SiteOverviewFragment extends Fragment {
                 break;
         }
     }
+
 }
