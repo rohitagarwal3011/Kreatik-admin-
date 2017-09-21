@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.app.rbc.admin.R;
+import com.app.rbc.admin.models.db.models.Categoryproduct;
 import com.app.rbc.admin.models.db.models.Site;
 import com.app.rbc.admin.models.db.models.site_overview.Stock;
 import com.squareup.picasso.Picasso;
@@ -42,6 +43,13 @@ public class CustomStockDetailsAdapter extends RecyclerView.Adapter<CustomStockD
         holder.stock_location.setText(Site.findById(Site.class,Long.valueOf(stocks.get(position).getSite())).getName());
         holder.stock_product.setText(stocks.get(position).getProduct());
         holder.stock_quantity.setText(stocks.get(position).getQuantity());
+        List<Categoryproduct> categoryproducts = Categoryproduct.find(Categoryproduct.class,
+                "product = ?",stocks.get(position).getProduct());
+        if(categoryproducts.size() != 0) {
+            holder.stock_quantity.setText(holder.stock_quantity.getText()+" "
+            +categoryproducts.get(0).getUnit());
+        }
+
 
         if(stocks.get(position).getStocktype().equalsIgnoreCase("Stock"))
         {
