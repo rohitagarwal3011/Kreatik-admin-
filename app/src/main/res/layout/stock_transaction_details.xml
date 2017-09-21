@@ -53,7 +53,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/transaction_quantity"
-        android:text="300 bags"
         android:textSize="@dimen/_15sdp"
         android:textColor="#FF1493"
         android:layout_gravity="center_horizontal"/>
@@ -62,7 +61,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/transaction_date"
-        android:text="06-07-2017"
         android:textSize="@dimen/_12sdp"
         android:textColor="@color/mdtp_dark_gray"
         android:layout_gravity="center_horizontal|center_vertical"/>
@@ -71,7 +69,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/source"
-        android:text="Site A"
         android:textSize="@dimen/_12sdp"
         android:textColor="@color/black"
         android:layout_gravity="bottom"/>
@@ -80,7 +77,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/destination"
-        android:text="Site B"
         android:textSize="@dimen/_12sdp"
         android:textColor="@color/black"
         android:layout_gravity="bottom|right"/>

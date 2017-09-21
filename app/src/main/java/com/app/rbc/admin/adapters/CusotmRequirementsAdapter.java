@@ -10,11 +10,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.app.rbc.admin.R;
+import com.app.rbc.admin.models.db.models.Categoryproduct;
 import com.app.rbc.admin.models.db.models.Site;
 import com.app.rbc.admin.models.db.models.site_overview.Requirement;
 import com.app.rbc.admin.models.db.models.site_overview.Stock;
 import com.squareup.picasso.Picasso;
 
+import java.sql.Array;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -43,11 +46,36 @@ public class CusotmRequirementsAdapter extends RecyclerView.Adapter<CusotmRequir
     @Override
     public void onBindViewHolder(MyViewHolder holder, final int position) {
         Log.e("Setting",position+"");
-        holder.total_quantity.setText(requirements.get(position).getQuantities());
-        holder.requirementSite.setText(requirements.get(position).getSite());
+        Site site = Site.findById(Site.class,Long.valueOf(requirements.get(position).getSite()));
+        if(site != null) {
+            holder.requirementSite.setText(site.getName());
+        }
         holder.purpose.setText(requirements.get(position).getPurpose());
         holder.requirementStatus.setText(requirements.get(position).getStatus());
-        holder.remaining_quantity.setText(requirements.get(position).getRemquantities());
+
+        if(!(requirements.get(position).getProducts().equalsIgnoreCase(""))) {
+
+            String[] products = requirements.get(position).getProducts().split("\\|");
+            String[] quantities = requirements.get(position).getQuantities().split("\\|");
+            String[] rem_quantities = requirements.get(position).getRemquantities().split("\\|");
+
+            Log.e("Quantitites", Arrays.toString(quantities));
+            Log.e("Rem Quantitites", Arrays.toString(rem_quantities));
+            float quantity = 0, rem_quantity = 0;
+            for(int i = 0 ; i < quantities.length ; i++) {
+                quantity += Float.valueOf(quantities[i]);
+                rem_quantity += Float.valueOf(rem_quantities[i]);
+
+            }
+
+            List<Categoryproduct> categoryproducts = Categoryproduct.find(Categoryproduct.class,
+                    "product = ?", products[0]);
+            if (categoryproducts.size() != 0) {
+                holder.total_quantity.setText(quantity + " " + categoryproducts.get(0).getUnit());
+                holder.remaining_quantity.setText(rem_quantity + " " + categoryproducts.get(0).getUnit());
+            }
+        }
+
         holder.createdOn.setText(requirements.get(position).getCreatedon());
 
     }

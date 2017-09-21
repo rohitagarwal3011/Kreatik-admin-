@@ -13,6 +13,7 @@ import com.app.rbc.admin.activities.RequirementActivity;
 import com.app.rbc.admin.fragments.Cat_Des_Requirement_List;
 import com.app.rbc.admin.fragments.Dispatch_Vehicle;
 import com.app.rbc.admin.models.RequirementList;
+import com.app.rbc.admin.models.db.models.Categoryproduct;
 import com.app.rbc.admin.utils.AppUtil;
 
 import java.text.ParseException;
@@ -122,14 +123,21 @@ public class Requirement_list_adapter extends RecyclerView.Adapter<Requirement_l
 
         Long total_qty = 0L;
         Long rem_qty=0L;
-        
+        String unit = "";
+        if(data.get(position).getProducts().size() != 0) {
+            List<Categoryproduct> categoryproducts = Categoryproduct.find(Categoryproduct.class,
+                    "product = ?",data.get(position).getProducts().get(0).getProduct());
+            if(categoryproducts.size() != 0) {
+                unit = categoryproducts.get(0).getUnit();
+            }
+        }
         for(int i = 0 ; i<data.get(position).getProducts().size();i++)
         {
             total_qty=total_qty+data.get(position).getProducts().get(i).getQuantity();
             rem_qty=rem_qty+data.get(position).getProducts().get(i).getRemQuantity();
         }
-        holder.mQuantityTotal.setText(total_qty.toString()+" bags");
-        holder.mQuantityRemaining.setText(rem_qty.toString()+" rem.");
+        holder.mQuantityTotal.setText(total_qty.toString()+" "+unit);
+        holder.mQuantityRemaining.setText(rem_qty.toString()+" "+unit);
 
 
 

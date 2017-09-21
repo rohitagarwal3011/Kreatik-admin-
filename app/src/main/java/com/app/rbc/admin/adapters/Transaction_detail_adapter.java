@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.app.rbc.admin.R;
 import com.app.rbc.admin.models.StockCategoryDetails;
 import com.app.rbc.admin.models.VehicleDetail;
+import com.app.rbc.admin.models.db.models.Categoryproduct;
 import com.app.rbc.admin.utils.AppUtil;
 import com.squareup.picasso.Picasso;
 
@@ -41,6 +42,7 @@ public class Transaction_detail_adapter extends RecyclerView.Adapter<Transaction
         TextView source;
         TextView destination;
         TableLayout productTable;
+        TextView transaction_quantity;
 
         public MyViewHolder(View view) {
             super(view);
@@ -51,17 +53,8 @@ public class Transaction_detail_adapter extends RecyclerView.Adapter<Transaction
             destinationType = (ImageView) view.findViewById(R.id.destination_type);
             destination = (TextView) view.findViewById(R.id.destination);
             productTable = (TableLayout) view.findViewById(R.id.product_table);
+            transaction_quantity = (TextView) view.findViewById(R.id.transaction_quantity);
             count=1;
-
-//            view.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//
-//                    final Stock_categories info = (Stock_categories) ((StockActivity) context).getSupportFragmentManager().findFragmentByTag(Stock_categories.TAG);
-//                    info.set_product_type(getAdapterPosition());
-//
-//                }
-//            });
 
         }
     }
@@ -84,6 +77,8 @@ public class Transaction_detail_adapter extends RecyclerView.Adapter<Transaction
     public void onBindViewHolder(MyViewHolder holder, final int position) {
 
         StockCategoryDetails.TransactionDetail transactionDetail = data.get(position);
+
+
         holder.source.setText(transactionDetail.getDetails().get(0).getSource());
         holder.destination.setText(transactionDetail.getDetails().get(0).getDestination());
         holder.transactionDate.setText(transactionDetail.getDetails().get(0).getDispatchDt());
@@ -137,11 +132,20 @@ public class Transaction_detail_adapter extends RecyclerView.Adapter<Transaction
             holder.productTable.addView(tr0, 0);
             count =1;
 
-
+            int totalQuantity = 0;
+            String unit = "";
+            if(data.get(position).getProducts().size() != 0) {
+                List<Categoryproduct> categoryproducts = Categoryproduct.find(Categoryproduct.class,
+                        "product = ?",data.get(position).getProducts().get(0).getProduct());
+                if(categoryproducts.size() != 0) {
+                    unit = categoryproducts.get(0).getUnit();
+                }
+            }
             for (int i = 0; i < data.get(position).getProducts().size(); i++) {
                 StockCategoryDetails.TransactionDetail.Product products = data.get(position).getProducts().get(i);
                 String product = products.getProduct();
-                String quantity = products.getQuantity().toString();
+                String quantity = products.getQuantity().toString()+" "+unit;
+                totalQuantity += Float.valueOf(quantity);
                 TableRow tr = new TableRow(context);
                 TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
 
@@ -169,10 +173,12 @@ public class Transaction_detail_adapter extends RecyclerView.Adapter<Transaction
                 count++;
                // AppUtil.logger("Transaction Detail Adapter : ", String.valueOf(count));
             }
+            holder.transaction_quantity.setText(totalQuantity+" "+unit);
         }
         else {
             holder.productTable.setVisibility(View.GONE);
         }
+
 
     }
 
