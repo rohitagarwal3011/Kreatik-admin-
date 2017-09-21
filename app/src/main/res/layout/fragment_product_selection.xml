@@ -72,10 +72,10 @@
             <Button
                 android:id="@+id/proceed_button"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_40sdp"
+                android:layout_height="@dimen/_45sdp"
                 android:visibility="visible"
                 android:textColor="@color/white"
-                android:background="@color/colorAccent"
+                android:background="@color/colorPrimary"
                 android:text="Next"
                 android:layout_margin="@dimen/_15sdp"
                 android:layout_alignParentEnd="true"

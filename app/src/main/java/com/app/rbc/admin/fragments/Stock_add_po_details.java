@@ -179,7 +179,7 @@ public class Stock_add_po_details extends Fragment {
 
         TextView tv = new TextView(getContext());
         tv.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 1f));
-        tv.setGravity(Gravity.LEFT);
+        tv.setGravity(Gravity.CENTER);
         tv.setTextColor(Color.parseColor("#000000"));
         tv.setText(product);
 
@@ -187,7 +187,7 @@ public class Stock_add_po_details extends Fragment {
 
         TextView tv1 = new TextView(getContext());
         tv1.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 1f));
-        tv1.setGravity(Gravity.LEFT);
+        tv1.setGravity(Gravity.CENTER);
         tv1.setTextColor(Color.parseColor("#000000"));
         tv1.setText(quantity);
 

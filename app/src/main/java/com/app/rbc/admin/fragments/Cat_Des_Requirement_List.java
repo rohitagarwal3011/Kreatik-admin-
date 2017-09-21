@@ -154,13 +154,9 @@ public class Cat_Des_Requirement_List extends Fragment {
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
-
-
         Requirement_list_adapter adapter = new Requirement_list_adapter(reqLists, getContext());
         recyclerView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
-
     }
 
     public static List<String> product_list = new ArrayList<>();

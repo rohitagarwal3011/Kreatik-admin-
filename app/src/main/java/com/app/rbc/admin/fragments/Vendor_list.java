@@ -102,6 +102,16 @@ public class Vendor_list extends Fragment {
         get_data();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(TAG.equalsIgnoreCase(Stock_add_po_details.TAG))
+        {
+            StockActivity.show_tabs=true;
+
+        }
+    }
+
     private void get_data() {
         pDialog = new SweetAlertDialog(getContext(), SweetAlertDialog.PROGRESS_TYPE);
         pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));

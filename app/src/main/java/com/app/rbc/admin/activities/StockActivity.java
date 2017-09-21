@@ -206,7 +206,7 @@ public class StockActivity extends AppCompatActivity implements SearchView.OnQue
 
             if(getSupportFragmentManager().findFragmentByTag(Stock_categories.TAG).isVisible())
             {
-                getSupportFragmentManager().popBackStackImmediate();
+               // getSupportFragmentManager().popBackStackImmediate();
                 Intent intent = new Intent(StockActivity.this, HomeActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

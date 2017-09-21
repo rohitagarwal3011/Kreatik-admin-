@@ -21,6 +21,7 @@
             android:layout_width="@dimen/_80sdp"
             android:layout_height="@dimen/_40sdp"
             android:text="Employee"
+            android:textColor="#333"
             android:padding="@dimen/_5sdp"
             android:id="@+id/employee_title"
             android:background="@drawable/round_edittext_light"
@@ -47,7 +48,7 @@
             android:layout_width="@dimen/_80sdp"
             android:layout_height="@dimen/_40sdp"
             android:background="@drawable/round_edittext_light"
-
+            android:textColor="#333"
             android:text="Category"
             android:gravity="center_vertical"
             android:padding="@dimen/_5sdp"
@@ -90,6 +91,7 @@
                 android:textSize="@dimen/_12sdp"
                 android:padding="@dimen/_5sdp"
                 android:background="@color/heading"
+                android:textColor="@color/black"
                 android:id="@+id/product_table_title"/>
 
             <TableLayout
@@ -184,8 +186,8 @@
 
 
     <com.dd.processbutton.iml.ActionProcessButton
-        android:layout_below="@id/deadline_card"
         android:id="@+id/submit_task"
+        android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_45sdp"
         android:text="submit"
@@ -199,6 +201,10 @@
         custom:pb_textComplete="Success"
         custom:pb_textError="Error"
         custom:pb_textProgress="Uploading"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:layout_marginBottom="@dimen/_8sdp"
+        android:layout_marginLeft="@dimen/_16sdp"
+        android:layout_marginRight="@dimen/_16sdp"
         android:layout_marginStart="@dimen/_16sdp"
         android:layout_marginEnd="@dimen/_16sdp" />
 

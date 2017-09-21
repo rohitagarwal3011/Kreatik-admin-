@@ -47,6 +47,7 @@
                 android:layout_height="50dp"
                 android:id="@+id/vehicle_number"
                 android:textSize="15sp"
+
                 android:layout_alignTop="@id/vehicle_number_title"
                 android:background="@drawable/round_edittext_light"
                 android:layout_toRightOf="@id/vehicle_number_title"/>

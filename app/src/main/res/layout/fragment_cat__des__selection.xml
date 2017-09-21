@@ -4,14 +4,11 @@
     android:layout_height="match_parent"
     tools:context="com.app.rbc.admin.fragments.Cat_Des_Selection">
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
+
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
 
             <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
@@ -28,6 +25,7 @@
                          android:layout_width="wrap_content"
                          android:layout_height="@dimen/_40sdp"
                          android:gravity="center_vertical"
+                         android:textColor="#333"
                          android:id="@+id/po_relation_title"
                          android:padding="@dimen/_5sdp"
                          android:text="Is it related to PO ? "/>
@@ -72,6 +70,7 @@
                             android:id="@+id/po_number_title"
                             android:layout_height="@dimen/_40sdp"
                             android:padding="@dimen/_5sdp"
+                            android:textColor="#333"
                             android:gravity="center_vertical"
                             android:background="@drawable/round_edittext_light"
                             android:text="PO Number : "/>
@@ -115,6 +114,7 @@
                     android:layout_width="@dimen/_80sdp"
                     android:layout_height="@dimen/_40sdp"
                     android:text="Category"
+                    android:textColor="#333"
                     android:padding="@dimen/_5sdp"
                     android:gravity="center_vertical"                    android:background="@drawable/round_edittext_light"
                     android:id="@+id/select_category_title"
@@ -136,6 +136,7 @@
                     android:layout_width="@dimen/_80sdp"
                     android:layout_height="@dimen/_40sdp"
                     android:text="Source"
+                    android:textColor="#333"
                     android:padding="@dimen/_5sdp"
                     android:background="@drawable/round_edittext_light"
                     android:gravity="center_vertical"
@@ -159,6 +160,7 @@
                     android:layout_height="@dimen/_40sdp"
                     android:text="Destination"
                     android:padding="@dimen/_5sdp"
+                    android:textColor="#333"
                     android:gravity="center_vertical"
                     android:id="@+id/select_destination_title"
                     android:textSize="@dimen/_12sdp"
@@ -181,12 +183,15 @@
         </android.support.v7.widget.CardView>
 
             <Button
-                android:layout_below="@id/vehicle_details_card"
+
                 android:id="@+id/submit_button"
+                android:layout_alignParentBottom="true"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/_10sdp"
                 android:text="proceed"
+                android:layout_marginBottom="@dimen/_16sdp"
+                android:layout_marginLeft="@dimen/_16sdp"
+                android:layout_marginRight="@dimen/_16sdp"
                 android:textColor="@color/white"
                 android:background="@color/colorAccent"/>
 
@@ -334,5 +339,5 @@
             <!--android:text="proceed"-->
             <!--android:background="@drawable/login_button"/>-->
     <!--</LinearLayout>-->
-    </ScrollView>
+
 </FrameLayout>

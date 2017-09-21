@@ -39,7 +39,7 @@
     </provider>
 
     <application
-        android:name="com.orm.SugarApp"
+        android:name="com.app.rbc.admin.app.AppController"
         android:allowBackup="true"
         android:hardwareAccelerated="false"
         android:icon="@mipmap/ic_launcher1"

@@ -10,13 +10,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@color/black"
-        android:textSize="@dimen/_20sdp"
+        android:textSize="@dimen/_13sdp"
         android:text="Bihani Traders"
         />
     <TextView
         android:id="@+id/vendor_address"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/_15sdp"
+        android:textSize="@dimen/_11sdp"
         android:text="Cooch Behar"/>
 </LinearLayout>
