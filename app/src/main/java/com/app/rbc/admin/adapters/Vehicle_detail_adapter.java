@@ -2,6 +2,7 @@ package com.app.rbc.admin.adapters;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -13,11 +14,14 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.app.rbc.admin.R;
-import com.app.rbc.admin.activities.RequirementDetailActivity;
-import com.app.rbc.admin.models.Product;
 import com.app.rbc.admin.models.VehicleDetail;
+import com.app.rbc.admin.utils.AppUtil;
+import com.facebook.drawee.generic.RoundingParams;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.squareup.picasso.Picasso;
+import com.stfalcon.frescoimageviewer.ImageViewer;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -29,8 +33,8 @@ public class Vehicle_detail_adapter extends RecyclerView.Adapter<Vehicle_detail_
 
     private List<VehicleDetail> data;
     private Context context;
-    int count ;
-
+    int count;
+    ArrayList posters= new ArrayList(1);
 
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -45,9 +49,12 @@ public class Vehicle_detail_adapter extends RecyclerView.Adapter<Vehicle_detail_
         TextView vehicle_number;
         TextView driver_name;
         TextView challan_number;
-         TableRow mRowheading;
-         TableLayout productTable;
-
+        TableRow mRowheading;
+        TableLayout productTable;
+        SimpleDraweeView mImgChallan;
+        SimpleDraweeView mImgInvoice;
+        SimpleDraweeView mImgOnrecieve;
+        SimpleDraweeView mImgUnloaded;
 
 
         public MyViewHolder(View view) {
@@ -64,7 +71,15 @@ public class Vehicle_detail_adapter extends RecyclerView.Adapter<Vehicle_detail_
             challan_number = (TextView) view.findViewById(R.id.challan_link);
             mRowheading = (TableRow) view.findViewById(R.id.rowheading);
             productTable = (TableLayout) view.findViewById(R.id.product_table);
-            count=1;
+            count = 1;
+            mImgChallan = (SimpleDraweeView) itemView.findViewById(R.id.challan_img);
+            mImgInvoice = (SimpleDraweeView) itemView.findViewById(R.id.invoice_img);
+            mImgOnrecieve = (SimpleDraweeView) itemView.findViewById(R.id.onrecieve_img);
+            mImgUnloaded = (SimpleDraweeView) itemView.findViewById(R.id.unloaded_img);
+
+//            final String [] images = data.get(getAdapterPosition()).getDetails().get(0).getChallanImg().split("\\|");
+
+
 //            view.setOnClickListener(new View.OnClickListener() {
 //                @Override
 //                public void onClick(View v) {
@@ -99,7 +114,7 @@ public class Vehicle_detail_adapter extends RecyclerView.Adapter<Vehicle_detail_
         holder.destination.setText(vehicleDetail.getDetails().get(0).getDestination());
         holder.transaction_status.setText(vehicleDetail.getDetails().get(0).getStatus());
         holder.vehicle_number.setText(vehicleDetail.getDetails().get(0).getVehicleNumber());
-        holder.driver_name.setText("Driver : "+vehicleDetail.getDetails().get(0).getDriver());
+        holder.driver_name.setText("Driver : " + vehicleDetail.getDetails().get(0).getDriver());
         holder.challan_number.setText(vehicleDetail.getDetails().get(0).getChallanNum());
         holder.transactionDate.setText(vehicleDetail.getDetails().get(0).getDispatchDt());
 //        holder.transactionQuantity.setText(vehicleDetail.getQuantity().toString());
@@ -122,7 +137,7 @@ public class Vehicle_detail_adapter extends RecyclerView.Adapter<Vehicle_detail_
             Picasso.with(context).load((R.drawable.user)).into(holder.destinationType);
         }
 
-        if(!vehicleDetail.getProducts().isEmpty()) {
+        if (!vehicleDetail.getProducts().isEmpty()) {
 
             holder.productTable.setVisibility(View.VISIBLE);
             holder.productTable.removeAllViews();
@@ -150,7 +165,7 @@ public class Vehicle_detail_adapter extends RecyclerView.Adapter<Vehicle_detail_
             tr0.addView(tv01, 1);
 
             holder.productTable.addView(tr0, 0);
-            count =1;
+            count = 1;
 
 
             for (int i = 0; i < data.get(position).getProducts().size(); i++) {
@@ -185,10 +200,83 @@ public class Vehicle_detail_adapter extends RecyclerView.Adapter<Vehicle_detail_
                 count++;
                 // AppUtil.logger("Transaction Detail Adapter : ", String.valueOf(count));
             }
-        }
-        else {
+        } else {
             holder.productTable.setVisibility(View.GONE);
         }
+
+//        int color = context.getResources().getColor(R.color.black_overlay);
+//        RoundingParams roundingParams = RoundingParams.fromCornersRadius(7f);
+//        roundingParams.setBorder(color, 1.0f);
+//        roundingParams.setRoundAsCircle(true);
+//        holder.mImgChallan.getHierarchy().setRoundingParams(roundingParams);
+        final String [] images = vehicleDetail.getDetails().get(0).getChallanImg().split("\\|");
+        AppUtil.logger("Image links : ", images[0]+"--"+images[1]+"--"+images[2]+"--"+images[3]);
+        holder.mImgChallan.setImageURI(images[0]);
+        holder.mImgInvoice.setImageURI(images[1]);
+        holder.mImgOnrecieve.setImageURI(images[2]);
+        holder.mImgUnloaded.setImageURI(images[3]);
+
+        holder.mImgChallan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                posters.clear();
+
+                posters.add(Uri.parse(images[0]));
+
+                new ImageViewer.Builder<>(context, posters)
+                        .setStartPosition(0)
+                        .allowSwipeToDismiss(true)
+                        .show();
+            }
+        });
+
+
+       holder.mImgInvoice.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                posters.clear();
+
+                posters.add(Uri.parse(images[1]));
+
+                new ImageViewer.Builder<>(context, posters)
+                        .setStartPosition(0)
+                        .allowSwipeToDismiss(true)
+                        .show();
+            }
+        });
+
+        holder.mImgUnloaded.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                posters.clear();
+
+                posters.add(Uri.parse(images[2]));
+
+                new ImageViewer.Builder<>(context, posters)
+                        .setStartPosition(0)
+                        .allowSwipeToDismiss(true)
+                        .show();
+            }
+        });
+
+        holder.mImgOnrecieve.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                posters.clear();
+
+                posters.add(Uri.parse(images[3]));
+
+                new ImageViewer.Builder<>(context, posters)
+                        .setStartPosition(0)
+                        .allowSwipeToDismiss(true)
+                        .show();
+            }
+        });
+
+
+
+
+
 
     }
 
