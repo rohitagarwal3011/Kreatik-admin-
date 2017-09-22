@@ -54,4 +54,13 @@ public class Stock extends SugarRecord{
     public void setStocktype(String stocktype) {
         this.stocktype = stocktype;
     }
+
+    private int statestore;
+    public int getStatestore() {
+        return statestore;
+    }
+
+    public void setStatestore(int statestore) {
+        this.statestore = statestore;
+    }
 }

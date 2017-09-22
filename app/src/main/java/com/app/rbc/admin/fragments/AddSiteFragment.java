@@ -38,6 +38,8 @@ public class AddSiteFragment extends Fragment implements View.OnClickListener{
     private Site editSite;
     private View view;
     private List<String> incharge_names,incharge_ids;
+    public Site state_store;
+    private boolean save_state_store = true;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -66,7 +68,7 @@ public class AddSiteFragment extends Fragment implements View.OnClickListener{
 
         site_types = getActivity().getResources().getStringArray(R.array.site_types);
         ArrayAdapter<String> site_type_spinner_adapter = new ArrayAdapter<>(getContext(),
-                android.R.layout.simple_expandable_list_item_1,
+                R.layout.custom_spinner_text,
                 site_types);
         site_type_spinner.setAdapter(site_type_spinner_adapter);
 
@@ -80,7 +82,7 @@ public class AddSiteFragment extends Fragment implements View.OnClickListener{
         }
 
         ArrayAdapter<String> site_incharge_spinner_adapter = new ArrayAdapter<String>(getContext(),
-                android.R.layout.simple_expandable_list_item_1,
+                R.layout.custom_spinner_text,
                 incharge_names);
 
         site_incharge_spinner.setAdapter(site_incharge_spinner_adapter);
@@ -94,7 +96,7 @@ public class AddSiteFragment extends Fragment implements View.OnClickListener{
             site_name.setText(editSite.getName());
             site_location.setText(editSite.getLocation());
             for(int i = 0 ; i < site_types.length ; i++) {
-                if(site_types[i].equals(editSite.getType())) {
+                if(site_types[i].equalsIgnoreCase(editSite.getType())) {
                     site_type_spinner.setSelection(i);
                     break;
                 }
@@ -116,7 +118,54 @@ public class AddSiteFragment extends Fragment implements View.OnClickListener{
 
 
         }
+
+        else {
+            List<Site> state_stores = Site.find(Site.class,"statestore = ?",1+"");
+            if(state_stores.size() != 0) {
+                state_store = state_stores.get(0);
+                site_name.setText(state_store.getName());
+                site_location.setText(state_store.getLocation());
+
+                for(int i = 0 ; i < site_types.length ; i++) {
+                    if(site_types[i].equalsIgnoreCase(state_store.getType())) {
+                        site_type_spinner.setSelection(i);
+                        break;
+                    }
+                }
+
+                for(int i = 0 ; i < employees.size() ; i++) {
+                    if(employees.get(i).getUserid().equalsIgnoreCase(state_store.getIncharge())) {
+                        site_incharge_spinner.setSelection(i);
+                        break;
+                    }
+                }
+
+            }
+        }
     }
+
+    @Override
+    public void onPause() {
+        if(save_state_store) {
+            if (edit != true) {
+                Site state_store;
+                if (this.state_store == null) {
+                    state_store = new Site();
+                } else {
+                    state_store = this.state_store;
+                }
+                state_store.setStatestore(1);
+                state_store.setIncharge(incharge_ids.get(site_incharge_spinner.getSelectedItemPosition()));
+                state_store.setLocation(site_location.getText().toString());
+                state_store.setName(site_name.getText().toString());
+                state_store.setType(site_types[site_type_spinner.getSelectedItemPosition()]);
+                state_store.save();
+            }
+        }
+
+        super.onPause();
+    }
+
 
     @Override
     public void onClick(View view) {
@@ -224,15 +273,32 @@ public class AddSiteFragment extends Fragment implements View.OnClickListener{
         return addSiteFragment;
     }
 
+    public void deleteStateStores() {
+        List<Site> state_stores = Site.find(Site.class,"statestore = ?",1+"");
+        Site.deleteInTx(state_stores);
+    }
+
     public void publishAPIResponse(int status,int code,String... message) {
         sweetAlertDialog.dismiss();
         switch(status) {
             case 2 :
                 if(code == 71) {
+                    deleteStateStores();
+                    if(state_store !=null) {
+
+                        this.state_store = null;
+                    }
                     callSitesFetchApi();
                     refreshUI();
                 }
                 else if(code == 70){
+                    deleteStateStores();
+                    this.save_state_store = false;
+
+                    if(state_store != null) {
+
+                        this.state_store = null;
+                    }
                     callSitesFetchApi();
                     ((IndentRegisterActivity)getActivity()).popBackStack();
                 }

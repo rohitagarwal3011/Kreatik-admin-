@@ -30,6 +30,8 @@ public class Employee extends SugarRecord{
     @Expose
     private String mobile;
 
+    private int statestore;
+
     public String getUserid() {
         return userid;
     }
@@ -76,5 +78,13 @@ public class Employee extends SugarRecord{
 
     public void setMobile(String mobile) {
         this.mobile = mobile;
+    }
+
+    public int getStatestore() {
+        return statestore;
+    }
+
+    public void setStatestore(int statestore) {
+        this.statestore = statestore;
     }
 }

@@ -116,19 +116,27 @@
                     android:layout_height="@dimen/_40sdp"
                     android:text="Category"
                     android:padding="@dimen/_5sdp"
-                    android:gravity="center_vertical"                    android:background="@drawable/round_edittext_light"
+                    android:gravity="center_vertical"
+                    android:background="@drawable/round_edittext_light"
                     android:id="@+id/select_category_title"
                     android:textSize="@dimen/_12sdp"
                     />
 
-                <Spinner
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_40sdp"
+                    android:background="@drawable/round_edittext_light"
                     android:layout_toRightOf="@id/select_category_title"
                     android:layout_alignTop="@id/select_category_title"
-                    android:id="@+id/select_category"
-                    android:layout_width="match_parent"
-                    android:background="@drawable/round_edittext_light"
-                    android:layout_height="@dimen/_40sdp"
-                    android:spinnerMode="dropdown"/>
+                    android:id="@+id/select_category_relative">
+
+                    <Spinner
+                        android:id="@+id/select_category"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_40sdp"
+                        android:spinnerMode="dropdown"/>
+
+                </RelativeLayout>
 
 
                 <TextView
@@ -144,15 +152,20 @@
                     />
 
 
-
-                <Spinner
-                    android:layout_toRightOf="@id/select_source_title"
-                    android:layout_alignTop="@id/select_source_title"
-                    android:id="@+id/select_source"
-                    android:background="@drawable/round_edittext_light"
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_40sdp"
-                    android:spinnerMode="dropdown"/>
+                    android:background="@drawable/round_edittext_light"
+                    android:layout_toRightOf="@id/select_source_title"
+                    android:layout_alignTop="@id/select_source_title"
+                    android:id="@+id/select_source_relative">
+                    <Spinner
+                        android:id="@+id/select_source"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_40sdp"
+                        android:spinnerMode="dropdown"/>
+
+                </RelativeLayout>
 
                 <TextView
                     android:layout_width="@dimen/_80sdp"
@@ -166,14 +179,22 @@
                     android:background="@drawable/round_edittext_light"
                     />
 
-                <Spinner
-                    android:layout_toRightOf="@id/select_destination_title"
-                    android:id="@+id/select_destination"
+
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_40sdp"
                     android:background="@drawable/round_edittext_light"
+                    android:layout_toRightOf="@id/select_destination_title"
                     android:layout_alignTop="@id/select_destination_title"
-                    android:spinnerMode="dropdown"/>
+                    android:id="@+id/select_destination_relative">
+
+                    <Spinner
+                        android:id="@+id/select_destination"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_40sdp"
+                        android:spinnerMode="dropdown"/>
+
+                </RelativeLayout>
 
 
 

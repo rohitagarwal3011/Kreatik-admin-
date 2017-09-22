@@ -22,19 +22,17 @@
             android:layout_width="100dp"
             android:layout_height="50dp"
             android:id="@+id/product_category_title"
-            android:paddingTop="15dp"
-            android:paddingBottom="5dp"
-            android:paddingLeft="10dp"
-            android:textAlignment="center"
+            android:padding="@dimen/_5sdp"
+            android:gravity="center_vertical"
             android:text="Category"
             android:textSize="14sp"
-            android:paddingRight="10dp"
 
             android:background="@drawable/round_edittext_light"/>
         <EditText
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:id="@+id/product_category"
+            android:textSize="@dimen/_12sdp"
             android:paddingTop="5dp"
             android:layout_toRightOf="@id/product_category_title"
             android:paddingBottom="5dp"
@@ -48,14 +46,11 @@
             android:layout_width="100dp"
             android:layout_height="50dp"
             android:id="@+id/product_unit_title"
-            android:paddingTop="15dp"
-            android:paddingBottom="5dp"
-            android:paddingLeft="10dp"
+            android:padding="@dimen/_5sdp"
+            android:gravity="center_vertical"
             android:layout_below="@id/product_category_title"
-            android:textAlignment="center"
             android:text="Unit"
             android:textSize="14sp"
-            android:paddingRight="10dp"
 
             android:background="@drawable/round_edittext_light"/>
         <EditText
@@ -63,6 +58,7 @@
             android:layout_height="50dp"
             android:id="@+id/product_unit"
             android:paddingTop="5dp"
+            android:textSize="@dimen/_12sdp"
             android:layout_toRightOf="@id/product_category_title"
             android:paddingBottom="5dp"
             android:paddingLeft="10dp"

@@ -59,7 +59,7 @@
                     android:layout_toRightOf="@id/category_title"
                     android:layout_alignTop="@id/category_title"
                     android:textColor="@color/black"
-                    android:background="@drawable/round_edittext_light"
+                    android:background="@drawable/round_edittext_unselectable"
                     android:gravity="center_vertical"
                     android:textSize="@dimen/_12sdp"/>
 

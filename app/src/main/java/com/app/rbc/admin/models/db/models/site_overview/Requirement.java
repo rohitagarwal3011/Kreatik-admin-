@@ -15,6 +15,7 @@ public class Requirement extends SugarRecord{
     private String products;
     private String quantities;
     private String remquantities;
+    private int statestore;
 
     public Requirement() {
 
@@ -123,5 +124,13 @@ public class Requirement extends SugarRecord{
 
     public void setRemquantities(String remquantities) {
         this.remquantities = remquantities;
+    }
+
+    public int getStatestore() {
+        return statestore;
+    }
+
+    public void setStatestore(int statestore) {
+        this.statestore = statestore;
     }
 }

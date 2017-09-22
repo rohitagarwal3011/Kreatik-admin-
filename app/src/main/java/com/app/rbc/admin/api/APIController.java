@@ -79,14 +79,17 @@ public class APIController{
     public void addUser(User user) {
         try {
             File file;
+            RequestBody filepart;
+            MultipartBody.Part myfile;
             if (user.getFile_present() == 0) {
                 file = null;
+                myfile = null;
             } else {
                 file = new File(user.getMyfile());
+                filepart = RequestBody.create(MediaType.parse("image/*"), file);
+                myfile = MultipartBody.Part.createFormData("myfile",file.getName(), filepart);
             }
-            Log.e("file",file.getPath());
-            RequestBody filepart = RequestBody.create(MediaType.parse("image/*"), file);
-            MultipartBody.Part myfile = MultipartBody.Part.createFormData("myfile",file.getName(), filepart);
+
 
             RequestBody name = RequestBody.create(MediaType.parse("text/plain"), user.getName());
             RequestBody email = RequestBody.create(MediaType.parse("text/plain"), user.getEmail());
@@ -121,10 +124,12 @@ public class APIController{
                 @Override
                 public void onFailure(Call call, Throwable t) {
                     Log.e("Error", t.toString());
-                    sendAPIResult(0);
+                    sendAPIResult(0,"Service encountered an error");
                 }
             });
         } catch (Exception e) {
+            sendAPIResult(0,"Service encountered an error");
+
             Log.e("Add User Exception",e.toString());
         }
     }
@@ -169,10 +174,12 @@ public class APIController{
                 @Override
                 public void onFailure(Call call, Throwable t) {
                     Log.e("Error", t.toString());
-                    sendAPIResult(0);
+                    sendAPIResult(0,"Service encountered an error");
                 }
             });
         } catch (Exception e) {
+            sendAPIResult(0,"Service encountered an error");
+
             Log.e("Add User Exception",e.toString());
         }
     }
@@ -194,19 +201,20 @@ public class APIController{
                         String message = body.getJSONObject("meta").getString("message");
                         sendAPIResult(status,message);
                     }catch (Exception e) {
+                        sendAPIResult(0,"Service encountered an error");
 
                     }
                 }
                 else {
                     Log.e("Error",response.errorBody().toString());
-                    sendAPIResult(0);
+                    sendAPIResult(0,"Service encountered an error");
                 }
             }
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
                 Log.e("Error",t.toString());
-                sendAPIResult(0);
+                sendAPIResult(0,"Service encountered an error");
             }
         });
     }
@@ -230,19 +238,20 @@ public class APIController{
                         String message = body.getJSONObject("meta").getString("message");
                         sendAPIResult(status,message);
                     }catch (Exception e) {
+                        sendAPIResult(0,"Service encountered an error");
 
                     }
                 }
                 else {
                     Log.e("Error",response.errorBody().toString());
-                    sendAPIResult(0);
+                    sendAPIResult(0,"Service encountered an error");
                 }
             }
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
                 Log.e("Error",t.toString());
-                sendAPIResult(0);
+                sendAPIResult(0,"Service encountered an error");
             }
         });
     }
@@ -263,19 +272,20 @@ public class APIController{
                         String message = body.getJSONObject("meta").getString("message");
                         sendAPIResult(status,message);
                     }catch (Exception e) {
+                        sendAPIResult(0,"Service encountered an error");
 
                     }
                 }
                 else {
                     Log.e("Error",response.errorBody().toString());
-                    sendAPIResult(0);
+                    sendAPIResult(0,"Service encountered an error");
                 }
             }
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
                 Log.e("Error",t.toString());
-                sendAPIResult(0);
+                sendAPIResult(0,"Service encountered an error");
             }
         });
     }
@@ -301,14 +311,14 @@ public class APIController{
                 }
                 else {
                     Log.e("Error",response.errorBody().toString());
-                    sendAPIResult(0);
+                    sendAPIResult(0,"Service encountered an error");
                 }
             }
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
                 Log.e("Error",t.toString());
-                sendAPIResult(0);
+                sendAPIResult(0,"Service encountered an error");
             }
         });
     }
@@ -332,20 +342,20 @@ public class APIController{
                 }
                 else {
                     Log.e("Error",response.errorBody().toString());
-                    sendAPIResult(0);
+                    sendAPIResult(0,"Service encountered an error");
                 }
             }
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
                 Log.e("Error",t.toString());
-                sendAPIResult(0);
+                sendAPIResult(0,"Service encountered an error");
             }
         });
     }
 
     public void fetchVehicleList() {
-        Call<String> call = apiInterface.vehicleList(1);
+        Call<String> call = apiInterface.vehicleList(2);
 
         call.enqueue(new Callback<String>() {
             @Override
@@ -382,7 +392,25 @@ public class APIController{
                                 vehicle.setDestination(details.getString("destination"));
                                 vehicle.setChallannum(details.getString("challan_num"));
                                 vehicle.setChallanimg(details.getString("challan_img"));
+
+
                             }
+
+                            JSONArray products_array = vehicleObj.getJSONArray("products");
+                            String products = "",quantities = "";
+                            for(int j = 0 ; j < products_array.length() ; j++) {
+                                JSONObject productObj = products_array.getJSONObject(j);
+                                if(j == products_array.length()-1) {
+                                    products += productObj.getString("product");
+                                    quantities += productObj.getString("quantity");
+                                }
+                                else {
+                                    products += productObj.getString("product")+"|";
+                                    quantities += productObj.getString("quantity")+"|";
+                                }
+                            }
+                            vehicle.setProducts(products);
+                            vehicle.setQuantities(quantities);
                             vehicleList.add(vehicle);
 
                         }
@@ -396,19 +424,19 @@ public class APIController{
                 }
                 else {
                     Log.e("Error",response.errorBody().toString());
-                    sendAPIResult(0);
+                    sendAPIResult(0,"Service encountered an error");
                 }
             }
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
                 Log.e("Error",t.toString());
-                sendAPIResult(0);
+                sendAPIResult(0,"Service encountered an error");
             }
         });
     }
 
-    public void receiveVehicle(Vehicle vehicle,File challan_img,File invoice_img,
+    public void receiveVehicle(Vehicle vehicle,JSONArray prod_list,File challan_img,File invoice_img,
                                File onreceive_img,File unloaded_img) {
         try {
             RequestBody challan_img_rb = RequestBody.create(MediaType.parse("image/*"), challan_img);
@@ -426,9 +454,10 @@ public class APIController{
 
             RequestBody trans_id = RequestBody.create(MediaType.parse("text/plain"), vehicle.getTransid());
             RequestBody challan_num = RequestBody.create(MediaType.parse("text/plain"), vehicle.getChallannum());
+            RequestBody prod_list_part = RequestBody.create(MediaType.parse("text/plain"), prod_list.toString());
 
 
-            Call<String> call = apiInterface.receiveVehicle(trans_id, challan_num,challan_img_part,invoice_img_part,
+            Call<String> call = apiInterface.receiveVehicle(trans_id,prod_list_part,challan_num,challan_img_part,invoice_img_part,
                     onreceive_img_part,unloaded_img_part);
             call.enqueue(new Callback<String>() {
                 @Override
@@ -455,7 +484,7 @@ public class APIController{
                 @Override
                 public void onFailure(Call call, Throwable t) {
                     Log.e("Error", t.toString());
-                    sendAPIResult(0);
+                    sendAPIResult(0,"Service encountered an error");
                 }
             });
         } catch (Exception e) {
@@ -494,14 +523,14 @@ public class APIController{
                 }
                 else {
                     Log.e("Error",response.errorBody().toString());
-                    sendAPIResult(0);
+                    sendAPIResult(0,"Service encountered an error");
                 }
             }
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
                 Log.e("Error",t.toString());
-                sendAPIResult(0);
+                sendAPIResult(0,"Service encountered an error");
             }
         });
     }
@@ -525,19 +554,20 @@ public class APIController{
                         String message = body.getJSONObject("meta").getString("message");
                         sendAPIResult(status,message);
                     }catch (Exception e) {
+                        sendAPIResult(0,"Service encountered an error");
 
                     }
                 }
                 else {
                     Log.e("Error",response.errorBody().toString());
-                    sendAPIResult(0);
+                    sendAPIResult(0,"Service encountered an error");
                 }
             }
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
                 Log.e("Error",t.toString());
-                sendAPIResult(0);
+                sendAPIResult(0,"Service encountered an error");
             }
         });
     }
@@ -566,14 +596,14 @@ public class APIController{
                 }
                 else {
                     Log.e("Error",response.errorBody().toString());
-                    sendAPIResult(0);
+                    sendAPIResult(0,"Service encountered an error");
                 }
             }
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
                 Log.e("Error",t.toString());
-                sendAPIResult(0);
+                sendAPIResult(0,"Service encountered an error");
             }
         });
     }
@@ -755,14 +785,14 @@ public class APIController{
                 }
                 else {
                     Log.e("Error",response.errorBody().toString());
-                    sendAPIResult(0);
+                    sendAPIResult(0,"Service encountered an error");
                 }
             }
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
                 Log.e("Error",t.toString());
-                sendAPIResult(0);
+                sendAPIResult(0,"Service encountered an error");
             }
         });
     }
@@ -788,14 +818,14 @@ public class APIController{
                 }
                 else {
                     Log.e("Error",response.errorBody().toString());
-                    sendAPIResult(0);
+                    sendAPIResult(0,"Service encountered an error");
                 }
             }
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
                 Log.e("Error",t.toString());
-                sendAPIResult(0);
+                sendAPIResult(0,"Service encountered an error");
             }
         });
     }
@@ -822,14 +852,14 @@ public class APIController{
                 }
                 else {
                     Log.e("Error",response.errorBody().toString());
-                    sendAPIResult(0);
+                    sendAPIResult(0,"Service encountered an error");
                 }
             }
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
                 Log.e("Error",t.toString());
-                sendAPIResult(0);
+                sendAPIResult(0,"Service encountered an error");
             }
         });
     }
@@ -853,7 +883,8 @@ public class APIController{
                             JSONArray data = body.getJSONArray("data");
                             Type listType = new TypeToken<List<Employee>>(){}.getType();
                             List<Employee> employees = gson.fromJson(data.toString(), listType);
-                            Employee.deleteAll(Employee.class);
+                            List<Employee> deleteEmps = Employee.find(Employee.class,"statestore != ?",1+"");
+                            Employee.deleteInTx(deleteEmps);
                             Employee.saveInTx(employees);
                             Log.e("Employees Count",employees.size()+"");
                             sendAPIResult(status,message);
@@ -896,7 +927,8 @@ public class APIController{
                             JSONArray data = body.getJSONArray("site_list");
                             Type listType = new TypeToken<List<Site>>(){}.getType();
                             List<Site> sites = gson.fromJson(data.toString(), listType);
-                            Site.deleteAll(Site.class);
+                            List<Site> deleteSites = Site.find(Site.class,"statestore != ?",1+"");
+                            Site.deleteInTx(deleteSites);
                             Site.saveInTx(sites);
                             Log.e("Site Count",sites.size()+"");
                             sendAPIResult(status,message);
@@ -939,7 +971,9 @@ public class APIController{
                             JSONArray data = body.getJSONArray("vendor_list");
                             Type listType = new TypeToken<List<Vendor>>(){}.getType();
                             List<Vendor> vendors = gson.fromJson(data.toString(), listType);
-                            Vendor.deleteAll(Vendor.class);
+                            List<Vendor> deleteVendors = Vendor.find(Vendor.class,"statestore != ?",1+"");
+
+                            Vendor.deleteInTx(deleteVendors);
                             Vendor.saveInTx(vendors);
                             Log.e("Vendor Count",vendors.size()+"");
                             sendAPIResult(status,message);

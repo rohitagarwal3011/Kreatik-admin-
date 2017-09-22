@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.app.rbc.admin.R;
+import com.app.rbc.admin.activities.AddVehicleActivity;
 import com.app.rbc.admin.activities.RequirementDetailActivity;
 import com.app.rbc.admin.interfaces.ApiServices;
 import com.app.rbc.admin.utils.AppUtil;
@@ -93,12 +94,25 @@ public class Dispatch_Vehicle extends Fragment {
         }
     }
 
+
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_dispatch__vehicle, container, false);
         unbinder = ButterKnife.bind(this, view);
+
+
+        Bundle bundle = ((AddVehicleActivity)getActivity()).finalform;
+        if(bundle != null) {
+            vehicleNumber.setText(bundle.getString("vehiclenumber"));
+            driverName.setText(bundle.getString("drivername"));
+            challanNo.setText(bundle.getString("challannumber"));
+        }
+
+
         return view;
     }
 
@@ -108,6 +122,21 @@ public class Dispatch_Vehicle extends Fragment {
         setData();
 
     }
+
+    @Override
+    public void onPause() {
+        if(((AddVehicleActivity)getActivity()).finalform == null) {
+            ((AddVehicleActivity)getActivity()).finalform = new Bundle();
+        }
+        Bundle bundle = ((AddVehicleActivity) getActivity()).finalform;
+        bundle.putString("vehiclenumber", vehicleNumber.getText().toString());
+        bundle.putString("drivername", driverName.getText().toString());
+        bundle.putString("challannumber", challanNo.getText().toString());
+
+        super.onPause();
+    }
+
+
     JSONArray prod_list = new JSONArray();
 
     public void setData()

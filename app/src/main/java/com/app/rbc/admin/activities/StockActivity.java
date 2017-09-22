@@ -56,10 +56,12 @@ import com.app.rbc.admin.fragments.Stock_po_details;
 import com.app.rbc.admin.fragments.Vendor_list;
 import com.app.rbc.admin.interfaces.ApiServices;
 import com.app.rbc.admin.models.StockCategoryDetails;
+import com.app.rbc.admin.models.db.models.site_overview.Order;
 import com.app.rbc.admin.utils.AppUtil;
 import com.app.rbc.admin.utils.ChangeFragment;
 import com.app.rbc.admin.utils.RetrofitClient;
 import com.app.rbc.admin.utils.TagsPreferences;
+import com.facebook.drawee.backends.pipeline.Fresco;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -107,6 +109,11 @@ public class StockActivity extends AppCompatActivity implements SearchView.OnQue
     StockCategoryDetails productDetails;
     private Menu menu;
 
+    public List<Order> po_task = new ArrayList<>();
+    public List<Order> po_details = new ArrayList<>();
+
+    public Bundle task_finalform,details_finalform;
+
 
 
     public static Boolean show_tabs = false;
@@ -116,7 +123,7 @@ public class StockActivity extends AppCompatActivity implements SearchView.OnQue
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stock);
         ButterKnife.bind(this);
-
+        Fresco.initialize(this);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -635,17 +642,17 @@ public class StockActivity extends AppCompatActivity implements SearchView.OnQue
             }
 
             ArrayAdapter<String> product_adapter = new ArrayAdapter<String>(getActivity(),
-                    android.R.layout.simple_expandable_list_item_1,
+                    R.layout.custom_spinner_text,
                     products);
             product_spinner.setAdapter(product_adapter);
 
             ArrayAdapter<String> site_adapter = new ArrayAdapter<String>(getActivity(),
-                    android.R.layout.simple_expandable_list_item_1,
+                    R.layout.custom_spinner_text,
                     sites);
             site_spinner.setAdapter(site_adapter);
 
             ArrayAdapter<String> stock_type_adapter = new ArrayAdapter<String>(getActivity(),
-                    android.R.layout.simple_expandable_list_item_1,
+                    R.layout.custom_spinner_text,
                     stock_types);
             stock_type_spinner.setAdapter(stock_type_adapter);
 
@@ -739,17 +746,17 @@ public class StockActivity extends AppCompatActivity implements SearchView.OnQue
             }
 
             ArrayAdapter<String> category_adapter = new ArrayAdapter<String>(getActivity(),
-                    android.R.layout.simple_expandable_list_item_1,
+                    R.layout.custom_spinner_text,
                     categories);
             category_spinner.setAdapter(category_adapter);
 
             ArrayAdapter<String> statuses_adapter = new ArrayAdapter<String>(getActivity(),
-                    android.R.layout.simple_expandable_list_item_1,
+                    R.layout.custom_spinner_text,
                     statuses);
             status_spinner.setAdapter(statuses_adapter);
 
             ArrayAdapter<String> created_bys_adapter = new ArrayAdapter<String>(getActivity(),
-                    android.R.layout.simple_expandable_list_item_1,
+                    R.layout.custom_spinner_text,
                     created_bys);
             created_by_spinner.setAdapter(created_bys_adapter);
 
@@ -842,17 +849,17 @@ public class StockActivity extends AppCompatActivity implements SearchView.OnQue
             }
 
             ArrayAdapter<String> vehicle_number_adapter = new ArrayAdapter<String>(getActivity(),
-                    android.R.layout.simple_expandable_list_item_1,
+                    R.layout.custom_spinner_text,
                     vehicle_numbers);
             vehicle_number_spinner.setAdapter(vehicle_number_adapter);
 
             ArrayAdapter<String> statuses_adapter = new ArrayAdapter<String>(getActivity(),
-                    android.R.layout.simple_expandable_list_item_1,
+                    R.layout.custom_spinner_text,
                     statuses);
             status_spinner.setAdapter(statuses_adapter);
 
             ArrayAdapter<String> destination_type_adapter = new ArrayAdapter<String>(getActivity(),
-                    android.R.layout.simple_expandable_list_item_1,
+                    R.layout.custom_spinner_text,
                     destination_types);
             destination_type_spinner.setAdapter(destination_type_adapter);
 

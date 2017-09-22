@@ -34,6 +34,7 @@ import com.app.rbc.admin.interfaces.ApiServices;
 import com.app.rbc.admin.models.Product;
 import com.app.rbc.admin.models.RequirementDetails;
 import com.app.rbc.admin.models.VehicleDetail;
+import com.app.rbc.admin.models.db.models.site_overview.Order;
 import com.app.rbc.admin.utils.AppUtil;
 import com.app.rbc.admin.utils.ChangeFragment;
 import com.app.rbc.admin.utils.RetrofitClient;
@@ -64,6 +65,9 @@ public class RequirementDetailActivity extends AppCompatActivity {
     FrameLayout frameMain;
 
     private String category_selected;
+
+    public List<Order> orders = new ArrayList<>();
+    public Bundle finalform;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
