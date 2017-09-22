@@ -36,6 +36,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.itextpdf.text.BadElementException;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -50,13 +51,15 @@ public class AddEmployeeFragment extends Fragment implements View.OnClickListene
     private Spinner emp_role_spinner;
     private final int PICK_FROM_GALLERY = 1;
     public final int READ_EXTERNAL_CARD = 6;
-    private final int RESULT_CROP = 2;
-    private String profilePath;
+    private String profilePath = "";
     private String[] emp_roles;
     private SweetAlertDialog sweetAlertDialog;
     private static boolean edit = false;
     private static long editId;
     private com.app.rbc.admin.models.db.models.Employee editEmployee;
+
+    private com.app.rbc.admin.models.db.models.Employee state_store;
+    private boolean save_state_store = true;
 
 
     @Override
@@ -139,6 +142,44 @@ public class AddEmployeeFragment extends Fragment implements View.OnClickListene
             }
         }
 
+        else {
+            List<com.app.rbc.admin.models.db.models.Employee> state_stores = com.app.rbc.admin.models.db.models.Employee.find(
+                    com.app.rbc.admin.models.db.models.Employee.class,"statestore = ?",1+"");
+            if(state_stores.size() != 0) {
+                state_store = state_stores.get(0);
+                fullname.setText(state_store.getUserName());
+                email.setText(state_store.getEmail());
+
+                for(int i = 0 ; i < emp_roles.length ; i++) {
+                    if(emp_roles[i].equalsIgnoreCase(state_store.getRole())) {
+                        emp_role_spinner.setSelection(i);
+                        break;
+                    }
+                }
+            }
+        }
+
+    }
+
+    @Override
+    public void onPause() {
+        if(save_state_store) {
+            if (edit != true) {
+                com.app.rbc.admin.models.db.models.Employee state_store;
+                if (this.state_store == null) {
+                    state_store = new com.app.rbc.admin.models.db.models.Employee();
+                } else {
+                    state_store = this.state_store;
+                }
+                state_store.setEmail(email.getText().toString());
+                state_store.setUserName(fullname.getText().toString());
+                state_store.setRole(emp_roles[emp_role_spinner.getSelectedItemPosition()]);
+                state_store.setStatestore(1);
+                state_store.save();
+            }
+        }
+
+        super.onPause();
     }
 
     @Override
@@ -274,7 +315,6 @@ public class AddEmployeeFragment extends Fragment implements View.OnClickListene
         user.setEmail(email.getText().toString());
         user.setPwd(password.getText().toString());
         user.setRole(emp_roles[emp_role_spinner.getSelectedItemPosition()]);
-        Log.e("Role",user.getRole());
         user.setName(fullname.getText().toString());
 
         if(profilePath.equals("")) {
@@ -341,13 +381,31 @@ public class AddEmployeeFragment extends Fragment implements View.OnClickListene
         return  addEmployeeFragment;
     }
 
+    public void deleteStateStores() {
+        List<com.app.rbc.admin.models.db.models.Employee> state_stores =
+                com.app.rbc.admin.models.db.models.Employee.find(com.app.rbc.admin.models.db.models.Employee.class,
+                        "statestore = ?",1+"");
+        com.app.rbc.admin.models.db.models.Employee.deleteInTx(state_stores);
+    }
+
     public void publishAPIResponse(int status,int code,String... message) {
         sweetAlertDialog.dismiss();
         switch(status) {
             case 2 : if(code == 61) {
+                deleteStateStores();
+                if(state_store != null) {
+
+                    this.state_store = null;
+                }
                 refreshUI();
             }
             else if(code == 60){
+                deleteStateStores();
+                this.save_state_store = false;
+                if(state_store != null) {
+
+                    this.state_store = null;
+                }
                 callEmployeeFetchApi();
                 ((IndentRegisterActivity)getActivity()).popBackStack();
             }

@@ -737,7 +737,7 @@ public class Task_home extends Fragment implements Todo_list_adapter.OnItemLongC
         final Spinner status_spinner = (Spinner) filterDialogView.findViewById(R.id.status_spinner);
         final String[] status_types = getActivity().getResources().getStringArray(R.array.task_status_filter);
         ArrayAdapter<String> status_adapter = new ArrayAdapter<String>(getActivity(),
-                android.R.layout.simple_expandable_list_item_1,
+                R.layout.custom_spinner_text,
                 status_types);
         status_spinner.setAdapter(status_adapter);
 
@@ -767,7 +767,7 @@ public class Task_home extends Fragment implements Todo_list_adapter.OnItemLongC
         }
         final Spinner employee_spinner = (Spinner) filterDialogView.findViewById(R.id.employee_spinner);
         ArrayAdapter<String> employee_adapter = new ArrayAdapter<String>(getActivity(),
-                android.R.layout.simple_expandable_list_item_1,
+                R.layout.custom_spinner_text,
                 employees);
         employee_spinner.setAdapter(employee_adapter);
 

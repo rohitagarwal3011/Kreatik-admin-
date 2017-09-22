@@ -315,6 +315,9 @@ public class YoutubeActivity extends AppCompatActivity implements EasyPermission
                 Log.e("Response",response.toPrettyString());
                 return  response.toString();
             }
+            catch (UserRecoverableAuthIOException e) {
+                startActivityForResult(e.getIntent(), REQUEST_AUTHORIZATION);
+            }
             catch (Exception e) {
                 Log.e("Video Item", e.toString());
             }

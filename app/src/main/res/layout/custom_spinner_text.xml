@@ -1,0 +1,11 @@
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@android:id/text1"
+    android:layout_height="@dimen/_40sdp"
+    android:layout_width="match_parent"
+    android:textSize="@dimen/_12sdp"
+    android:textColor="@color/black"
+    android:padding="@dimen/_5sdp"
+    android:text="Hii"
+    android:gravity="center_vertical">
+
+</TextView>

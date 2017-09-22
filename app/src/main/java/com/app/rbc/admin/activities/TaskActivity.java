@@ -34,6 +34,7 @@ import com.app.rbc.admin.utils.ChangeFragment;
 import com.app.rbc.admin.utils.FileDownloader;
 import com.app.rbc.admin.utils.FileUtils;
 import com.app.rbc.admin.utils.RetrofitClient;
+import com.facebook.drawee.backends.pipeline.Fresco;
 import com.yalantis.contextmenu.lib.ContextMenuDialogFragment;
 import com.yalantis.contextmenu.lib.MenuObject;
 import com.yalantis.contextmenu.lib.MenuParams;
@@ -71,6 +72,7 @@ public class TaskActivity extends AppCompatActivity implements Task_home.OnTaskT
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task);
         ButterKnife.bind(this);
+        Fresco.initialize(this);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         //initMenuFragment();
         setSupportActionBar(toolbar);

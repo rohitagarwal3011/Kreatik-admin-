@@ -12,14 +12,23 @@
         android:paddingLeft="@dimen/_4sdp"
         android:paddingTop="@dimen/_10sdp"
         android:background="@drawable/round_edittext_light"/>
-    <Spinner
-        android:id="@+id/select_product"
+
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/_40sdp"
-        android:spinnerMode="dropdown"
-        android:textSize="@dimen/_12sdp"
         android:background="@drawable/round_edittext_light"
-        android:layout_toRightOf="@id/select_product_title"/>
+        android:layout_toRightOf="@id/select_product_title"
+        android:layout_alignTop="@id/select_product_title"
+        android:id="@+id/select_product_relative">
+
+        <Spinner
+            android:id="@+id/select_product"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_40sdp"
+            android:spinnerMode="dropdown"
+            android:textSize="@dimen/_12sdp" />
+
+    </RelativeLayout>
 
     <TextView
         android:layout_width="@dimen/_100sdp"

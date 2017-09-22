@@ -38,7 +38,7 @@ public class CustomCategoryProductAdapter extends RecyclerView.Adapter<CustomCat
     @Override
     public void onBindViewHolder(MyViewHolder holder, final int position) {
         holder.category_title.setText(categories.get(position));
-
+        holder.category_icon.setText(categories.get(position).substring(0,1));
 
         holder.category_click.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,11 +57,13 @@ public class CustomCategoryProductAdapter extends RecyclerView.Adapter<CustomCat
     public class MyViewHolder extends RecyclerView.ViewHolder{
         public TextView category_title;
         public Button category_click;
+        public Button category_icon;
 
         public MyViewHolder(View itemView) {
             super(itemView);
             category_title = (TextView) itemView.findViewById(R.id.category_title);
             category_click = (Button) itemView.findViewById(R.id.category_click);
+            category_icon = (Button) itemView.findViewById(R.id.category_icon);
 
         }
     }

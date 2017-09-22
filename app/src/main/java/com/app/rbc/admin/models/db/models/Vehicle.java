@@ -20,6 +20,11 @@ public class Vehicle extends SugarRecord{
     private String challannum;
     private String challanimg;
 
+    private int statestore;
+
+    private String products;
+    private String quantities;
+
     public String getTransid() {
         return transid;
     }
@@ -106,5 +111,29 @@ public class Vehicle extends SugarRecord{
 
     public void setChallanimg(String challanimg) {
         this.challanimg = challanimg;
+    }
+
+    public int getStatestore() {
+        return statestore;
+    }
+
+    public void setStatestore(int statestore) {
+        this.statestore = statestore;
+    }
+
+    public String getProducts() {
+        return products;
+    }
+
+    public void setProducts(String products) {
+        this.products = products;
+    }
+
+    public String getQuantities() {
+        return quantities;
+    }
+
+    public void setQuantities(String quantities) {
+        this.quantities = quantities;
     }
 }

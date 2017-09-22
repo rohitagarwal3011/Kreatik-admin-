@@ -48,6 +48,8 @@ import com.app.rbc.admin.fragments.Stock_categories;
 import com.app.rbc.admin.interfaces.ApiServices;
 import com.app.rbc.admin.models.RequirementList;
 import com.app.rbc.admin.models.StockCategoryDetails;
+import com.app.rbc.admin.models.db.models.site_overview.Order;
+import com.app.rbc.admin.models.db.models.site_overview.Requirement;
 import com.app.rbc.admin.utils.AppUtil;
 import com.app.rbc.admin.utils.ChangeFragment;
 import com.app.rbc.admin.utils.RetrofitClient;
@@ -58,6 +60,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -88,20 +91,12 @@ public class RequirementActivity extends AppCompatActivity implements SearchView
     @BindView(R.id.frame_main)
     FrameLayout frameMain;
 
+    public List<Order> orders = new ArrayList<>();
+    public Bundle finalForm;
     public String category_selected;
-    /**
-     * The {@link PagerAdapter} that will provide
-     * fragments for each of the sections. We use a
-     * {@link FragmentPagerAdapter} derivative, which will keep every
-     * loaded fragment in memory. If this becomes too memory intensive, it
-     * may be best to switch to a
-     * {@link FragmentStatePagerAdapter}.
-     */
+
     public SectionsPagerAdapter mSectionsPagerAdapter;
 
-    /**
-     * The {@link ViewPager} that will host the section contents.
-     */
     private ViewPager mViewPager;
     private Menu menu;
 
@@ -587,12 +582,12 @@ public class RequirementActivity extends AppCompatActivity implements SearchView
             }
 
             ArrayAdapter<String> category_adapter = new ArrayAdapter<>(getActivity(),
-                    android.R.layout.simple_expandable_list_item_1,
+                    R.layout.custom_spinner_text,
                     categories);
             category_spinner.setAdapter(category_adapter);
 
             ArrayAdapter<String> site_adapter = new ArrayAdapter<>(getActivity(),
-                    android.R.layout.simple_expandable_list_item_1,
+                    R.layout.custom_spinner_text,
                     sites);
             site_spinner.setAdapter(site_adapter);
 

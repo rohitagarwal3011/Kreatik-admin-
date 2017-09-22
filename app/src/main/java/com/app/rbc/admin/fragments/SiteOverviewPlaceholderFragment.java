@@ -48,7 +48,7 @@ public class SiteOverviewPlaceholderFragment extends Fragment {
 
     private void initializeUI() {
         switch (position) {
-            case 0 : stocks = Stock.find(Stock.class, "site = ?", site + "");
+            case 0 : stocks = Stock.find(Stock.class, "site = ? and statestore != ?", site + "",1+"");
                 recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
                 RecyclerView.LayoutManager layoutManagerSite = new LinearLayoutManager(getContext());
                 recyclerView.setLayoutManager(layoutManagerSite);
@@ -56,7 +56,7 @@ public class SiteOverviewPlaceholderFragment extends Fragment {
                 recyclerView.setAdapter(stockDetailsAdapter);
                 break;
             case 1:
-                requirements = Requirement.find(Requirement.class, "site = ?", site + "");
+                requirements = Requirement.find(Requirement.class, "site = ? and statestore != ?", site + "",1+"");
                 recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
                 RecyclerView.LayoutManager layoutManagerRequirement = new LinearLayoutManager(getContext());
                 recyclerView.setLayoutManager(layoutManagerRequirement);
@@ -66,7 +66,8 @@ public class SiteOverviewPlaceholderFragment extends Fragment {
                 Log.e("adapter","set");
                 break;
             case 2:
-                transactions = Trans.find(Trans.class,"source = ? or destination = ?",site+"",site+"");
+                transactions = Trans.find(Trans.class,"source = ? and statestore != ? or destination = ? and statestore != ?",
+                        site+"",1+"",site+"",1+"");
                 Log.e("count",transactions.size()+"");
                 recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
                 RecyclerView.LayoutManager layoutManagerTransaction = new LinearLayoutManager(getContext());

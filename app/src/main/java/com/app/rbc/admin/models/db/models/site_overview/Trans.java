@@ -133,4 +133,13 @@ public class Trans extends SugarRecord{
     public void setQuantites(String quantites) {
         this.quantites = quantites;
     }
+
+    private int statestore;
+    public int getStatestore() {
+        return statestore;
+    }
+
+    public void setStatestore(int statestore) {
+        this.statestore = statestore;
+    }
 }

@@ -3,6 +3,7 @@ package com.app.rbc.admin.adapters;
 import android.content.Context;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,7 +46,7 @@ public class CustomEmployeeListAdapter extends RecyclerView.Adapter<CustomEmploy
     public void onBindViewHolder(MyViewHolder holder, final int position) {
         holder.employee_name.setText(employees.get(position).getUserName());
         holder.employee_role.setText(employees.get(position).getRole());
-
+        Log.e("Employee",employees.get(position).getUserName());
         // Overlay Round
         int borderColor = context.getResources().getColor(R.color.dark_background);
         RoundingParams roundingParams = RoundingParams.fromCornersRadius(100f);

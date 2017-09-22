@@ -10,7 +10,11 @@ import android.widget.FrameLayout;
 
 import com.app.rbc.admin.R;
 import com.app.rbc.admin.fragments.Cat_Des_Selection;
+import com.app.rbc.admin.models.db.models.site_overview.Order;
 import com.app.rbc.admin.utils.ChangeFragment;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -22,6 +26,8 @@ public class AddVehicleActivity extends AppCompatActivity {
     @BindView(R.id.frame_main)
     FrameLayout frameMain;
 
+    public List<Order> orders = new ArrayList<>();
+    public Bundle finalform;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

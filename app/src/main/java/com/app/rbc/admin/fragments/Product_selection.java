@@ -6,7 +6,9 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,9 +24,14 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.app.rbc.admin.R;
+import com.app.rbc.admin.activities.AddVehicleActivity;
 import com.app.rbc.admin.activities.RequirementActivity;
 import com.app.rbc.admin.activities.RequirementDetailActivity;
+import com.app.rbc.admin.activities.StockActivity;
 import com.app.rbc.admin.models.StockCategories;
+import com.app.rbc.admin.models.db.models.site_overview.Order;
+import com.app.rbc.admin.models.db.models.site_overview.Requirement;
+import com.app.rbc.admin.models.db.models.site_overview.Stock;
 import com.app.rbc.admin.utils.AppUtil;
 import com.app.rbc.admin.utils.ChangeFragment;
 import com.app.rbc.admin.utils.TagsPreferences;
@@ -34,6 +41,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -74,19 +82,14 @@ public class Product_selection extends Fragment {
 
     private int count;
 
+    private int save_state_store;
     public Product_selection() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment Product_selection.
-     */
-    // TODO: Rename and change types and number of parameters
+    private Requirement state_store_req;
+
+
     public static Product_selection newInstance(String param1, String param2) {
         Product_selection fragment = new Product_selection();
         Bundle args = new Bundle();
@@ -111,8 +114,56 @@ public class Product_selection extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        if(TAG.equalsIgnoreCase(Requirement_create_new.TAG))
-        {
+
+        getView().setFocusableInTouchMode(true);
+        getView().requestFocus();
+        getView().setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+
+                if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK){
+
+                    if(TAG.equalsIgnoreCase(Requirement_create_new.TAG)) {
+                        ((RequirementActivity)getActivity()).finalForm = null;
+                        getActivity().onBackPressed();
+                    }
+
+
+                    else if(TAG.equalsIgnoreCase(Requirement_fulfill_task.TAG)) {
+                        ((RequirementDetailActivity)getActivity()).finalform = null;
+                        getActivity().onBackPressed();
+                    }
+
+                    else if(TAG.equalsIgnoreCase(Stock_add_po_details.TAG)) {
+                        ((StockActivity)getActivity()).details_finalform = null;
+                        getActivity().onBackPressed();
+                    }
+
+                    else if(TAG.equalsIgnoreCase(Stock_po_create_task.TAG)) {
+                        ((StockActivity)getActivity()).task_finalform = null;
+                        getActivity().onBackPressed();
+                    }
+
+                    else if(TAG.equalsIgnoreCase(Dispatch_Vehicle.TAG)) {
+                        ((AddVehicleActivity)getActivity()).finalform = null;
+                        getActivity().onBackPressed();
+                    }
+                    else {
+                        getActivity().onBackPressed();
+                    }
+                    return true;
+
+
+
+                }
+
+                return true;
+            }
+        });
+
+
+        if(TAG.equalsIgnoreCase(Requirement_create_new.TAG)){
+
             RequirementActivity.show_tabs=true;
 
         }
@@ -133,6 +184,9 @@ public class Product_selection extends Fragment {
         });
 
 
+
+
+
         proceedButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -145,7 +199,8 @@ public class Product_selection extends Fragment {
                         RequirementActivity.show_tabs = false;
                         ChangeFragment.changeFragment(getActivity().getSupportFragmentManager(), R.id.frame_main, Requirement_create_new.newInstance(category_selected, TAG), TAG);
                     } else if (TAG.equalsIgnoreCase(Requirement_fulfill_task.TAG))
-                        ChangeFragment.changeFragment(getActivity().getSupportFragmentManager(), R.id.frame_main, Requirement_fulfill_task.newInstance(category_selected, user_selected), TAG);
+                        ChangeFragment.changeFragment(getActivity().getSupportFragmentManager(), R.id.frame_main, Requirement_fulfill_task.newInstance(
+                                category_selected, user_selected, state_store_req), TAG);
                     else if (TAG.equalsIgnoreCase(Dispatch_Vehicle.TAG))
                         ChangeFragment.changeFragment(getActivity().getSupportFragmentManager(), R.id.frame_main, Dispatch_Vehicle.newInstance(category_selected, user_selected), TAG);
                 }
@@ -159,18 +214,100 @@ public class Product_selection extends Fragment {
         return view;
     }
 
+
+    private void initializeStateStore() {
+        if(TAG.equalsIgnoreCase(Requirement_create_new.TAG)) {
+            if (category_selected != null) {
+                List<Order> orders = ((RequirementActivity)getActivity()).orders;
+                Log.e("count",orders.size()+"");
+                for(int i = 0 ; i < orders.size() ; i++) {
+                    Log.e(orders.get(i).getCategory(),category_selected);
+                    if((orders.get(i).getCategory().equalsIgnoreCase(category_selected))) {
+                        Log.e("Order","added");
+                        product_grid.put(orders.get(i).getProduct(),orders.get(i).getQuantity());
+                    }
+                }
+            }
+        }
+
+        else if(TAG.equalsIgnoreCase(Requirement_fulfill_task.TAG)) {
+            if (category_selected != null) {
+                List<Order> orders = ((RequirementDetailActivity)getActivity()).orders;
+                Log.e("count",orders.size()+"");
+                for(int i = 0 ; i < orders.size() ; i++) {
+                    Log.e(orders.get(i).getCategory(),category_selected);
+                    if((orders.get(i).getCategory().equalsIgnoreCase(category_selected))) {
+                        Log.e("Order","added");
+                        product_grid.put(orders.get(i).getProduct(),orders.get(i).getQuantity());
+                    }
+                }
+            }
+        }
+
+        else if(TAG.equalsIgnoreCase(Stock_add_po_details.TAG)) {
+            if (category_selected != null) {
+                List<Order> orders = ((StockActivity)getActivity()).po_details;
+                Log.e("count",orders.size()+"");
+                for(int i = 0 ; i < orders.size() ; i++) {
+                    Log.e(orders.get(i).getCategory(),category_selected);
+                    if((orders.get(i).getCategory().equalsIgnoreCase(category_selected))) {
+                        Log.e("Order","added");
+                        product_grid.put(orders.get(i).getProduct(),orders.get(i).getQuantity());
+                    }
+                }
+            }
+        }
+
+        else if(TAG.equalsIgnoreCase(Stock_po_create_task.TAG)) {
+            if (category_selected != null) {
+                List<Order> orders = ((StockActivity)getActivity()).po_task;
+                Log.e("count",orders.size()+"");
+                for(int i = 0 ; i < orders.size() ; i++) {
+                    Log.e(orders.get(i).getCategory(),category_selected);
+                    if((orders.get(i).getCategory().equalsIgnoreCase(category_selected))) {
+                        Log.e("Order","added");
+                        product_grid.put(orders.get(i).getProduct(),orders.get(i).getQuantity());
+                    }
+                }
+            }
+        }
+
+        else if(TAG.equalsIgnoreCase(Dispatch_Vehicle.TAG)) {
+            if (category_selected != null) {
+                List<Order> orders = ((AddVehicleActivity)getActivity()).orders;
+                Log.e("count",orders.size()+"");
+                for(int i = 0 ; i < orders.size() ; i++) {
+                    Log.e(orders.get(i).getCategory(),category_selected);
+                    if((orders.get(i).getCategory().equalsIgnoreCase(category_selected))) {
+                        Log.e("Order","added");
+                        product_grid.put(orders.get(i).getProduct(),orders.get(i).getQuantity());
+                    }
+                }
+            }
+        }
+
+
+    }
+
+
+
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        initializeStateStore();
 
+        // initializeStateStore();
         if(product_grid.isEmpty()) {
             get_product_list();
             show_select_product_dialog();
+
         }
         else
         {
+            get_product_list();
             set_data();
         }
+
     }
 
     private void set_data() {
@@ -225,7 +362,6 @@ public class Product_selection extends Fragment {
     public void show_select_product_dialog() {
         final Dialog dialog = new Dialog(getContext());
 
-        // dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setTitle("Select a product");
         dialog.setCanceledOnTouchOutside(false);
         dialog.setCancelable(true);
@@ -238,8 +374,8 @@ public class Product_selection extends Fragment {
 
         dialog.show();
 
-        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, product_list); //selected item will look like a spinner set from XML
-        spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(getContext(), R.layout.custom_spinner_text, product_list); //selected item will look like a spinner set from XML
+        spinnerArrayAdapter.setDropDownViewResource(R.layout.custom_spinner_text);
         product_spinner.setAdapter(spinnerArrayAdapter);
 
         submit.setOnClickListener(new View.OnClickListener() {
@@ -254,6 +390,7 @@ public class Product_selection extends Fragment {
                 } else {
 
                     dialog.dismiss();
+
                     set_hash_map(product_spinner.getSelectedItem().toString(), quantity.getText().toString().trim());
                 }
             }
@@ -261,6 +398,53 @@ public class Product_selection extends Fragment {
 
 
     }
+
+    private void setStateStoreProQuan(String product,String quantity) {
+        if(TAG.equalsIgnoreCase(Requirement_create_new.TAG)) {
+            Order order = new Order();
+            Log.e("Category",category_selected);
+            order.setCategory(category_selected);
+            order.setProduct(product);
+            order.setQuantity(quantity);
+            ((RequirementActivity)getActivity()).orders.add(order);
+        }
+        else if(TAG.equalsIgnoreCase(Requirement_fulfill_task.TAG)) {
+            Order order = new Order();
+            Log.e("Category",category_selected);
+            order.setCategory(category_selected);
+            order.setProduct(product);
+            order.setQuantity(quantity);
+            ((RequirementDetailActivity)getActivity()).orders.add(order);
+        }
+
+        else if(TAG.equalsIgnoreCase(Stock_add_po_details.TAG)) {
+            Order order = new Order();
+            Log.e("Category",category_selected);
+            order.setCategory(category_selected);
+            order.setProduct(product);
+            order.setQuantity(quantity);
+            ((StockActivity)getActivity()).po_details.add(order);
+        }
+
+        else if(TAG.equalsIgnoreCase(Stock_po_create_task.TAG)) {
+            Order order = new Order();
+            Log.e("Category",category_selected);
+            order.setCategory(category_selected);
+            order.setProduct(product);
+            order.setQuantity(quantity);
+            ((StockActivity)getActivity()).po_task.add(order);
+        }
+
+        else if(TAG.equalsIgnoreCase(Dispatch_Vehicle.TAG)) {
+            Order order = new Order();
+            Log.e("Category",category_selected);
+            order.setCategory(category_selected);
+            order.setProduct(product);
+            order.setQuantity(quantity);
+            ((AddVehicleActivity)getActivity()).orders.add(order);
+        }
+    }
+
 
     private void set_hash_map(String product, String quantity) {
 
@@ -292,14 +476,14 @@ public class Product_selection extends Fragment {
 
 
 
-
+        setStateStoreProQuan(product,quantity);
         product_grid.put(product, quantity);
 
         show_data(product,quantity);
 
     }
 
-    private void show_data(String product , String quantity)
+    private void show_data(final String product , String quantity)
     {
         AppUtil.logger("Product_selection", " Product : " + product + " Quantity : " + quantity);
 
@@ -323,7 +507,10 @@ public class Product_selection extends Fragment {
                         TextView tv = (TextView) row.getChildAt(1);
                         productTable.removeViewAt(v.getId());
                         count--;
+                        deleteStateStore(tv.getText().toString());
                         product_grid.remove(tv.getText().toString());
+
+
 
                     }
                 }
@@ -339,6 +526,63 @@ public class Product_selection extends Fragment {
 
 
         AppUtil.logger("Product_selection", "Row has been added");
+    }
+
+    private void deleteStateStore(String product) {
+        if(TAG.equalsIgnoreCase(Requirement_create_new.TAG)) {
+            List<Order> orders = ((RequirementActivity)getActivity()).orders;
+            for(int i = 0 ; i < orders.size() ; i++) {
+                Log.e(product,orders.get(i).getProduct());
+                if(orders.get(i).getProduct().equalsIgnoreCase(product)&&
+                        orders.get(i).getCategory().equalsIgnoreCase(category_selected)) {
+                    ((RequirementActivity)getActivity()).orders.remove(i);
+                }
+            }
+        }
+
+        else if(TAG.equalsIgnoreCase(Requirement_fulfill_task.TAG)) {
+            List<Order> orders = ((RequirementDetailActivity)getActivity()).orders;
+            for(int i = 0 ; i < orders.size() ; i++) {
+                Log.e(product,orders.get(i).getProduct());
+                if(orders.get(i).getProduct().equalsIgnoreCase(product)&&
+                        orders.get(i).getCategory().equalsIgnoreCase(category_selected)) {
+                    ((RequirementDetailActivity)getActivity()).orders.remove(i);
+                }
+            }
+        }
+
+        else if(TAG.equalsIgnoreCase(Stock_add_po_details.TAG)) {
+            List<Order> orders = ((StockActivity)getActivity()).po_details;
+            for(int i = 0 ; i < orders.size() ; i++) {
+                Log.e(product,orders.get(i).getProduct());
+                if(orders.get(i).getProduct().equalsIgnoreCase(product)&&
+                        orders.get(i).getCategory().equalsIgnoreCase(category_selected)) {
+                    ((StockActivity)getActivity()).po_details.remove(i);
+                }
+            }
+        }
+
+        else if(TAG.equalsIgnoreCase(Stock_po_create_task.TAG)) {
+            List<Order> orders = ((StockActivity)getActivity()).po_task;
+            for(int i = 0 ; i < orders.size() ; i++) {
+                Log.e(product,orders.get(i).getProduct());
+                if(orders.get(i).getProduct().equalsIgnoreCase(product)&&
+                        orders.get(i).getCategory().equalsIgnoreCase(category_selected)) {
+                    ((StockActivity)getActivity()).po_task.remove(i);
+                }
+            }
+        }
+
+        else if(TAG.equalsIgnoreCase(Dispatch_Vehicle.TAG)) {
+            List<Order> orders = ((AddVehicleActivity)getActivity()).orders;
+            for(int i = 0 ; i < orders.size() ; i++) {
+                Log.e(product,orders.get(i).getProduct());
+                if(orders.get(i).getProduct().equalsIgnoreCase(product)&&
+                        orders.get(i).getCategory().equalsIgnoreCase(category_selected)) {
+                    ((AddVehicleActivity)getActivity()).orders.remove(i);
+                }
+            }
+        }
     }
 
     @Override

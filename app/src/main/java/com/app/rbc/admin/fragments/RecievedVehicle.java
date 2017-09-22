@@ -28,6 +28,8 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,6 +42,9 @@ import com.app.rbc.admin.utils.Compress;
 import com.app.rbc.admin.utils.FileUtils;
 import com.itextpdf.text.BadElementException;
 
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
@@ -61,6 +66,7 @@ public class RecievedVehicle extends Fragment implements View.OnClickListener {
     private Spinner vehicle_number_spinner;
     private EditText challan_number;
     private TextView error,form_title;
+    private Button submit_challan;
 
     private ImageView challan_image_tick,invoice_image_tick,
             vehicle_goods_tick,vehicle_unloading_tick;
@@ -80,8 +86,12 @@ public class RecievedVehicle extends Fragment implements View.OnClickListener {
     private List<Vehicle> vehicles = new ArrayList<>();
     private List<String> vehicleNumbers = new ArrayList<>();
     private List<String> challanNumbers = new ArrayList<>();
+    private int count = 1;
+    private TableLayout tableLayout;
 
     public static final int FETCH_VEHICLE_API = 11,ONRECEIVE_VEHICLE_API = 12;
+    private Vehicle validatedVehicle;
+    private CardView table_card;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -105,6 +115,8 @@ public class RecievedVehicle extends Fragment implements View.OnClickListener {
     private void initializeUI() {
 
         vehicles = Vehicle.listAll(Vehicle.class);
+        vehicleNumbers.add("Choose a vehicle");
+        challanNumbers.add("Choose a challan");
         for(int i = 0 ; i < vehicles.size() ; i++) {
             vehicleNumbers.add(vehicles.get(i).getVehiclenumber());
             challanNumbers.add(vehicles.get(i).getChallannum());
@@ -112,7 +124,7 @@ public class RecievedVehicle extends Fragment implements View.OnClickListener {
 
         vehicle_number_spinner = (Spinner) view.findViewById(R.id.vehicle_number);
         ArrayAdapter<String> vehicle_number_adapter = new ArrayAdapter<String>(getActivity(),
-                android.R.layout.simple_expandable_list_item_1,
+                R.layout.custom_spinner_text,
                 vehicleNumbers);
         vehicle_number_spinner.setAdapter(vehicle_number_adapter);
 
@@ -120,6 +132,7 @@ public class RecievedVehicle extends Fragment implements View.OnClickListener {
         challan_number = (EditText) view.findViewById(R.id.challan_number);
         error = (TextView) view.findViewById(R.id.error);
         form_title = (TextView) view.findViewById(R.id.form_title);
+        submit_challan = (Button) view.findViewById(R.id.submit_challan);
 
         challan_image_tick = (ImageView) view.findViewById(R.id.challan_image_tick);
         invoice_image_tick = (ImageView) view.findViewById(R.id.invoice_image_tick);
@@ -129,6 +142,10 @@ public class RecievedVehicle extends Fragment implements View.OnClickListener {
         upload_cardview = (CardView) view.findViewById(R.id.upload_cardview);
 
 
+        // Table
+
+        tableLayout = (TableLayout) view.findViewById(R.id.product_table);
+        table_card = (CardView) view.findViewById(R.id.product_table_card);
 
 
         challan_image_upload = (Button) view.findViewById(R.id.challan_image_upload);
@@ -142,6 +159,7 @@ public class RecievedVehicle extends Fragment implements View.OnClickListener {
         invoice_image_upload.setOnClickListener(this);
         vehicle_goods_upload.setOnClickListener(this);
         vehicle_unloading_upload.setOnClickListener(this);
+        submit_challan.setOnClickListener(this);
         save.setOnClickListener(this);
 
 
@@ -154,24 +172,7 @@ public class RecievedVehicle extends Fragment implements View.OnClickListener {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if(s.toString().length() == challanNumbers.get(vehicle_number_spinner.getSelectedItemPosition()).length()) {
-                    if(s.toString().equalsIgnoreCase(challanNumbers.get(vehicle_number_spinner.getSelectedItemPosition()))) {
 
-                        challan_number.setEnabled(false);
-                        challan_number.setClickable(false);
-                        challan_number.setBackground(getActivity().getResources().getDrawable(R.drawable.round_edittext_unselectable));
-
-                        form_title.setText("Challan Verified");
-                        form_title.setTextColor(getResources().getColor(R.color.verified));
-
-                        ViewGroup.LayoutParams params = upload_cardview.getLayoutParams();
-                        params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-                        upload_cardview.setLayoutParams(params);
-
-                    }
-                    else {
-                        challan_number.setError("Verification Failed");
-                        challan_number.requestFocus();
-                    }
                 }
 
             }
@@ -204,8 +205,69 @@ public class RecievedVehicle extends Fragment implements View.OnClickListener {
                 show_attachment_dialog();
                 break;
             case R.id.save :
-                validateUploads();
+                validateUploadsAndForm();
+                break;
+            case R.id.submit_challan:
+                validateVehicleChallan();
         }
+    }
+
+    private void validateVehicleChallan() {
+        if(challan_number.getText().toString().equalsIgnoreCase(challanNumbers.get(vehicle_number_spinner.getSelectedItemPosition()))) {
+
+            validatedVehicle = vehicles.get(vehicle_number_spinner.getSelectedItemPosition()-1);
+            table_card.setVisibility(View.VISIBLE);
+            ViewGroup.LayoutParams submit_challan_params = submit_challan.getLayoutParams();
+            submit_challan_params.height = 0;
+            submit_challan.setLayoutParams(submit_challan_params);
+
+
+            vehicle_number_spinner.setEnabled(false);
+            vehicle_number_spinner.setClickable(false);
+            vehicle_number_spinner.setBackground(getActivity().getResources().getDrawable(R.drawable.round_edittext_unselectable));
+
+
+            challan_number.setEnabled(false);
+            challan_number.setClickable(false);
+            challan_number.setBackground(getActivity().getResources().getDrawable(R.drawable.round_edittext_unselectable));
+
+            form_title.setText("Challan Verified");
+            form_title.setTextColor(getResources().getColor(R.color.verified));
+
+            ViewGroup.LayoutParams params = upload_cardview.getLayoutParams();
+            params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+            upload_cardview.setLayoutParams(params);
+
+            setTable(validatedVehicle);
+
+        }
+        else {
+            challan_number.setError("Verification Failed");
+            challan_number.requestFocus();
+        }
+    }
+
+
+    private void setTable(Vehicle vehicle) {
+
+        String[] products = vehicle.getProducts().split("\\|");
+        String[] quantities = vehicle.getQuantities().split("\\|");
+
+        for(int i = 0 ; i < products.length ; i++) {
+            View tr = getActivity().getLayoutInflater().inflate(R.layout.custom_product_editable_row,null);
+
+            TextView productText = (TextView) tr.findViewById(R.id.product);
+            EditText quantityText = (EditText) tr.findViewById(R.id.quantity);
+
+
+
+            productText.setText(products[i]);
+            quantityText.setText(quantities[i]);
+
+            tableLayout.addView(tr, count);
+            count++;
+        }
+
     }
 
 
@@ -220,7 +282,7 @@ public class RecievedVehicle extends Fragment implements View.OnClickListener {
         dialog.setContentView(R.layout.dialog_camera_options);
         dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
 
-        ImageView gallery,camera,pdf;
+        ImageView gallery,camera;
 
         gallery = (ImageView) dialog.findViewById(R.id.gallery);
         camera = (ImageView) dialog.findViewById(R.id.camera);
@@ -390,22 +452,57 @@ public class RecievedVehicle extends Fragment implements View.OnClickListener {
         }
     }
 
-    private void validateUploads() {
-        if(challan_image != null && invoice_image != null  && vehicle_goods != null &&
-                vehicle_unloading != null){
-            sweetAlertDialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.PROGRESS_TYPE);
-            sweetAlertDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
-            sweetAlertDialog.setTitleText("Processing");
-            sweetAlertDialog.setCancelable(false);
-            sweetAlertDialog.show();
+    private void validateUploadsAndForm() {
+        int count = validatedVehicle.getProducts().split("\\|").length;
+        int validate = 1;
+        JSONArray prod_list = new JSONArray();
+        try {
 
-            APIController controller = new APIController(getActivity(),
-                    ONRECEIVE_VEHICLE_API,ReportActivity.ACTIVITY);
-            controller.receiveVehicle(vehicles.get(vehicle_number_spinner.getSelectedItemPosition()),
-                    challan_image,invoice_image,vehicle_goods,vehicle_unloading);
+            for (int i = 0; i < count; i++) {
+                View view = tableLayout.getChildAt(i + 1);
+                if (view instanceof TableRow) {
+                    // then, you can remove the the row you want...
+                    // for instance...
+                    TableRow row = (TableRow) view;
+                    TextView product = (TextView) row.findViewById(R.id.product);
+                    EditText quantity = (EditText) row.findViewById(R.id.quantity);
+                    if (quantity.getText().toString().trim().equalsIgnoreCase("")) {
+                        quantity.setError("Please enter a valid quantity");
+                        quantity.requestFocus();
+                        validate = 0;
+                        break;
+                    }
+                    else {
+                        JSONObject productObj = new JSONObject();
+                        productObj.put("product",product.getText().toString());
+                        productObj.put("quantity",quantity.getText().toString());
+                        prod_list.put(productObj);
+                    }
+                }
+            }
+            Log.e("List",prod_list.toString());
+        }catch (Exception e) {
+            Log.e("Prod List Formation",e.toString());
         }
-        else {
-            error.setText("Please upload all the attachments");
+
+        if(validate == 1) {
+
+
+            if (challan_image != null && invoice_image != null && vehicle_goods != null &&
+                    vehicle_unloading != null) {
+                sweetAlertDialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.PROGRESS_TYPE);
+                sweetAlertDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+                sweetAlertDialog.setTitleText("Processing");
+                sweetAlertDialog.setCancelable(false);
+                sweetAlertDialog.show();
+
+                APIController controller = new APIController(getActivity(),
+                        ONRECEIVE_VEHICLE_API, ReportActivity.ACTIVITY);
+                controller.receiveVehicle(validatedVehicle,prod_list,
+                        challan_image, invoice_image, vehicle_goods, vehicle_unloading);
+            } else {
+                error.setText("Please upload all the attachments");
+            }
         }
     }
 

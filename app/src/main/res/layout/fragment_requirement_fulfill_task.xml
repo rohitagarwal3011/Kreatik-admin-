@@ -217,26 +217,28 @@
                 android:gravity="center"
                 android:background="@drawable/round_edittext_light"
                 android:textSize="@dimen/_12sdp"/>
+            <RelativeLayout
+                android:layout_toRightOf="@id/deadline_title"
+                android:layout_alignTop="@id/deadline_title"
+                android:layout_width="match_parent"
+                android:background="@drawable/round_edittext_light"
+                android:layout_height="@dimen/_80sdp">
 
             <com.app.rbc.admin.utils.MySpinner
                 android:id="@+id/date_select"
-                android:layout_alignTop="@id/deadline_title"
-                android:layout_toRightOf="@id/deadline_title"
                 android:layout_width="match_parent"
-                android:background="@drawable/round_edittext_light"
                 android:layout_height="@dimen/_40sdp"
                 android:spinnerMode="dropdown"
                 android:visibility="visible" />
 
 
             <com.app.rbc.admin.utils.MySpinner
-                android:layout_toRightOf="@id/deadline_title"
                 android:id="@+id/time_select"
                 android:layout_below="@id/date_select"
                 android:layout_width="match_parent"
-                android:background="@drawable/round_edittext_light"
                 android:layout_height="@dimen/_40sdp"
                 android:spinnerMode="dropdown" />
+            </RelativeLayout>
 
 
 

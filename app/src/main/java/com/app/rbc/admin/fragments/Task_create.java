@@ -115,7 +115,7 @@ public class Task_create extends Fragment implements DatePickerDialog.OnDateSetL
     @BindView(R.id.submit_task)
     ActionProcessButton submitTask;
     Unbinder unbinder;
-    @BindView(R.id.textView8)
+    @BindView(R.id.deadline_title)
     TextView deadLine_text;
     @BindView(R.id.select_employee)
     RecyclerView selectEmployee;
@@ -470,7 +470,7 @@ public class Task_create extends Fragment implements DatePickerDialog.OnDateSetL
 
 
         dateAdapter = new AdapterWithCustomItem(getContext(), dates);
-        dateAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        dateAdapter.setDropDownViewResource(R.layout.custom_spinner_text);
         dateSelect.setAdapter(dateAdapter);
 
         Calendar calendar = Calendar.getInstance();
@@ -519,7 +519,7 @@ public class Task_create extends Fragment implements DatePickerDialog.OnDateSetL
         deadline_time = "13:00:00";
 
         timeAdapter = new AdapterWithCustomItem(getContext(), times);
-        timeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        timeAdapter.setDropDownViewResource(R.layout.custom_spinner_text);
         timeSelect.setAdapter(timeAdapter);
         timeSelect.setOnItemSelectedEvenIfUnchangedListener(new AdapterView.OnItemSelectedListener() {
             @Override

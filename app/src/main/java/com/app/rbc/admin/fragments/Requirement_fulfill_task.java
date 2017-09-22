@@ -18,9 +18,11 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.app.rbc.admin.R;
+import com.app.rbc.admin.activities.RequirementActivity;
 import com.app.rbc.admin.activities.RequirementDetailActivity;
 import com.app.rbc.admin.activities.StockActivity;
 import com.app.rbc.admin.interfaces.ApiServices;
+import com.app.rbc.admin.models.db.models.site_overview.Requirement;
 import com.app.rbc.admin.utils.AdapterWithCustomItem;
 import com.app.rbc.admin.utils.AppUtil;
 import com.app.rbc.admin.utils.ChangeFragment;
@@ -100,25 +102,16 @@ public class Requirement_fulfill_task extends Fragment implements DatePickerDial
     AdapterWithCustomItem timeAdapter;
     String date_shown, time_shown;
 
-
+    private long state_store_id;
     public Requirement_fulfill_task() {
-        // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment Requirement_fulfill_task.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static Requirement_fulfill_task newInstance(String param1, String param2) {
+    public static Requirement_fulfill_task newInstance(String param1, String param2,Requirement state_store_req) {
         Requirement_fulfill_task fragment = new Requirement_fulfill_task();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
+        state_store_req = state_store_req;
         fragment.setArguments(args);
         return fragment;
     }
@@ -130,7 +123,10 @@ public class Requirement_fulfill_task extends Fragment implements DatePickerDial
             category_selected = getArguments().getString(ARG_PARAM1);
             user_selected = getArguments().getString(ARG_PARAM2);
         }
+
     }
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -139,6 +135,13 @@ public class Requirement_fulfill_task extends Fragment implements DatePickerDial
         View view = inflater.inflate(R.layout.fragment_requirement_fulfill_task, container, false);
         unbinder = ButterKnife.bind(this, view);
         count =1;
+
+        Bundle bundle = ((RequirementDetailActivity)getActivity()).finalform;
+        if(bundle != null) {
+            desc.setText(bundle.getString("description"));
+            dateSelect.setSelection(bundle.getInt("dateselect"));
+            timeSelect.setSelection(bundle.getInt("timeselect"));
+        }
         return view;
     }
 
@@ -148,6 +151,19 @@ public class Requirement_fulfill_task extends Fragment implements DatePickerDial
         set_data();
         spinner_values();
 
+    }
+
+    @Override
+    public void onPause() {
+        if(((RequirementDetailActivity)getActivity()).finalform == null) {
+            ((RequirementDetailActivity)getActivity()).finalform = new Bundle();
+        }
+        Bundle bundle = ((RequirementDetailActivity) getActivity()).finalform;
+        bundle.putString("description", desc.getText().toString());
+        bundle.putInt("dateselect", dateSelect.getSelectedItemPosition());
+        bundle.putInt("timeselect", timeSelect.getSelectedItemPosition());
+
+        super.onPause();
     }
 
 
@@ -253,7 +269,7 @@ public class Requirement_fulfill_task extends Fragment implements DatePickerDial
 
 
         dateAdapter = new AdapterWithCustomItem(getContext(), dates);
-        dateAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        dateAdapter.setDropDownViewResource(R.layout.custom_spinner_text);
         dateSelect.setAdapter(dateAdapter);
 
         Calendar calendar = Calendar.getInstance();
@@ -302,7 +318,7 @@ public class Requirement_fulfill_task extends Fragment implements DatePickerDial
         deadline_time = "13:00:00";
 
         timeAdapter = new AdapterWithCustomItem(getContext(), times);
-        timeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        timeAdapter.setDropDownViewResource(R.layout.custom_spinner_text);
         timeSelect.setAdapter(timeAdapter);
         timeSelect.setOnItemSelectedEvenIfUnchangedListener(new AdapterView.OnItemSelectedListener() {
             @Override
