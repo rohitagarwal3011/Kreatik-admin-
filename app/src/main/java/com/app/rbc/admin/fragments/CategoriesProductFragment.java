@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,6 +49,7 @@ public class CategoriesProductFragment extends Fragment implements View.OnClickL
     private CustomCategoryProductAdapter adapter;
     private Categoryproduct categoryproduct;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private RelativeLayout empty_relative;
 
     final GestureDetector mGestureDetector = new GestureDetector(getContext(),
             new GestureDetector.SimpleOnGestureListener() {
@@ -76,6 +78,7 @@ public class CategoriesProductFragment extends Fragment implements View.OnClickL
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         String query = "Select category from Categoryproduct group by category";
         categories = getCategories(query,getContext());
+        empty_relative = (RelativeLayout) view.findViewById(R.id.empty_relative);
 
 
         // Recycler Listener
@@ -124,6 +127,7 @@ public class CategoriesProductFragment extends Fragment implements View.OnClickL
             }
         });
         if(categories.size() == 0) {
+            empty_relative.setVisibility(View.VISIBLE);
             callCategoriesProductsFetchApi();
         }
 
@@ -242,6 +246,12 @@ public class CategoriesProductFragment extends Fragment implements View.OnClickL
             break;
             case 51 : switch(status) {
                 case 2 :
+                    if(Categoryproduct.count(Categoryproduct.class) == 0) {
+                        empty_relative.setVisibility(View.VISIBLE);
+                    }
+                    else {
+                        empty_relative.setVisibility(View.GONE);
+                    }
                     refreshAdapter();
                     break;
                 case 0:

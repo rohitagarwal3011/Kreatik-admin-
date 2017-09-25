@@ -263,7 +263,27 @@
 
 
 
-
+            <com.dd.processbutton.iml.ActionProcessButton
+                android:layout_below="@id/deadline_card"
+                android:id="@+id/submit_task"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_45sdp"
+                android:layout_marginBottom="@dimen/_8sdp"
+                android:layout_marginLeft="@dimen/_16sdp"
+                android:layout_marginRight="@dimen/_16sdp"
+                android:text="submit"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
+                custom:pb_colorComplete="@color/green_complete"
+                custom:pb_colorError="@color/red_error"
+                custom:pb_colorNormal="@color/colorPrimary"
+                custom:pb_colorPressed="@color/colorPrimaryDark"
+                custom:pb_colorProgress="@color/purple_progress"
+                custom:pb_textComplete="Success"
+                custom:pb_textError="Error"
+                custom:pb_textProgress="Uploading"
+                android:layout_marginStart="@dimen/_16sdp"
+                android:layout_marginEnd="@dimen/_16sdp" />
 
 
             <!--<LinearLayout-->
@@ -272,26 +292,7 @@
                 <!--android:id="@+id/submit_button_layout"-->
                 <!--android:layout_alignParentBottom="true">-->
 
-            <!--<com.dd.processbutton.iml.ActionProcessButton-->
-                <!--android:id="@+id/submit_task"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="@dimen/_45sdp"-->
-                <!--android:layout_marginBottom="@dimen/_8sdp"-->
-                <!--android:layout_marginLeft="@dimen/_16sdp"-->
-                <!--android:layout_marginRight="@dimen/_16sdp"-->
-                <!--android:text="submit"-->
-                <!--android:textColor="@android:color/white"-->
-                <!--android:textSize="18sp"-->
-                <!--custom:pb_colorComplete="@color/green_complete"-->
-                <!--custom:pb_colorError="@color/red_error"-->
-                <!--custom:pb_colorNormal="@color/colorPrimary"-->
-                <!--custom:pb_colorPressed="@color/colorPrimaryDark"-->
-                <!--custom:pb_colorProgress="@color/purple_progress"-->
-                <!--custom:pb_textComplete="Success"-->
-                <!--custom:pb_textError="Error"-->
-                <!--custom:pb_textProgress="Uploading"-->
-                <!--android:layout_marginStart="@dimen/_16sdp"-->
-                <!--android:layout_marginEnd="@dimen/_16sdp" />-->
+
             <!--</LinearLayout>-->
         </RelativeLayout>
     </FrameLayout>

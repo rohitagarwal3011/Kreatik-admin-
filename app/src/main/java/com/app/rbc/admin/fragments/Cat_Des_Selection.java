@@ -89,15 +89,6 @@ public class Cat_Des_Selection extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment Cat_Des_Selection.
-     */
-    // TODO: Rename and change types and number of parameters
     public static Cat_Des_Selection newInstance(String param1, String param2) {
         Cat_Des_Selection fragment = new Cat_Des_Selection();
         Bundle args = new Bundle();
@@ -131,7 +122,7 @@ public class Cat_Des_Selection extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         get_site();
-        //get_vendors();
+//        get_vendors();
         setSelectCategory();
         onclicks();
     }
@@ -197,7 +188,6 @@ public class Cat_Des_Selection extends Fragment {
                     get_vendors();
                     setSourceasSite();
                     setSelectDestination();
-
 //                    SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
 //                    Date formated = null;
 //                    try {

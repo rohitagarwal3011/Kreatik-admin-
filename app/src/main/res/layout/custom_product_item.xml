@@ -13,11 +13,13 @@
         android:padding="@dimen/native_padding"
         android:background="@color/itemGradient">
 
-        <ImageView
+        <Button
             android:layout_width="45dp"
             android:layout_height="45dp"
             android:id="@+id/category_icon"
-            android:background="@drawable/product_circle_pink"/>
+            android:text="P"
+            android:textColor="@color/white"
+            android:background="@drawable/circle_pink"/>
 
         <TextView
             android:layout_width="wrap_content"

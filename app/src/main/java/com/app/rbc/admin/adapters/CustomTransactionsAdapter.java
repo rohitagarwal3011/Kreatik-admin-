@@ -8,6 +8,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
@@ -125,9 +126,12 @@ public class CustomTransactionsAdapter extends RecyclerView.Adapter<CustomTransa
 
                 TextView productText = (TextView) tr.findViewById(R.id.product);
                 TextView quantityText = (TextView) tr.findViewById(R.id.quantity);
+                Button product_icon = (Button) tr.findViewById(R.id.product_icon);
 
                 productText.setText(products[i]);
                 quantityText.setText(quantities[i]+" "+unit);
+                product_icon.setText(products[i].substring(0,1));
+
 
                 holder.productTable.addView(tr);
                 quantity += Float.valueOf(quantities[i]);

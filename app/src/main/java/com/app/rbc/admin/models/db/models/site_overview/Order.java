@@ -16,6 +16,8 @@ public class Order extends SugarRecord{
     private String quantity;
     private String product;
 
+    private long site;
+
     public String getCategory() {
         return category;
     }
@@ -38,5 +40,13 @@ public class Order extends SugarRecord{
 
     public void setProduct(String product) {
         this.product = product;
+    }
+
+    public long getSite() {
+        return site;
+    }
+
+    public void setSite(long site) {
+        this.site = site;
     }
 }

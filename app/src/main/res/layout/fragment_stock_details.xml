@@ -9,11 +9,54 @@
         android:id="@+id/swiperefresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/empty_relative"
+            android:background="@color/background"
+            android:visibility="gone">
+
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:gravity="center"
+                android:id="@+id/empty"
+                android:text="No data found"
+                android:layout_below="@id/add_employee_card"
+                android:textColor="@color/light_text"
+                android:textSize="@dimen/_12sdp"
+                android:padding="@dimen/_5sdp" />
+
+            <ImageView
+                android:layout_width="@dimen/_40sdp"
+                android:layout_height="@dimen/_40sdp"
+                android:layout_above="@id/empty"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="@dimen/_10sdp"
+                android:background="@drawable/error_circle_light"/>
+
+        </RelativeLayout>
+
+
+
+
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/recycler_view"
         android:scrollbars="vertical"/>
+
+        </RelativeLayout>
     </android.support.v4.widget.SwipeRefreshLayout>
+
+
 
 </RelativeLayout>
