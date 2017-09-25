@@ -64,7 +64,7 @@
             android:name=".activities.LoginActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
-            android:windowSoftInputMode="adjustResize|stateHidden" />
+            android:windowSoftInputMode="adjustPan|stateHidden" />
 
         <meta-data
             android:name="DATABASE"
@@ -181,18 +181,27 @@
             android:name=".activities.RequirementActivity"
             android:label="@string/title_activity_requirement"
             android:theme="@style/AppTheme"
-            android:windowSoftInputMode="stateHidden|adjustPan">
+            android:windowSoftInputMode="stateHidden|adjustResize">
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/task_searchable" />
         </activity>
-        <activity android:name=".activities.RequirementDetailActivity" />
+        <activity android:name=".activities.RequirementDetailActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="adjustResize|stateHidden"/>
         <activity
             android:name=".activities.AddVehicleActivity"
             android:label="@string/title_activity_add_vehicle"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateHidden|adjustPan" />
-        <activity android:name=".activities.ReportActivity" />
+        <activity android:name=".activities.ReportActivity"
+            android:parentActivityName=".activities.HomeActivity"
+            >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.app.rbc.admin.activities.HomeActivity" />
+            </activity>
         <activity android:name=".activities.SiteOverviewActivity" />
         <activity android:name=".activities.YoutubeActivity"
             android:theme="@style/AppTheme"></activity>

@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fillViewport="true"
     android:background="@drawable/side_nav_bar"
     tools:context="com.app.rbc.admin.activities.LoginActivity">
 
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
     <RelativeLayout
         android:id="@+id/password_relative"
@@ -100,7 +106,7 @@
         android:text="KREATIK"
         android:textColor="@color/white"
         android:textSize="@dimen/_25sdp"
-        android:visibility="visible" />
+        android:visibility="gone" />
 
 
     <ImageView
@@ -108,7 +114,7 @@
         android:layout_height="@dimen/_80sdp"
         android:layout_above="@id/kreatik_title"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="@dimen/_5sdp"
+        android:layout_marginBottom="@dimen/_35sdp"
 
         android:background="@drawable/white_logo" />
 
@@ -147,3 +153,4 @@
         android:visibility="gone" />
 
 </RelativeLayout>
+    </ScrollView>

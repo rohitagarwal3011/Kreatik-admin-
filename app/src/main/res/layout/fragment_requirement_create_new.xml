@@ -5,6 +5,10 @@
     xmlns:custom="http://schemas.android.com/apk/res-auto"
     tools:context="com.app.rbc.admin.fragments.Stock_po_create_task">
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -65,7 +69,7 @@
                         android:textSize="@dimen/_12sdp"
                         android:hint="Why do you need it?"
                         android:padding="@dimen/_5sdp"
-                        android:maxLength="20"/>
+                        android:maxLength="35"/>
 
                 </RelativeLayout>
             </android.support.v7.widget.CardView>
@@ -111,7 +115,7 @@
                         android:layout_alignTop="@id/category_title"
                         android:gravity="center_vertical"
                         android:textColor="@color/black"
-                        android:background="@drawable/round_edittext_light"
+                        android:background="@drawable/round_edittext_unselectable"
                         android:paddingLeft="@dimen/_5sdp"
                         android:textSize="@dimen/_12sdp"/>
 
@@ -137,7 +141,7 @@
                         android:textColor="@color/black"
                         android:gravity="center_vertical"
 
-                        android:background="@drawable/round_edittext_light"
+                        android:background="@drawable/round_edittext_unselectable"
                         android:paddingLeft="@dimen/_5sdp"
                         android:textSize="@dimen/_12sdp"
                     />
@@ -190,7 +194,7 @@
                                 android:text="Quantity"
                                 android:textSize="@dimen/_12sdp"
                                 android:gravity="center_vertical"
-                                android:paddingLeft="@dimen/_5sdp"
+                                android:paddingLeft="@dimen/_10sdp"
                                 android:background="@drawable/round_edittext_light"
                                 android:layout_weight="1"/>
                         </TableRow>
@@ -203,10 +207,11 @@
 
             <com.dd.processbutton.iml.ActionProcessButton
                 android:id="@+id/submit_task"
-                android:layout_alignParentBottom="true"
+                android:layout_alignParentBottom="false"
+                android:layout_below="@+id/product_details"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_45sdp"
-                android:layout_marginTop="@dimen/_8sdp"
+                android:layout_marginTop="@dimen/_40sdp"
                 android:layout_marginBottom="@dimen/_8sdp"
                 android:layout_marginLeft="@dimen/_10sdp"
                 android:layout_marginRight="@dimen/_10sdp"
@@ -225,4 +230,5 @@
                 android:layout_marginEnd="@dimen/_16sdp" />
         </RelativeLayout>
 
+    </ScrollView>
 </FrameLayout>

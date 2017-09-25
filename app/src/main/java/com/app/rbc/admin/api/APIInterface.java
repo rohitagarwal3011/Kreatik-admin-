@@ -16,7 +16,7 @@ import retrofit2.http.Part;
  * Created by jeet on 5/9/17.
  */
 
-public interface APIInterface {
+public interface    APIInterface {
 
     @Multipart
     @POST("add_user/")
@@ -106,6 +106,7 @@ public interface APIInterface {
     @Multipart
     @POST("receive_vehicle/")
     Call<String> receiveVehicle(@Part("trans_id") RequestBody trans_id,
+                                @Part("prod_list") RequestBody prod_list,
                          @Part("challan_num") RequestBody challan_num,
                          @Part MultipartBody.Part challan_img,
                                 @Part MultipartBody.Part invoice_img,

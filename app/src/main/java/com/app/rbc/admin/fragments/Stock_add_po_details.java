@@ -5,6 +5,8 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +17,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.app.rbc.admin.R;
+import com.app.rbc.admin.activities.RequirementDetailActivity;
 import com.app.rbc.admin.activities.StockActivity;
 import com.app.rbc.admin.interfaces.ApiServices;
 import com.app.rbc.admin.models.Vendors;
@@ -120,6 +123,21 @@ public class Stock_add_po_details extends Fragment {
         unbinder = ButterKnife.bind(this, view);
         count=1;
         remaining_quantity = 0;
+
+
+        Bundle bundle = ((StockActivity)getActivity()).details_finalform;
+        if(bundle != null) {
+            POTitle.setText(bundle.getString("title"));
+            POAmount.setText(bundle.getString("amount"));
+            POPayMode.setText(bundle.getString("paymentmode"));
+
+        }
+
+        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
+        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Add PO details");
+
+
         return view;
     }
 
@@ -131,6 +149,20 @@ public class Stock_add_po_details extends Fragment {
 
 
     }
+
+    @Override
+    public void onPause() {
+        if(((StockActivity)getActivity()).details_finalform == null) {
+            ((StockActivity)getActivity()).details_finalform = new Bundle();
+        }
+        Bundle bundle = ((StockActivity) getActivity()).details_finalform;
+        bundle.putString("title", POTitle.getText().toString());
+        bundle.putString("amount", POAmount.getText().toString());
+        bundle.putString("paymentmode", POPayMode.getText().toString());
+
+        super.onPause();
+    }
+
 
 
     private void set_data() {
@@ -264,6 +296,9 @@ public class Stock_add_po_details extends Fragment {
                                     }
                                 });
 
+                            }else
+                            {
+                                AppUtil.showToast(getContext(), "Network Issue. Please check your connectivity and try again");
                             }
                         } catch (IOException e) {
                             e.printStackTrace();

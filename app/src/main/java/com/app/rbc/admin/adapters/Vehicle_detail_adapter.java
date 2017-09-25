@@ -110,32 +110,43 @@ public class Vehicle_detail_adapter extends RecyclerView.Adapter<Vehicle_detail_
     @Override
     public void onBindViewHolder(MyViewHolder holder, final int position) {
         VehicleDetail vehicleDetail = data.get(position);
-        holder.source.setText(vehicleDetail.getDetails().get(0).getSource());
-        holder.destination.setText(vehicleDetail.getDetails().get(0).getDestination());
+
+
+            if(vehicleDetail.getSiteDetails().get(0).getId()==Integer.parseInt(vehicleDetail.getDetails().get(0).getSource()))
+            {
+                holder.source.setText(vehicleDetail.getSiteDetails().get(0).getName());
+                holder.destination.setText(vehicleDetail.getSiteDetails().get(1).getName());
+            }
+            else {
+                holder.source.setText(vehicleDetail.getSiteDetails().get(1).getName());
+                holder.destination.setText(vehicleDetail.getSiteDetails().get(0).getName());
+            }
+
+
         holder.transaction_status.setText(vehicleDetail.getDetails().get(0).getStatus());
         holder.vehicle_number.setText(vehicleDetail.getDetails().get(0).getVehicleNumber());
         holder.driver_name.setText("Driver : " + vehicleDetail.getDetails().get(0).getDriver());
-        holder.challan_number.setText(vehicleDetail.getDetails().get(0).getChallanNum());
+        holder.challan_number.setText("Challan No. \n"+vehicleDetail.getDetails().get(0).getChallanNum());
         holder.transactionDate.setText(vehicleDetail.getDetails().get(0).getDispatchDt());
 //        holder.transactionQuantity.setText(vehicleDetail.getQuantity().toString());
 //        holder..setText(vehicleDetail.getDispatchDt());
-        if (vehicleDetail.getDetails().get(0).getSourceType().equalsIgnoreCase("Stock")) {
-            Picasso.with(context).load((R.drawable.stock)).into(holder.sourceType);
-        } else if (vehicleDetail.getDetails().get(0).getSourceType().equalsIgnoreCase("Site")) {
-
-            Picasso.with(context).load((R.drawable.site_overview)).into(holder.sourceType);
-        } else {
-            Picasso.with(context).load((R.drawable.user)).into(holder.sourceType);
-        }
-
-        if (vehicleDetail.getDetails().get(0).getDestType().equalsIgnoreCase("Stock")) {
-            Picasso.with(context).load((R.drawable.stock)).into(holder.destinationType);
-        } else if (vehicleDetail.getDetails().get(0).getDestType().equalsIgnoreCase("Site")) {
-
-            Picasso.with(context).load((R.drawable.site_overview)).into(holder.destinationType);
-        } else {
-            Picasso.with(context).load((R.drawable.user)).into(holder.destinationType);
-        }
+//        if (vehicleDetail.getDetails().get(0).getSourceType().equalsIgnoreCase("Stock")) {
+//            Picasso.with(context).load((R.drawable.stock)).into(holder.sourceType);
+//        } else if (vehicleDetail.getDetails().get(0).getSourceType().equalsIgnoreCase("Site")) {
+//
+//            Picasso.with(context).load((R.drawable.site_overview)).into(holder.sourceType);
+//        } else {
+//            Picasso.with(context).load((R.drawable.user)).into(holder.sourceType);
+//        }
+//
+//        if (vehicleDetail.getDetails().get(0).getDestType().equalsIgnoreCase("Stock")) {
+//            Picasso.with(context).load((R.drawable.stock)).into(holder.destinationType);
+//        } else if (vehicleDetail.getDetails().get(0).getDestType().equalsIgnoreCase("Site")) {
+//
+//            Picasso.with(context).load((R.drawable.site_overview)).into(holder.destinationType);
+//        } else {
+//            Picasso.with(context).load((R.drawable.user)).into(holder.destinationType);
+//        }
 
         if (!vehicleDetail.getProducts().isEmpty()) {
 
@@ -208,70 +219,77 @@ public class Vehicle_detail_adapter extends RecyclerView.Adapter<Vehicle_detail_
 //        RoundingParams roundingParams = RoundingParams.fromCornersRadius(7f);
 //        roundingParams.setBorder(color, 1.0f);
 //        roundingParams.setRoundAsCircle(true);
-//        holder.mImgChallan.getHierarchy().setRoundingParams(roundingParams);
-        final String [] images = vehicleDetail.getDetails().get(0).getChallanImg().split("\\|");
-        AppUtil.logger("Image links : ", images[0]+"--"+images[1]+"--"+images[2]+"--"+images[3]);
-        holder.mImgChallan.setImageURI(images[0]);
-        holder.mImgInvoice.setImageURI(images[1]);
-        holder.mImgOnrecieve.setImageURI(images[2]);
-        holder.mImgUnloaded.setImageURI(images[3]);
-
-        holder.mImgChallan.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                posters.clear();
-
-                posters.add(Uri.parse(images[0]));
-
-                new ImageViewer.Builder<>(context, posters)
-                        .setStartPosition(0)
-                        .allowSwipeToDismiss(true)
-                        .show();
-            }
-        });
+//
+//
+// holder.mImgChallan.getHierarchy().setRoundingParams(roundingParams);
 
 
-       holder.mImgInvoice.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                posters.clear();
+        if(vehicleDetail.getDetails().get(0).getStatus().equalsIgnoreCase("Received")) {
+            final String[] images = vehicleDetail.getDetails().get(0).getChallanImg().split("\\|");
+            AppUtil.logger("Image links : ", images[0] + "--" + images[1] + "--" + images[2] + "--" + images[3]);
 
-                posters.add(Uri.parse(images[1]));
+            holder.mImgChallan.setImageURI(images[0]);
+            holder.mImgInvoice.setImageURI(images[1]);
+            holder.mImgOnrecieve.setImageURI(images[2]);
+            holder.mImgUnloaded.setImageURI(images[3]);
 
-                new ImageViewer.Builder<>(context, posters)
-                        .setStartPosition(0)
-                        .allowSwipeToDismiss(true)
-                        .show();
-            }
-        });
+            holder.mImgChallan.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    posters.clear();
 
-        holder.mImgUnloaded.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                posters.clear();
+                    posters.add(Uri.parse(images[0]));
 
-                posters.add(Uri.parse(images[2]));
+                    new ImageViewer.Builder<>(context, posters)
+                            .setStartPosition(0)
+                            .allowSwipeToDismiss(true)
+                            .show();
+                }
+            });
 
-                new ImageViewer.Builder<>(context, posters)
-                        .setStartPosition(0)
-                        .allowSwipeToDismiss(true)
-                        .show();
-            }
-        });
 
-        holder.mImgOnrecieve.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                posters.clear();
+            holder.mImgInvoice.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    posters.clear();
 
-                posters.add(Uri.parse(images[3]));
+                    posters.add(Uri.parse(images[1]));
 
-                new ImageViewer.Builder<>(context, posters)
-                        .setStartPosition(0)
-                        .allowSwipeToDismiss(true)
-                        .show();
-            }
-        });
+                    new ImageViewer.Builder<>(context, posters)
+                            .setStartPosition(0)
+                            .allowSwipeToDismiss(true)
+                            .show();
+                }
+            });
+
+            holder.mImgUnloaded.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    posters.clear();
+
+                    posters.add(Uri.parse(images[2]));
+
+                    new ImageViewer.Builder<>(context, posters)
+                            .setStartPosition(0)
+                            .allowSwipeToDismiss(true)
+                            .show();
+                }
+            });
+
+            holder.mImgOnrecieve.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    posters.clear();
+
+                    posters.add(Uri.parse(images[3]));
+
+                    new ImageViewer.Builder<>(context, posters)
+                            .setStartPosition(0)
+                            .allowSwipeToDismiss(true)
+                            .show();
+                }
+            });
+        }
 
 
 

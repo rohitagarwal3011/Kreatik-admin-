@@ -87,7 +87,7 @@ public class EmployeesFragment extends Fragment implements View.OnClickListener{
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        employees = Employee.listAll(Employee.class);
+        employees = Employee.find(Employee.class,"statestore != ?",1+"");
         setRecyclerView(employees);
 
         if(employees.size() == 0) {
@@ -105,7 +105,6 @@ public class EmployeesFragment extends Fragment implements View.OnClickListener{
                 if (child != null && mGestureDetector.onTouchEvent(e)) {
 
                     int a=rv.getChildPosition(child);
-                    //Log.e("Listener Id",jobList.get(a).getId()+"");
 
                     ((IndentRegisterActivity)getContext()).setFragment(6,employees.get(a).getId());
 
@@ -169,7 +168,7 @@ public class EmployeesFragment extends Fragment implements View.OnClickListener{
     }
 
     private void refreshAdapter() {
-        adapter.refreshAdapter(Employee.listAll(Employee.class));
+        adapter.refreshAdapter(Employee.find(Employee.class,"statestore != ?",1+""));
     }
 
 }

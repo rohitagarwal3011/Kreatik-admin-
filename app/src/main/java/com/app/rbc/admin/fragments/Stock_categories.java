@@ -6,10 +6,13 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -95,6 +98,14 @@ public class Stock_categories extends Fragment {
         // Inflate the layout for this source_activity
         View view = inflater.inflate(R.layout.fragment_stock_categories, container, false);
         unbinder = ButterKnife.bind(this, view);
+
+        if(getActivity()!=null)
+        {
+          Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
+            ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+            ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Choose Category");
+
+        }
         return view;
     }
 
@@ -104,6 +115,13 @@ public class Stock_categories extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         get_data();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+
     }
 
 

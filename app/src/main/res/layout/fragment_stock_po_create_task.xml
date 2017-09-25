@@ -158,23 +158,34 @@
                 android:orientation="horizontal"
                 android:weightSum="2">
 
-                <com.app.rbc.admin.utils.MySpinner
-                    android:id="@+id/date_select"
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_40sdp"
                     android:background="@drawable/round_edittext_light"
+                    android:layout_weight="1">
+
+                    <com.app.rbc.admin.utils.MySpinner
+                        android:id="@+id/date_select"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_40sdp"
+                        android:spinnerMode="dropdown"
+                        android:visibility="visible" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_40sdp"
                     android:layout_weight="1"
-                    android:spinnerMode="dropdown"
-                    android:visibility="visible" />
+                    android:background="@drawable/round_edittext_light">
 
+                    <com.app.rbc.admin.utils.MySpinner
+                        android:id="@+id/time_select"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_40sdp"
+                        android:spinnerMode="dropdown" />
 
-                <com.app.rbc.admin.utils.MySpinner
-                    android:id="@+id/time_select"
-                    android:background="@drawable/round_edittext_light"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/_40sdp"
-                    android:layout_weight="1"
-                    android:spinnerMode="dropdown" />
+                </RelativeLayout>
             </LinearLayout>
 
 

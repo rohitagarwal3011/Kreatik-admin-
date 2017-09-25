@@ -68,6 +68,7 @@ public class CusotmRequirementsAdapter extends RecyclerView.Adapter<CusotmRequir
 
             }
 
+
             List<Categoryproduct> categoryproducts = Categoryproduct.find(Categoryproduct.class,
                     "product = ?", products[0]);
             if (categoryproducts.size() != 0) {

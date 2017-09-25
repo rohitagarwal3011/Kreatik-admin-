@@ -34,6 +34,7 @@ import com.app.rbc.admin.interfaces.ApiServices;
 import com.app.rbc.admin.models.Product;
 import com.app.rbc.admin.models.RequirementDetails;
 import com.app.rbc.admin.models.VehicleDetail;
+import com.app.rbc.admin.models.db.models.site_overview.Order;
 import com.app.rbc.admin.utils.AppUtil;
 import com.app.rbc.admin.utils.ChangeFragment;
 import com.app.rbc.admin.utils.RetrofitClient;
@@ -58,12 +59,16 @@ public class RequirementDetailActivity extends AppCompatActivity {
     public RequirementDetails requirementDetails;
     public Toolbar toolbar;
     public static String rq_id;
-    public static String req_site;
+    public static String req_site_name;
+    public static String req_site_id;
     public static List<String> product_list = new ArrayList<>();
     @BindView(R.id.frame_main)
     FrameLayout frameMain;
 
     private String category_selected;
+
+    public List<Order> orders = new ArrayList<>();
+    public Bundle finalform;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,7 +101,8 @@ public class RequirementDetailActivity extends AppCompatActivity {
         {
             getSupportFragmentManager().popBackStackImmediate();
         }
-        super.onBackPressed();
+
+            super.onBackPressed();
 
     }
 

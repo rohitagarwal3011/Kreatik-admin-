@@ -515,7 +515,7 @@ public class Task_details extends Fragment {
         newlog1.setStatus(current_status);
         newlog1.setTaskId(task_id);
         newlog1.setComment("");
-        newlog1.setmLogtype("Status_change");
+        newlog1.setmLogtype("Status change");
         add_new_message(newlog1);
 
 

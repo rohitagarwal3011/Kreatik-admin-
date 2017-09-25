@@ -11,6 +11,7 @@ import android.support.v4.content.LocalBroadcastManager;
 
 import com.app.rbc.admin.R;
 import com.app.rbc.admin.activities.AttendanceActivity;
+import com.app.rbc.admin.activities.StockActivity;
 import com.app.rbc.admin.activities.TaskActivity;
 import com.app.rbc.admin.utils.AppUtil;
 import com.app.rbc.admin.utils.Constant;
@@ -119,6 +120,64 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 notificationManager.notify(0, notification);
 
             }
+            else if (remoteMessage.getData().get("type").equalsIgnoreCase("new_po"))
+            {
+                String category= remoteMessage.getData().get("category");
+                String parent_id=remoteMessage.getData().get("parent_id");
+
+                Intent intent = new Intent(this, StockActivity.class);
+                intent.putExtra("category",category);
+                intent.putExtra("po_id",parent_id);
+                intent.putExtra("type",remoteMessage.getData().get("type"));
+
+                PendingIntent pendingIntent = PendingIntent.getActivity(this,0/* Request code */, intent,
+                        PendingIntent.FLAG_UPDATE_CURRENT);
+
+                Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+
+                NotificationCompat.Builder builder =
+                        new NotificationCompat.Builder(this);
+
+                final NotificationCompat.BigTextStyle style = new NotificationCompat.BigTextStyle(builder);
+
+
+                Notification notification = builder
+                        .setSmallIcon(R.drawable.ic_ac_unit_black_24dp)
+                        .setContentTitle(remoteMessage.getNotification().getTitle())
+                        .setStyle(style.bigText(remoteMessage.getNotification().getBody()))
+                        .setAutoCancel(true)
+                        .setSound(defaultSoundUri)
+                        .setContentIntent(pendingIntent)
+                        .setContentText(remoteMessage.getNotification().getBody())
+                        .build();
+
+                NotificationManagerCompat notificationManager =
+                        NotificationManagerCompat.from(this);
+
+                notificationManager.notify(0, notification);
+
+            }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             if (/* Check if data needs to be processed by long running job */ true) {
                 // For long-running tasks (10 seconds or more) use Firebase Job Dispatcher.
                // scheduleJob();

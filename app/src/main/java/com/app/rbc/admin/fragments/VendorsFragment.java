@@ -86,7 +86,7 @@ public class VendorsFragment extends Fragment implements View.OnClickListener {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        vendors = Vendor.listAll(Vendor.class);
+        vendors = Vendor.find(Vendor.class,"statestore != ?",1+"");
         setRecyclerView(vendors);
 
         if(vendors.size() == 0) {
@@ -167,6 +167,6 @@ public class VendorsFragment extends Fragment implements View.OnClickListener {
     }
 
     private void refreshAdapter() {
-        adapter.refreshAdapter(Vendor.listAll(Vendor.class));
+        adapter.refreshAdapter(Vendor.find(Vendor.class,"statestore != ?",1+""));
     }
 }

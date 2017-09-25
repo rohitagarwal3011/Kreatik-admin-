@@ -31,6 +31,8 @@ public class Site extends SugarRecord{
     @Expose
     private String incharge;
 
+    private int statestore;
+
     public String getName() {
         return name;
     }
@@ -63,4 +65,11 @@ public class Site extends SugarRecord{
         this.incharge = incharge;
     }
 
+    public int getStatestore() {
+        return statestore;
+    }
+
+    public void setStatestore(int statestore) {
+        this.statestore = statestore;
+    }
 }

@@ -85,7 +85,7 @@ public class SitesFragment extends Fragment implements View.OnClickListener{
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        sites = Site.listAll(Site.class);
+        sites = Site.find(Site.class,"statestore != ?",1+"");
         setRecyclerView(sites);
 
         if(sites.size() == 0) {
@@ -164,6 +164,6 @@ public class SitesFragment extends Fragment implements View.OnClickListener{
     }
 
     private void refreshAdapter() {
-        adapter.refreshAdapter(Site.listAll(Site.class));
+        adapter.refreshAdapter(Site.find(Site.class,"statestore != ?",1+""));
     }
 }

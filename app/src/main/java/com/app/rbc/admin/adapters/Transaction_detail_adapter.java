@@ -146,6 +146,7 @@ public class Transaction_detail_adapter extends RecyclerView.Adapter<Transaction
                 String product = products.getProduct();
                 String quantity = products.getQuantity().toString();
                 totalQuantity += Float.valueOf(quantity);
+                quantity += unit;
                 TableRow tr = new TableRow(context);
                 TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
 

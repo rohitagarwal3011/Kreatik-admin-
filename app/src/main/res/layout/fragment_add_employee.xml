@@ -17,25 +17,26 @@
             android:layout_height="wrap_content">
 
             <com.facebook.drawee.view.SimpleDraweeView
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+                android:layout_width="@dimen/_80sdp"
+                android:layout_height="@dimen/_80sdp"
                 android:id="@+id/form_employee_image"
                 android:background="@drawable/image_placeholder"/>
 
             <EditText
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="@dimen/_40sdp"
                 android:layout_toRightOf="@+id/form_employee_image"
                 android:background="@drawable/round_edittext_light"
                 android:hint="Email Address"
                 android:singleLine="true"
                 android:imeOptions="actionNext"
                 android:textSize="15sp"
+                android:inputType="textEmailAddress"
                 android:paddingLeft="10dp"
                 android:id="@+id/form_employee_email"/>
             <EditText
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="@dimen/_40sdp"
                 android:imeOptions="actionNext"
                 android:singleLine="true"
                 android:layout_toRightOf="@+id/form_employee_image"
@@ -49,19 +50,19 @@
 
             <EditText
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="@dimen/_40sdp"
                 android:background="@drawable/round_edittext_light"
                 android:hint="Full Name"
                 android:singleLine="true"
                 android:textSize="15sp"
-                android:inputType="textEmailAddress"
+                android:inputType="textPersonName"
                 android:layout_below="@+id/form_employee_password"
                 android:paddingLeft="10dp"
                 android:id="@+id/form_employee_fullname"/>
 
             <TextView
                 android:layout_width="100dp"
-                android:layout_height="50dp"
+                android:layout_height="@dimen/_40sdp"
                 android:text="Role"
                 android:textSize="15sp"
                 android:gravity="center"
@@ -69,19 +70,26 @@
                 android:layout_below="@id/form_employee_fullname"
                 android:background="@drawable/round_edittext_light"/>
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_40sdp"
+            android:background="@drawable/round_edittext_light"
+            android:layout_toRightOf="@id/role_title"
+            android:layout_alignTop="@id/role_title"
+            android:id="@+id/form_employee_role_spinner_relative">
+
             <Spinner
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:id="@+id/form_employee_role_spinner"
-                android:layout_toRightOf="@+id/role_title"
-                android:layout_alignTop="@id/role_title" />
+                android:layout_height="@dimen/_40sdp"
+                android:id="@+id/form_employee_role_spinner"/>
+        </RelativeLayout>
 
         </RelativeLayout>
     </android.support.v7.widget.CardView>
 
         <Button
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="@dimen/_40sdp"
             android:background="@color/colorAccent"
             android:text="Save"
             android:layout_margin="10dp"
@@ -102,7 +110,7 @@
 
         <Button
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="@dimen/_40sdp"
             android:layout_margin="10dp"
             android:background="@color/colorAccentRed"
             android:text="Save &amp; Add another"
