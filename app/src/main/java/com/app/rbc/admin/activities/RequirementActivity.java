@@ -140,17 +140,26 @@ public class RequirementActivity extends AppCompatActivity implements SearchView
 
     }
 
+    Intent intent;
+
     @Override
     protected void onResume() {
         super.onResume();
-        if (show_tabs)
-        {
-            show_tablayout();
-        }
-        else {
-            hide_tablayout();
-            changeFragment(getSupportFragmentManager(), R.id.frame_main, new Stock_categories().newInstance("RequirementActivity"), Stock_categories.TAG);
 
+        try{
+            intent = getIntent();
+            if (intent.getStringExtra("type").equalsIgnoreCase("new_req")||intent.getStringExtra("type").equalsIgnoreCase("vehicle")) {
+                get_category_requirements(intent.getStringExtra("category"));
+            }
+        }
+        catch (Exception e) {
+            if (show_tabs) {
+                show_tablayout();
+            } else {
+                hide_tablayout();
+                changeFragment(getSupportFragmentManager(), R.id.frame_main, new Stock_categories().newInstance("RequirementActivity"), Stock_categories.TAG);
+
+            }
         }
     }
 
@@ -334,7 +343,18 @@ public class RequirementActivity extends AppCompatActivity implements SearchView
                     AppUtil.putString(getApplicationContext(), TagsPreferences.REQUIREMENT_LIST, new Gson().toJson(response.body()));
                     //productDetails = new Gson().fromJson(AppUtil.getString(getApplicationContext(), TagsPreferences.CATEGORY_DETAILS), RequirementList.class);
                     AppUtil.logger("Product Details : ", AppUtil.getString(getApplicationContext(), TagsPreferences.REQUIREMENT_LIST));
-                    show_tablayout();
+
+                    try {
+                        if (intent.getStringExtra("type").equalsIgnoreCase("new_req")||intent.getStringExtra("type").equalsIgnoreCase("vehicle")) {
+                            show_req_details(intent.getStringExtra("rq_id"));
+                        }
+                    }
+                    catch (Exception e){
+                        show_tablayout();
+                    }
+
+
+
                 }
 
             }

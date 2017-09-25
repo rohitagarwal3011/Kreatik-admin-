@@ -154,7 +154,7 @@ public class StockActivity extends AppCompatActivity implements SearchView.OnQue
 
         try {
             intent = getIntent();
-            if (intent.getStringExtra("type").equalsIgnoreCase("new_po")) {
+            if (intent.getStringExtra("type").equalsIgnoreCase("new_po")||intent.getStringExtra("type").equalsIgnoreCase("vehicle")) {
                 get_product_details(intent.getStringExtra("category"));
             }
         }
@@ -350,7 +350,7 @@ public class StockActivity extends AppCompatActivity implements SearchView.OnQue
                     AppUtil.logger("Product Details : ", AppUtil.getString(getApplicationContext(), TagsPreferences.CATEGORY_DETAILS));
 
                     try {
-                        if (intent.getStringExtra("type").equalsIgnoreCase("new_po")) {
+                        if (intent.getStringExtra("type").equalsIgnoreCase("new_po")||intent.getStringExtra("type").equalsIgnoreCase("vehicle")) {
                             show_po_details(intent.getStringExtra("po_id"));
                         }
                     }
