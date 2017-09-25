@@ -37,6 +37,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -48,6 +49,7 @@ import com.app.rbc.admin.fragments.Stock_categories;
 import com.app.rbc.admin.interfaces.ApiServices;
 import com.app.rbc.admin.models.RequirementList;
 import com.app.rbc.admin.models.StockCategoryDetails;
+import com.app.rbc.admin.models.db.models.Site;
 import com.app.rbc.admin.models.db.models.site_overview.Order;
 import com.app.rbc.admin.models.db.models.site_overview.Requirement;
 import com.app.rbc.admin.utils.AppUtil;
@@ -373,7 +375,9 @@ public class RequirementActivity extends AppCompatActivity implements SearchView
                List<RequirementList.ReqList> search = new ArrayList<>();
                 for(int i = 0 ; i < placeholderFragment.latest.size()  ; i++) {
                     RequirementList.ReqList.Detail detail = placeholderFragment.latest.get(i).getDetails().get(0);
-                    if(detail.getTitle().toLowerCase().contains(newText.toLowerCase())) {
+                    if(detail.getTitle().toLowerCase().contains(newText.toLowerCase()) ||
+                            detail.getSite().toLowerCase().contains(newText.toLowerCase()) ||
+                            detail.getPurpose().toLowerCase().contains(newText.toLowerCase())) {
                         search.add(placeholderFragment.latest.get(i));
                     }
                 }
@@ -384,7 +388,9 @@ public class RequirementActivity extends AppCompatActivity implements SearchView
                 List<RequirementList.ReqList> search_ongoing = new ArrayList<>();
                 for(int i = 0 ; i < placeholderFragment.ongoing.size()  ; i++) {
                     RequirementList.ReqList.Detail detail = placeholderFragment.ongoing.get(i).getDetails().get(0);
-                    if(detail.getTitle().toLowerCase().contains(newText.toLowerCase())) {
+                    if(detail.getTitle().toLowerCase().contains(newText.toLowerCase()) ||
+                            detail.getSite().toLowerCase().contains(newText.toLowerCase()) ||
+                            detail.getPurpose().toLowerCase().contains(newText.toLowerCase())) {
                         search_ongoing.add(placeholderFragment.ongoing.get(i));
                     }
                 }
@@ -395,7 +401,9 @@ public class RequirementActivity extends AppCompatActivity implements SearchView
                 List<RequirementList.ReqList> search_complete = new ArrayList<>();
                 for(int i = 0 ; i < placeholderFragment.complete.size()  ; i++) {
                     RequirementList.ReqList.Detail detail = placeholderFragment.complete.get(i).getDetails().get(0);
-                    if(detail.getTitle().toLowerCase().contains(newText.toLowerCase())) {
+                    if(detail.getTitle().toLowerCase().contains(newText.toLowerCase()) ||
+                            detail.getSite().toLowerCase().contains(newText.toLowerCase()) ||
+                            detail.getPurpose().toLowerCase().contains(newText.toLowerCase())) {
                         search_complete.add(placeholderFragment.complete.get(i));
                     }
                 }
@@ -418,6 +426,11 @@ public class RequirementActivity extends AppCompatActivity implements SearchView
         private static final String ARG_SECTION_NUMBER = "section_number";
         @BindView(R.id.recycler_view)
         RecyclerView recyclerView;
+
+        @BindView(R.id.empty_relative)
+        RelativeLayout empty_relative;
+
+
         Unbinder unbinder;
         private Button created_on;
         private Calendar myCalendar;
@@ -492,12 +505,32 @@ public class RequirementActivity extends AppCompatActivity implements SearchView
 
             switch (position) {
                 case 1:
+                    if(latest.size() == 0) {
+                        empty_relative.setVisibility(View.VISIBLE);
+                    }
+                    else {
+                        empty_relative.setVisibility(View.GONE);
+                    }
                     show_requirement_list(latest);
                     break;
                 case 2:
+                    if(ongoing.size() == 0) {
+                        empty_relative.setVisibility(View.VISIBLE);
+                    }
+                    else {
+                        empty_relative.setVisibility(View.GONE);
+                    }
                   show_requirement_list(ongoing);
                     break;
                 case 3:
+
+                    if(complete.size() == 0) {
+                        empty_relative.setVisibility(View.VISIBLE);
+                    }
+                    else {
+                        empty_relative.setVisibility(View.GONE);
+                    }
+
                     show_requirement_list(complete);
                     break;
 

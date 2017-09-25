@@ -38,6 +38,7 @@ import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -451,6 +452,10 @@ public class StockActivity extends AppCompatActivity implements SearchView.OnQue
         public static final String TAG = "Placeholder Fragment";
         @BindView(R.id.recycler_view)
         RecyclerView recyclerView;
+
+        @BindView(R.id.empty_relative)
+        RelativeLayout empty_relative;
+
         Unbinder unbinder;
         private View view;
         private List<StockCategoryDetails.StockDetail> stockDetail;
@@ -529,6 +534,14 @@ public class StockActivity extends AppCompatActivity implements SearchView.OnQue
         public void show_stock_details() {
 
             stockDetail = new Gson().fromJson(AppUtil.getString(getContext().getApplicationContext(), TagsPreferences.CATEGORY_DETAILS), StockCategoryDetails.class).getStockDetails();
+
+            if(stockDetail.size() == 0) {
+                empty_relative.setVisibility(View.VISIBLE);
+            }
+            else {
+                empty_relative.setVisibility(View.GONE);
+            }
+
             recyclerView.setHasFixedSize(true);
             LinearLayoutManager gridLayoutManager = new LinearLayoutManager(getContext());
             gridLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -890,6 +903,13 @@ public class StockActivity extends AppCompatActivity implements SearchView.OnQue
                             }
                         }
                         filtered.add(transactionDetails.get(i));
+                    }
+
+                    if(filtered.size() == 0) {
+                        empty_relative.setVisibility(View.GONE);
+                    }
+                    else {
+                        empty_relative.setVisibility(View.VISIBLE);
                     }
                     set_show_transaction_recycler(filtered);
                 }

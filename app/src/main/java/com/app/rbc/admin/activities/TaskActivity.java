@@ -4,6 +4,7 @@ import android.app.SearchManager;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -11,8 +12,10 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
@@ -22,9 +25,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
+import com.app.rbc.admin.Manifest;
 import com.app.rbc.admin.R;
 import com.app.rbc.admin.fragments.Employee_list;
+import com.app.rbc.admin.fragments.RecievedVehicle;
 import com.app.rbc.admin.fragments.Task_create;
 import com.app.rbc.admin.fragments.Task_details;
 import com.app.rbc.admin.fragments.Task_home;
@@ -66,6 +72,7 @@ public class TaskActivity extends AppCompatActivity implements Task_home.OnTaskT
     public static String visible_fragment;
     private ContextMenuDialogFragment mMenuDialogFragment;
     private Menu menu;
+    private int fragment,function;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -416,6 +423,4 @@ public class TaskActivity extends AppCompatActivity implements Task_home.OnTaskT
 
         }
     }
-
-
 }

@@ -33,6 +33,7 @@ public class VendorsFragment extends Fragment implements View.OnClickListener {
     private RecyclerView recyclerView;
     private CustomVendorListAdapter adapter;
     private List<Vendor> vendors;
+    private RelativeLayout empty_relative;
     SwipeRefreshLayout swipeRefreshLayout;
 
     final GestureDetector mGestureDetector = new GestureDetector(getContext(),
@@ -62,6 +63,7 @@ public class VendorsFragment extends Fragment implements View.OnClickListener {
         TextView add_vendor_title = (TextView) view.findViewById(R.id.add_vendor_title);
         ImageView add_vendor_icon = (ImageView) view.findViewById(R.id.add_vendor_icon);
         Button add_vendor_next = (Button) view.findViewById(R.id.add_vendor_next);
+        empty_relative = (RelativeLayout) view.findViewById(R.id.empty_relative);
 
         add_vendor_container.setOnClickListener(this);
         add_vendor_title.setOnClickListener(this);
@@ -90,6 +92,7 @@ public class VendorsFragment extends Fragment implements View.OnClickListener {
         setRecyclerView(vendors);
 
         if(vendors.size() == 0) {
+            empty_relative.setVisibility(View.VISIBLE);
             swipeRefreshLayout.setRefreshing(true);
             callVendorsFetchApi();
         }
@@ -156,6 +159,12 @@ public class VendorsFragment extends Fragment implements View.OnClickListener {
         swipeRefreshLayout.setRefreshing(false);
         switch(status) {
             case 2 :
+                if(Vendor.count(Vendor.class) == 0) {
+                    empty_relative.setVisibility(View.VISIBLE);
+                }
+                else {
+                    empty_relative.setVisibility(View.GONE);
+                }
                 refreshAdapter();
                 break;
             case 0:

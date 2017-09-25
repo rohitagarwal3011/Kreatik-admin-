@@ -33,6 +33,7 @@ public class SitesFragment extends Fragment implements View.OnClickListener{
     private CustomSiteListAdapter adapter;
     private List<Site> sites;
     SwipeRefreshLayout swipeRefreshLayout;
+    private RelativeLayout empty_relative;
 
     final GestureDetector mGestureDetector = new GestureDetector(getContext(),
             new GestureDetector.SimpleOnGestureListener() {
@@ -61,6 +62,7 @@ public class SitesFragment extends Fragment implements View.OnClickListener{
         TextView add_factory_title = (TextView) view.findViewById(R.id.add_factory_title);
         ImageView add_factory_icon = (ImageView) view.findViewById(R.id.add_factory_icon);
         Button add_factory_next = (Button) view.findViewById(R.id.add_factory_next);
+        empty_relative = (RelativeLayout) view.findViewById(R.id.empty_relative);
 
         add_factory_container.setOnClickListener(this);
         add_factory_title.setOnClickListener(this);
@@ -89,8 +91,10 @@ public class SitesFragment extends Fragment implements View.OnClickListener{
         setRecyclerView(sites);
 
         if(sites.size() == 0) {
+            empty_relative.setVisibility(View.VISIBLE);
             swipeRefreshLayout.setRefreshing(true);
             callSitesFetchApi();
+
         }
 
         // Recycler Listener
@@ -153,6 +157,12 @@ public class SitesFragment extends Fragment implements View.OnClickListener{
         swipeRefreshLayout.setRefreshing(false);
         switch(status) {
             case 2 :
+                if(Site.count(Site.class) == 0) {
+                    empty_relative.setVisibility(View.VISIBLE);
+                }
+                else {
+                    empty_relative.setVisibility(View.GONE);
+                }
                 refreshAdapter();
                 break;
             case 0:

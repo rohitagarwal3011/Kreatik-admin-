@@ -97,6 +97,8 @@ public interface    APIInterface {
     @POST("site_overview/")
     Call<String> siteOverview(@Field("site") String site);
 
+
+
     @FormUrlEncoded
     @POST("update_product/")
     Call<String> updateProdut(@Field("category") String category,
@@ -107,11 +109,22 @@ public interface    APIInterface {
     @POST("receive_vehicle/")
     Call<String> receiveVehicle(@Part("trans_id") RequestBody trans_id,
                                 @Part("prod_list") RequestBody prod_list,
-                         @Part("challan_num") RequestBody challan_num,
-                         @Part MultipartBody.Part challan_img,
+                                @Part("challan_num") RequestBody challan_num,
+                                @Part MultipartBody.Part challan_img,
                                 @Part MultipartBody.Part invoice_img,
                                 @Part MultipartBody.Part onreceive_img,
                                 @Part MultipartBody.Part unloaded_img);
+
+
+    @FormUrlEncoded
+    @POST("add_stock/")
+    Call<String> addStock(@Field("site_id") String site_id,
+                          @Field("site_type") String site_type,
+                          @Field("category") String category,
+                          @Field("product") String product,
+                          @Field("qty") String qty);
+
+
 
     @FormUrlEncoded
     @POST("vehicle_list/")

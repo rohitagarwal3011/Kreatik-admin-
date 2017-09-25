@@ -491,6 +491,8 @@ public class Product_selection extends Fragment {
 
         TextView productText = (TextView) tr.findViewById(R.id.product);
         TextView quantityText = (TextView) tr.findViewById(R.id.quantity);
+        Button product_icon = (Button) tr.findViewById(R.id.product_icon);
+
         ImageView delete = (ImageView) tr.findViewById(R.id.delete_icon);
         delete.setId(count);
 
@@ -519,6 +521,7 @@ public class Product_selection extends Fragment {
 
         productText.setText(product);
         quantityText.setText(quantity);
+        product_icon.setText(product.substring(0,1));
 
         productTable.addView(tr, count);
         count++;

@@ -24,6 +24,7 @@ import com.app.rbc.admin.interfaces.ApiServices;
 import com.app.rbc.admin.utils.AppUtil;
 import com.app.rbc.admin.utils.ChangeFragment;
 import com.app.rbc.admin.utils.RetrofitClient;
+import com.facebook.drawee.backends.pipeline.Fresco;
 import com.rackspira.kristiawan.rackmonthpicker.RackMonthPicker;
 import com.rackspira.kristiawan.rackmonthpicker.listener.DateMonthDialogListener;
 import com.rackspira.kristiawan.rackmonthpicker.listener.OnCancelMonthDialogListener;
@@ -52,6 +53,7 @@ public class AttendanceActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_attendance);
+        Fresco.initialize(this);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 

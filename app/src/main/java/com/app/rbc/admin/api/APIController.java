@@ -16,6 +16,7 @@ import com.app.rbc.admin.models.db.models.Site;
 import com.app.rbc.admin.models.db.models.User;
 import com.app.rbc.admin.models.db.models.Vehicle;
 import com.app.rbc.admin.models.db.models.Vendor;
+import com.app.rbc.admin.models.db.models.site_overview.Order;
 import com.app.rbc.admin.models.db.models.site_overview.Requirement;
 import com.app.rbc.admin.models.db.models.site_overview.Stock;
 import com.app.rbc.admin.models.db.models.site_overview.Trans;
@@ -51,8 +52,8 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
 public class APIController{
 
     private final String BASE_URL = "http://plethron.pythonanywhere.com/eagle/";
-    private Retrofit retrofit;
-    private APIInterface apiInterface;
+    public Retrofit retrofit;
+    public APIInterface apiInterface;
     private Context context;
     private int code;
     private Gson gson;
@@ -74,6 +75,10 @@ public class APIController{
                 .build();
 
         apiInterface = retrofit.create(APIInterface.class);
+    }
+
+    public APIInterface getInterface() {
+        return this.apiInterface;
     }
 
     public void addUser(User user) {
@@ -353,6 +358,9 @@ public class APIController{
             }
         });
     }
+
+
+
 
     public void fetchVehicleList() {
         Call<String> call = apiInterface.vehicleList(2);
@@ -917,6 +925,7 @@ public class APIController{
                 if(response.errorBody() == null) {
                     try {
                         JSONObject body = new JSONObject(response.body().toString());
+                        AppUtil.logger("Fetch Site Response",body.toString());
                         int status = body.getJSONObject("meta").getInt("status");
                         String message = body.getJSONObject("meta").getString("message");
                         if(status != 2) {
