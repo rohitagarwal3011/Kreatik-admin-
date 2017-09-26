@@ -73,6 +73,9 @@ public class HomeActivity extends AppCompatActivity
     @BindView(R.id.module_reports)
     LinearLayout module_reports;
 
+    @BindView(R.id.settings)
+    TextView settings;
+
 
     View rootLayout;
 
@@ -127,6 +130,14 @@ public class HomeActivity extends AppCompatActivity
         //   this.menu = navigationView.getMenu();
 
         //   updateMenuItems();
+
+        settings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(HomeActivity.this, IndentRegisterActivity.class);
+                startActivity(intent);
+            }
+        });
 
     }
 

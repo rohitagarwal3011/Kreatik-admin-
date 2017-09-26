@@ -101,6 +101,7 @@ public class RequirementActivity extends AppCompatActivity implements SearchView
 
     private ViewPager mViewPager;
     private Menu menu;
+    public SearchView searchView;
 
     public static boolean show_tabs = false;
     @Override
@@ -240,9 +241,10 @@ public class RequirementActivity extends AppCompatActivity implements SearchView
         }
         SearchManager searchManager =
                 (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView = (SearchView)
+        searchView = (SearchView)
                 MenuItemCompat.getActionView(menu.findItem(R.id.search));
 
+        searchView.setMaxWidth(Integer.MAX_VALUE);
         searchView.setSearchableInfo(
                 searchManager.getSearchableInfo(getComponentName()));
         searchView.setSubmitButtonEnabled(true);

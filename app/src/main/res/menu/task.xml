@@ -20,16 +20,21 @@
         android:title="Completed Tasks"
         app:showAsAction="never"
         />
+
+
     <item android:id="@+id/search"
         android:icon="@drawable/search_icon"
         android:title="Search Tasks"
-        app:showAsAction="collapseActionView|ifRoom"
+        app:showAsAction="always"
+
         android:actionViewClass="android.support.v7.widget.SearchView"
         app:actionViewClass="android.support.v7.widget.SearchView"
         />
+
     <item android:id="@+id/filter"
         android:icon="@drawable/filter_icon"
         android:title="Filter Tasks"
         app:showAsAction="always"
         />
+
 </menu>
