@@ -14,6 +14,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
 import com.app.rbc.admin.R;
 import com.app.rbc.admin.adapters.Requirement_list_adapter;
@@ -51,6 +52,8 @@ public class Cat_Des_Requirement_List extends Fragment {
     RecyclerView recyclerView;
     Unbinder unbinder;
 
+    @BindView(R.id.empty_relative)
+    RelativeLayout empty_relative;
     String TAG;
 
     // TODO: Rename and change types of parameters
@@ -137,13 +140,21 @@ public class Cat_Des_Requirement_List extends Fragment {
                     catDesRequirementList = new Gson().fromJson( new Gson().toJson(response.body()), CatDesRequirementList.class);
                     //AppUtil.logger("Product Details : ", AppUtil.getString(getContext(), TagsPreferences.REQUIREMENT_LIST));
                     show_requirement_list(catDesRequirementList.getReqList());
+
+
+                    if(catDesRequirementList.getReqList().size() == 0) {
+                        empty_relative.setVisibility(View.VISIBLE);
+                    }
+                    else {
+                        empty_relative.setVisibility(View.GONE);
+                    }
                 }
 
             }
 
             @Override
             public void onFailure(Call<CatDesRequirementList> call1, Throwable t) {
-
+                empty_relative.setVisibility(View.VISIBLE);
                 pDialog.dismiss();
 
 

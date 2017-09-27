@@ -152,31 +152,31 @@ public class Vehicle_detail_adapter extends RecyclerView.Adapter<Vehicle_detail_
 
             holder.productTable.setVisibility(View.VISIBLE);
             holder.productTable.removeAllViews();
-            TableRow tr0 = new TableRow(context);
-            TableRow.LayoutParams layoutParams0 = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
-
-            layoutParams0.setMargins(0, (int) context.getResources().getDimension(R.dimen._5sdp), 0, (int) context.getResources().getDimensionPixelSize(R.dimen._5sdp));
-            tr0.setLayoutParams(layoutParams0);
-            tr0.setPadding((int) context.getResources().getDimension(R.dimen._3sdp), (int) context.getResources().getDimension(R.dimen._3sdp), (int) context.getResources().getDimension(R.dimen._3sdp), (int) context.getResources().getDimension(R.dimen._3sdp));
-
-            TextView tv0 = new TextView(context);
-            tv0.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 1f));
-            tv0.setGravity(Gravity.CENTER_HORIZONTAL);
-            tv0.setTextColor(Color.parseColor("#000000"));
-            tv0.setText("Product");
-
-            tr0.addView(tv0, 0);
-
-            TextView tv01 = new TextView(context);
-            tv01.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 1f));
-            tv01.setGravity(Gravity.CENTER_HORIZONTAL);
-            tv01.setTextColor(Color.parseColor("#000000"));
-            tv01.setText("Quantity");
-
-            tr0.addView(tv01, 1);
-
-            holder.productTable.addView(tr0, 0);
-            count = 1;
+//            TableRow tr0 = new TableRow(context);
+//            TableRow.LayoutParams layoutParams0 = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
+//
+//            layoutParams0.setMargins(0, (int) context.getResources().getDimension(R.dimen._5sdp), 0, (int) context.getResources().getDimensionPixelSize(R.dimen._5sdp));
+//            tr0.setLayoutParams(layoutParams0);
+//            tr0.setPadding((int) context.getResources().getDimension(R.dimen._3sdp), (int) context.getResources().getDimension(R.dimen._3sdp), (int) context.getResources().getDimension(R.dimen._3sdp), (int) context.getResources().getDimension(R.dimen._3sdp));
+//
+//            TextView tv0 = new TextView(context);
+//            tv0.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 1f));
+//            tv0.setGravity(Gravity.CENTER_HORIZONTAL);
+//            tv0.setTextColor(Color.parseColor("#000000"));
+//            tv0.setText("Product");
+//
+//            tr0.addView(tv0, 0);
+//
+//            TextView tv01 = new TextView(context);
+//            tv01.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 1f));
+//            tv01.setGravity(Gravity.CENTER_HORIZONTAL);
+//            tv01.setTextColor(Color.parseColor("#000000"));
+//            tv01.setText("Quantity");
+//
+//            tr0.addView(tv01, 1);
+//
+//            holder.productTable.addView(tr0, 0);
+            count = 0;
 
 
             for (int i = 0; i < data.get(position).getProducts().size(); i++) {
@@ -193,7 +193,7 @@ public class Vehicle_detail_adapter extends RecyclerView.Adapter<Vehicle_detail_
 
                 TextView tv = new TextView(context);
                 tv.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 1f));
-                tv.setGravity(Gravity.CENTER_HORIZONTAL);
+                tv.setGravity(Gravity.LEFT);
                 tv.setTextColor(Color.parseColor("#000000"));
                 tv.setText(product);
 
@@ -201,7 +201,7 @@ public class Vehicle_detail_adapter extends RecyclerView.Adapter<Vehicle_detail_
 
                 TextView tv1 = new TextView(context);
                 tv1.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 1f));
-                tv1.setGravity(Gravity.CENTER_HORIZONTAL);
+                tv1.setGravity(Gravity.LEFT);
                 tv1.setTextColor(Color.parseColor("#000000"));
                 tv1.setText(quantity);
 

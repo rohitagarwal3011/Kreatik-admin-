@@ -33,6 +33,7 @@ public class EmployeesFragment extends Fragment implements View.OnClickListener{
 
     private View view;
     private RecyclerView recyclerView;
+    private RelativeLayout empty_relative;
     private CustomEmployeeListAdapter adapter;
     private List<Employee> employees;
     SwipeRefreshLayout swipeRefreshLayout;
@@ -62,6 +63,7 @@ public class EmployeesFragment extends Fragment implements View.OnClickListener{
         TextView add_employee_title = (TextView) view.findViewById(R.id.add_employee_title);
         ImageView add_employee_icon = (ImageView) view.findViewById(R.id.add_employee_icon);
         Button add_employee_next = (Button) view.findViewById(R.id.add_employee_next);
+        empty_relative = (RelativeLayout) view.findViewById(R.id.empty_relative);
 
         add_employee_container.setOnClickListener(this);
         add_employee_icon.setOnClickListener(this);
@@ -91,6 +93,7 @@ public class EmployeesFragment extends Fragment implements View.OnClickListener{
         setRecyclerView(employees);
 
         if(employees.size() == 0) {
+            empty_relative.setVisibility(View.VISIBLE);
             swipeRefreshLayout.setRefreshing(true);
             callEmployeeFetchApi();
         }
@@ -157,6 +160,12 @@ public class EmployeesFragment extends Fragment implements View.OnClickListener{
         swipeRefreshLayout.setRefreshing(false);
         switch(status) {
             case 2 :
+                if(Employee.count(Employee.class) == 0) {
+                    empty_relative.setVisibility(View.VISIBLE);
+                }
+                else {
+                    empty_relative.setVisibility(View.GONE);
+                }
                 refreshAdapter();
                 break;
             case 0:

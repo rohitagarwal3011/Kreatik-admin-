@@ -32,16 +32,9 @@ import java.util.Locale;
 
 import static com.app.rbc.admin.fragments.Task_create.MEDIA_TYPE_IMAGE;
 
-/**
- * @version 2009-07-03
- * @author Peli
- * @version 2013-12-11
- * @author paulburke (ipaulpro)
- */
 public class FileUtils {
-    private FileUtils() {} //private constructor to enforce Singleton pattern
+    private FileUtils() {}
 
-    /** TAG for log messages. */
     static final String TAG = "FileUtils";
     private static final boolean DEBUG = false; // Set to true to enable logging
 
@@ -54,43 +47,26 @@ public class FileUtils {
     public static final String HIDDEN_PREFIX = ".";
 
     public static String mCurrentPhotoPath;
-    /**
-     * Gets the extension of a file name, like ".png" or ".jpg".
-     *
-     * @param uri
-     * @return Extension including the dot("."); "" if there is no extension;
-     *         null if uri was null.
-     */
 
-
-
-    /**
-     * Creating file uri to store image/video
-     */
     public static Uri getOutputMediaFileUri(int type) {
         return Uri.fromFile(getOutputMediaFile(type));
     }
 
     public static File createImageFile() throws IOException {
-        // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
         File storageDir = new File(Environment.getExternalStorageDirectory().getPath(), "Inizio/Images Clicked");
         File image = File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                storageDir      /* directory */
+                imageFileName,
+                ".jpg",
+                storageDir
         );
 
-        // Save a file: path for use with ACTION_VIEW intents
         mCurrentPhotoPath = image.getAbsolutePath();
         return image;
     }
 
 
-    /**
-     * returning image / video
-     */
     public static File getOutputMediaFile(int type) {
 
         // External sdcard location
@@ -99,7 +75,6 @@ public class FileUtils {
             file.mkdirs();
         }
 
-        // Create a media file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss",
                 Locale.getDefault()).format(new Date());
         File mediaFile;

@@ -266,10 +266,6 @@ public class RecievedVehicle extends Fragment implements View.OnClickListener {
             EditText quantityText = (EditText) tr.findViewById(R.id.quantity);
 
 
-
-            productText.setText(products[i]);
-            quantityText.setText(quantities[i]);
-
             tableLayout.addView(tr, count);
             count++;
         }

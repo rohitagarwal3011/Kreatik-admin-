@@ -14,6 +14,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/requirement_details_layout"
+            android:background="@color/white"
             android:orientation="vertical">
 
 
@@ -21,7 +22,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:background="@color/colorPrimary"
+                android:background="@color/white"
 
                 android:padding="@dimen/_10sdp">
 
@@ -112,7 +113,7 @@
                             android:gravity="right|center_vertical"
                             android:text="Site"
                             android:textColor="@color/black"
-                            android:textSize="@dimen/_11sdp" />
+                            android:textSize="@dimen/_14sdp" />
                         <TextView
                             android:id="@+id/remaining_quantity"
                             android:layout_width="match_parent"
@@ -179,6 +180,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
+                android:background="@color/white"
 
                 >
 
@@ -203,37 +205,35 @@
                         android:id="@+id/rowheading"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/_5sdp"
-                        android:layout_marginBottom="@dimen/_5sdp"
-                        android:padding="@dimen/_3sdp"
                         >
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/_25sdp"
-                            android:layout_weight="1"
+                            android:layout_weight="3"
                             android:gravity="center_vertical"
                             android:paddingLeft="@dimen/_5sdp"
                             android:background="@drawable/round_edittext_light"
                             android:text="Product"
-                            android:textSize="@dimen/_12sdp"/>
+                            android:textSize="@dimen/_10sdp"/>
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/_25sdp"
                             android:text="Quantity"
-                            android:textSize="@dimen/_12sdp"
+                            android:visibility="gone"
+                            android:textSize="@dimen/_11sdp"
                             android:gravity="center_vertical"
                             android:paddingLeft="@dimen/_5sdp"
                             android:background="@drawable/round_edittext_light"
-                            android:layout_weight="1"/>
+                            android:layout_weight=".5"/>
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/_25sdp"
                             android:text="Rem. Quantity"
-                            android:textSize="@dimen/_12sdp"
+                            android:textSize="@dimen/_10sdp"
                             android:gravity="center_vertical"
                             android:paddingLeft="@dimen/_5sdp"
                             android:background="@drawable/round_edittext_light"
-                            android:layout_weight="1"/>
+                            android:layout_weight=".5"/>
                     </TableRow>
                 </TableLayout>
 
@@ -258,6 +258,7 @@
                 android:paddingLeft="@dimen/_10sdp"
                 android:paddingRight="@dimen/_10sdp"
                 android:paddingTop="@dimen/_5sdp"
+                android:background="@color/white"
                 android:text=""
                 android:textColor="@color/black"/>
 
@@ -280,6 +281,7 @@
                 android:scrollbars="vertical"/>
             <View
                 android:layout_width="match_parent"
+                android:background="@color/white"
                 android:layout_height="@dimen/_50sdp"/>
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>

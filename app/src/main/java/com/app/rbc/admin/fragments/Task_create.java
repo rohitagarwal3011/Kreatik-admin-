@@ -3,6 +3,7 @@ package com.app.rbc.admin.fragments;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -11,7 +12,9 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
@@ -35,6 +38,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.app.rbc.admin.Manifest;
 import com.app.rbc.admin.R;
 import com.app.rbc.admin.activities.TaskActivity;
 import com.app.rbc.admin.adapters.Employee_list_adapter;
@@ -92,6 +96,8 @@ public class Task_create extends Fragment implements DatePickerDialog.OnDateSetL
     private static final String TASK_TYPE = "task_type";
     private static final String TO_USER = "TO_USER";
     public static final String TAG = "Task_create";
+    public static final int fragment = 1;
+    private int function;
     @BindView(R.id.emp_select)
     Spinner empSelect;
     @BindView(R.id.task_title)
@@ -302,6 +308,83 @@ public class Task_create extends Fragment implements DatePickerDialog.OnDateSetL
     }
 
 
+    public void askPermission(int code,int function) {
+        this.function = function;
+        switch (code) {
+            case 120:
+                if (ContextCompat.checkSelfPermission(getContext(),
+                        Manifest.permission.CAMERA)
+                        != PackageManager.PERMISSION_GRANTED ||
+                        ContextCompat.checkSelfPermission(getContext(),
+                                Manifest.permission.READ_EXTERNAL_STORAGE)
+                                != PackageManager.PERMISSION_GRANTED ||
+                        ContextCompat.checkSelfPermission(getContext(),
+                                Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                                != PackageManager.PERMISSION_GRANTED) {
+
+                    requestPermissions(new String[]{Manifest.permission.CAMERA,
+                                    Manifest.permission.READ_EXTERNAL_STORAGE,
+                                    Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                            code);
+
+                }
+                else {
+
+                            switch (function) {
+                                case 1:
+                                    loadImagefromGallery();
+                                    break;
+                                case 2 :captureImage();
+                                    break;
+                                case 3:onBrowse();
+                                    break;
+                            }
+                            break;
+
+
+                }
+                break;
+        }
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        Log.e("Permisson","callback");
+
+        switch (requestCode) {
+            case 120: {
+
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                            switch (function) {
+                                case 1:
+                                    loadImagefromGallery();
+                                    break;
+                                case 2 :
+                                    captureImage();
+                                    break;
+                                case 3:
+                                    onBrowse();
+                                    break;
+                            }
+                            break;
+
+
+                } else {
+
+                    Toast.makeText(getContext(),
+                            "Permission Denied!",
+                            Toast.LENGTH_SHORT).show();
+                }
+                break;
+            }
+
+        }
+    }
+
     @OnClick({R.id.button_attachment, R.id.remove_attachment, R.id.submit_task})
     public void onViewClicked(View view) {
         switch (view.getId()) {
@@ -326,7 +409,8 @@ public class Task_create extends Fragment implements DatePickerDialog.OnDateSetL
                 gallery.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        loadImagefromGallery(v);
+                        askPermission(120,1);
+
                         dialog.dismiss();
                     }
                 });
@@ -334,7 +418,8 @@ public class Task_create extends Fragment implements DatePickerDialog.OnDateSetL
                 camera.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        captureImage();
+                        askPermission(120,2);
+
                         dialog.dismiss();
                     }
                 });
@@ -342,7 +427,7 @@ public class Task_create extends Fragment implements DatePickerDialog.OnDateSetL
                 pdf.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        onBrowse(v);
+                        askPermission(120,3);
                         dialog.dismiss();
                     }
                 });
@@ -669,7 +754,7 @@ public class Task_create extends Fragment implements DatePickerDialog.OnDateSetL
 
 
     //this when button click
-    public void onBrowse(View view) {
+    public void onBrowse() {
         Intent chooseFile;
         Intent intent;
         chooseFile = new Intent(Intent.ACTION_GET_CONTENT);
@@ -687,7 +772,7 @@ public class Task_create extends Fragment implements DatePickerDialog.OnDateSetL
 
     Bitmap bitmap;
 
-    public void loadImagefromGallery(View view) {
+    public void loadImagefromGallery() {
         // Create intent to Open Image applications like Gallery, Google Photos
         Intent galleryIntent = new Intent(Intent.ACTION_PICK,
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -837,7 +922,7 @@ public class Task_create extends Fragment implements DatePickerDialog.OnDateSetL
     }
 
 
-    private void captureImage() {
+    public void captureImage() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
         fileUri = FileUtils.getOutputMediaFileUri(MEDIA_TYPE_IMAGE);

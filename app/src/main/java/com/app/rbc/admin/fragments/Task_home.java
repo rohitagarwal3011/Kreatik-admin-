@@ -13,6 +13,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -29,6 +30,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 
 import com.app.rbc.admin.R;
@@ -100,6 +102,8 @@ public class Task_home extends Fragment implements Todo_list_adapter.OnItemLongC
     View todoIndicator;
     @BindView(R.id.assigned_indicator)
     View assignedIndicator;
+    @BindView(R.id.empty_relative)
+    RelativeLayout empty_relative;
 
 
     public static Employee employee_list;
@@ -116,6 +120,7 @@ public class Task_home extends Fragment implements Todo_list_adapter.OnItemLongC
     // Filter Dialog
     private Button deadline_button;
     private Calendar myCalendar;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     public Task_home() {
         // Required empty public constructor
@@ -156,9 +161,20 @@ public class Task_home extends Fragment implements Todo_list_adapter.OnItemLongC
         rootview = inflater.inflate(R.layout.fragment_task_home, container, false);
         show_delete = false;
         unbinder = ButterKnife.bind(this, rootview);
+        setSwipeRefresh();
         return rootview;
     }
 
+
+    private void setSwipeRefresh() {
+        swipeRefreshLayout = (SwipeRefreshLayout) rootview.findViewById(R.id.swiperefresh);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                get_todo_list();
+            }
+        });
+    }
 
     @Override
     public void onDestroyView() {
@@ -506,6 +522,8 @@ public class Task_home extends Fragment implements Todo_list_adapter.OnItemLongC
 
             @Override
             public void onFailure(Call<Todolist> call, Throwable t) {
+                empty_relative.setVisibility(View.VISIBLE);
+                swipeRefreshLayout.setRefreshing(false);
                 pDialog.dismiss();
                 AppUtil.showToast(getContext(), "Network Issue. Please check your connectivity and try again");
             }
@@ -559,6 +577,7 @@ public class Task_home extends Fragment implements Todo_list_adapter.OnItemLongC
 
                // show_todo_list();
               //  show_tasks_assigned();
+                swipeRefreshLayout.setRefreshing(false);
                 set_todo_list();
                 get_non_completed_task();
                 //  proceed();
@@ -678,6 +697,13 @@ public class Task_home extends Fragment implements Todo_list_adapter.OnItemLongC
         for(int i = 0 ;i<todolist.getData1().size();i++)
         {
             todo_list.add(todolist.getData1().get(i));
+        }
+
+        if(todo_list.size() == 0) {
+            empty_relative.setVisibility(View.VISIBLE);
+        }
+        else {
+            empty_relative.setVisibility(View.GONE);
         }
 
 
@@ -841,7 +867,7 @@ public class Task_home extends Fragment implements Todo_list_adapter.OnItemLongC
                     date = format.parse(deadline);
                     long millisFilter = date.getTime();
 
-                    if(!(millisTodo <= millisFilter)) {
+                    if(millisTodo > millisFilter) {
                         continue;
                     }
 

@@ -14,6 +14,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -22,10 +23,12 @@ import android.widget.TextView;
 import com.app.rbc.admin.R;
 import com.app.rbc.admin.activities.RequirementActivity;
 import com.app.rbc.admin.activities.RequirementDetailActivity;
+import com.app.rbc.admin.activities.SiteOverviewActivity;
 import com.app.rbc.admin.adapters.Vehicle_detail_adapter;
 import com.app.rbc.admin.interfaces.ApiServices;
 import com.app.rbc.admin.models.Product;
 import com.app.rbc.admin.models.VehicleDetail;
+import com.app.rbc.admin.models.db.models.Categoryproduct;
 import com.app.rbc.admin.utils.AppUtil;
 import com.app.rbc.admin.utils.ChangeFragment;
 import com.app.rbc.admin.utils.RetrofitClient;
@@ -298,37 +301,60 @@ public class RequirementDetails extends Fragment {
     }
 
     private void addrow(String product, String quantity, String rem_quantity) {
-        TableRow tr = new TableRow(getContext());
-        TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
 
-        layoutParams.setMargins(0, (int) getResources().getDimension(R.dimen._5sdp), 0, (int) getResources().getDimensionPixelSize(R.dimen._5sdp));
-        tr.setLayoutParams(layoutParams);
-        tr.setPadding((int) getResources().getDimension(R.dimen._3sdp), (int) getResources().getDimension(R.dimen._3sdp), (int) getResources().getDimension(R.dimen._3sdp), (int) getResources().getDimension(R.dimen._3sdp));
+        String unit="";
+        List<Categoryproduct> categoryproducts = Categoryproduct.find(Categoryproduct.class,
+                "product = ?", product+"");
+        if(categoryproducts.size() != 0) {
+            unit = categoryproducts.get(0).getUnit();
+        }
+        View tr = ((RequirementDetailActivity)getContext()).getLayoutInflater().inflate(R.layout.custom_product_row_layout,null);
 
-        TextView tv = new TextView(getContext());
-        tv.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 1f));
-        tv.setGravity(Gravity.LEFT);
-        tv.setTextColor(Color.parseColor("#000000"));
-        tv.setText(product);
+        TextView productText = (TextView) tr.findViewById(R.id.product);
+        TextView quantityText = (TextView) tr.findViewById(R.id.quantity);
+        Button product_icon = (Button) tr.findViewById(R.id.product_icon);
+        TextView rem_qty=(TextView) tr.findViewById(R.id.remaining_quantity);
 
-        tr.addView(tv, 0);
+        productText.setText(product);
+        quantityText.setText(quantity+" "+unit);
+        rem_qty.setText(rem_quantity+" "+unit);
+        product_icon.setText(product.substring(0,1));
 
-        TextView tv1 = new TextView(getContext());
-        tv1.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 1f));
-        tv1.setGravity(Gravity.LEFT);
-        tv1.setTextColor(Color.parseColor("#000000"));
-        tv1.setText(quantity);
 
-        tr.addView(tv1, 1);
-
-        TextView tv2 = new TextView(getContext());
-        tv2.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 1f));
-        tv2.setGravity(Gravity.LEFT);
-        tv2.setTextColor(Color.parseColor("#000000"));
-        tv2.setText(rem_quantity);
-
-        tr.addView(tv2, 2);
-        productTable.addView(tr, count);
+        productTable.addView(tr,count);
+//        TableRow tr = new TableRow(getContext());
+//        TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
+//
+//        layoutParams.setMargins(0, (int) getResources().getDimension(R.dimen._5sdp), 0, (int) getResources().getDimensionPixelSize(R.dimen._5sdp));
+//        tr.setLayoutParams(layoutParams);
+//        tr.setPadding((int) getResources().getDimension(R.dimen._3sdp), (int) getResources().getDimension(R.dimen._3sdp), (int) getResources().getDimension(R.dimen._3sdp), (int) getResources().getDimension(R.dimen._3sdp));
+//
+//        TextView tv = new TextView(getContext());
+//        tv.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 1f));
+//        tv.setGravity(Gravity.LEFT);
+//        tv.setTextColor(Color.parseColor("#000000"));
+//        tv.setText(product);
+//
+//        tr.addView(tv, 0);
+//
+//        TextView tv1 = new TextView(getContext());
+//        tv1.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 1f));
+//        tv1.setGravity(Gravity.LEFT);
+//        int dp1 = (int) (getResources().getDimension(R.dimen._15sdp) / getResources().getDisplayMetrics().density);
+//        tv1.setPadding(dp1,0,0,0);
+//        tv1.setTextColor(Color.parseColor("#000000"));
+//        tv1.setText(quantity);
+//
+//        tr.addView(tv1, 1);
+//
+//        TextView tv2 = new TextView(getContext());
+//        tv2.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 1f));
+//        tv2.setGravity(Gravity.LEFT);
+//        tv2.setTextColor(Color.parseColor("#000000"));
+//        tv2.setText(rem_quantity);
+//
+//        tr.addView(tv2, 2);
+//        productTable.addView(tr, count);
         count++;
     }
 
