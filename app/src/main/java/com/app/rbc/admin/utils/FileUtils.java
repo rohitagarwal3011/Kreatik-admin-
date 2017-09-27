@@ -55,7 +55,7 @@ public class FileUtils {
     public static File createImageFile() throws IOException {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
-        File storageDir = new File(Environment.getExternalStorageDirectory().getPath(), "Inizio/Images Clicked");
+        File storageDir = new File(Environment.getExternalStorageDirectory().getPath(), "Kreatik");
         File image = File.createTempFile(
                 imageFileName,
                 ".jpg",
@@ -70,7 +70,7 @@ public class FileUtils {
     public static File getOutputMediaFile(int type) {
 
         // External sdcard location
-        File file = new File(Environment.getExternalStorageDirectory().getPath(), "Inizio/Images Clicked");
+        File file = new File(Environment.getExternalStorageDirectory().getPath(), "Kreatik");
         if (!file.exists()) {
             file.mkdirs();
         }

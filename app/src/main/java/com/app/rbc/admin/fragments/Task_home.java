@@ -47,6 +47,7 @@ import com.app.rbc.admin.utils.ChangeFragment;
 import com.app.rbc.admin.utils.Constant;
 import com.app.rbc.admin.utils.RetrofitClient;
 import com.app.rbc.admin.utils.TagsPreferences;
+import com.google.android.gms.tasks.Task;
 import com.google.gson.Gson;
 
 import org.json.JSONException;
@@ -284,9 +285,13 @@ public class Task_home extends Fragment implements Todo_list_adapter.OnItemLongC
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        if (!((TaskActivity)getActivity()).searchView.isActivated()) {
+            ((TaskActivity)getActivity()).searchView.onActionViewCollapsed();
+        }
         switch (item.getItemId())
         {
             case R.id.completed:
+
                 show_completed_list();
                 return true;
             case R.id.filter :
