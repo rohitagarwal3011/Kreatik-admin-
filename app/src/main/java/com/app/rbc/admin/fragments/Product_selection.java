@@ -33,6 +33,7 @@ import com.app.rbc.admin.activities.RequirementActivity;
 import com.app.rbc.admin.activities.RequirementDetailActivity;
 import com.app.rbc.admin.activities.StockActivity;
 import com.app.rbc.admin.models.StockCategories;
+import com.app.rbc.admin.models.db.models.Categoryproduct;
 import com.app.rbc.admin.models.db.models.site_overview.Order;
 import com.app.rbc.admin.models.db.models.site_overview.Requirement;
 import com.app.rbc.admin.models.db.models.site_overview.Stock;
@@ -498,6 +499,15 @@ public class Product_selection extends Fragment {
 
     private void show_data(final String product , String quantity)
     {
+        String unit = "";
+        List<Categoryproduct> categoryproductList = Categoryproduct.find(Categoryproduct.class,
+                "product = ?",product);
+        if(categoryproductList.size() != 0) {
+
+            unit = categoryproductList.get(0).getUnit();
+        }
+
+
         AppUtil.logger("Product_selection", " Product : " + product + " Quantity : " + quantity);
 
         View tr = getActivity().getLayoutInflater().inflate(R.layout.custom_requirement_table_row,null);
@@ -534,7 +544,7 @@ public class Product_selection extends Fragment {
         });
 
         productText.setText(product);
-        quantityText.setText(quantity);
+        quantityText.setText(quantity+" "+unit);
         product_icon.setText(product.substring(0,1));
 
         productTable.addView(tr, count);

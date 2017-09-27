@@ -630,6 +630,13 @@ public class StockActivity extends AppCompatActivity implements SearchView.OnQue
 
         public void show_transaction_details() {
             transactionDetails = new Gson().fromJson(AppUtil.getString(getContext().getApplicationContext(), TagsPreferences.CATEGORY_DETAILS), StockCategoryDetails.class).getTransactionDetails();
+            if(transactionDetails.size() == 0) {
+                empty_relative.setVisibility(View.VISIBLE);
+            }
+            else {
+                empty_relative.setVisibility(View.GONE);
+            }
+
             recyclerView.setHasFixedSize(true);
             LinearLayoutManager gridLayoutManager = new LinearLayoutManager(getContext());
             gridLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -650,7 +657,15 @@ public class StockActivity extends AppCompatActivity implements SearchView.OnQue
         }
 
         public void show_PO_details() {
+
             poDetails = new Gson().fromJson(AppUtil.getString(getContext().getApplicationContext(), TagsPreferences.CATEGORY_DETAILS), StockCategoryDetails.class).getPoDetails();
+
+            if(poDetails.size() == 0) {
+                empty_relative.setVisibility(View.VISIBLE);
+            }
+            else {
+                empty_relative.setVisibility(View.GONE);
+            }
             recyclerView.setHasFixedSize(true);
             LinearLayoutManager gridLayoutManager = new LinearLayoutManager(getContext());
             gridLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);

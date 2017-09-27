@@ -103,7 +103,7 @@ public class CustomTransactionsAdapter extends RecyclerView.Adapter<CustomTransa
             .getDestination()).get(0).getName());
             Picasso.with(context).load((R.drawable.user)).into(holder.destinationType);
         }
-        float quantity = 0;
+        int quantity = 0;
         String unit = "";
         if(transactions.get(position).getProducts() != null && !(transactions.get(position).getProducts().equals(""))) {
             String[] products = transactions.get(position).getProducts().split("\\|");
@@ -129,7 +129,7 @@ public class CustomTransactionsAdapter extends RecyclerView.Adapter<CustomTransa
                 Button product_icon = (Button) tr.findViewById(R.id.product_icon);
 
                 productText.setText(products[i]);
-                quantityText.setText(quantities[i]+" "+unit);
+                quantityText.setText(Math.round(Float.valueOf(quantities[i]))+" "+unit);
                 product_icon.setText(products[i].substring(0,1));
 
 
@@ -141,7 +141,7 @@ public class CustomTransactionsAdapter extends RecyclerView.Adapter<CustomTransa
             holder.tablelinear.setVisibility(View.GONE);
         }
 
-        holder.transaction_quantity.setText(quantity+" "+unit);
+        holder.transaction_quantity.setText(Math.round(quantity)+" "+unit);
 
     }
 

@@ -73,7 +73,7 @@
                 android:layout_centerVertical="true"
                 android:gravity="center"
                 android:id="@+id/empty"
-                android:text="There was some trouble fetching data"
+                android:text="No data found"
                 android:textColor="@color/light_text"
                 android:textSize="@dimen/_12sdp"
                 android:padding="@dimen/_5sdp" />
