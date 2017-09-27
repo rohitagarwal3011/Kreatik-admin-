@@ -12,7 +12,9 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.FileProvider;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.Layout;
 import android.text.TextWatcher;
@@ -97,6 +99,10 @@ public class RecievedVehicle extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_recieved_vehicle, container, false);
         callfetchVehicleAPI();
+        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
+        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Receive a Vehicle");
+
         return view;
     }
 
@@ -471,7 +477,7 @@ public class RecievedVehicle extends Fragment implements View.OnClickListener {
                     else {
                         JSONObject productObj = new JSONObject();
                         productObj.put("product",product.getText().toString());
-                        productObj.put("quantity",quantity.getText().toString());
+                        productObj.put("quantity",Float.parseFloat(quantity.getText().toString()));
                         prod_list.put(productObj);
                     }
                 }

@@ -51,7 +51,7 @@ public class Stock_detail_adapter  extends RecyclerView.Adapter<Stock_detail_ada
                     {
 
                         final Stock_list_product_wise info = (Stock_list_product_wise) ((RequirementDetailActivity) context).getSupportFragmentManager().findFragmentByTag(Requirement_fulfill_task.TAG);
-                        info.set_site_selected(data.get(getAdapterPosition()).getWhere());
+                        info.set_site_selected(data.get(getAdapterPosition()).getWhere(),data.get(getAdapterPosition()).getMsitename());
 
                     }
                     else
@@ -82,7 +82,7 @@ public class Stock_detail_adapter  extends RecyclerView.Adapter<Stock_detail_ada
 
     @Override
     public void onBindViewHolder(Stock_detail_adapter.MyViewHolder holder, final int position) {
-        holder.stock_location.setText(data.get(position).getWhere());
+        holder.stock_location.setText(data.get(position).getMsitename());
         holder.stock_product.setText(data.get(position).getProduct().toString());
 
 

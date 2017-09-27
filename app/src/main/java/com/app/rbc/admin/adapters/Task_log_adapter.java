@@ -25,6 +25,7 @@ import com.facebook.common.executors.CallerThreadExecutor;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.datasource.DataSource;
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.generic.RoundingParams;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.imagepipeline.core.ImagePipeline;
 import com.facebook.imagepipeline.datasource.BaseBitmapDataSubscriber;
@@ -68,7 +69,7 @@ public class Task_log_adapter extends RecyclerView.Adapter<Task_log_adapter.MyVi
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
 
-        CircularImageView profilePic;
+        SimpleDraweeView profilePic;
         TextView leftMessage;
         LinearLayout leftMessageLayout;
         TextView rightMessage;
@@ -91,7 +92,7 @@ public class Task_log_adapter extends RecyclerView.Adapter<Task_log_adapter.MyVi
         public MyViewHolder(View view) {
 
             super(view);
-            profilePic = (CircularImageView) view.findViewById(R.id.profile_pic);
+            profilePic = (SimpleDraweeView) view.findViewById(R.id.profile_pic);
             leftMessage = (TextView) view.findViewById(R.id.left_message);
             leftMessageLayout = (LinearLayout) view.findViewById(R.id.left_message_layout);
             rightMessage = (TextView) view.findViewById(R.id.right_message);
@@ -297,7 +298,14 @@ public class Task_log_adapter extends RecyclerView.Adapter<Task_log_adapter.MyVi
         }
 
         if(log.getmLogtype().equalsIgnoreCase("Comment")||log.getmLogtype().equalsIgnoreCase("Attachment")) {
-            Picasso.with(context).load(pic_url).into(holder.profilePic);
+
+            int color = context.getResources().getColor(R.color.black_overlay);
+            RoundingParams roundingParams = RoundingParams.fromCornersRadius(5f);
+            roundingParams.setBorder(color, 1.0f);
+            roundingParams.setRoundAsCircle(true);
+            holder.profilePic.getHierarchy().setRoundingParams(roundingParams);
+            holder.profilePic.setImageURI(pic_url);
+           // Picasso.with(context).load(pic_url).into(holder.profilePic);
 
             if (log.getChangedBy().equalsIgnoreCase(AppUtil.getString(context, TagsPreferences.USER_ID))) {
                 holder.profilePic.setVisibility(View.INVISIBLE);
@@ -351,10 +359,10 @@ public class Task_log_adapter extends RecyclerView.Adapter<Task_log_adapter.MyVi
                 holder.statusLayout.setVisibility(View.GONE);
                 holder.log_time_right.setText(deadline);
             } else {
-                if (position >= 2) {
+                if (position >= 2 && !data.get(position-1).getmLogtype().equalsIgnoreCase("Status change")) {
 
 
-                    if (!data.get(position - 1).getChangedBy().equalsIgnoreCase(AppUtil.getString(context, TagsPreferences.USER_ID))) {
+                    if (!data.get(position - 1).getChangedBy().equalsIgnoreCase(AppUtil.getString(context, TagsPreferences.USER_ID)) ) {
                         holder.profilePic.setVisibility(View.INVISIBLE);
 //                        holder.profilePic.requestLayout();
 //                        holder.profilePic.getLayoutParams().height = 0;
