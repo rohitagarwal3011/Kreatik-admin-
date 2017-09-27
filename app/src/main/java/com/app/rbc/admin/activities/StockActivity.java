@@ -283,6 +283,7 @@ public class StockActivity extends AppCompatActivity implements SearchView.OnQue
                 (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView = (SearchView)
                 MenuItemCompat.getActionView(menu.findItem(R.id.search));
+        searchView.setMaxWidth(Integer.MAX_VALUE);
 
         searchView.setSearchableInfo(
                 searchManager.getSearchableInfo(getComponentName()));

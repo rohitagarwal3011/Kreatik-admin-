@@ -90,6 +90,7 @@ public class Stock_categories extends Fragment implements View.OnClickListener{
     // TODO: Rename and change types of parameters
     private String source_activity;
     private String mParam2;
+    private Dialog updateStockDialog;
 
     StockCategories stockCategories;
 
@@ -298,7 +299,7 @@ public class Stock_categories extends Fragment implements View.OnClickListener{
 
 
     private void showUpdateStockDialog() {
-        Dialog dialog = new Dialog(getContext());
+        updateStockDialog = new Dialog(getContext());
         View dialogView = getActivity().getLayoutInflater().inflate(R.layout.custom_update_stock_dialog,
                 null);
 
@@ -406,12 +407,13 @@ public class Stock_categories extends Fragment implements View.OnClickListener{
         });
 
 
-        dialog.setContentView(dialogView);
-        dialog.show();
+        updateStockDialog.setContentView(dialogView);
+        updateStockDialog.show();
 
     }
 
     public void addStock(Order order,String site_type) {
+        updateStockDialog.dismiss();
         Log.e(order.getSite()+" "+order.getCategory()+" "+
         order.getProduct()+" "+order.getQuantity(),site_type+"");
         pDialog = new SweetAlertDialog(getContext(), SweetAlertDialog.PROGRESS_TYPE);
@@ -450,6 +452,7 @@ public class Stock_categories extends Fragment implements View.OnClickListener{
                     }
                 }
                 else {
+                    updateStockDialog.show();
                     try {
                         Log.e("Error body", response.errorBody().string());
                     }
@@ -465,7 +468,7 @@ public class Stock_categories extends Fragment implements View.OnClickListener{
             @Override
             public void onFailure(Call<String> call, Throwable t) {
                 pDialog.dismiss();
-
+                updateStockDialog.show();
                 Log.e("Failure",t.getLocalizedMessage());
                 Toast.makeText(getContext(),
                         "Service Encountered an error",

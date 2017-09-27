@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -32,13 +33,13 @@ public class Stock_category_adapter  extends RecyclerView.Adapter<Stock_category
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
-        ImageView category_icon;
+        Button category_icon;
         TextView category_name;
 
         public MyViewHolder(View view) {
             super(view);
             category_name=(TextView)view.findViewById(R.id.category_name);
-            category_icon= (ImageView)view.findViewById(R.id.category_icon);
+            category_icon= (Button) view.findViewById(R.id.category_icon);
 
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -74,8 +75,8 @@ public class Stock_category_adapter  extends RecyclerView.Adapter<Stock_category
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, final int position) {
-        holder.category_icon.setVisibility(View.VISIBLE);
         holder.category_name.setText(data.get(position).getCategory());
+        holder.category_icon.setText(data.get(position).getCategory().substring(0,1));
 
     }
 

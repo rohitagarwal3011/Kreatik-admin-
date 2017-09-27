@@ -73,6 +73,7 @@ public class TaskActivity extends AppCompatActivity implements Task_home.OnTaskT
     private ContextMenuDialogFragment mMenuDialogFragment;
     private Menu menu;
     private int fragment,function;
+    public SearchView searchView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,8 +125,9 @@ public class TaskActivity extends AppCompatActivity implements Task_home.OnTaskT
         this.menu = menu;
         SearchManager searchManager =
                 (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView = (SearchView)
+        searchView = (SearchView)
                 MenuItemCompat.getActionView(menu.findItem(R.id.search));
+        searchView.setMaxWidth(Integer.MAX_VALUE);
 
         searchView.setSearchableInfo(
                 searchManager.getSearchableInfo(getComponentName()));

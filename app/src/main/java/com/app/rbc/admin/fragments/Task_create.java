@@ -15,6 +15,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
@@ -53,6 +54,7 @@ import com.app.rbc.admin.utils.RetrofitClient;
 import com.app.rbc.admin.utils.TagsPreferences;
 import com.dd.processbutton.iml.ActionProcessButton;
 import com.google.gson.Gson;
+import com.itextpdf.text.BadElementException;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.Image;
 import com.itextpdf.text.pdf.PdfWriter;
@@ -141,7 +143,7 @@ public class Task_create extends Fragment implements DatePickerDialog.OnDateSetL
 
     public static final int MEDIA_TYPE_IMAGE = 1;
     private static final int CAMERA_CAPTURE_IMAGE_REQUEST_CODE = 100;
-    private Uri fileUri;
+    private File fileUri;
 
     String date_shown, time_shown;
     File attactment;
@@ -759,7 +761,7 @@ public class Task_create extends Fragment implements DatePickerDialog.OnDateSetL
         Intent intent;
         chooseFile = new Intent(Intent.ACTION_GET_CONTENT);
         chooseFile.addCategory(Intent.CATEGORY_OPENABLE);
-        chooseFile.setType("application/pdf");
+            chooseFile.setType("application/pdf");
         intent = Intent.createChooser(chooseFile, "Choose a file");
         getActivity().startActivityForResult(intent, RESULT_LOAD_PDF);
     }
@@ -885,36 +887,44 @@ public class Task_create extends Fragment implements DatePickerDialog.OnDateSetL
 
     private void compress_create_pdf_and_show_card(String image) {
         try {
+//            Compress compress = new Compress();
+//            String image_returned = compress.compressImage(image);
+//
+//            Document document = new Document();
+//            String dirpath = Environment.getExternalStorageDirectory().toString();
+//            File file = new File(Environment.getExternalStorageDirectory().getPath(), "Kreatik/Sent_Attachments");
+//
+//            if (!file.exists()) {
+//                file.mkdirs();
+//            }
+//
+//            File pdf_created = new File(file.getAbsolutePath(), "/" + System.currentTimeMillis() + ".pdf");
+//
+//            PdfWriter.getInstance(document, new FileOutputStream(pdf_created)); //  Change pdf's name.
+//            document.open();
+////                AppUtil.logger("Task_create","DirPath :"+dirpath);
+////                AppUtil.logger("Task_create","URIPath :"+selectedImage.getPath());
+//            //AppUtil.logger("Task_create ","Image path"+imgDecodableString);
+//            Image img = Image.getInstance(image_returned);  // Change image's name and extension.
+//
+//            float scaler = ((document.getPageSize().getWidth() - document.leftMargin()
+//                    - document.rightMargin() - 0) / img.getWidth()) * 100; // 0 means you have no indentation. If you have any, change it.
+//            img.scalePercent(scaler);
+//            img.setAlignment(Image.ALIGN_CENTER | Image.ALIGN_TOP);
+//            document.add(img);
+//            document.close();
+//            AppUtil.logger("Task_create", "Compressed Image Path : " + image_returned);
+//            AppUtil.logger("Task_create", "PDF path " + pdf_created.getAbsolutePath());
+//
+//            attactment = pdf_created;
+
             Compress compress = new Compress();
             String image_returned = compress.compressImage(image);
+            AppUtil.logger("Returned path : ", image_returned);
+            Uri fileUri = Uri.parse(image_returned);
+            AppUtil.logger("Uri of image ",fileUri.toString());
+            File pdf_created= new File(image_returned);
 
-            Document document = new Document();
-            String dirpath = Environment.getExternalStorageDirectory().toString();
-            File file = new File(Environment.getExternalStorageDirectory().getPath(), "Kreatik/Sent_Attachments");
-
-            if (!file.exists()) {
-                file.mkdirs();
-            }
-
-            File pdf_created = new File(file.getAbsolutePath(), "/" + System.currentTimeMillis() + ".pdf");
-
-            PdfWriter.getInstance(document, new FileOutputStream(pdf_created)); //  Change pdf's name.
-            document.open();
-//                AppUtil.logger("Task_create","DirPath :"+dirpath);
-//                AppUtil.logger("Task_create","URIPath :"+selectedImage.getPath());
-            //AppUtil.logger("Task_create ","Image path"+imgDecodableString);
-            Image img = Image.getInstance(image_returned);  // Change image's name and extension.
-
-            float scaler = ((document.getPageSize().getWidth() - document.leftMargin()
-                    - document.rightMargin() - 0) / img.getWidth()) * 100; // 0 means you have no indentation. If you have any, change it.
-            img.scalePercent(scaler);
-            img.setAlignment(Image.ALIGN_CENTER | Image.ALIGN_TOP);
-            document.add(img);
-            document.close();
-            AppUtil.logger("Task_create", "Compressed Image Path : " + image_returned);
-            AppUtil.logger("Task_create", "PDF path " + pdf_created.getAbsolutePath());
-
-            attactment = pdf_created;
             show_attachment_card(pdf_created.getAbsolutePath().substring(pdf_created.getAbsolutePath().lastIndexOf("/") + 1));
         } catch (Exception e) {
 
@@ -923,14 +933,36 @@ public class Task_create extends Fragment implements DatePickerDialog.OnDateSetL
 
 
     public void captureImage() {
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
-        fileUri = FileUtils.getOutputMediaFileUri(MEDIA_TYPE_IMAGE);
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
+        if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
 
-        // start the image capture Intent
-        getActivity().startActivityForResult(intent, CAMERA_CAPTURE_IMAGE_REQUEST_CODE);
+            fileUri = null;
+            try {
+                fileUri = FileUtils.createImageFile();
+            } catch (IOException ex) {
+                Log.e("Vehicle Recieved",ex.toString());
+
+            }
+
+            if (fileUri != null) {
+                Uri photoURI = FileProvider.getUriForFile(getActivity(),
+                        "com.example.android.fileprovider",
+                        fileUri);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                getActivity().startActivityForResult(takePictureIntent, CAMERA_CAPTURE_IMAGE_REQUEST_CODE);
+            }
+        }
+
+//        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//
+//        fileUri = FileUtils.getOutputMediaFileUri(MEDIA_TYPE_IMAGE);
+//
+//        intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
+//
+//        // start the image capture Intent
+//        getActivity().startActivityForResult(intent, CAMERA_CAPTURE_IMAGE_REQUEST_CODE);
     }
 
     /**
@@ -943,7 +975,9 @@ public class Task_create extends Fragment implements DatePickerDialog.OnDateSetL
 
         // save file url in bundle as it will be null on scren orientation
         // changes
-        outState.putParcelable("file_uri", fileUri);
+        if(fileUri != null) {
+            outState.putString("file_uri", fileUri.getAbsolutePath());
+        }
     }
 
 //    @Override
