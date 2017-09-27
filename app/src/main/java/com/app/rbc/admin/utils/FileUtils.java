@@ -23,6 +23,7 @@ import android.webkit.MimeTypeMap;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Comparator;
@@ -31,16 +32,9 @@ import java.util.Locale;
 
 import static com.app.rbc.admin.fragments.Task_create.MEDIA_TYPE_IMAGE;
 
-/**
- * @version 2009-07-03
- * @author Peli
- * @version 2013-12-11
- * @author paulburke (ipaulpro)
- */
 public class FileUtils {
-    private FileUtils() {} //private constructor to enforce Singleton pattern
+    private FileUtils() {}
 
-    /** TAG for log messages. */
     static final String TAG = "FileUtils";
     private static final boolean DEBUG = false; // Set to true to enable logging
 
@@ -52,35 +46,35 @@ public class FileUtils {
 
     public static final String HIDDEN_PREFIX = ".";
 
-    /**
-     * Gets the extension of a file name, like ".png" or ".jpg".
-     *
-     * @param uri
-     * @return Extension including the dot("."); "" if there is no extension;
-     *         null if uri was null.
-     */
+    public static String mCurrentPhotoPath;
 
-
-
-    /**
-     * Creating file uri to store image/video
-     */
     public static Uri getOutputMediaFileUri(int type) {
         return Uri.fromFile(getOutputMediaFile(type));
     }
 
-    /**
-     * returning image / video
-     */
-    private static File getOutputMediaFile(int type) {
+    public static File createImageFile() throws IOException {
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = new File(Environment.getExternalStorageDirectory().getPath(), "Kreatik");
+        File image = File.createTempFile(
+                imageFileName,
+                ".jpg",
+                storageDir
+        );
+
+        mCurrentPhotoPath = image.getAbsolutePath();
+        return image;
+    }
+
+
+    public static File getOutputMediaFile(int type) {
 
         // External sdcard location
-        File file = new File(Environment.getExternalStorageDirectory().getPath(), "Inizio/Images Clicked");
+        File file = new File(Environment.getExternalStorageDirectory().getPath(), "Kreatik");
         if (!file.exists()) {
             file.mkdirs();
         }
 
-        // Create a media file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss",
                 Locale.getDefault()).format(new Date());
         File mediaFile;

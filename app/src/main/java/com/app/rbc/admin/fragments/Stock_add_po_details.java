@@ -15,6 +15,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.app.rbc.admin.R;
+import com.app.rbc.admin.activities.RequirementDetailActivity;
 import com.app.rbc.admin.activities.StockActivity;
 import com.app.rbc.admin.interfaces.ApiServices;
 import com.app.rbc.admin.models.Vendors;
@@ -120,6 +121,17 @@ public class Stock_add_po_details extends Fragment {
         unbinder = ButterKnife.bind(this, view);
         count=1;
         remaining_quantity = 0;
+
+
+        Bundle bundle = ((StockActivity)getActivity()).details_finalform;
+        if(bundle != null) {
+            POTitle.setText(bundle.getString("title"));
+            POAmount.setText(bundle.getString("amount"));
+            POPayMode.setText(bundle.getString("paymentmode"));
+
+        }
+
+
         return view;
     }
 
@@ -131,6 +143,20 @@ public class Stock_add_po_details extends Fragment {
 
 
     }
+
+    @Override
+    public void onPause() {
+        if(((StockActivity)getActivity()).details_finalform == null) {
+            ((StockActivity)getActivity()).details_finalform = new Bundle();
+        }
+        Bundle bundle = ((StockActivity) getActivity()).details_finalform;
+        bundle.putString("title", POTitle.getText().toString());
+        bundle.putString("amount", POAmount.getText().toString());
+        bundle.putString("paymentmode", POPayMode.getText().toString());
+
+        super.onPause();
+    }
+
 
 
     private void set_data() {

@@ -1,0 +1,105 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto">
+
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/swiperefresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/container">
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/add_vendor_card"
+            card_view:cardCornerRadius="3dp"
+            android:elevation="2dp"
+            android:layout_marginBottom="2dp">
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/add_vendor_container"
+            android:padding="@dimen/native_padding">
+
+            <ImageView
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:background="@drawable/vendor_circle_pink"
+                android:id="@+id/add_vendor_icon"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@id/add_vendor_icon"
+                android:id="@+id/add_vendor_title"
+                android:text="Add a vendor"
+                android:textSize="16sp"
+                android:textColor="@color/dark_background"
+                android:layout_marginLeft="@dimen/native_padding"/>
+
+            <Button
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:background="@color/float_transparent"
+                android:layout_centerVertical="true"
+                android:layout_alignParentEnd="true"
+                android:id="@+id/add_vendor_next"
+                android:text="\u3009"
+                android:textColor="@color/dark_background"/>
+
+        </RelativeLayout>
+
+        </android.support.v7.widget.CardView>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/empty_relative"
+            android:background="@color/background"
+            android:visibility="gone">
+
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:gravity="center"
+                android:id="@+id/empty"
+                android:text="No data found"
+                android:layout_below="@id/add_employee_card"
+                android:textColor="@color/light_text"
+                android:textSize="@dimen/_12sdp"
+                android:padding="@dimen/_5sdp" />
+
+            <ImageView
+                android:layout_width="@dimen/_40sdp"
+                android:layout_height="@dimen/_40sdp"
+                android:layout_above="@id/empty"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="@dimen/_10sdp"
+                android:background="@drawable/error_circle_light"/>
+
+        </RelativeLayout>
+            <android.support.v7.widget.RecyclerView android:id="@+id/recycler_view"
+                android:scrollbars="vertical"
+                android:background="@color/background"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/add_vendor_card"
+                xmlns:android="http://schemas.android.com/apk/res/android"/>
+
+        </RelativeLayout>
+    </android.support.v4.widget.SwipeRefreshLayout>
+</FrameLayout>

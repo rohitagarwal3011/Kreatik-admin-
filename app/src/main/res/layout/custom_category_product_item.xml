@@ -1,0 +1,42 @@
+<android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/card_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    card_view:cardCornerRadius="2dp"
+    android:elevation="2dp"
+    android:layout_marginBottom="3dp">
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/native_padding"
+        android:background="@color/itemGradient">
+
+        <Button
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:textColor="@color/white"
+            android:id="@+id/category_icon"
+            android:background="@drawable/circle_pink"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:layout_marginRight="@dimen/native_padding"
+            android:layout_toRightOf="@+id/category_icon"
+            android:layout_marginLeft="@dimen/native_padding"
+            android:text="Cement"
+            android:id="@+id/category_title"
+            android:layout_centerVertical="true"/>
+
+        <Button
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:id="@+id/category_click"
+            android:background="@drawable/next"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"/>
+    </RelativeLayout>
+</android.support.v7.widget.CardView>

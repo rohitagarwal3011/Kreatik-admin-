@@ -1,10 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layoutMain"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/final_splash4"
-    tools:context="com.app.rbc.admin.activities.Splash">
+    android:fitsSystemWindows="true"
+    android:background="@color/white"
+    tools:context=".activities.Splash">
 
-</android.support.constraint.ConstraintLayout>
+
+
+
+
+    <ImageView
+        android:layout_width="10dp"
+        android:layout_gravity="end|bottom"
+        android:layout_height="10dp"
+        android:background="@drawable/primary_reveal"
+        android:id="@+id/reveal"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:id="@+id/kreatik_title"
+        android:text="KREATIK"
+        android:visibility="invisible"
+        android:layout_marginTop="@dimen/_60sdp"
+        android:layout_gravity="center"
+        android:textSize="@dimen/_55sdp"
+        />
+
+    <ImageView
+        android:layout_width="@dimen/_130sdp"
+        android:layout_height="@dimen/_100sdp"
+        android:background="@drawable/white_logo"
+        android:id="@+id/kreatik_icon"
+        android:visibility="invisible"
+        android:layout_gravity="center"
+        android:layout_marginBottom="@dimen/_40sdp"/>
+
+
+</FrameLayout>

@@ -11,8 +11,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 
 import com.app.rbc.admin.R;
@@ -63,33 +66,29 @@ public class Cat_Des_Selection extends Fragment {
 
     AllSiteList allSiteList;
     Vendors vendors;
-    @BindView(R.id.radio_vendor)
-    RadioButton radioVendor;
     @BindView(R.id.radio_site)
     RadioButton radioSite;
     @BindView(R.id.radiogroup)
     RadioGroup radiogroup;
+    @BindView(R.id.radio_po)
+    RadioButton radioPo;
+    @BindView(R.id.PO_number)
+    EditText PONumber;
+    @BindView(R.id.po_number_layout)
+    RelativeLayout poNumberLayout;
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
-    public static Long source;
+    public static String source;
     public static Long destination;
-
+    public static boolean vehicle_for_po ;
+    public static String po_number;
 
     public Cat_Des_Selection() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment Cat_Des_Selection.
-     */
-    // TODO: Rename and change types and number of parameters
     public static Cat_Des_Selection newInstance(String param1, String param2) {
         Cat_Des_Selection fragment = new Cat_Des_Selection();
         Bundle args = new Bundle();
@@ -114,6 +113,7 @@ public class Cat_Des_Selection extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_cat__des__selection, container, false);
         unbinder = ButterKnife.bind(this, view);
+        vehicle_for_po = false;
         return view;
     }
 
@@ -122,7 +122,7 @@ public class Cat_Des_Selection extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         get_site();
-        //get_vendors();
+//        get_vendors();
         setSelectCategory();
         onclicks();
     }
@@ -132,10 +132,17 @@ public class Cat_Des_Selection extends Fragment {
         radiogroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
-                if(checkedId == R.id.radio_vendor)
+                if (checkedId == R.id.radio_po) {
+                    poNumberLayout.setVisibility(View.VISIBLE);
+                    vehicle_for_po = true;
                     setSourceAsVendor();
-                else
+
+                }
+                else {
+                    poNumberLayout.setVisibility(View.GONE);
+                    vehicle_for_po = false;
                     setSourceasSite();
+                }
             }
         });
 
@@ -181,7 +188,6 @@ public class Cat_Des_Selection extends Fragment {
                     get_vendors();
                     setSourceasSite();
                     setSelectDestination();
-
 //                    SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
 //                    Date formated = null;
 //                    try {
@@ -297,11 +303,16 @@ public class Cat_Des_Selection extends Fragment {
     @OnClick(R.id.submit_button)
     public void onViewClicked() {
 
-        source = allSiteList.getSiteList().get(selectSource.getSelectedItemPosition()).getId();
+        po_number = PONumber.getText().toString();
+
+        if(vehicle_for_po)
+            source = vendors.getVendorList().get(selectSource.getSelectedItemPosition()).getVendorId();
+        else
+            source = ""+allSiteList.getSiteList().get(selectSource.getSelectedItemPosition()).getId();
 
         destination = allSiteList.getSiteList().get(selectDestination.getSelectedItemPosition()).getId();
 
-        ChangeFragment.changeFragment(getActivity().getSupportFragmentManager(),R.id.frame_main, Cat_Des_Requirement_List.newInstance(selectCategory.getSelectedItem().toString(),selectDestination.getSelectedItem().toString()),Dispatch_Vehicle.TAG);
+        ChangeFragment.changeFragment(getActivity().getSupportFragmentManager(), R.id.frame_main, Cat_Des_Requirement_List.newInstance(selectCategory.getSelectedItem().toString(), selectDestination.getSelectedItem().toString()), Dispatch_Vehicle.TAG);
 
     }
 }

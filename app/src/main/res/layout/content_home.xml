@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary"
+    android:background="@color/white"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.app.rbc.admin.activities.HomeActivity"
     tools:showIn="@layout/app_bar_home">
@@ -14,6 +14,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:orientation="vertical"
+        android:layout_marginTop="@dimen/_10sdp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -32,48 +33,51 @@
                 android:layout_height="@dimen/_100sdp"
                 android:layout_weight="1"
                 android:id="@+id/module_task"
-                android:background="@color/colorPrimary"
                 android:gravity="center"
                 android:orientation="vertical">
 
                 <ImageView
                     android:layout_width="@dimen/_50sdp"
                     android:layout_height="@dimen/_50sdp"
-                    android:src="@drawable/tasks"/>
+                    android:src="@drawable/task123"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_10sdp"
                     android:text="Task"
+                    android:textStyle="bold"
                     android:textAllCaps="false"
-                    android:textColor="@color/white"/>
+                    android:textColor="#808080"/>
 
             </LinearLayout>
             <View
                 android:layout_width="@dimen/_1sdp"
                 android:layout_height="match_parent"
                 android:layout_marginTop="@dimen/_10sdp"
-                android:background="@color/white"/>
+                android:background="#eee"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_100sdp"
+                android:id="@+id/module_site_overview"
+
                 android:layout_weight="1"
-                android:background="@color/colorPrimary"
+
                 android:gravity="center"
                 android:orientation="vertical">
 
                 <ImageView
                     android:layout_width="@dimen/_50sdp"
                     android:layout_height="@dimen/_50sdp"
-                    android:src="@drawable/site_overview_1"/>
+                    android:src="@drawable/crane"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_10sdp"
                     android:text="Site Overview"
+                    android:textStyle="bold"
                     android:textAllCaps="false"
-                    android:textColor="@color/white"/>
+                    android:textColor="#808080"/>
 
             </LinearLayout>
 
@@ -85,7 +89,7 @@
             android:layout_height="@dimen/_1sdp"
             android:layout_marginLeft="@dimen/_20sdp"
             android:layout_marginRight="@dimen/_20sdp"
-            android:background="@color/white"/>
+            android:background="#eee"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -98,21 +102,21 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_100sdp"
                 android:layout_weight="1"
-                android:background="@color/colorPrimary"
                 android:gravity="center"
                 android:orientation="vertical">
 
                 <ImageView
                     android:layout_width="@dimen/_50sdp"
                     android:layout_height="@dimen/_50sdp"
-                    android:src="@drawable/stock_1"/>
+                    android:src="@drawable/stock"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_10sdp"
                     android:text="Stocks"
+                    android:textStyle="bold"
                     android:textAllCaps="false"
-                    android:textColor="@color/white"/>
+                    android:textColor="#808080"/>
 
             </LinearLayout>
 
@@ -122,27 +126,27 @@
             <View
                 android:layout_width="@dimen/_1sdp"
                 android:layout_height="match_parent"
-                android:background="@color/white"/>
+                android:background="#eee"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_100sdp"
                 android:id="@+id/module_requirement"
                 android:layout_weight="1"
-                android:background="@color/colorPrimary"
                 android:gravity="center"
                 android:orientation="vertical">
 
                 <ImageView
                     android:layout_width="@dimen/_50sdp"
                     android:layout_height="@dimen/_50sdp"
-                    android:src="@drawable/requirements"/>
+                    android:src="@drawable/checklist"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_10sdp"
                     android:text="Requirements"
+                    android:textStyle="bold"
                     android:textAllCaps="false"
-                    android:textColor="@color/white"/>
+                    android:textColor="#808080"/>
 
             </LinearLayout>
 
@@ -154,7 +158,7 @@
             android:layout_height="@dimen/_1sdp"
             android:layout_marginLeft="@dimen/_20sdp"
             android:layout_marginRight="@dimen/_20sdp"
-            android:background="@color/white"/>
+            android:background="#eee"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -172,21 +176,21 @@
                 android:layout_height="@dimen/_100sdp"
                 android:layout_weight="1"
                 android:id="@+id/module_indents"
-                android:background="@color/colorPrimary"
                 android:gravity="center"
                 android:orientation="vertical">
 
                 <ImageView
                     android:layout_width="@dimen/_50sdp"
                     android:layout_height="@dimen/_50sdp"
-                    android:src="@drawable/cash_register"/>
+                    android:src="@drawable/register"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_10sdp"
                     android:text="Indents &amp; Registers "
                     android:textAllCaps="false"
-                    android:textColor="@color/white"/>
+                    android:textStyle="bold"
+                    android:textColor="#808080"/>
 
 
 
@@ -195,7 +199,7 @@
                 android:layout_width="@dimen/_1sdp"
                 android:layout_height="match_parent"
 
-                android:background="@color/white"/>
+                android:background="#eee"/>
 
             <LinearLayout
 
@@ -203,21 +207,23 @@
                 android:layout_height="@dimen/_100sdp"
                 android:id="@+id/module_attendance"
                 android:layout_weight="1"
-                android:background="@color/colorPrimary"
                 android:gravity="center"
                 android:orientation="vertical">
 
                 <ImageView
+                    android:id="@+id/imageView2"
                     android:layout_width="@dimen/_50sdp"
                     android:layout_height="@dimen/_50sdp"
-                    android:src="@drawable/attendance_1"/>
+                    android:src="@drawable/user" />
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_10sdp"
                     android:text="Attendance"
+                    android:textStyle="bold"
                     android:textAllCaps="false"
-                    android:textColor="@color/white"/>
+                    android:textColor="#808080"/>
 
             </LinearLayout>
 
@@ -229,7 +235,7 @@
             android:layout_height="@dimen/_1sdp"
             android:layout_marginLeft="@dimen/_20sdp"
             android:layout_marginRight="@dimen/_20sdp"
-            android:background="@color/white"/>
+            android:background="#eee"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -241,21 +247,21 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_100sdp"
                 android:layout_weight="1"
-                android:background="@color/colorPrimary"
                 android:gravity="center"
                 android:orientation="vertical">
 
                 <ImageView
                     android:layout_width="@dimen/_50sdp"
                     android:layout_height="@dimen/_50sdp"
-                    android:src="@drawable/chat_1"/>
+                    android:src="@drawable/chat"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_10sdp"
                     android:text="Chat"
+                    android:textStyle="bold"
                     android:textAllCaps="false"
-                    android:textColor="@color/white"/>
+                    android:textColor="#808080"/>
 
             </LinearLayout>
 
@@ -263,14 +269,14 @@
             <View
                 android:layout_width="@dimen/_1sdp"
                 android:layout_height="match_parent"
-                android:background="@color/white"/>
+                android:background="#eee"/>
 
 
             <LinearLayout
+                android:id="@+id/module_reports"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_100sdp"
                 android:layout_weight="1"
-                android:background="@color/colorPrimary"
                 android:gravity="center"
                 android:orientation="vertical">
 
@@ -283,8 +289,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_10sdp"
                     android:text="Reports"
+                    android:textStyle="bold"
                     android:textAllCaps="false"
-                    android:textColor="@color/white"/>
+                    android:textColor="#808080"/>
 
             </LinearLayout>
 

@@ -18,6 +18,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.app.rbc.admin.R;
+import com.app.rbc.admin.activities.RequirementDetailActivity;
 import com.app.rbc.admin.activities.StockActivity;
 import com.app.rbc.admin.interfaces.ApiServices;
 import com.app.rbc.admin.utils.AdapterWithCustomItem;
@@ -130,6 +131,14 @@ public class Stock_po_create_task extends Fragment implements DatePickerDialog.O
         View view = inflater.inflate(R.layout.fragment_stock_po_create_task, container, false);
         unbinder = ButterKnife.bind(this, view);
         count=1;
+
+        Bundle bundle = ((StockActivity)getActivity()).task_finalform;
+        if(bundle != null) {
+            dateSelect.setSelection(bundle.getInt("dateselect"));
+            timeSelect.setSelection(bundle.getInt("timeselect"));
+        }
+
+
         return view;
     }
 
@@ -139,6 +148,18 @@ public class Stock_po_create_task extends Fragment implements DatePickerDialog.O
         set_data();
         spinner_values();
 
+    }
+
+    @Override
+    public void onPause() {
+        if(((StockActivity)getActivity()).task_finalform == null) {
+            ((StockActivity)getActivity()).task_finalform = new Bundle();
+        }
+        Bundle bundle = ((StockActivity) getActivity()).task_finalform;
+        bundle.putInt("dateselect", dateSelect.getSelectedItemPosition());
+        bundle.putInt("timeselect", timeSelect.getSelectedItemPosition());
+
+        super.onPause();
     }
 
 
@@ -304,7 +325,7 @@ public class Stock_po_create_task extends Fragment implements DatePickerDialog.O
 
 
         dateAdapter = new AdapterWithCustomItem(getContext(), dates);
-        dateAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        dateAdapter.setDropDownViewResource(R.layout.custom_spinner_text);
         dateSelect.setAdapter(dateAdapter);
 
         Calendar calendar = Calendar.getInstance();
@@ -353,7 +374,7 @@ public class Stock_po_create_task extends Fragment implements DatePickerDialog.O
         deadline_time = "13:00:00";
 
         timeAdapter = new AdapterWithCustomItem(getContext(), times);
-        timeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        timeAdapter.setDropDownViewResource(R.layout.custom_spinner_text);
         timeSelect.setAdapter(timeAdapter);
         timeSelect.setOnItemSelectedEvenIfUnchangedListener(new AdapterView.OnItemSelectedListener() {
             @Override

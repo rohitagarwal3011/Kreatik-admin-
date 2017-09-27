@@ -5,232 +5,271 @@
     xmlns:custom="http://schemas.android.com/apk/res-auto"
     tools:context="com.app.rbc.admin.fragments.Stock_po_create_task">
 
-    <FrameLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-    <LinearLayout
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/_10sdp"
+            android:id="@+id/form_title">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="@dimen/_90sdp"
+                    android:layout_height="@dimen/_40sdp"
+                    android:text="Title"
+                    android:id="@+id/PO_title_title"
+                    android:paddingLeft="@dimen/_5sdp"
+                    android:background="@drawable/round_edittext_light"
+                    android:gravity="center_vertical"
+                    android:textSize="@dimen/_12sdp"/>
+
+                <EditText
+                    android:id="@+id/PO_title"
+                    android:layout_toRightOf="@id/PO_title_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_40sdp"
+                    android:background="@drawable/round_edittext_light"
+                    android:maxLength="25"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_12sdp"
+                    android:padding="@dimen/_5sdp"
+                    android:hint="Enter Title for PO"/>
+
+                <TextView
+                    android:layout_width="@dimen/_90sdp"
+                    android:layout_height="@dimen/_40sdp"
+                    android:text="Category"
+                    android:layout_below="@id/PO_title_title"
+                    android:id="@+id/category_title"
+                    android:padding="@dimen/_5sdp"
+                    android:background="@drawable/round_edittext_light"
+                    android:gravity="center_vertical"
+                    android:textSize="@dimen/_12sdp" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_40sdp"
+                    android:id="@+id/product_for_po"
+                    android:text="Cement"
+                    android:padding="@dimen/_5sdp"
+                    android:layout_toRightOf="@id/category_title"
+                    android:layout_alignTop="@id/category_title"
+                    android:textColor="@color/black"
+                    android:background="@drawable/round_edittext_unselectable"
+                    android:gravity="center_vertical"
+                    android:textSize="@dimen/_12sdp"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_30sdp"
+                    android:layout_below="@id/category_title"
+                    android:id="@+id/product_table_title"
+                    android:background="@color/backgroundcolor"
+                    android:text="Product Requirement"
+                    android:textColor="@color/dark_text"
+                    android:paddingLeft="@dimen/_5sdp"
+                    android:gravity="center_vertical"/>
+
+
+                <TableLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/product_table"
+                    android:layout_below="@id/product_table_title"
+                    >
+                    <TableRow
+                        android:id="@+id/rowheading"
+                        android:layout_width="match_parent"
+                        android:background="@drawable/round_edittext_light"
+                        android:layout_height="wrap_content"
+
+                        >
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/_40sdp"
+                            android:layout_weight="1"
+                            android:background="@drawable/round_edittext_light"
+                            android:paddingLeft="@dimen/_5sdp"
+                            android:gravity="center_vertical"
+                            android:textColor="@color/black"
+                            android:text="Product"/>
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/_40sdp"
+                            android:text="Quantity"
+                            android:paddingLeft="@dimen/_5sdp"
+                            android:background="@drawable/round_edittext_light"
+                            android:gravity="center_vertical"
+                            android:textColor="@color/black"
+                            android:layout_weight="1"/>
+                    </TableRow>
+                </TableLayout>
+
+            </RelativeLayout>
+        </android.support.v7.widget.CardView>
+
+
+    <android.support.v7.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="@dimen/_15sdp"
-        android:orientation="vertical">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Title"
-            android:gravity="center_vertical"
-            android:textColor="@color/black"
-            android:layout_marginBottom="@dimen/_5sdp"
-            android:textSize="@dimen/_15sdp"/>
-
-        <LinearLayout
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_10sdp"
+        android:layout_below="@id/form_title"
+        android:id="@+id/payment_info_card">
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:orientation="horizontal">
-            <EditText
-                android:id="@+id/PO_title"
+            android:layout_height="wrap_content">
+
+            <TextView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/edit_text_with_border"
-                android:maxLength="25"
-                android:textColor="@color/black"
-                android:textSize="@dimen/_15sdp"
+                android:layout_height="@dimen/_30sdp"
+                android:id="@+id/payment_info_title"
+                android:background="@color/backgroundcolor"
+                android:text="Payment Information"
+                android:textColor="@color/dark_text"
+                android:paddingLeft="@dimen/_5sdp"
+                android:gravity="center_vertical"/>
+
+
+            <TextView
+                android:layout_width="@dimen/_90sdp"
+                android:layout_height="@dimen/_40sdp"
+                android:id="@+id/price_title"
+                android:layout_below="@id/payment_info_title"
+                android:text="Price"
+                android:background="@drawable/round_edittext_light"
                 android:padding="@dimen/_5sdp"
-                android:hint="Enter Title for PO"/>
+                android:gravity="center_vertical"/>
 
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_10sdp"
-            android:layout_gravity="center_horizontal"
-            android:orientation="horizontal">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Category : "
-                android:gravity="center_vertical"
-                android:textColor="@color/black"
-                android:textSize="@dimen/_15sdp"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/product_for_po"
-                android:text="Cement"
-                android:gravity="center_vertical"
-                android:textColor="@color/black"
-                android:textSize="@dimen/_12sdp"/>
-
-        </LinearLayout>
-
-        <TableLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/product_table"
-            >
-            <TableRow
-                android:id="@+id/rowheading"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_5sdp"
-                android:layout_marginBottom="@dimen/_5sdp"
-                android:padding="@dimen/_3sdp"
-                >
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/_15sdp"
-                    android:layout_weight="1"
-                    android:gravity="left"
-                    android:textColor="@color/black"
-                    android:text="Product"/>
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/_15sdp"
-                    android:text="Quantity"
-                    android:gravity="left"
-                    android:textColor="@color/black"
-                    android:layout_weight="1"/>
-            </TableRow>
-        </TableLayout>
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/_25sdp"
-            android:layout_marginTop="@dimen/_25sdp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="Price : "/>
             <EditText
                 android:id="@+id/PO_amount"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="@dimen/_10sdp"
-                android:layout_marginRight="@dimen/_25sdp"
-                android:background="@drawable/edit_text_with_border"
+                android:layout_height="@dimen/_40sdp"
+                android:textSize="@dimen/_12sdp"
+                android:layout_toRightOf="@id/price_title"
+                android:layout_alignTop="@id/price_title"
+                android:background="@drawable/round_edittext_light"
                 android:inputType="number"
-                android:padding="@dimen/_3sdp"
+                android:padding="@dimen/_5sdp"
                 android:maxLength="6"
-                />
+            />
 
-        </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/_25sdp"
-            android:layout_marginTop="@dimen/_25sdp"
-            android:orientation="horizontal">
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="Payment Mode: "/>
+                android:layout_width="@dimen/_90sdp"
+                android:layout_height="@dimen/_40sdp"
+                android:layout_below="@id/price_title"
+                android:id="@+id/payment_mode_title"
+                android:text="Payment Mode"
+                android:background="@drawable/round_edittext_light"
+                android:padding="@dimen/_5sdp"
+                android:gravity="center_vertical"/>
             <EditText
                 android:id="@+id/PO_pay_mode"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="@dimen/_10sdp"
-                android:layout_marginRight="@dimen/_25sdp"
-                android:background="@drawable/edit_text_with_border"
+                android:layout_alignTop="@id/payment_mode_title"
+                android:layout_toRightOf="@id/payment_mode_title"
+                android:layout_height="@dimen/_40sdp"
+                android:background="@drawable/round_edittext_light"
                 android:inputType="text"
-                android:padding="@dimen/_3sdp"
+                android:textSize="@dimen/_12sdp"
+                android:padding="@dimen/_5sdp"
                 android:maxLength="10"
-                />
+            />
 
-        </LinearLayout>
+        </RelativeLayout>
+        </android.support.v7.widget.CardView>
 
-        <LinearLayout
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_10sdp"
+        android:layout_below="@id/payment_info_card"
+        android:id="@+id/vendor_info_card">
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="@dimen/_10sdp"
-            >
+            android:layout_height="wrap_content">
+
 
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Vendor's Information"
-                android:textColor="@color/black"
-                android:textSize="@dimen/_15sdp"/>
+                android:layout_height="@dimen/_30sdp"
+                android:id="@+id/vendor_info_title"
+                android:background="@color/backgroundcolor"
+                android:text="Vendor Information"
+                android:textColor="@color/dark_text"
+                android:paddingLeft="@dimen/_5sdp"
+                android:gravity="center_vertical"/>
 
-            <LinearLayout
+
+            <ImageView
+                android:layout_width="@dimen/_80sdp"
+                android:layout_height="@dimen/_80sdp"
+                android:id="@+id/source_type"
+                android:background="#000"
+                android:layout_gravity="center_vertical"
+                android:padding="@dimen/_5sdp"
+                android:src="@drawable/user"
+                android:layout_below="@id/vendor_info_title"
+            />
+
+
+            <TextView
+                android:layout_toRightOf="@id/source_type"
+                android:layout_alignTop="@id/source_type"
+                android:layout_width="match_parent"
+                android:padding="@dimen/_5sdp"
+                android:layout_height="wrap_content"
+                android:gravity="left|center_vertical"
+                android:id="@+id/vendor_name"
+                android:textStyle="bold"
+                android:text="Bihani Traders"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_13sdp" />
+
+            <TextView
+                android:layout_toRightOf="@id/source_type"
+                android:layout_below="@id/vendor_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:id="@+id/vendor_address"
+                android:gravity="left|center_vertical"
+                android:text="B-3/5 Sector-11, Rohini\nNew Delhi - 110085"
+                android:visibility="visible"
+                android:textSize="@dimen/_12sdp"
+                android:paddingLeft="@dimen/_5sdp"/>
 
-                <ImageView
-                    android:layout_width="@dimen/_50sdp"
-                    android:layout_height="@dimen/_50sdp"
-                    android:id="@+id/source_type"
-                    android:background="#000"
-                    android:layout_gravity="center_vertical"
-                    android:padding="@dimen/_5sdp"
-                    android:src="@drawable/user"
-                    />
-                <!--
-                 app:civ_border_color="#ccc"
-
-                 app:civ_border_width="@dimen/_1sdp"
-                 app:civ_shadow="true"
-                 app:civ_shadow_color="#ccc"
-                 app:civ_shadow_radius="0" />-->
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:paddingLeft="@dimen/_20sdp"
-                    android:gravity="center_vertical">
-
-                    <TextView
-
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="left|center_vertical"
-                        android:id="@+id/vendor_name"
-                        android:text="Bihani Traders"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/_14sdp" />
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/vendor_address"
-                        android:gravity="left|center_vertical"
-                        android:text="B-3/5 Sector-11, Rohini\n New Delhi - 110085"
-                        android:visibility="visible"
-                        android:textColor="@color/mdtp_dark_gray"
-                        android:textSize="@dimen/_12sdp" />
-
-                    <TextView
-
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:id="@+id/vendor_phone"
-                        android:text="+91-9564145000"
-                        android:visibility="visible"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/_12sdp" />
+            <TextView
+                android:layout_below="@id/vendor_address"
+                android:layout_toRightOf="@id/source_type"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/_5sdp"
+                android:gravity="center_vertical"
+                android:paddingTop="@dimen/_2sdp"
+                android:id="@+id/vendor_phone"
+                android:text="+91-9564145000"
+                android:visibility="visible"
+                android:textSize="@dimen/_12sdp" />
 
 
 
 
 
-                </LinearLayout>
-            </LinearLayout>
 
-        </LinearLayout>
 
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
         <com.dd.processbutton.iml.ActionProcessButton
             android:id="@+id/submit_task"
+            android:layout_below="@id/vendor_info_card"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_45sdp"
-            android:layout_marginTop="@dimen/_25sdp"
+            android:layout_marginTop="@dimen/_10sdp"
             android:layout_marginBottom="@dimen/_8sdp"
             android:layout_marginLeft="@dimen/_16sdp"
             android:layout_marginRight="@dimen/_16sdp"
@@ -247,7 +286,232 @@
             custom:pb_textProgress="Uploading"
             android:layout_marginStart="@dimen/_16sdp"
             android:layout_marginEnd="@dimen/_16sdp" />
-    </LinearLayout>
-    </FrameLayout>
+
+    </RelativeLayout>
+
+    <!--<FrameLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent">-->
+    <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:padding="@dimen/_15sdp"-->
+        <!--android:orientation="vertical">-->
+
+        <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="Title"-->
+            <!--android:gravity="center_vertical"-->
+            <!--android:textColor="@color/black"-->
+            <!--android:layout_marginBottom="@dimen/_5sdp"-->
+            <!--android:textSize="@dimen/_15sdp"/>-->
+
+        <!--<LinearLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_gravity="center_horizontal"-->
+            <!--android:orientation="horizontal">-->
+            <!--<EditText-->
+                <!--android:id="@+id/PO_title"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:background="@drawable/edit_text_with_border"-->
+                <!--android:maxLength="25"-->
+                <!--android:textColor="@color/black"-->
+                <!--android:textSize="@dimen/_15sdp"-->
+                <!--android:padding="@dimen/_5sdp"-->
+                <!--android:hint="Enter Title for PO"/>-->
+
+        <!--</LinearLayout>-->
+
+        <!--<LinearLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginTop="@dimen/_10sdp"-->
+            <!--android:layout_gravity="center_horizontal"-->
+            <!--android:orientation="horizontal">-->
+            <!--<TextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="Category : "-->
+                <!--android:gravity="center_vertical"-->
+                <!--android:textColor="@color/black"-->
+                <!--android:textSize="@dimen/_15sdp"/>-->
+            <!--<TextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:id="@+id/product_for_po"-->
+                <!--android:text="Cement"-->
+                <!--android:gravity="center_vertical"-->
+                <!--android:textColor="@color/black"-->
+                <!--android:textSize="@dimen/_12sdp"/>-->
+
+        <!--</LinearLayout>-->
+
+        <!--<TableLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:id="@+id/product_table"-->
+            <!--&gt;-->
+            <!--<TableRow-->
+                <!--android:id="@+id/rowheading"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginTop="@dimen/_5sdp"-->
+                <!--android:layout_marginBottom="@dimen/_5sdp"-->
+                <!--android:padding="@dimen/_3sdp"-->
+                <!--&gt;-->
+                <!--<TextView-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="@dimen/_15sdp"-->
+                    <!--android:layout_weight="1"-->
+                    <!--android:gravity="left"-->
+                    <!--android:textColor="@color/black"-->
+                    <!--android:text="Product"/>-->
+                <!--<TextView-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="@dimen/_15sdp"-->
+                    <!--android:text="Quantity"-->
+                    <!--android:gravity="left"-->
+                    <!--android:textColor="@color/black"-->
+                    <!--android:layout_weight="1"/>-->
+            <!--</TableRow>-->
+        <!--</TableLayout>-->
+
+
+        <!--<LinearLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="@dimen/_25sdp"-->
+            <!--android:layout_marginTop="@dimen/_25sdp"-->
+            <!--android:orientation="horizontal">-->
+
+            <!--<TextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:text="Price : "/>-->
+            <!--<EditText-->
+                <!--android:id="@+id/PO_amount"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:layout_marginLeft="@dimen/_10sdp"-->
+                <!--android:layout_marginRight="@dimen/_25sdp"-->
+                <!--android:background="@drawable/edit_text_with_border"-->
+                <!--android:inputType="number"-->
+                <!--android:padding="@dimen/_3sdp"-->
+                <!--android:maxLength="6"-->
+                <!--/>-->
+
+        <!--</LinearLayout>-->
+
+        <!--<LinearLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="@dimen/_25sdp"-->
+            <!--android:layout_marginTop="@dimen/_25sdp"-->
+            <!--android:orientation="horizontal">-->
+
+            <!--<TextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:text="Payment Mode: "/>-->
+            <!--<EditText-->
+                <!--android:id="@+id/PO_pay_mode"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:layout_marginLeft="@dimen/_10sdp"-->
+                <!--android:layout_marginRight="@dimen/_25sdp"-->
+                <!--android:background="@drawable/edit_text_with_border"-->
+                <!--android:inputType="text"-->
+                <!--android:padding="@dimen/_3sdp"-->
+                <!--android:maxLength="10"-->
+                <!--/>-->
+
+        <!--</LinearLayout>-->
+
+        <!--<LinearLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:orientation="vertical"-->
+            <!--android:padding="@dimen/_10sdp"-->
+            <!--&gt;-->
+
+            <!--<TextView-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="Vendor's Information"-->
+                <!--android:textColor="@color/black"-->
+                <!--android:textSize="@dimen/_15sdp"/>-->
+
+            <!--<LinearLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:orientation="horizontal">-->
+
+                <!--<ImageView-->
+                    <!--android:layout_width="@dimen/_50sdp"-->
+                    <!--android:layout_height="@dimen/_50sdp"-->
+                    <!--android:id="@+id/source_type"-->
+                    <!--android:background="#000"-->
+                    <!--android:layout_gravity="center_vertical"-->
+                    <!--android:padding="@dimen/_5sdp"-->
+                    <!--android:src="@drawable/user"-->
+                    <!--/>-->
+                <!--&lt;!&ndash;-->
+                 <!--app:civ_border_color="#ccc"-->
+
+                 <!--app:civ_border_width="@dimen/_1sdp"-->
+                 <!--app:civ_shadow="true"-->
+                 <!--app:civ_shadow_color="#ccc"-->
+                 <!--app:civ_shadow_radius="0" />&ndash;&gt;-->
+
+                <!--<LinearLayout-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:orientation="vertical"-->
+                    <!--android:paddingLeft="@dimen/_20sdp"-->
+                    <!--android:gravity="center_vertical">-->
+
+                    <!--<TextView-->
+
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:gravity="left|center_vertical"-->
+                        <!--android:id="@+id/vendor_name"-->
+                        <!--android:text="Bihani Traders"-->
+                        <!--android:textColor="@color/black"-->
+                        <!--android:textSize="@dimen/_14sdp" />-->
+                    <!--<TextView-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:id="@+id/vendor_address"-->
+                        <!--android:gravity="left|center_vertical"-->
+                        <!--android:text="B-3/5 Sector-11, Rohini\n New Delhi - 110085"-->
+                        <!--android:visibility="visible"-->
+                        <!--android:textColor="@color/mdtp_dark_gray"-->
+                        <!--android:textSize="@dimen/_12sdp" />-->
+
+                    <!--<TextView-->
+
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:gravity="center_vertical"-->
+                        <!--android:id="@+id/vendor_phone"-->
+                        <!--android:text="+91-9564145000"-->
+                        <!--android:visibility="visible"-->
+                        <!--android:textColor="@color/black"-->
+                        <!--android:textSize="@dimen/_12sdp" />-->
+
+
+
+
+
+                <!--</LinearLayout>-->
+            <!--</LinearLayout>-->
+
+        <!--</LinearLayout>-->
+
+
+    <!--</LinearLayout>-->
+    <!--</FrameLayout>-->
 
 </ScrollView>

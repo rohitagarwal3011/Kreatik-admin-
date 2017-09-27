@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp">
+
+    <TextView
+        android:layout_width="120dp"
+        android:layout_height="@dimen/_40sdp"
+        android:id="@+id/vehicle_number_title"
+        android:paddingTop="15dp"
+        android:text="Vehicle Number"
+        android:textColor="@color/cardview_dark_background"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_40sdp"
+        android:background="@drawable/round_edittext_light"
+        android:layout_toRightOf="@id/vehicle_number_title"
+        android:layout_alignTop="@id/vehicle_number_title"
+        android:id="@+id/vehicle_number_spinner_relative">
+
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_40sdp"
+            android:id="@+id/vehicle_number_spinner" />
+
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="120dp"
+        android:layout_height="@dimen/_40sdp"
+        android:id="@+id/destination_type_title"
+        android:text="Destination Type"
+        android:layout_below="@id/vehicle_number_title"
+        android:paddingTop="15dp"
+        android:textColor="@color/cardview_dark_background"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_40sdp"
+        android:background="@drawable/round_edittext_light"
+        android:layout_toRightOf="@id/destination_type_title"
+        android:layout_alignTop="@id/destination_type_title"
+        android:id="@+id/destination_type_spinner_relative">
+
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_40sdp"
+            android:id="@+id/destination_type_spinner" />
+    </RelativeLayout>
+
+
+    <TextView
+        android:layout_width="120dp"
+        android:layout_height="@dimen/_40sdp"
+        android:id="@+id/status_title"
+        android:text="Status"
+        android:layout_below="@id/destination_type_title"
+        android:paddingTop="15dp"
+        android:textColor="@color/cardview_dark_background"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_40sdp"
+        android:background="@drawable/round_edittext_light"
+        android:layout_toRightOf="@id/status_title"
+        android:layout_alignTop="@id/status_title"
+        android:id="@+id/status_spinner_relative">
+
+
+    <Spinner
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_40sdp"
+        android:id="@+id/status_spinner" />
+
+        </RelativeLayout>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@id/status_title"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="15dp"
+        android:background="@color/colorPrimary"
+        android:text="Submit"
+        android:id="@+id/submit"
+        android:textColor="@color/white"/>
+
+</RelativeLayout>

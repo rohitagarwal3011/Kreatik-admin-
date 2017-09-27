@@ -1,35 +1,62 @@
 package com.app.rbc.admin.fragments;
 
 
+import android.app.Dialog;
+import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.RelativeLayout;
+import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.app.rbc.admin.R;
 import com.app.rbc.admin.activities.RequirementActivity;
 import com.app.rbc.admin.activities.StockActivity;
 import com.app.rbc.admin.adapters.Stock_category_adapter;
+import com.app.rbc.admin.api.APIController;
+import com.app.rbc.admin.api.APIInterface;
 import com.app.rbc.admin.interfaces.ApiServices;
 import com.app.rbc.admin.models.StockCategories;
+import com.app.rbc.admin.models.db.models.Categoryproduct;
+import com.app.rbc.admin.models.db.models.Site;
+import com.app.rbc.admin.models.db.models.site_overview.Order;
 import com.app.rbc.admin.utils.AppUtil;
 import com.app.rbc.admin.utils.RetrofitClient;
 import com.app.rbc.admin.utils.TagsPreferences;
 import com.google.gson.Gson;
+import com.orm.SugarDb;
 
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit2.Call;
@@ -41,19 +68,26 @@ import retrofit2.Response;
  * Use the {@link Stock_categories#newInstance} factory method to
  * create an instance of this source_activity.
  */
-public class Stock_categories extends Fragment {
+public class Stock_categories extends Fragment implements View.OnClickListener{
     // TODO: Rename parameter arguments, choose names that match
     // the source_activity initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     public static final String TAG = "Stock_categories";
+
     @BindView(R.id.stock_category_list)
     RecyclerView stockCategoryList;
     Unbinder unbinder;
 
+    @BindView(R.id.fab)
+    FloatingActionButton fab;
+    @BindView(R.id.empty_relative)
+    RelativeLayout empty_relative;
+
     // TODO: Rename and change types of parameters
     private String source_activity;
     private String mParam2;
+    private Dialog updateStockDialog;
 
     StockCategories stockCategories;
 
@@ -93,6 +127,7 @@ public class Stock_categories extends Fragment {
         // Inflate the layout for this source_activity
         View view = inflater.inflate(R.layout.fragment_stock_categories, container, false);
         unbinder = ButterKnife.bind(this, view);
+        fab.setOnClickListener(this);
         return view;
     }
 
@@ -104,29 +139,40 @@ public class Stock_categories extends Fragment {
         get_data();
     }
 
+
     private void get_data() {
-        pDialog = new SweetAlertDialog(getContext(), SweetAlertDialog.PROGRESS_TYPE);
-        pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
-        pDialog.setTitleText("Loading");
-        pDialog.setCancelable(false);
-        pDialog.show();
-
-        final ApiServices apiServices = RetrofitClient.getApiService();
-        // AppUtil.logger(TAG, "User id : " + user_id + " Pwd : " + new_password.getText().toString());
-        Call<StockCategories> call = apiServices.stock_category();
-        //AppUtil.logger("Date :", String.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime())));
-        AppUtil.logger("Stock Category ", "Get Categories : " + call.request().toString());
-        call.enqueue(new Callback<StockCategories>() {
-            @Override
-            public void onResponse(Call<StockCategories> call, Response<StockCategories> response) {
-                pDialog.dismiss();
-                if (response.body().getMeta().getStatus() == 2) {
 
 
-                    AppUtil.putString(getContext().getApplicationContext(), TagsPreferences.STOCK_LIST, new Gson().toJson(response.body()));
-                    stockCategories = new Gson().fromJson(AppUtil.getString(getContext().getApplicationContext(), TagsPreferences.STOCK_LIST), StockCategories.class);
-                    AppUtil.logger("Stock List : ", AppUtil.getString(getContext().getApplicationContext(), TagsPreferences.STOCK_LIST));
-                    set_category_list();
+        if(AppUtil.getString(getContext(),TagsPreferences.STOCK_LIST).isEmpty())
+        {
+            pDialog = new SweetAlertDialog(getContext(), SweetAlertDialog.PROGRESS_TYPE);
+            pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+            pDialog.setTitleText("Loading");
+            pDialog.setCancelable(false);
+            pDialog.show();
+            final ApiServices apiServices = RetrofitClient.getApiService();
+            // AppUtil.logger(TAG, "User id : " + user_id + " Pwd : " + new_password.getText().toString());
+            Call<StockCategories> call = apiServices.stock_category();
+            //AppUtil.logger("Date :", String.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime())));
+            AppUtil.logger("Stock Category ", "Get Categories : " + call.request().toString());
+            call.enqueue(new Callback<StockCategories>() {
+                @Override
+                public void onResponse(Call<StockCategories> call, Response<StockCategories> response) {
+                    pDialog.dismiss();
+                    if (response.body().getMeta().getStatus() == 2) {
+
+
+                        AppUtil.putString(getContext().getApplicationContext(), TagsPreferences.STOCK_LIST, new Gson().toJson(response.body()));
+                        stockCategories = new Gson().fromJson(AppUtil.getString(getContext().getApplicationContext(), TagsPreferences.STOCK_LIST), StockCategories.class);
+                        AppUtil.logger("Stock List : ", AppUtil.getString(getContext().getApplicationContext(), TagsPreferences.STOCK_LIST));
+                        set_category_list();
+
+                        if(stockCategories.getCategoryList().size() != 0) {
+                            empty_relative.setVisibility(View.GONE);
+                        }
+                        else {
+                            empty_relative.setVisibility(View.VISIBLE);
+                        }
 
 //                    SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
 //                    Date formated = null;
@@ -137,19 +183,25 @@ public class Stock_categories extends Fragment {
 //                    }
 
 
+                    }
+
                 }
 
-            }
-
-            @Override
-            public void onFailure(Call<StockCategories> call1, Throwable t) {
-
-                pDialog.dismiss();
+                @Override
+                public void onFailure(Call<StockCategories> call1, Throwable t) {
+                    empty_relative.setVisibility(View.VISIBLE);
+                    pDialog.dismiss();
 
 
-                AppUtil.showToast(getContext(), "Network Issue. Please check your connectivity and try again");
-            }
-        });
+                    AppUtil.showToast(getContext(), "Network Issue. Please check your connectivity and try again");
+                }
+            });
+        }
+        else {
+            stockCategories = new Gson().fromJson(AppUtil.getString(getContext().getApplicationContext(), TagsPreferences.STOCK_LIST), StockCategories.class);
+            set_category_list();
+        }
+
     }
 
     public void set_category_list() {
@@ -216,5 +268,221 @@ public class Stock_categories extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.fab :
+                showUpdateStockDialog();
+                break;
+        }
+    }
+
+
+    private void showUpdateStockDialog() {
+        updateStockDialog = new Dialog(getContext());
+        View dialogView = getActivity().getLayoutInflater().inflate(R.layout.custom_update_stock_dialog,
+                null);
+
+        final Spinner category_spinner = (Spinner) dialogView.findViewById(R.id.category_spinner);
+        final Spinner product_spinner = (Spinner) dialogView.findViewById(R.id.product_spinner);
+        final Spinner site_spinner = (Spinner) dialogView.findViewById(R.id.site_spinner);
+        final EditText quantity = (EditText) dialogView.findViewById(R.id.quantity);
+        Button save = (Button) dialogView.findViewById(R.id.save);
+
+        final ArrayList<String> categories = new ArrayList<>()
+                ,products = new ArrayList<>()
+                ,sites = new ArrayList<>();
+
+        categories.add("--Category--");
+        products.add("--Product--");
+        sites.add("--Site--");
+
+        String query = "Select category from Categoryproduct group by category";
+
+        List<String> categoryproductList = getCategories(query,getContext());
+        for(int i = 0 ; i < categoryproductList.size() ; i++) {
+            categories.add(categoryproductList.get(i));
+        }
+
+        ArrayAdapter<String> category_adapter = new ArrayAdapter<>(getContext(),
+                R.layout.custom_spinner_text,
+                categories);
+        category_spinner.setAdapter(category_adapter);
+
+        final List<Site> siteList = Site.listAll(Site.class);
+
+        for(int i = 0 ; i < siteList.size() ; i++) {
+            sites.add(siteList.get(i).getName());
+        }
+
+        ArrayAdapter<String> site_adapter = new ArrayAdapter<>(getContext(),
+                R.layout.custom_spinner_text,
+                sites);
+        site_spinner.setAdapter(site_adapter);
+
+        category_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                products.clear();
+                products.add("--Product--");
+                List<Categoryproduct> productsArr = Categoryproduct.find(Categoryproduct.class,
+                        "category = ?",categories.get(position));
+
+                for(int i = 0 ; i < productsArr.size() ; i++) {
+                    products.add(productsArr.get(i).getProduct());
+                }
+
+                ArrayAdapter<String> product_adapter = new ArrayAdapter<>(getContext(),
+                        R.layout.custom_spinner_text,
+                        products);
+                product_spinner.setAdapter(product_adapter);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+
+        save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int validate = 1;
+                if(category_spinner.getSelectedItemPosition() == 0) {
+                    validate = 0;
+                    ((TextView)category_spinner.getSelectedView()).setError("Select a category");
+                    category_spinner.requestFocus();
+                }
+                if(product_spinner.getSelectedItemPosition() == 0) {
+                    validate = 0;
+                    ((TextView)product_spinner.getSelectedView()).setError("Select a product");
+                    product_spinner.requestFocus();
+                }
+
+                if(site_spinner.getSelectedItemPosition() == 0) {
+                    validate = 0;
+                    ((TextView)site_spinner.getSelectedView()).setError("Select a site");
+                    site_spinner.requestFocus();
+                }
+
+                if(quantity.getText().toString().trim().equalsIgnoreCase("")) {
+                    validate = 0;
+                    quantity.setError("Please enter a valid quantity");
+                    quantity.requestFocus();
+                }
+
+
+                if(validate == 1) {
+                    Order order = new Order();
+                    order.setCategory(categories.get(category_spinner.getSelectedItemPosition()));
+                    order.setProduct(products.get(product_spinner.getSelectedItemPosition()));
+
+                    order.setSite(siteList.get(site_spinner.getSelectedItemPosition()-1).getId());
+                    order.setQuantity(quantity.getText().toString().trim());
+
+                    addStock(order,siteList.get(site_spinner.getSelectedItemPosition()-1).getType());
+                }
+            }
+        });
+
+
+        updateStockDialog.setContentView(dialogView);
+        updateStockDialog.show();
+
+    }
+
+    public void addStock(Order order,String site_type) {
+        updateStockDialog.dismiss();
+        Log.e(order.getSite()+" "+order.getCategory()+" "+
+        order.getProduct()+" "+order.getQuantity(),site_type+"");
+        pDialog = new SweetAlertDialog(getContext(), SweetAlertDialog.PROGRESS_TYPE);
+        pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+        pDialog.setTitleText("Loading");
+        pDialog.setCancelable(false);
+        pDialog.show();
+
+        APIController controller = new APIController(getContext(),
+                1,
+                1);
+
+
+        Call<String> call = controller.getInterface().addStock(order.getSite()+"",
+                site_type,
+                order.getCategory(),
+                order.getProduct(),
+                order.getQuantity());
+
+
+
+        call.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, retrofit2.Response<String> response) {
+                pDialog.dismiss();
+
+                if(response.errorBody() == null) {
+                    try {
+                        JSONObject body = new JSONObject(response.body().toString());
+                        Log.e("Response",body.toString());
+                    }catch (Exception e) {
+                        Toast.makeText(getContext(),
+                                "Service Encountered an error",
+                                Toast.LENGTH_SHORT).show();
+
+                    }
+                }
+                else {
+                    updateStockDialog.show();
+                    try {
+                        Log.e("Error body", response.errorBody().string());
+                    }
+                    catch (Exception e) {
+                        Log.e("Error error parsing",e.toString());
+                    }
+                    Toast.makeText(getContext(),
+                            "Service Encountered an error",
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                pDialog.dismiss();
+                updateStockDialog.show();
+                Log.e("Failure",t.getLocalizedMessage());
+                Toast.makeText(getContext(),
+                        "Service Encountered an error",
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public List<String> getCategories(String rawQuery, Context mContext) {
+        List<String> stringList = new ArrayList<>();
+        if (mContext != null) {
+            SugarDb sugarDb = new SugarDb(mContext);
+            SQLiteDatabase database = sugarDb.getDB();
+
+            try {
+                Cursor cursor = database.rawQuery(rawQuery, null);
+                try {
+                    if (cursor.moveToFirst()) {
+                        do {
+                            stringList.add(cursor.getString(0));
+                        } while (cursor.moveToNext());
+                    }
+                } finally {
+                    try {
+                        cursor.close();
+                    } catch (Exception ignore) {
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return stringList;
     }
 }

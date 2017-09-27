@@ -3,6 +3,7 @@ package com.app.rbc.admin.models;
 
 import java.util.List;
 import com.google.gson.annotations.SerializedName;
+import com.orm.SugarRecord;
 
 public class Employee {
 
@@ -27,7 +28,7 @@ public class Employee {
         mMeta = meta;
     }
 
-    public class Data {
+    public class Data{
 
         @SerializedName("user_id")
         private String mUserId;

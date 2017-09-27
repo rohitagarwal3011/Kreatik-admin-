@@ -1,7 +1,10 @@
 package com.app.rbc.admin.activities;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -11,6 +14,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewAnimationUtils;
+import android.view.ViewTreeObserver;
+import android.view.animation.AccelerateInterpolator;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -26,15 +32,11 @@ import com.crashlytics.android.Crashlytics;
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.squareup.picasso.Picasso;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.fabric.sdk.android.Fabric;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -42,6 +44,10 @@ import retrofit2.Response;
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+
+    public static final String EXTRA_CIRCULAR_REVEAL_X = "EXTRA_CIRCULAR_REVEAL_X";
+    public static final String EXTRA_CIRCULAR_REVEAL_Y = "EXTRA_CIRCULAR_REVEAL_Y";
 
 
     @BindView(R.id.module_task)
@@ -59,23 +65,37 @@ public class HomeActivity extends AppCompatActivity
     LinearLayout stocks;
     @BindView(R.id.module_chat)
     LinearLayout moduleChat;
-
+    @BindView(R.id.module_indents)
+    LinearLayout moduleIndents;
     DeadlineNotificationService alarm;
     @BindView(R.id.module_requirement)
     LinearLayout moduleRequirement;
+    @BindView(R.id.module_reports)
+    LinearLayout module_reports;
+
+    @BindView(R.id.settings)
+    TextView settings;
+
+
+    View rootLayout;
+
+    private int revealX;
+    private int revealY;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_home);
+
+
         ButterKnife.bind(this);
         alarm = new DeadlineNotificationService();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("R. B. Corporation");
+        toolbar.setTitle("Kreatik");
         setSupportActionBar(toolbar);
-
+        Fabric.with(this, new Crashlytics());
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -100,6 +120,10 @@ public class HomeActivity extends AppCompatActivity
         Picasso.with(context).load(AppUtil.getString(context, TagsPreferences.PROFILE_IMAGE)).into(imageView);
 
 
+
+//        Animation
+
+
         navigationView.setNavigationItemSelectedListener(this);
         logUser();
 
@@ -107,7 +131,16 @@ public class HomeActivity extends AppCompatActivity
 
         //   updateMenuItems();
 
+        settings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(HomeActivity.this, IndentRegisterActivity.class);
+                startActivity(intent);
+            }
+        });
+
     }
+
 
     private void logUser() {
         // TODO: Use the current user's information
@@ -145,6 +178,15 @@ public class HomeActivity extends AppCompatActivity
     }
 
 
+    @OnClick(R.id.module_reports)
+    public void open_reports_module(View view) {
+
+        Intent intent = new Intent(HomeActivity.this, ReportActivity.class);
+        startActivity(intent);
+
+    }
+
+
     //Open requirement module
     @OnClick(R.id.module_requirement)
     public void open_requirement_module(View view) {
@@ -159,6 +201,22 @@ public class HomeActivity extends AppCompatActivity
     public void open_chat(View view) {
 
         Intent intent = new Intent(HomeActivity.this, AddVehicleActivity.class);
+        startActivity(intent);
+
+    }
+
+    @OnClick(R.id.module_indents)
+    public void open_indents_module(View view) {
+
+        Intent intent = new Intent(HomeActivity.this, IndentRegisterActivity.class);
+        startActivity(intent);
+
+    }
+
+    @OnClick(R.id.module_site_overview)
+    public void open_site_overview_module(View view) {
+
+        Intent intent = new Intent(HomeActivity.this, SiteOverviewActivity.class);
         startActivity(intent);
 
     }

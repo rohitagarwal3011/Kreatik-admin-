@@ -1,0 +1,392 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="match_parent"
+    tools:context="com.app.rbc.admin.fragments.RecievedVehicle">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+    
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp">
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/form_cardview"
+            android:layout_margin="5dp"
+            app:cardElevation="2dp"
+            >
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:id="@+id/form_title"
+                    android:textColor="@color/dark_text"
+                    android:background="@color/backgroundcolor"
+                    android:text="Enter Vehicle Details"/>
+            
+            <TextView
+                android:layout_width="120dp"
+                android:layout_height="@dimen/_40sdp"
+                android:layout_below="@+id/form_title"
+                android:id="@+id/vehicle_number_title"
+                android:text="Vehicle Number"
+                android:textAlignment="center"
+                android:paddingTop="15dp"
+                android:background="@drawable/round_edittext_light"/>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_40sdp"
+                    android:background="@drawable/round_edittext_light"
+                    android:layout_toRightOf="@id/vehicle_number_title"
+                    android:layout_alignTop="@id/vehicle_number_title"
+                    android:id="@+id/vehicle_number_relative">
+
+                    <Spinner
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_40sdp"
+                        android:id="@+id/vehicle_number"
+                        android:textSize="15sp"/>
+
+                </RelativeLayout>
+
+                <TextView
+                    android:layout_width="120dp"
+                    android:layout_height="@dimen/_40sdp"
+                    android:layout_below="@id/vehicle_number_title"
+                    android:id="@+id/challan_number_title"
+                    android:text="Challan Number"
+                    android:textAlignment="center"
+                    android:paddingTop="15dp"
+                    android:background="@drawable/round_edittext_light"/>
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_40sdp"
+                    android:id="@+id/challan_number"
+                    android:hint="Challan Number"
+                    android:textSize="15sp"
+                    android:padding="10dp"
+                    android:layout_alignTop="@id/challan_number_title"
+                    android:background="@drawable/round_edittext_light"
+                    android:layout_toRightOf="@id/challan_number_title"/>
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_40sdp"
+                    android:layout_below="@id/challan_number_title"
+                    android:background="@color/colorAccent"
+                    android:layout_margin="@dimen/_10sdp"
+                    android:text="Submit"
+                    android:textColor="@color/white"
+                    android:id="@+id/submit_challan"
+                    />
+
+            </RelativeLayout>
+
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:layout_below="@id/form_cardview"
+            android:layout_width="match_parent"
+            android:layout_margin="@dimen/_5sdp"
+            android:visibility="gone"
+            android:layout_height="wrap_content"
+            android:id="@+id/product_table_card">
+
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <TableLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/product_table"
+                        >
+                        <TableRow android:id="@+id/rowheading"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="@dimen/_5sdp"
+                            android:gravity="center_vertical"
+                            android:background="@color/backgroundcolor"
+                            xmlns:android="http://schemas.android.com/apk/res/android">
+
+                            <ImageView
+                                android:layout_width="@dimen/_30sdp"
+                                android:layout_height="@dimen/_10sdp"
+                                android:layout_centerVertical="true"
+                                android:visibility="invisible"
+                                android:layout_marginRight="@dimen/_5sdp"
+                                android:background="@drawable/product_circle_pink"
+                                android:layout_marginLeft="@dimen/_10sdp"/>
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/_20sdp"
+                                android:layout_weight="1"
+                                android:gravity="left|center_vertical"
+                                android:id="@+id/product"
+                                android:text="Product"/>
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/_20sdp"
+                                android:text="Quantity"
+                                android:id="@+id/quantity"
+                                android:gravity="left|center_vertical"
+                                android:layout_weight="1"/>
+                            <ImageView
+                                android:id="@+id/delete_icon"
+                                android:layout_width="@dimen/_20sdp"
+                                android:layout_height="@dimen/_10sdp"
+                                android:background="@drawable/task_type_circle"
+                                android:src="@drawable/delete"
+                                android:visibility="invisible"
+                                android:layout_marginRight="@dimen/_15sdp"
+                                android:layout_gravity="right|center_vertical"
+                                android:elevation="@dimen/_1sdp"
+                                />
+
+                        </TableRow>
+
+                    </TableLayout>
+                </LinearLayout>
+        </android.support.v7.widget.CardView>
+        
+        
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_below="@id/product_table_card"
+            android:layout_marginBottom="5dp"
+            android:id="@+id/upload_cardview"
+            android:layout_marginLeft="5dp"
+            app:cardElevation="2dp"
+            android:layout_marginRight="5dp">
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:background="@drawable/round_edittext_light"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:id="@+id/upload_images_title"
+                    android:textColor="@color/dark_text"
+                    android:background="@color/backgroundcolor"
+                    android:text="Upload Images"/>
+                
+
+                <android.support.v7.widget.CardView
+                    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/challan_image_card"
+                    app:cardElevation="2dp"
+                    android:layout_below="@id/upload_images_title"
+                    android:layout_margin="4dp">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:id="@+id/challan_image_tick"
+                        android:layout_margin="10dp"
+                        android:background="@drawable/cancel_circle_icon"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/challan_image_title"
+                        android:layout_toRightOf="@id/challan_image_tick"
+                        android:layout_centerVertical="true"
+                        android:text="Challan's Image"/>
+                        
+                        <Button
+                            android:layout_width="80dp"
+                            android:layout_height="30dp"
+                            android:background="@color/colorPrimary"
+                            android:layout_alignParentEnd="true"
+                            android:layout_marginRight="10dp"
+                            android:layout_centerVertical="true"
+                            android:text="Upload"
+                            android:id="@+id/challan_image_upload"
+                            android:textColor="@color/white"/>
+
+                    </RelativeLayout>
+
+                </android.support.v7.widget.CardView>
+
+                <android.support.v7.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/invoice_image_card"
+                    app:cardElevation="2dp"
+
+                    android:layout_below="@id/challan_image_card"
+                    android:layout_margin="3dp">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <ImageView
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:id="@+id/invoice_image_tick"
+                            android:layout_margin="10dp"
+                            android:background="@drawable/cancel_circle_icon"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/invoice_image_title"
+                            android:layout_toRightOf="@id/invoice_image_tick"
+                            android:layout_centerVertical="true"
+                            android:text="Invoice Image"/>
+
+                        <Button
+                            android:layout_width="80dp"
+                            android:layout_height="30dp"
+                            android:background="@color/colorPrimary"
+                            android:layout_alignParentEnd="true"
+                            android:layout_marginRight="10dp"
+                            android:layout_centerVertical="true"
+                            android:text="Upload"
+                            android:id="@+id/invoice_image_upload"
+                            android:textColor="@color/white"/>
+
+                    </RelativeLayout>
+
+                </android.support.v7.widget.CardView>
+
+                <android.support.v7.widget.CardView
+                    android:layout_width="match_parent"
+                    app:cardElevation="2dp"
+
+                    android:layout_height="wrap_content"
+                    android:id="@+id/vehicle_goods_card"
+                    android:layout_below="@id/invoice_image_card"
+                    android:layout_margin="3dp">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <ImageView
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:id="@+id/vehicle_goods_tick"
+                            android:layout_margin="10dp"
+                            android:background="@drawable/cancel_circle_icon"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/vehicle_goods_title"
+                            android:layout_toRightOf="@id/vehicle_goods_tick"
+                            android:layout_centerVertical="true"
+                            android:text="Vehicle with goods"/>
+
+                        <Button
+                            android:layout_width="80dp"
+                            android:layout_height="30dp"
+                            android:background="@color/colorPrimary"
+                            android:layout_alignParentEnd="true"
+                            android:layout_marginRight="10dp"
+                            android:layout_centerVertical="true"
+                            android:text="Upload"
+                            android:id="@+id/vehicle_goods_upload"
+                            android:textColor="@color/white"/>
+
+                    </RelativeLayout>
+
+                </android.support.v7.widget.CardView>
+
+                <android.support.v7.widget.CardView
+                    android:layout_width="match_parent"
+                    app:cardElevation="2dp"
+
+                    android:layout_height="wrap_content"
+                    android:id="@+id/vehicle_unloading_card"
+                    android:layout_below="@id/vehicle_goods_card"
+                    android:layout_margin="3dp">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <ImageView
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:id="@+id/vehicle_unloading_tick"
+                            android:layout_margin="10dp"
+                            android:background="@drawable/cancel_circle_icon"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/vehicle_unloading_title"
+                            android:layout_toRightOf="@id/vehicle_unloading_tick"
+                            android:layout_centerVertical="true"
+                            android:text="Vehicle after unloading"/>
+
+                        <Button
+                            android:layout_width="80dp"
+                            android:layout_height="30dp"
+                            android:background="@color/colorPrimary"
+                            android:layout_alignParentEnd="true"
+                            android:layout_marginRight="10dp"
+                            android:layout_centerVertical="true"
+                            android:text="Upload"
+                            android:id="@+id/vehicle_unloading_upload"
+                            android:textColor="@color/white"/>
+
+                    </RelativeLayout>
+
+                </android.support.v7.widget.CardView>
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_below="@id/vehicle_unloading_card"
+                    android:background="@color/colorAccent"
+                    android:layout_margin="10dp"
+                    android:text="Save"
+                    android:id="@+id/save"
+                    android:textColor="@color/white"/>
+
+            </RelativeLayout>
+        </android.support.v7.widget.CardView>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/upload_cardview"
+            android:padding="5dp"
+            android:id="@+id/error"
+            android:textAlignment="center"
+            android:textColor="@color/colorAccentRed"/>
+    </RelativeLayout>
+    </ScrollView>
+
+</FrameLayout>

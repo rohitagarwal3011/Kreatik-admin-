@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -15,9 +16,11 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -30,6 +33,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.app.rbc.admin.Manifest;
 import com.app.rbc.admin.R;
 import com.app.rbc.admin.activities.TaskActivity;
 import com.app.rbc.admin.adapters.Task_log_adapter;
@@ -87,6 +91,7 @@ public class Task_details extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private  int function;
     @BindView(R.id.show_deadline)
     TextView showDeadline;
 
@@ -200,6 +205,10 @@ public class Task_details extends Fragment {
         item1.setVisible(true);
         MenuItem item2 = menu.findItem(R.id.completed);
         item2.setVisible(false);
+        MenuItem search = menu.findItem(R.id.search);
+        search.setVisible(false);
+        MenuItem filter = menu.findItem(R.id.filter);
+        filter.setVisible(false);
     }
 
     @Override
@@ -627,6 +636,83 @@ public class Task_details extends Fragment {
     }
 
 
+    public void askPermission(int code,int function) {
+        this.function = function;
+        switch (code) {
+            case 120:
+                if (ContextCompat.checkSelfPermission(getContext(),
+                        Manifest.permission.CAMERA)
+                        != PackageManager.PERMISSION_GRANTED ||
+                        ContextCompat.checkSelfPermission(getContext(),
+                                Manifest.permission.READ_EXTERNAL_STORAGE)
+                                != PackageManager.PERMISSION_GRANTED ||
+                        ContextCompat.checkSelfPermission(getContext(),
+                                Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                                != PackageManager.PERMISSION_GRANTED) {
+
+                    requestPermissions(new String[]{Manifest.permission.CAMERA,
+                                    Manifest.permission.READ_EXTERNAL_STORAGE,
+                                    Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                            code);
+
+                }
+                else {
+
+                    switch (function) {
+                        case 1:
+                            loadImagefromGallery();
+                            break;
+                        case 2 :captureImage();
+                            break;
+                        case 3:onBrowse();
+                            break;
+                    }
+                    break;
+
+
+                }
+                break;
+        }
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        Log.e("Permisson","callback");
+        switch (requestCode) {
+            case 120: {
+
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    switch (function) {
+                        case 1:
+                            loadImagefromGallery();
+                            break;
+                        case 2 :
+                            captureImage();
+                            break;
+                        case 3:
+                            onBrowse();
+                            break;
+                    }
+                    break;
+
+
+                } else {
+
+                    Toast.makeText(getContext(),
+                            "Permission Denied!",
+                            Toast.LENGTH_SHORT).show();
+                }
+                break;
+            }
+
+        }
+    }
+
+
     public void show_attachment_dialog()
     {
         final Dialog dialog = new Dialog(getContext());
@@ -648,7 +734,7 @@ public class Task_details extends Fragment {
         gallery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               loadImagefromGallery(v);
+                askPermission(120,1);
                 dialog.dismiss();
             }
         });
@@ -656,7 +742,7 @@ public class Task_details extends Fragment {
         camera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                captureImage();
+                askPermission(120,1);
                 dialog.dismiss();
             }
         });
@@ -664,7 +750,7 @@ public class Task_details extends Fragment {
         pdf.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onBrowse(v);
+                askPermission(120,1);
                 dialog.dismiss();
             }
         });
@@ -676,7 +762,7 @@ public class Task_details extends Fragment {
 
 
     //this when button click
-    public void onBrowse(View view) {
+    public void onBrowse() {
         Intent chooseFile;
         Intent intent;
         chooseFile = new Intent(Intent.ACTION_GET_CONTENT);
@@ -699,7 +785,7 @@ public class Task_details extends Fragment {
 
 
     Bitmap bitmap;
-    public void loadImagefromGallery(View view) {
+    public void loadImagefromGallery() {
         // Create intent to Open Image applications like Gallery, Google Photos
         Intent galleryIntent = new Intent(Intent.ACTION_PICK,
                 android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -709,7 +795,7 @@ public class Task_details extends Fragment {
 
 
 
-    private void captureImage() {
+    public void captureImage() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
         fileUri = FileUtils.getOutputMediaFileUri(MEDIA_TYPE_IMAGE);

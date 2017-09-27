@@ -3,6 +3,7 @@ package com.app.rbc.admin.fragments;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -11,7 +12,10 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
@@ -35,6 +39,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.app.rbc.admin.Manifest;
 import com.app.rbc.admin.R;
 import com.app.rbc.admin.activities.TaskActivity;
 import com.app.rbc.admin.adapters.Employee_list_adapter;
@@ -49,6 +54,7 @@ import com.app.rbc.admin.utils.RetrofitClient;
 import com.app.rbc.admin.utils.TagsPreferences;
 import com.dd.processbutton.iml.ActionProcessButton;
 import com.google.gson.Gson;
+import com.itextpdf.text.BadElementException;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.Image;
 import com.itextpdf.text.pdf.PdfWriter;
@@ -92,6 +98,8 @@ public class Task_create extends Fragment implements DatePickerDialog.OnDateSetL
     private static final String TASK_TYPE = "task_type";
     private static final String TO_USER = "TO_USER";
     public static final String TAG = "Task_create";
+    public static final int fragment = 1;
+    private int function;
     @BindView(R.id.emp_select)
     Spinner empSelect;
     @BindView(R.id.task_title)
@@ -115,7 +123,7 @@ public class Task_create extends Fragment implements DatePickerDialog.OnDateSetL
     @BindView(R.id.submit_task)
     ActionProcessButton submitTask;
     Unbinder unbinder;
-    @BindView(R.id.textView8)
+    @BindView(R.id.deadline_title)
     TextView deadLine_text;
     @BindView(R.id.select_employee)
     RecyclerView selectEmployee;
@@ -135,7 +143,7 @@ public class Task_create extends Fragment implements DatePickerDialog.OnDateSetL
 
     public static final int MEDIA_TYPE_IMAGE = 1;
     private static final int CAMERA_CAPTURE_IMAGE_REQUEST_CODE = 100;
-    private Uri fileUri;
+    private File fileUri;
 
     String date_shown, time_shown;
     File attactment;
@@ -223,6 +231,10 @@ public class Task_create extends Fragment implements DatePickerDialog.OnDateSetL
         item1.setVisible(false);
         MenuItem item2 = menu.findItem(R.id.completed);
         item2.setVisible(false);
+        MenuItem search = menu.findItem(R.id.search);
+        search.setVisible(false);
+        MenuItem filter = menu.findItem(R.id.filter);
+        filter.setVisible(false);
     }
 
 
@@ -298,6 +310,83 @@ public class Task_create extends Fragment implements DatePickerDialog.OnDateSetL
     }
 
 
+    public void askPermission(int code,int function) {
+        this.function = function;
+        switch (code) {
+            case 120:
+                if (ContextCompat.checkSelfPermission(getContext(),
+                        Manifest.permission.CAMERA)
+                        != PackageManager.PERMISSION_GRANTED ||
+                        ContextCompat.checkSelfPermission(getContext(),
+                                Manifest.permission.READ_EXTERNAL_STORAGE)
+                                != PackageManager.PERMISSION_GRANTED ||
+                        ContextCompat.checkSelfPermission(getContext(),
+                                Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                                != PackageManager.PERMISSION_GRANTED) {
+
+                    requestPermissions(new String[]{Manifest.permission.CAMERA,
+                                    Manifest.permission.READ_EXTERNAL_STORAGE,
+                                    Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                            code);
+
+                }
+                else {
+
+                            switch (function) {
+                                case 1:
+                                    loadImagefromGallery();
+                                    break;
+                                case 2 :captureImage();
+                                    break;
+                                case 3:onBrowse();
+                                    break;
+                            }
+                            break;
+
+
+                }
+                break;
+        }
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        Log.e("Permisson","callback");
+
+        switch (requestCode) {
+            case 120: {
+
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                            switch (function) {
+                                case 1:
+                                    loadImagefromGallery();
+                                    break;
+                                case 2 :
+                                    captureImage();
+                                    break;
+                                case 3:
+                                    onBrowse();
+                                    break;
+                            }
+                            break;
+
+
+                } else {
+
+                    Toast.makeText(getContext(),
+                            "Permission Denied!",
+                            Toast.LENGTH_SHORT).show();
+                }
+                break;
+            }
+
+        }
+    }
+
     @OnClick({R.id.button_attachment, R.id.remove_attachment, R.id.submit_task})
     public void onViewClicked(View view) {
         switch (view.getId()) {
@@ -322,7 +411,8 @@ public class Task_create extends Fragment implements DatePickerDialog.OnDateSetL
                 gallery.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        loadImagefromGallery(v);
+                        askPermission(120,1);
+
                         dialog.dismiss();
                     }
                 });
@@ -330,7 +420,8 @@ public class Task_create extends Fragment implements DatePickerDialog.OnDateSetL
                 camera.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        captureImage();
+                        askPermission(120,2);
+
                         dialog.dismiss();
                     }
                 });
@@ -338,7 +429,7 @@ public class Task_create extends Fragment implements DatePickerDialog.OnDateSetL
                 pdf.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        onBrowse(v);
+                        askPermission(120,3);
                         dialog.dismiss();
                     }
                 });
@@ -414,7 +505,7 @@ public class Task_create extends Fragment implements DatePickerDialog.OnDateSetL
                                 public void onClick(SweetAlertDialog sweetAlertDialog) {
                                     pDialog.dismiss();
                                     Task_home task_home = new Task_home();
-                                    ((TaskActivity)getContext()).setToolbar("Task");
+                                    ((TaskActivity)getContext()).setToolbar("Tasks");
                                     ((TaskActivity)getContext()).setFragment(task_home,Task_home.TAG);
 
                                 }
@@ -466,7 +557,7 @@ public class Task_create extends Fragment implements DatePickerDialog.OnDateSetL
 
 
         dateAdapter = new AdapterWithCustomItem(getContext(), dates);
-        dateAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        dateAdapter.setDropDownViewResource(R.layout.custom_spinner_text);
         dateSelect.setAdapter(dateAdapter);
 
         Calendar calendar = Calendar.getInstance();
@@ -515,7 +606,7 @@ public class Task_create extends Fragment implements DatePickerDialog.OnDateSetL
         deadline_time = "13:00:00";
 
         timeAdapter = new AdapterWithCustomItem(getContext(), times);
-        timeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        timeAdapter.setDropDownViewResource(R.layout.custom_spinner_text);
         timeSelect.setAdapter(timeAdapter);
         timeSelect.setOnItemSelectedEvenIfUnchangedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -657,12 +748,12 @@ public class Task_create extends Fragment implements DatePickerDialog.OnDateSetL
 
 
     //this when button click
-    public void onBrowse(View view) {
+    public void onBrowse() {
         Intent chooseFile;
         Intent intent;
         chooseFile = new Intent(Intent.ACTION_GET_CONTENT);
         chooseFile.addCategory(Intent.CATEGORY_OPENABLE);
-        chooseFile.setType("application/pdf");
+            chooseFile.setType("application/pdf");
         intent = Intent.createChooser(chooseFile, "Choose a file");
         getActivity().startActivityForResult(intent, RESULT_LOAD_PDF);
     }
@@ -675,7 +766,7 @@ public class Task_create extends Fragment implements DatePickerDialog.OnDateSetL
 
     Bitmap bitmap;
 
-    public void loadImagefromGallery(View view) {
+    public void loadImagefromGallery() {
         // Create intent to Open Image applications like Gallery, Google Photos
         Intent galleryIntent = new Intent(Intent.ACTION_PICK,
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -788,36 +879,44 @@ public class Task_create extends Fragment implements DatePickerDialog.OnDateSetL
 
     private void compress_create_pdf_and_show_card(String image) {
         try {
+//            Compress compress = new Compress();
+//            String image_returned = compress.compressImage(image);
+//
+//            Document document = new Document();
+//            String dirpath = Environment.getExternalStorageDirectory().toString();
+//            File file = new File(Environment.getExternalStorageDirectory().getPath(), "Kreatik/Sent_Attachments");
+//
+//            if (!file.exists()) {
+//                file.mkdirs();
+//            }
+//
+//            File pdf_created = new File(file.getAbsolutePath(), "/" + System.currentTimeMillis() + ".pdf");
+//
+//            PdfWriter.getInstance(document, new FileOutputStream(pdf_created)); //  Change pdf's name.
+//            document.open();
+////                AppUtil.logger("Task_create","DirPath :"+dirpath);
+////                AppUtil.logger("Task_create","URIPath :"+selectedImage.getPath());
+//            //AppUtil.logger("Task_create ","Image path"+imgDecodableString);
+//            Image img = Image.getInstance(image_returned);  // Change image's name and extension.
+//
+//            float scaler = ((document.getPageSize().getWidth() - document.leftMargin()
+//                    - document.rightMargin() - 0) / img.getWidth()) * 100; // 0 means you have no indentation. If you have any, change it.
+//            img.scalePercent(scaler);
+//            img.setAlignment(Image.ALIGN_CENTER | Image.ALIGN_TOP);
+//            document.add(img);
+//            document.close();
+//            AppUtil.logger("Task_create", "Compressed Image Path : " + image_returned);
+//            AppUtil.logger("Task_create", "PDF path " + pdf_created.getAbsolutePath());
+//
+//            attactment = pdf_created;
+
             Compress compress = new Compress();
             String image_returned = compress.compressImage(image);
+            AppUtil.logger("Returned path : ", image_returned);
+            Uri fileUri = Uri.parse(image_returned);
+            AppUtil.logger("Uri of image ",fileUri.toString());
+            File pdf_created= new File(image_returned);
 
-            Document document = new Document();
-            String dirpath = Environment.getExternalStorageDirectory().toString();
-            File file = new File(Environment.getExternalStorageDirectory().getPath(), "Kreatik/Sent_Attachments");
-
-            if (!file.exists()) {
-                file.mkdirs();
-            }
-
-            File pdf_created = new File(file.getAbsolutePath(), "/" + System.currentTimeMillis() + ".pdf");
-
-            PdfWriter.getInstance(document, new FileOutputStream(pdf_created)); //  Change pdf's name.
-            document.open();
-//                AppUtil.logger("Task_create","DirPath :"+dirpath);
-//                AppUtil.logger("Task_create","URIPath :"+selectedImage.getPath());
-            //AppUtil.logger("Task_create ","Image path"+imgDecodableString);
-            Image img = Image.getInstance(image_returned);  // Change image's name and extension.
-
-            float scaler = ((document.getPageSize().getWidth() - document.leftMargin()
-                    - document.rightMargin() - 0) / img.getWidth()) * 100; // 0 means you have no indentation. If you have any, change it.
-            img.scalePercent(scaler);
-            img.setAlignment(Image.ALIGN_CENTER | Image.ALIGN_TOP);
-            document.add(img);
-            document.close();
-            AppUtil.logger("Task_create", "Compressed Image Path : " + image_returned);
-            AppUtil.logger("Task_create", "PDF path " + pdf_created.getAbsolutePath());
-
-            attactment = pdf_created;
             show_attachment_card(pdf_created.getAbsolutePath().substring(pdf_created.getAbsolutePath().lastIndexOf("/") + 1));
         } catch (Exception e) {
 
@@ -825,15 +924,37 @@ public class Task_create extends Fragment implements DatePickerDialog.OnDateSetL
     }
 
 
-    private void captureImage() {
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+    public void captureImage() {
 
-        fileUri = FileUtils.getOutputMediaFileUri(MEDIA_TYPE_IMAGE);
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
+        if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
 
-        // start the image capture Intent
-        getActivity().startActivityForResult(intent, CAMERA_CAPTURE_IMAGE_REQUEST_CODE);
+            fileUri = null;
+            try {
+                fileUri = FileUtils.createImageFile();
+            } catch (IOException ex) {
+                Log.e("Vehicle Recieved",ex.toString());
+
+            }
+
+            if (fileUri != null) {
+                Uri photoURI = FileProvider.getUriForFile(getActivity(),
+                        "com.example.android.fileprovider",
+                        fileUri);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                getActivity().startActivityForResult(takePictureIntent, CAMERA_CAPTURE_IMAGE_REQUEST_CODE);
+            }
+        }
+
+//        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//
+//        fileUri = FileUtils.getOutputMediaFileUri(MEDIA_TYPE_IMAGE);
+//
+//        intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
+//
+//        // start the image capture Intent
+//        getActivity().startActivityForResult(intent, CAMERA_CAPTURE_IMAGE_REQUEST_CODE);
     }
 
     /**
@@ -846,7 +967,9 @@ public class Task_create extends Fragment implements DatePickerDialog.OnDateSetL
 
         // save file url in bundle as it will be null on scren orientation
         // changes
-        outState.putParcelable("file_uri", fileUri);
+        if(fileUri != null) {
+            outState.putString("file_uri", fileUri.getAbsolutePath());
+        }
     }
 
 //    @Override

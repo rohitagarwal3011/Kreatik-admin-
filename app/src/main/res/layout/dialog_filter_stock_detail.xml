@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp">
+
+    <TextView
+        android:layout_width="100dp"
+        android:layout_height="@dimen/_40sdp"
+        android:id="@+id/product_title"
+        android:paddingTop="15dp"
+        android:text="Product"
+        android:textColor="@color/cardview_dark_background"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_40sdp"
+        android:background="@drawable/round_edittext_light"
+        android:layout_toRightOf="@id/product_title"
+        android:layout_alignTop="@id/product_title"
+        android:id="@+id/product_spinner_relative">
+
+    <Spinner
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_40sdp"
+        android:id="@+id/product_spinner" />
+
+        </RelativeLayout>
+
+    <TextView
+        android:layout_width="100dp"
+        android:layout_height="@dimen/_40sdp"
+        android:id="@+id/site_title"
+        android:text="Site"
+        android:layout_below="@id/product_title"
+        android:paddingTop="15dp"
+        android:textColor="@color/cardview_dark_background"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_40sdp"
+        android:background="@drawable/round_edittext_light"
+        android:layout_toRightOf="@id/site_title"
+        android:layout_alignTop="@id/site_title"
+        android:id="@+id/site_spinner_relative">
+
+
+    <Spinner
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_40sdp"
+        android:id="@+id/site_spinner"/>
+
+        </RelativeLayout>
+
+
+    <TextView
+        android:layout_width="100dp"
+        android:layout_height="@dimen/_40sdp"
+        android:id="@+id/stock_type_title"
+        android:text="Stock Type"
+        android:layout_below="@id/site_title"
+        android:paddingTop="15dp"
+        android:textColor="@color/cardview_dark_background"/>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_40sdp"
+        android:background="@drawable/round_edittext_light"
+        android:layout_toRightOf="@id/stock_type_title"
+        android:layout_alignTop="@id/stock_type_title"
+        android:id="@+id/stock_type_spinner_relative">
+
+    <Spinner
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_40sdp"
+        android:id="@+id/stock_type_spinner" />
+        </RelativeLayout>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_40sdp"
+        android:layout_below="@id/stock_type_title"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="15dp"
+        android:background="@color/colorPrimary"
+        android:text="Submit"
+        android:id="@+id/submit"
+        android:textColor="@color/white"/>
+
+</RelativeLayout>

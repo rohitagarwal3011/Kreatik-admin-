@@ -13,6 +13,7 @@ import com.app.rbc.admin.activities.RequirementDetailActivity;
 import com.app.rbc.admin.fragments.Requirement_fulfill_task;
 import com.app.rbc.admin.fragments.Stock_list_product_wise;
 import com.app.rbc.admin.models.StockCategoryDetails;
+import com.app.rbc.admin.models.db.models.Categoryproduct;
 import com.app.rbc.admin.utils.AppUtil;
 import com.squareup.picasso.Picasso;
 
@@ -82,15 +83,25 @@ public class Stock_detail_adapter  extends RecyclerView.Adapter<Stock_detail_ada
     @Override
     public void onBindViewHolder(Stock_detail_adapter.MyViewHolder holder, final int position) {
         holder.stock_location.setText(data.get(position).getWhere());
-        holder.stock_quantity.setText(data.get(position).getQuantity().toString());
         holder.stock_product.setText(data.get(position).getProduct().toString());
+
+
+
+        List<Categoryproduct> categoryproducts = Categoryproduct.find(Categoryproduct.class,
+                "product = ?",data.get(position).getProduct().toString());
+
+        if(categoryproducts.size() != 0) {
+            holder.stock_quantity.setText(data.get(position).getQuantity().toString()+" "+
+            categoryproducts.get(0).getUnit());
+        }
+
         if(data.get(position).getMstock_type().equalsIgnoreCase("Stock"))
         {
             Picasso.with(context).load((R.drawable.stock)).into(holder.stock_type);
         }
         else {
 
-            Picasso.with(context).load((R.drawable.site_overview)).into(holder.stock_type);
+            Picasso.with(context).load((R.drawable.crane)).into(holder.stock_type);
         }
 
     }
