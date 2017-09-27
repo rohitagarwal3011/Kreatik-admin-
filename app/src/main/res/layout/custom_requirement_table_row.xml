@@ -37,7 +37,7 @@
         android:layout_height="@dimen/_20sdp"
         android:background="@drawable/task_type_circle"
         android:src="@drawable/delete"
-        android:visibility="visible"
+        android:visibility="invisible"
         android:layout_marginRight="@dimen/_15sdp"
         android:layout_gravity="right|center_vertical"
         android:elevation="@dimen/_1sdp"

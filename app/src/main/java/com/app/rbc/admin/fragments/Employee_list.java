@@ -4,10 +4,12 @@ package com.app.rbc.admin.fragments;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -96,6 +98,10 @@ public class Employee_list extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_attendance_emp_list, container, false);
         unbinder = ButterKnife.bind(this, view);
+        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
+        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Select an Employee");
+
         return view;
     }
 
@@ -130,7 +136,7 @@ public class Employee_list extends Fragment {
     {
         Employee employee = new Gson().fromJson(AppUtil.getString(getContext().getApplicationContext(), TagsPreferences.EMPLOYEE_LIST), Employee.class);
 
-        employee_list_adapter = new Employee_list_adapter(employee.getData(), getContext(), tag);
+                          employee_list_adapter = new Employee_list_adapter(employee.getData(), getContext(), tag);
         LinearLayoutManager gridLayoutManager = new LinearLayoutManager(getContext());
         gridLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         selectEmployee.setLayoutManager(gridLayoutManager);

@@ -59,7 +59,8 @@ public class RequirementDetailActivity extends AppCompatActivity {
     public RequirementDetails requirementDetails;
     public Toolbar toolbar;
     public static String rq_id;
-    public static String req_site;
+    public static String req_site_name;
+    public static String req_site_id;
     public static List<String> product_list = new ArrayList<>();
     @BindView(R.id.frame_main)
     FrameLayout frameMain;
@@ -100,7 +101,8 @@ public class RequirementDetailActivity extends AppCompatActivity {
         {
             getSupportFragmentManager().popBackStackImmediate();
         }
-        super.onBackPressed();
+
+            super.onBackPressed();
 
     }
 

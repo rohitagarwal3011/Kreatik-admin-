@@ -6,6 +6,8 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -138,6 +140,10 @@ public class Stock_po_create_task extends Fragment implements DatePickerDialog.O
             timeSelect.setSelection(bundle.getInt("timeselect"));
         }
 
+        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
+        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Select Deadline ");
+
 
         return view;
     }
@@ -194,7 +200,7 @@ public class Stock_po_create_task extends Fragment implements DatePickerDialog.O
 
         TextView tv = new TextView(getContext());
         tv.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 1f));
-        tv.setGravity(Gravity.LEFT);
+        tv.setGravity(Gravity.CENTER);
         tv.setTextColor(Color.parseColor("#000000"));
         tv.setText(product);
 
@@ -202,7 +208,7 @@ public class Stock_po_create_task extends Fragment implements DatePickerDialog.O
 
         TextView tv1 = new TextView(getContext());
         tv1.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 1f));
-        tv1.setGravity(Gravity.LEFT);
+        tv1.setGravity(Gravity.CENTER);
         tv1.setTextColor(Color.parseColor("#000000"));
         tv1.setText(quantity);
 
@@ -272,26 +278,33 @@ public class Stock_po_create_task extends Fragment implements DatePickerDialog.O
 
                     submitTask.setEnabled(true);
                     submitTask.setProgress(0);
-                    final SweetAlertDialog pDialog = new SweetAlertDialog(getContext(), SweetAlertDialog.SUCCESS_TYPE);
-                    pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
-                    pDialog.setTitleText("Task Created");
-                    pDialog.setContentText("Your task has been successfully created");
-                    pDialog.setCancelable(false);
-                    pDialog.show();
 
-                    pDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                        @Override
-                        public void onClick(SweetAlertDialog sweetAlertDialog) {
-                            pDialog.dismiss();
-                            ((StockActivity) getContext()).get_product_details(product_selected);
-
-                        }
-                    });
                     try {
 
                         try {
                             JSONObject obj = new JSONObject(response.body().string());
                             AppUtil.logger(TAG, obj.toString());
+                            if(obj.getJSONObject("meta").getInt("status")==2)
+                            {
+                                final SweetAlertDialog pDialog = new SweetAlertDialog(getContext(), SweetAlertDialog.SUCCESS_TYPE);
+                                pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+                                pDialog.setTitleText("Task Created");
+                                pDialog.setContentText("Your task has been successfully created");
+                                pDialog.setCancelable(false);
+                                pDialog.show();
+
+                                pDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                    @Override
+                                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                        pDialog.dismiss();
+                                        ((StockActivity) getContext()).get_product_details(product_selected);
+
+                                    }
+                                });
+                            }
+                            else {
+                                AppUtil.showToast(getContext(), "Network Issue. Please check your connectivity and try again");
+                            }
                         } catch (IOException e) {
                             e.printStackTrace();
                         }

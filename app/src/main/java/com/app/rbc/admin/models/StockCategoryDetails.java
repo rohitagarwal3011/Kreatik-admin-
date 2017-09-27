@@ -58,6 +58,17 @@ public class StockCategoryDetails {
         @SerializedName("stock_type")
         private String mstock_type;
 
+        public String getMsitename() {
+            return msitename;
+        }
+
+        public void setMsitename(String msitename) {
+            this.msitename = msitename;
+        }
+
+        @SerializedName("sitename")
+        private String msitename;
+
         public String getMstock_type() {
             return mstock_type;
         }

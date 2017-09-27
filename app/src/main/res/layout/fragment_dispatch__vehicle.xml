@@ -21,7 +21,8 @@
                 android:layout_height="@dimen/_40sdp"
                 android:id="@+id/vehicle_number_title"
                 android:textSize="@dimen/_12sdp"
-                android:gravity="center_vertical"
+                android:gravity="left|center_vertical"
+                android:paddingLeft="@dimen/_5sdp"
                 android:padding="@dimen/_5sdp"
                 android:background="@drawable/round_edittext_light"
                 android:text="Vehicle Number"
@@ -51,8 +52,10 @@
                 android:background="@drawable/round_edittext_light"
                 android:layout_below="@id/vehicle_number_title"
                 android:textSize="@dimen/_12sdp"
-                android:gravity="center_vertical"
+                android:gravity="left|center_vertical"
+                android:paddingLeft="@dimen/_5sdp"
                 android:padding="@dimen/_5sdp"
+
                 android:text="Driver Name"
                 />
 
@@ -77,12 +80,13 @@
                 android:layout_width="@dimen/_120sdp"
                 android:layout_height="@dimen/_40sdp"
                 android:textSize="@dimen/_12sdp"
-                android:gravity="center_vertical"
                 android:padding="@dimen/_5sdp"
                 android:layout_below="@id/driver_name_title"
                 android:background="@drawable/round_edittext_light"
                 android:id="@+id/challan_number_title"
                 android:text="Challan Number"
+                android:gravity="left|center_vertical"
+                android:paddingLeft="@dimen/_5sdp"
                 />
 
             <EditText
@@ -91,7 +95,7 @@
                 android:layout_height="@dimen/_40sdp"
                 android:layout_alignTop="@id/challan_number_title"
                 android:layout_toRightOf="@id/challan_number_title"
-                android:hint="Enter Challan No."
+                android:hint="Enter Challan Number"
                 android:inputType="text"
                 android:maxLength="10"
                 android:background="@drawable/round_edittext_light"

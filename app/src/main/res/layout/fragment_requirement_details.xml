@@ -14,6 +14,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/requirement_details_layout"
+            android:background="@color/white"
             android:orientation="vertical">
 
 
@@ -21,7 +22,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:background="#87cad0"
+                android:background="@color/white"
 
                 android:padding="@dimen/_10sdp">
 
@@ -101,18 +102,18 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:orientation="vertical"
-                        android:visibility="invisible"
+                        android:visibility="visible"
                         android:paddingLeft="@dimen/_20sdp"
                         android:gravity="center_vertical">
 
                         <TextView
-                            android:id="@+id/total_quantity"
+                            android:id="@+id/site_name"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="right|center_vertical"
-                            android:text="2000 bags"
-                            android:textColor="@color/colorAccent"
-                            android:textSize="@dimen/_15sdp" />
+                            android:text="Site"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_14sdp" />
                         <TextView
                             android:id="@+id/remaining_quantity"
                             android:layout_width="match_parent"
@@ -120,7 +121,7 @@
                             android:gravity="right|center_vertical"
                             android:text="350 remaining"
                             android:textStyle="italic"
-                            android:visibility="visible"
+                            android:visibility="invisible"
                             android:textColor="@color/black"
                             android:textSize="@dimen/_12sdp" />
                     </LinearLayout>
@@ -179,6 +180,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
+                android:background="@color/white"
 
                 >
 
@@ -187,8 +189,8 @@
                     android:layout_height="wrap_content"
                     android:text="Product's Information"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/_13sdp"
-                    android:padding="@dimen/_10sdp"
+                    android:textSize="@dimen/_11sdp"
+                    android:padding="@dimen/_5sdp"
                     android:background="#ccc"
 
                     />
@@ -203,31 +205,35 @@
                         android:id="@+id/rowheading"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/_5sdp"
-                        android:layout_marginBottom="@dimen/_5sdp"
-                        android:padding="@dimen/_3sdp"
                         >
                         <TextView
                             android:layout_width="match_parent"
-                            android:layout_height="@dimen/_15sdp"
-                            android:layout_weight="1"
-                            android:gravity="center_horizontal"
-                            android:textColor="@color/black"
-                            android:text="Product"/>
+                            android:layout_height="@dimen/_25sdp"
+                            android:layout_weight="3"
+                            android:gravity="center_vertical"
+                            android:paddingLeft="@dimen/_5sdp"
+                            android:background="@drawable/round_edittext_light"
+                            android:text="Product"
+                            android:textSize="@dimen/_10sdp"/>
                         <TextView
                             android:layout_width="match_parent"
-                            android:layout_height="@dimen/_15sdp"
+                            android:layout_height="@dimen/_25sdp"
                             android:text="Quantity"
-                            android:gravity="center_horizontal"
-                            android:textColor="@color/black"
-                            android:layout_weight="1"/>
+                            android:visibility="gone"
+                            android:textSize="@dimen/_11sdp"
+                            android:gravity="center_vertical"
+                            android:paddingLeft="@dimen/_5sdp"
+                            android:background="@drawable/round_edittext_light"
+                            android:layout_weight=".5"/>
                         <TextView
                             android:layout_width="match_parent"
-                            android:layout_height="@dimen/_15sdp"
-                            android:text="Remainig Qty"
-                            android:gravity="center_horizontal"
-                            android:textColor="@color/black"
-                            android:layout_weight="1"/>
+                            android:layout_height="@dimen/_25sdp"
+                            android:text="Rem. Quantity"
+                            android:textSize="@dimen/_10sdp"
+                            android:gravity="center_vertical"
+                            android:paddingLeft="@dimen/_5sdp"
+                            android:background="@drawable/round_edittext_light"
+                            android:layout_weight=".5"/>
                     </TableRow>
                 </TableLayout>
 
@@ -238,9 +244,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Description"
+                android:id="@+id/description_heading"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_13sdp"
-                android:padding="@dimen/_10sdp"
+                android:textSize="@dimen/_11sdp"
+                android:padding="@dimen/_5sdp"
                 android:background="#ccc"
                 android:layout_marginTop="@dimen/_10sdp"
                 />
@@ -251,6 +258,7 @@
                 android:paddingLeft="@dimen/_10sdp"
                 android:paddingRight="@dimen/_10sdp"
                 android:paddingTop="@dimen/_5sdp"
+                android:background="@color/white"
                 android:text=""
                 android:textColor="@color/black"/>
 
@@ -258,9 +266,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Vehicle's Information"
+                android:id="@+id/vehicle_heading"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_13sdp"
-                android:padding="@dimen/_10sdp"
+                android:textSize="@dimen/_11sdp"
+                android:padding="@dimen/_5sdp"
                 android:background="#ccc"
                 android:layout_marginTop="@dimen/_10sdp"
                 />
@@ -269,10 +278,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:id="@+id/vehicle_info"
-                android:layout_marginTop="@dimen/_10sdp"
                 android:scrollbars="vertical"/>
             <View
                 android:layout_width="match_parent"
+                android:background="@color/white"
                 android:layout_height="@dimen/_50sdp"/>
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>

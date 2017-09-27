@@ -520,7 +520,7 @@ public class Task_details extends Fragment {
         newlog1.setStatus(current_status);
         newlog1.setTaskId(task_id);
         newlog1.setComment("");
-        newlog1.setmLogtype("Status_change");
+        newlog1.setmLogtype("Status change");
         add_new_message(newlog1);
 
 
@@ -742,7 +742,7 @@ public class Task_details extends Fragment {
         camera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                askPermission(120,1);
+                askPermission(120,2);
                 dialog.dismiss();
             }
         });
@@ -750,7 +750,7 @@ public class Task_details extends Fragment {
         pdf.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                askPermission(120,1);
+                askPermission(120,3);
                 dialog.dismiss();
             }
         });

@@ -493,28 +493,36 @@ public class Task_create extends Fragment implements DatePickerDialog.OnDateSetL
 
                             submitTask.setEnabled(true);
                             submitTask.setProgress(0);
-                            final SweetAlertDialog pDialog = new SweetAlertDialog(getContext(), SweetAlertDialog.SUCCESS_TYPE);
-                            pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
-                            pDialog.setTitleText("Task Created");
-                            pDialog.setContentText("Your task has been successfully created");
-                            pDialog.setCancelable(false);
-                            pDialog.show();
 
-                            pDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                                @Override
-                                public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                    pDialog.dismiss();
-                                    Task_home task_home = new Task_home();
-                                    ((TaskActivity)getContext()).setToolbar("Tasks");
-                                    ((TaskActivity)getContext()).setFragment(task_home,Task_home.TAG);
-
-                                }
-                            });
                             try {
 
                                 try {
                                     JSONObject obj = new JSONObject(response.body().string());
                                     AppUtil.logger(TAG, obj.toString());
+                                    if(obj.getJSONObject("meta").getInt("status")==2)
+                                    {
+                                        final SweetAlertDialog pDialog = new SweetAlertDialog(getContext(), SweetAlertDialog.SUCCESS_TYPE);
+                                        pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+                                        pDialog.setTitleText("Task Created");
+                                        pDialog.setContentText("Your task has been successfully created");
+                                        pDialog.setCancelable(false);
+                                        pDialog.show();
+
+                                        pDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                            @Override
+                                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                                pDialog.dismiss();
+                                                Task_home task_home = new Task_home();
+                                                ((TaskActivity)getContext()).setToolbar("Tasks");
+                                                ((TaskActivity)getContext()).setFragment(task_home,Task_home.TAG);
+
+                                            }
+                                        });
+                                    }
+                                    else
+                                    {
+                                        AppUtil.showToast(getContext(), "Network Issue. Please check your connectivity and try again");
+                                    }
                                 } catch (IOException e) {
                                     e.printStackTrace();
                                 }

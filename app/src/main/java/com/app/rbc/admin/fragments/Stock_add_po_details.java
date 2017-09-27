@@ -5,6 +5,8 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -131,6 +133,10 @@ public class Stock_add_po_details extends Fragment {
 
         }
 
+        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
+        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Add PO details");
+
 
         return view;
     }
@@ -205,7 +211,7 @@ public class Stock_add_po_details extends Fragment {
 
         TextView tv = new TextView(getContext());
         tv.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 1f));
-        tv.setGravity(Gravity.LEFT);
+        tv.setGravity(Gravity.CENTER);
         tv.setTextColor(Color.parseColor("#000000"));
         tv.setText(product);
 
@@ -213,7 +219,7 @@ public class Stock_add_po_details extends Fragment {
 
         TextView tv1 = new TextView(getContext());
         tv1.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 1f));
-        tv1.setGravity(Gravity.LEFT);
+        tv1.setGravity(Gravity.CENTER);
         tv1.setTextColor(Color.parseColor("#000000"));
         tv1.setText(quantity);
 
@@ -290,6 +296,9 @@ public class Stock_add_po_details extends Fragment {
                                     }
                                 });
 
+                            }else
+                            {
+                                AppUtil.showToast(getContext(), "Network Issue. Please check your connectivity and try again");
                             }
                         } catch (IOException e) {
                             e.printStackTrace();
