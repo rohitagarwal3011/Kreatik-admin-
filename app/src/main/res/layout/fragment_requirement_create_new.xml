@@ -41,6 +41,7 @@
                         android:layout_height="@dimen/_40sdp"
                         android:background="@drawable/round_edittext_light"
                         android:maxLength="25"
+                        android:visibility="gone"
                         android:textColor="@color/black"
                         android:textSize="@dimen/_12sdp"
                         android:padding="@dimen/_5sdp"

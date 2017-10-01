@@ -486,6 +486,8 @@ public class Requirement_fulfill_task extends Fragment implements DatePickerDial
 //                                            getFragmentManager().popBackStackImmediate();
 //                                        }
 
+                                        getActivity().getSupportFragmentManager().popBackStack(null,
+                                                getActivity().getSupportFragmentManager().POP_BACK_STACK_INCLUSIVE);
 
                                         ChangeFragment.changeFragment(getActivity().getSupportFragmentManager(), R.id.frame_main, com.app.rbc.admin.fragments.RequirementDetails.newInstance(category_selected), com.app.rbc.admin.fragments.RequirementDetails.TAG);
 
