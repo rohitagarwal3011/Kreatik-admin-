@@ -24,6 +24,7 @@ import com.app.rbc.admin.R;
 import com.app.rbc.admin.activities.RequirementDetailActivity;
 import com.app.rbc.admin.interfaces.ApiServices;
 import com.app.rbc.admin.models.StockListProductWise;
+import com.app.rbc.admin.models.db.models.Categoryproduct;
 import com.app.rbc.admin.models.db.models.site_overview.Requirement;
 import com.app.rbc.admin.utils.AdapterWithCustomItem;
 import com.app.rbc.admin.utils.AppUtil;
@@ -45,6 +46,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -199,6 +201,16 @@ public class Requirement_fulfill_task extends Fragment implements DatePickerDial
 
     private void addrow(String product,String quantity)
     {
+
+        String unit = "";
+        List<Categoryproduct> categoryproductList = Categoryproduct.find(Categoryproduct.class,
+                "product = ?",product);
+        if(categoryproductList.size() != 0) {
+
+            unit = categoryproductList.get(0).getUnit();
+        }
+
+
         TableRow tr = new TableRow(getContext());
         TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
 
@@ -222,7 +234,7 @@ public class Requirement_fulfill_task extends Fragment implements DatePickerDial
         int dp1 = (int) (getResources().getDimension(R.dimen._15sdp) / getResources().getDisplayMetrics().density);
         tv1.setPadding(dp1,0,0,0);
         tv1.setTextColor(Color.parseColor("#000000"));
-        tv1.setText(quantity);
+        tv1.setText(quantity+" "+unit);
 
         tr.addView(tv1, 1);
 
