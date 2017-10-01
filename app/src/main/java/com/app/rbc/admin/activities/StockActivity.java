@@ -118,7 +118,9 @@ public class StockActivity extends AppCompatActivity implements SearchView.OnQue
 
 
     public static Boolean show_tabs = false;
+    public Boolean show_menu = false;
 
+    Intent intent;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -150,8 +152,17 @@ public class StockActivity extends AppCompatActivity implements SearchView.OnQue
 //                        .setAction("Action", null).show();
             }
         });
-        hide_tablayout();
-        changeFragment(getSupportFragmentManager(), R.id.frame_main, new Stock_categories().newInstance("StockActivity"), Stock_categories.TAG);
+
+        try {
+            intent = getIntent();
+            if (intent.getStringExtra("type").equalsIgnoreCase("new_po")||intent.getStringExtra("type").equalsIgnoreCase("vehicle")) {
+                get_product_details(intent.getStringExtra("category"));
+            }
+        }
+        catch (Exception e){
+            hide_tablayout();
+            changeFragment(getSupportFragmentManager(), R.id.frame_main, new Stock_categories().newInstance("StockActivity"), Stock_categories.TAG);
+        }
     }
 
     public void show_dialog()
@@ -207,14 +218,18 @@ public class StockActivity extends AppCompatActivity implements SearchView.OnQue
 
         if(tabLayout.getVisibility() == View.VISIBLE)
         {
+            menu.findItem(R.id.search).setVisible(false);
+            menu.findItem(R.id.filter).setVisible(false);
             hide_tablayout();
-            //changeFragment(getSupportFragmentManager(), R.id.frame_main, new Stock_categories().newInstance("StockActivity"), Stock_categories.TAG);
+            changeFragment(getSupportFragmentManager(), R.id.frame_main, new Stock_categories().newInstance("StockActivity"), Stock_categories.TAG);
         }
         else {
 
-            if(getSupportFragmentManager().findFragmentByTag(Stock_categories.TAG).isVisible())
+            Fragment mFragment = getSupportFragmentManager().findFragmentById(R.id.frame_main);
+
+            if(mFragment instanceof  Stock_categories)
             {
-                getSupportFragmentManager().popBackStackImmediate();
+               // getSupportFragmentManager().popBackStackImmediate();
                 Intent intent = new Intent(StockActivity.this, HomeActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -223,8 +238,11 @@ public class StockActivity extends AppCompatActivity implements SearchView.OnQue
             }
             else if (show_tabs)
             {
+                //getSupportFragmentManager().popBackStackImmediate();
                 show_tablayout();
-                getSupportFragmentManager().popBackStackImmediate();
+                //super.onBackPressed();
+                //getSupportFragmentManager().popBackStackImmediate();
+
             }
 
 //            else if(getSupportFragmentManager()..isVisible())
@@ -236,8 +254,8 @@ public class StockActivity extends AppCompatActivity implements SearchView.OnQue
 //                show_tablayout();
 //            }
             else {
-                getSupportFragmentManager().popBackStackImmediate();
-               // super.onBackPressed();
+               // getSupportFragmentManager().popBackStackImmediate();
+                super.onBackPressed();
 
             }
         }
@@ -250,11 +268,16 @@ public class StockActivity extends AppCompatActivity implements SearchView.OnQue
         getMenuInflater().inflate(R.menu.menu_stock, menu);
         this.menu = menu;
 
-        if(!show_tabs)
+        if(show_menu)
+        {
+            menu.findItem(R.id.search).setVisible(true);
+            menu.findItem(R.id.filter).setVisible(true);
+
+        }
+        else
         {
             menu.findItem(R.id.search).setVisible(false);
             menu.findItem(R.id.filter).setVisible(false);
-
         }
         SearchManager searchManager =
                 (SearchManager) getSystemService(Context.SEARCH_SERVICE);
@@ -303,6 +326,8 @@ public class StockActivity extends AppCompatActivity implements SearchView.OnQue
 
 
     public void get_product_details(String category) {
+
+        getSupportFragmentManager().popBackStackImmediate();
         pDialog = new SweetAlertDialog(StockActivity.this, SweetAlertDialog.PROGRESS_TYPE);
         pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
         pDialog.setTitleText("Loading");
@@ -325,7 +350,16 @@ public class StockActivity extends AppCompatActivity implements SearchView.OnQue
                     AppUtil.putString(getApplicationContext(), TagsPreferences.CATEGORY_DETAILS, new Gson().toJson(response.body()));
                     productDetails = new Gson().fromJson(AppUtil.getString(getApplicationContext(), TagsPreferences.CATEGORY_DETAILS), StockCategoryDetails.class);
                     AppUtil.logger("Product Details : ", AppUtil.getString(getApplicationContext(), TagsPreferences.CATEGORY_DETAILS));
-                    show_tablayout();
+
+                    try {
+                        if (intent.getStringExtra("type").equalsIgnoreCase("new_po")||intent.getStringExtra("type").equalsIgnoreCase("vehicle")) {
+                            show_po_details(intent.getStringExtra("po_id"));
+                        }
+                    }
+                    catch (Exception e){
+                        show_tablayout();
+                    }
+
                 }
 
             }
@@ -343,8 +377,11 @@ public class StockActivity extends AppCompatActivity implements SearchView.OnQue
 
     public void show_tablayout() {
 
+        AppUtil.logger("Stock Activity ", "Show Tablayout");
+        toolbar.setTitle(category_selected);
         tabLayout.setVisibility(View.VISIBLE);
         mViewPager.setVisibility(View.VISIBLE);
+
         frameMain.setVisibility(View.GONE);
         fab.show();
 
@@ -352,8 +389,10 @@ public class StockActivity extends AppCompatActivity implements SearchView.OnQue
         tabLayout.setupWithViewPager(mViewPager);
 
 
-        menu.findItem(R.id.search).setVisible(true);
-        menu.findItem(R.id.filter).setVisible(true);
+//        menu.findItem(R.id.search).setVisible(true);
+//        menu.findItem(R.id.filter).setVisible(true);
+        show_menu=true;
+        this.invalidateOptionsMenu();
 
     }
 
@@ -363,13 +402,16 @@ public class StockActivity extends AppCompatActivity implements SearchView.OnQue
         mViewPager.setVisibility(View.GONE);
         frameMain.setVisibility(View.VISIBLE);
         fab.hide();
+        show_menu=false;
+        this.invalidateOptionsMenu();
 
-        if(menu != null)
-        {
-            menu.findItem(R.id.search).setVisible(false);
-            menu.findItem(R.id.filter).setVisible(false);
-
-        }
+//        if(menu != null)
+//        {
+//            AppUtil.logger("StockActivity","Hide toolbar icons");
+//            menu.findItem(R.id.search).setVisible(false);
+//            menu.findItem(R.id.filter).setVisible(false);
+//            this.invalidateOptionsMenu();
+//        }
     }
 
     public void show_po_details(String po)
@@ -511,7 +553,30 @@ public class StockActivity extends AppCompatActivity implements SearchView.OnQue
                     recyclerView.invalidate();
                 }
             });
+
+            Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
+            ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+            ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle( ((StockActivity)getActivity()).category_selected);
+
             return view;
+        }
+
+        @Override
+        public void onResume() {
+            super.onResume();
+            Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
+            ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+            ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle( ((StockActivity)getActivity()).category_selected);
+
+        }
+
+        @Override
+        public void onAttachFragment(Fragment childFragment) {
+            super.onAttachFragment(childFragment);
+            Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
+            ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+            ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle( ((StockActivity)getActivity()).category_selected);
+
         }
 
         @Override
@@ -565,6 +630,13 @@ public class StockActivity extends AppCompatActivity implements SearchView.OnQue
 
         public void show_transaction_details() {
             transactionDetails = new Gson().fromJson(AppUtil.getString(getContext().getApplicationContext(), TagsPreferences.CATEGORY_DETAILS), StockCategoryDetails.class).getTransactionDetails();
+            if(transactionDetails.size() == 0) {
+                empty_relative.setVisibility(View.VISIBLE);
+            }
+            else {
+                empty_relative.setVisibility(View.GONE);
+            }
+
             recyclerView.setHasFixedSize(true);
             LinearLayoutManager gridLayoutManager = new LinearLayoutManager(getContext());
             gridLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -585,7 +657,15 @@ public class StockActivity extends AppCompatActivity implements SearchView.OnQue
         }
 
         public void show_PO_details() {
+
             poDetails = new Gson().fromJson(AppUtil.getString(getContext().getApplicationContext(), TagsPreferences.CATEGORY_DETAILS), StockCategoryDetails.class).getPoDetails();
+
+            if(poDetails.size() == 0) {
+                empty_relative.setVisibility(View.VISIBLE);
+            }
+            else {
+                empty_relative.setVisibility(View.GONE);
+            }
             recyclerView.setHasFixedSize(true);
             LinearLayoutManager gridLayoutManager = new LinearLayoutManager(getContext());
             gridLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);

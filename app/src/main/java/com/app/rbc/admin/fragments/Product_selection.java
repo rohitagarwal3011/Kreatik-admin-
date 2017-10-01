@@ -2,10 +2,13 @@ package com.app.rbc.admin.fragments;
 
 
 import android.app.Dialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -13,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -29,6 +33,7 @@ import com.app.rbc.admin.activities.RequirementActivity;
 import com.app.rbc.admin.activities.RequirementDetailActivity;
 import com.app.rbc.admin.activities.StockActivity;
 import com.app.rbc.admin.models.StockCategories;
+import com.app.rbc.admin.models.db.models.Categoryproduct;
 import com.app.rbc.admin.models.db.models.site_overview.Order;
 import com.app.rbc.admin.models.db.models.site_overview.Requirement;
 import com.app.rbc.admin.models.db.models.site_overview.Stock;
@@ -169,11 +174,12 @@ public class Product_selection extends Fragment {
         }
     }
 
+    View view;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_product_selection, container, false);
+        view = inflater.inflate(R.layout.fragment_product_selection, container, false);
         unbinder = ButterKnife.bind(this, view);
         count = 1;
         fab.setOnClickListener(new View.OnClickListener() {
@@ -185,6 +191,10 @@ public class Product_selection extends Fragment {
 
 
 
+
+        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
+        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Select Products");
 
 
         proceedButton.setOnClickListener(new View.OnClickListener() {
@@ -298,12 +308,14 @@ public class Product_selection extends Fragment {
 
         // initializeStateStore();
         if(product_grid.isEmpty()) {
+            product_list.clear();
             get_product_list();
             show_select_product_dialog();
 
         }
         else
         {
+            product_list.clear();
             get_product_list();
             set_data();
         }
@@ -389,8 +401,10 @@ public class Product_selection extends Fragment {
                     quantity.setError("Enter quantity");
                 } else {
 
-                    dialog.dismiss();
 
+                    InputMethodManager imm = (InputMethodManager)getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(quantity.getWindowToken(), 0);
+                    dialog.dismiss();
                     set_hash_map(product_spinner.getSelectedItem().toString(), quantity.getText().toString().trim());
                 }
             }
@@ -485,6 +499,15 @@ public class Product_selection extends Fragment {
 
     private void show_data(final String product , String quantity)
     {
+        String unit = "";
+        List<Categoryproduct> categoryproductList = Categoryproduct.find(Categoryproduct.class,
+                "product = ?",product);
+        if(categoryproductList.size() != 0) {
+
+            unit = categoryproductList.get(0).getUnit();
+        }
+
+
         AppUtil.logger("Product_selection", " Product : " + product + " Quantity : " + quantity);
 
         View tr = getActivity().getLayoutInflater().inflate(R.layout.custom_requirement_table_row,null);
@@ -494,6 +517,7 @@ public class Product_selection extends Fragment {
         Button product_icon = (Button) tr.findViewById(R.id.product_icon);
 
         ImageView delete = (ImageView) tr.findViewById(R.id.delete_icon);
+        delete.setVisibility(View.VISIBLE);
         delete.setId(count);
 
         delete.setOnClickListener(new View.OnClickListener() {
@@ -520,7 +544,7 @@ public class Product_selection extends Fragment {
         });
 
         productText.setText(product);
-        quantityText.setText(quantity);
+        quantityText.setText(quantity+" "+unit);
         product_icon.setText(product.substring(0,1));
 
         productTable.addView(tr, count);

@@ -6,6 +6,8 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -21,6 +23,7 @@ import com.app.rbc.admin.R;
 import com.app.rbc.admin.activities.RequirementDetailActivity;
 import com.app.rbc.admin.activities.StockActivity;
 import com.app.rbc.admin.interfaces.ApiServices;
+import com.app.rbc.admin.models.db.models.Categoryproduct;
 import com.app.rbc.admin.utils.AdapterWithCustomItem;
 import com.app.rbc.admin.utils.AppUtil;
 import com.app.rbc.admin.utils.MySpinner;
@@ -40,6 +43,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -138,6 +142,10 @@ public class Stock_po_create_task extends Fragment implements DatePickerDialog.O
             timeSelect.setSelection(bundle.getInt("timeselect"));
         }
 
+        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
+        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Select Deadline ");
+
 
         return view;
     }
@@ -185,6 +193,14 @@ public class Stock_po_create_task extends Fragment implements DatePickerDialog.O
 
     private void addrow(String product,String quantity)
     {
+        String unit = "";
+        List<Categoryproduct> categoryproductList = Categoryproduct.find(Categoryproduct.class,
+                "product = ?",product);
+        if(categoryproductList.size() != 0) {
+
+            unit = categoryproductList.get(0).getUnit();
+        }
+
         TableRow tr = new TableRow(getContext());
         TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
 
@@ -194,7 +210,7 @@ public class Stock_po_create_task extends Fragment implements DatePickerDialog.O
 
         TextView tv = new TextView(getContext());
         tv.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 1f));
-        tv.setGravity(Gravity.LEFT);
+        tv.setGravity(Gravity.CENTER);
         tv.setTextColor(Color.parseColor("#000000"));
         tv.setText(product);
 
@@ -202,9 +218,9 @@ public class Stock_po_create_task extends Fragment implements DatePickerDialog.O
 
         TextView tv1 = new TextView(getContext());
         tv1.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 1f));
-        tv1.setGravity(Gravity.LEFT);
+        tv1.setGravity(Gravity.CENTER);
         tv1.setTextColor(Color.parseColor("#000000"));
-        tv1.setText(quantity);
+        tv1.setText(quantity+" "+unit);
 
         tr.addView(tv1, 1);
 
@@ -272,26 +288,33 @@ public class Stock_po_create_task extends Fragment implements DatePickerDialog.O
 
                     submitTask.setEnabled(true);
                     submitTask.setProgress(0);
-                    final SweetAlertDialog pDialog = new SweetAlertDialog(getContext(), SweetAlertDialog.SUCCESS_TYPE);
-                    pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
-                    pDialog.setTitleText("Task Created");
-                    pDialog.setContentText("Your task has been successfully created");
-                    pDialog.setCancelable(false);
-                    pDialog.show();
 
-                    pDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                        @Override
-                        public void onClick(SweetAlertDialog sweetAlertDialog) {
-                            pDialog.dismiss();
-                            ((StockActivity) getContext()).get_product_details(product_selected);
-
-                        }
-                    });
                     try {
 
                         try {
                             JSONObject obj = new JSONObject(response.body().string());
                             AppUtil.logger(TAG, obj.toString());
+                            if(obj.getJSONObject("meta").getInt("status")==2)
+                            {
+                                final SweetAlertDialog pDialog = new SweetAlertDialog(getContext(), SweetAlertDialog.SUCCESS_TYPE);
+                                pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+                                pDialog.setTitleText("Task Created");
+                                pDialog.setContentText("Your task has been successfully created");
+                                pDialog.setCancelable(false);
+                                pDialog.show();
+
+                                pDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                    @Override
+                                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                        pDialog.dismiss();
+                                        ((StockActivity) getContext()).get_product_details(product_selected);
+
+                                    }
+                                });
+                            }
+                            else {
+                                AppUtil.showToast(getContext(), "Network Issue. Please check your connectivity and try again");
+                            }
                         } catch (IOException e) {
                             e.printStackTrace();
                         }

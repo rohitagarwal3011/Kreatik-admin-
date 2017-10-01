@@ -5,6 +5,8 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +21,7 @@ import com.app.rbc.admin.activities.RequirementDetailActivity;
 import com.app.rbc.admin.activities.StockActivity;
 import com.app.rbc.admin.interfaces.ApiServices;
 import com.app.rbc.admin.models.Vendors;
+import com.app.rbc.admin.models.db.models.Categoryproduct;
 import com.app.rbc.admin.utils.AppUtil;
 import com.app.rbc.admin.utils.RetrofitClient;
 import com.app.rbc.admin.utils.TagsPreferences;
@@ -30,6 +33,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -131,6 +135,10 @@ public class Stock_add_po_details extends Fragment {
 
         }
 
+        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
+        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Add PO details");
+
 
         return view;
     }
@@ -196,6 +204,14 @@ public class Stock_add_po_details extends Fragment {
 
     private void addrow(String product,String quantity)
     {
+        String unit = "";
+        List<Categoryproduct> categoryproductList = Categoryproduct.find(Categoryproduct.class,
+                "product = ?",product);
+        if(categoryproductList.size() != 0) {
+
+            unit = categoryproductList.get(0).getUnit();
+        }
+
         TableRow tr = new TableRow(getContext());
         TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
 
@@ -205,7 +221,7 @@ public class Stock_add_po_details extends Fragment {
 
         TextView tv = new TextView(getContext());
         tv.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 1f));
-        tv.setGravity(Gravity.LEFT);
+        tv.setGravity(Gravity.CENTER);
         tv.setTextColor(Color.parseColor("#000000"));
         tv.setText(product);
 
@@ -213,9 +229,9 @@ public class Stock_add_po_details extends Fragment {
 
         TextView tv1 = new TextView(getContext());
         tv1.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 1f));
-        tv1.setGravity(Gravity.LEFT);
+        tv1.setGravity(Gravity.CENTER);
         tv1.setTextColor(Color.parseColor("#000000"));
-        tv1.setText(quantity);
+        tv1.setText(quantity+" "+unit);
 
         tr.addView(tv1, 1);
 
@@ -290,6 +306,9 @@ public class Stock_add_po_details extends Fragment {
                                     }
                                 });
 
+                            }else
+                            {
+                                AppUtil.showToast(getContext(), "Network Issue. Please check your connectivity and try again");
                             }
                         } catch (IOException e) {
                             e.printStackTrace();

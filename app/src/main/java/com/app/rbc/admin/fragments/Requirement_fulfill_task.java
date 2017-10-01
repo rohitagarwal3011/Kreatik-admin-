@@ -6,6 +6,9 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -18,10 +21,10 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.app.rbc.admin.R;
-import com.app.rbc.admin.activities.RequirementActivity;
 import com.app.rbc.admin.activities.RequirementDetailActivity;
-import com.app.rbc.admin.activities.StockActivity;
 import com.app.rbc.admin.interfaces.ApiServices;
+import com.app.rbc.admin.models.StockListProductWise;
+import com.app.rbc.admin.models.db.models.Categoryproduct;
 import com.app.rbc.admin.models.db.models.site_overview.Requirement;
 import com.app.rbc.admin.utils.AdapterWithCustomItem;
 import com.app.rbc.admin.utils.AppUtil;
@@ -43,6 +46,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -142,6 +146,11 @@ public class Requirement_fulfill_task extends Fragment implements DatePickerDial
             dateSelect.setSelection(bundle.getInt("dateselect"));
             timeSelect.setSelection(bundle.getInt("timeselect"));
         }
+
+        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
+        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Assign a Task");
+
         return view;
     }
 
@@ -171,8 +180,8 @@ public class Requirement_fulfill_task extends Fragment implements DatePickerDial
         String[] user = AppUtil.get_employee_from_user_id(getContext(), user_selected);
         employeeForTask.setText(user[0]);
         requirementCategory.setText(category_selected);
-        fromSite.setText(Stock_list_product_wise.site_selected);
-        toSite.setText(RequirementDetailActivity.req_site);
+        fromSite.setText(Stock_list_product_wise.site_name);
+        toSite.setText(RequirementDetailActivity.req_site_name);
 
         try {
 
@@ -192,6 +201,16 @@ public class Requirement_fulfill_task extends Fragment implements DatePickerDial
 
     private void addrow(String product,String quantity)
     {
+
+        String unit = "";
+        List<Categoryproduct> categoryproductList = Categoryproduct.find(Categoryproduct.class,
+                "product = ?",product);
+        if(categoryproductList.size() != 0) {
+
+            unit = categoryproductList.get(0).getUnit();
+        }
+
+
         TableRow tr = new TableRow(getContext());
         TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
 
@@ -202,6 +221,8 @@ public class Requirement_fulfill_task extends Fragment implements DatePickerDial
         TextView tv = new TextView(getContext());
         tv.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 1f));
         tv.setGravity(Gravity.LEFT);
+        int dp = (int) (getResources().getDimension(R.dimen._10sdp) / getResources().getDisplayMetrics().density);
+        tv.setPadding(dp,0,0,0);
         tv.setTextColor(Color.parseColor("#000000"));
         tv.setText(product);
 
@@ -210,8 +231,10 @@ public class Requirement_fulfill_task extends Fragment implements DatePickerDial
         TextView tv1 = new TextView(getContext());
         tv1.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 1f));
         tv1.setGravity(Gravity.LEFT);
+        int dp1 = (int) (getResources().getDimension(R.dimen._15sdp) / getResources().getDisplayMetrics().density);
+        tv1.setPadding(dp1,0,0,0);
         tv1.setTextColor(Color.parseColor("#000000"));
-        tv1.setText(quantity);
+        tv1.setText(quantity+" "+unit);
 
         tr.addView(tv1, 1);
 
@@ -244,17 +267,20 @@ public class Requirement_fulfill_task extends Fragment implements DatePickerDial
 
         if (new Timestamp(date1.getTime()).before(new Timestamp(new Date().getTime()))) {
             AppUtil.showToast(getContext(), "Choose correct time");
-            flag = false;
+            flag= false;
+
         } else {
-            flag = true;
+
+            if(check_length(desc))
+            {
+                flag = true;
+            }
+            else
+                flag=false;
+
+
         }
 
-        if(check_length(desc))
-        {
-            flag=true;
-        }
-        else
-            flag=false;
 
 
         return flag;
@@ -437,7 +463,7 @@ public class Requirement_fulfill_task extends Fragment implements DatePickerDial
 
 
             final ApiServices apiServices = RetrofitClient.getApiService();
-            Call<ResponseBody> call = apiServices.fulfill_req(RequirementDetailActivity.rq_id,toSite.getText().toString(),fromSite.getText().toString(),to_user, from_user, product, prod_list,desc.getText().toString(), deadline);
+            Call<ResponseBody> call = apiServices.fulfill_req(RequirementDetailActivity.rq_id,RequirementDetailActivity.req_site_id, Stock_list_product_wise.site_selected,to_user, from_user, product, prod_list,desc.getText().toString(), deadline);
 
             AppUtil.logger(TAG, "Creation Request : " + call.request().toString() + " Product :" + prod_list + " \n " + " Employee ID  :" + to_user + " \n " + "Assigned by :" + from_user + " \n " + "Deadline :" + deadline + " \n ");
             call.enqueue(new Callback<ResponseBody>() {
@@ -446,29 +472,43 @@ public class Requirement_fulfill_task extends Fragment implements DatePickerDial
 
                     // progress.dismiss();
 
+
                     submitTask.setEnabled(true);
                     submitTask.setProgress(0);
-                    final SweetAlertDialog pDialog = new SweetAlertDialog(getContext(), SweetAlertDialog.SUCCESS_TYPE);
-                    pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
-                    pDialog.setTitleText("Task Created");
-                    pDialog.setContentText("Your task has been successfully created");
-                    pDialog.setCancelable(false);
-                    pDialog.show();
 
-                    pDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                        @Override
-                        public void onClick(SweetAlertDialog sweetAlertDialog) {
-                            pDialog.dismiss();
-                            ChangeFragment.changeFragment(getActivity().getSupportFragmentManager(), R.id.frame_main, com.app.rbc.admin.fragments.RequirementDetails.newInstance(category_selected), com.app.rbc.admin.fragments.RequirementDetails.TAG);
-
-
-                        }
-                    });
                     try {
 
                         try {
                             JSONObject obj = new JSONObject(response.body().string());
                             AppUtil.logger(TAG, obj.toString());
+                            if(obj.getJSONObject("meta").getInt("status")==2)
+                            {
+                                final SweetAlertDialog pDialog = new SweetAlertDialog(getContext(), SweetAlertDialog.SUCCESS_TYPE);
+                                pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+                                pDialog.setTitleText("Task Created");
+                                pDialog.setContentText("Your task has been successfully created");
+                                pDialog.setCancelable(false);
+                                pDialog.show();
+
+                                pDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                    @Override
+                                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                        pDialog.dismiss();
+//                                        while (getFragmentManager().getBackStackEntryCount() != 0) {
+//                                            getFragmentManager().popBackStackImmediate();
+//                                        }
+
+
+                                        ChangeFragment.changeFragment(getActivity().getSupportFragmentManager(), R.id.frame_main, com.app.rbc.admin.fragments.RequirementDetails.newInstance(category_selected), com.app.rbc.admin.fragments.RequirementDetails.TAG);
+
+
+                                    }
+                                });
+                            }
+                            else
+                                AppUtil.showToast(getContext(), "Network Issue. Please check your connectivity and try again");
+
+
                         } catch (IOException e) {
                             e.printStackTrace();
                         }

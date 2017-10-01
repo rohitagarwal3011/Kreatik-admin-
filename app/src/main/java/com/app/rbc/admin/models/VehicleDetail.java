@@ -18,6 +18,17 @@ public class VehicleDetail {
     @SerializedName("trans_id")
     private String mTransId;
 
+    @SerializedName("site_details")
+    private List<SiteDetail> siteDetails;
+
+    public List<SiteDetail> getSiteDetails() {
+        return siteDetails;
+    }
+
+    public void setSiteDetails(List<SiteDetail> siteDetails) {
+        this.siteDetails = siteDetails;
+    }
+
     public List<Detail> getDetails() {
         return mDetails;
     }

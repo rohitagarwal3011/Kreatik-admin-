@@ -2,8 +2,8 @@
        android:shape="rectangle" android:layout_width="wrap_content"
        android:layout_height="wrap_content">
 
-    <solid android:color="@color/Red_700" />
+    <solid android:color="@color/colorAccent" />
     <corners android:radius="@dimen/_8sdp"></corners>
-    <stroke  android:width="2dip" android:color="@color/Red_700"/><corners
+    <stroke  android:width="2dip" android:color="@color/colorAccent"/><corners
 
     /></shape>

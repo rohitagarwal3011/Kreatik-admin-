@@ -206,7 +206,53 @@ public class Splash extends AppCompatActivity {
                                             overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 
                                             finish();
-                                        } else {
+                                        }
+
+                                        else if (type.equalsIgnoreCase("new_po"))
+                                        {
+                                            Intent intent = new Intent(Splash.this, StockActivity.class);
+                                            intent.putExtra("category",intent.getStringExtra("category"));
+                                            intent.putExtra("po_id",intent.getStringExtra("parent_id"));
+                                            intent.putExtra("type",intent.getStringExtra("type"));
+                                            startActivity(intent);
+                                            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+
+                                            finish();
+                                        }
+
+                                        else if (type.equalsIgnoreCase("new_req"))
+                                        {
+                                            Intent intent = new Intent(Splash.this, RequirementActivity.class);
+                                            intent.putExtra("category",intent.getStringExtra("category"));
+                                            intent.putExtra("rq_id",intent.getStringExtra("rq_id"));
+                                            intent.putExtra("type",intent.getStringExtra("type"));
+                                            startActivity(intent);
+                                            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                                            finish();
+                                        }
+                                        else if (type.equalsIgnoreCase("vehicle") )
+                                        {
+                                            if(intent.getStringExtra("vehicle_for").equalsIgnoreCase("po")) {
+                                                Intent intent = new Intent(Splash.this, StockActivity.class);
+                                                intent.putExtra("category", intent.getStringExtra("category"));
+                                                intent.putExtra("po_id", intent.getStringExtra("parent_id"));
+                                                intent.putExtra("type", intent.getStringExtra("type"));
+                                                startActivity(intent);
+                                                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                                                finish();
+                                            }
+                                            else {
+                                                Intent intent = new Intent(Splash.this, RequirementActivity.class);
+                                                intent.putExtra("category", intent.getStringExtra("category"));
+                                                intent.putExtra("rq_id", intent.getStringExtra("parent_id"));
+                                                intent.putExtra("type", intent.getStringExtra("type"));
+                                                startActivity(intent);
+                                                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                                                finish();
+                                            }
+                                        }
+
+                                        else {
 
 
                                             Intent intent = new Intent(Splash.this, HomeActivity.class);

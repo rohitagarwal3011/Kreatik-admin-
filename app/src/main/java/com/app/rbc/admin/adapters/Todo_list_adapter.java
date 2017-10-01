@@ -147,12 +147,12 @@ public class Todo_list_adapter extends RecyclerView.Adapter<Todo_list_adapter.My
 
         String date_recieved = data.get(position).getDeadline();
         String date = date_recieved.substring(0,date_recieved.indexOf('T'));
-        AppUtil.logger("Date substring: ",date);
+        //AppUtil.logger("Date substring: ",date);
         SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
         try {
             Date formated = fmt.parse(date);
             SimpleDateFormat fmtout = new SimpleDateFormat("EEE, MMM dd");
-            AppUtil.logger("Final date : ", fmtout.format(formated));
+           // AppUtil.logger("Final date : ", fmtout.format(formated));
 
             holder.deadLine.setText(fmtout.format(formated));
 

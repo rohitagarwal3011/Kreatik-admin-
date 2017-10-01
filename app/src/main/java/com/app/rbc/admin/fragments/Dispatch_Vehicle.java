@@ -1,10 +1,13 @@
 package com.app.rbc.admin.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +16,9 @@ import android.widget.EditText;
 
 import com.app.rbc.admin.R;
 import com.app.rbc.admin.activities.AddVehicleActivity;
+import com.app.rbc.admin.activities.HomeActivity;
 import com.app.rbc.admin.activities.RequirementDetailActivity;
+import com.app.rbc.admin.activities.StockActivity;
 import com.app.rbc.admin.interfaces.ApiServices;
 import com.app.rbc.admin.utils.AppUtil;
 import com.app.rbc.admin.utils.RetrofitClient;
@@ -111,6 +116,10 @@ public class Dispatch_Vehicle extends Fragment {
             driverName.setText(bundle.getString("drivername"));
             challanNo.setText(bundle.getString("challannumber"));
         }
+
+        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
+        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Dispatch Vehicle");
 
 
         return view;
@@ -224,8 +233,8 @@ public class Dispatch_Vehicle extends Fragment {
 
                     final SweetAlertDialog pDialog = new SweetAlertDialog(getContext(), SweetAlertDialog.SUCCESS_TYPE);
                     pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
-                    pDialog.setTitleText("Task Created");
-                    pDialog.setContentText("Your task has been successfully created");
+                    pDialog.setTitleText("Vehicle Dispatched");
+                    pDialog.setContentText("Dispatched Vehicle info has been saved.");
                     pDialog.setCancelable(false);
                     pDialog.show();
 
@@ -233,6 +242,11 @@ public class Dispatch_Vehicle extends Fragment {
                         @Override
                         public void onClick(SweetAlertDialog sweetAlertDialog) {
                             pDialog.dismiss();
+                            Intent intent = new Intent(getContext(), HomeActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
+                            getActivity().finish();
                             //((RequirementDetailActivity) getContext()).get_data();
 
                         }

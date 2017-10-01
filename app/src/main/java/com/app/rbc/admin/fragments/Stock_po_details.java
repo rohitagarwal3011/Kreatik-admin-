@@ -6,10 +6,12 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,12 +28,15 @@ import com.app.rbc.admin.adapters.Vehicle_detail_adapter;
 import com.app.rbc.admin.interfaces.ApiServices;
 import com.app.rbc.admin.models.Product;
 import com.app.rbc.admin.models.StockPoDetails;
+import com.app.rbc.admin.models.db.models.Categoryproduct;
 import com.app.rbc.admin.utils.AppUtil;
 import com.app.rbc.admin.utils.RetrofitClient;
 import com.app.rbc.admin.utils.TagsPreferences;
 import com.facebook.drawee.generic.RoundingParams;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.gson.Gson;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -52,6 +57,7 @@ public class Stock_po_details extends Fragment {
     public static final String TAG = "Stock_po_details";
     private static final String PO_NUMBER = "PO_NUMBER";
     private static final String ARG_PARAM2 = "param2";
+
     @BindView(R.id.profile_pic)
     SimpleDraweeView profilePic;
     @BindView(R.id.employee_name)
@@ -117,6 +123,10 @@ public class Stock_po_details extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_stock_po_details, container, false);
         unbinder = ButterKnife.bind(this, view);
+        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
+        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("PO number : "+po_number);
+
         return view;
     }
 
@@ -188,16 +198,38 @@ public class Stock_po_details extends Fragment {
     private void set_po_details() {
 
         StockPoDetails.PoDetail poDetail = stockPoDetails.getPoDetails().get(0);
-        String[] user = AppUtil.get_employee_from_user_id(getContext(), poDetail.getDetails().get(0).getCreatedBy().toString().trim());
+        if(poDetail.getDetails().get(0).getCreatedBy().toString().trim().equalsIgnoreCase(AppUtil.getString(getContext(),TagsPreferences.USER_ID)))
+        {
+            employeeName.setText(AppUtil.getString(getContext(),TagsPreferences.NAME));
+            role.setText(AppUtil.getString(getContext(),TagsPreferences.ROLE));
+            int color = getContext().getResources().getColor(R.color.black_overlay);
+            RoundingParams roundingParams = RoundingParams.fromCornersRadius(5f);
+            roundingParams.setBorder(color, 1.0f);
+            roundingParams.setRoundAsCircle(true);
+            profilePic.getHierarchy().setRoundingParams(roundingParams);
+
+
+            profilePic.setImageURI(AppUtil.getString(getContext(),TagsPreferences.PROFILE_IMAGE));
+
+
+        }
+        else
+        {
+            String[] user = AppUtil.get_employee_from_user_id(getContext(), poDetail.getDetails().get(0).getCreatedBy().toString().trim());
+
+            show_profile_pic(user);
+            employeeName.setText(user[0]);
+            role.setText(user[2]);
+        }
         AppUtil.logger("User Details : ", poDetail.getDetails().get(0).getCreatedBy());
-        show_profile_pic(user);
-        employeeName.setText(user[0]);
-        role.setText(user[2]);
+
         PODate.setText(poDetail.getDetails().get(0).getCreationDt());
         // POQuantity.setText(poDetail.getDetails().get(0)..toString());
         POAmount.setText(poDetail.getDetails().get(0).getPrice().toString());
         POPayMode.setText(poDetail.getDetails().get(0).getPayMode());
         POStatus.setText(poDetail.getDetails().get(0).getStatus());
+
+
 
     }
 
@@ -246,6 +278,12 @@ public class Stock_po_details extends Fragment {
     }
 
     private void addrow(String product, String quantity, String rem_quantity) {
+        String unit = "";
+        List<Categoryproduct> categoryproductList = Categoryproduct.find(Categoryproduct.class,
+                "product = ?",product);
+        if(categoryproductList.size() != 0) {
+            unit = categoryproductList.get(0).getUnit();
+        }
         TableRow tr = new TableRow(getContext());
         TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
 
@@ -265,7 +303,7 @@ public class Stock_po_details extends Fragment {
         tv1.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 1f));
         tv1.setGravity(Gravity.CENTER_HORIZONTAL);
         tv1.setTextColor(Color.parseColor("#000000"));
-        tv1.setText(quantity);
+        tv1.setText(quantity+" "+unit);
 
         tr.addView(tv1, 1);
 
@@ -273,7 +311,7 @@ public class Stock_po_details extends Fragment {
         tv2.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 1f));
         tv2.setGravity(Gravity.CENTER_HORIZONTAL);
         tv2.setTextColor(Color.parseColor("#000000"));
-        tv2.setText(rem_quantity);
+        tv2.setText(rem_quantity+" "+unit);
 
         tr.addView(tv2, 2);
         productTable.addView(tr, count);

@@ -5,7 +5,21 @@
     android:orientation="horizontal" android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-  <com.mikhaellopez.circularimageview.CircularImageView
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/profile_pic"
+        android:layout_width="@dimen/_40sdp"
+        android:layout_height="@dimen/_40sdp"
+        android:layout_gravity="left"
+        android:visibility="gone"
+        fresco:roundAsCircle="true"
+        fresco:roundedCornerRadius="@dimen/_5sdp"
+        fresco:roundWithOverlayColor="#ccc"
+        fresco:roundBottomLeft="false"
+        fresco:roundBottomRight="false"
+        fresco:roundingBorderWidth="1dp"
+        fresco:roundingBorderColor="#eee"/>
+
+  <!--<com.mikhaellopez.circularimageview.CircularImageView
         android:id="@+id/profile_pic"
         android:layout_width="@dimen/_40sdp"
         android:layout_height="@dimen/_40sdp"
@@ -16,7 +30,7 @@
         app:civ_border_width="@dimen/_2sdp"
         app:civ_shadow="true"
         app:civ_shadow_radius="0"
-        app:civ_shadow_color="@color/white"/>
+        app:civ_shadow_color="@color/white"/>-->
 
     <LinearLayout
         android:id="@+id/left_message_layout"

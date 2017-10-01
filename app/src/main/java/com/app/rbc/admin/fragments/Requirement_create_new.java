@@ -5,6 +5,8 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -20,6 +22,7 @@ import com.app.rbc.admin.R;
 import com.app.rbc.admin.activities.RequirementActivity;
 import com.app.rbc.admin.activities.StockActivity;
 import com.app.rbc.admin.interfaces.ApiServices;
+import com.app.rbc.admin.models.db.models.Categoryproduct;
 import com.app.rbc.admin.models.db.models.site_overview.Requirement;
 import com.app.rbc.admin.utils.AppUtil;
 import com.app.rbc.admin.utils.RetrofitClient;
@@ -113,6 +116,11 @@ public class Requirement_create_new extends Fragment {
             requirement_title.setText(bundle.getString("title"));
             purpose.setText(bundle.getString("purpose"));
         }
+
+        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
+        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Create New Requirement");
+
         return view;
     }
 
@@ -162,6 +170,18 @@ public class Requirement_create_new extends Fragment {
 
     private void addrow(String product,String quantity)
     {
+
+        Log.e("Product",product);
+        String unit = "";
+        List<Categoryproduct> categoryproductList = Categoryproduct.find(Categoryproduct.class,
+                "product = ?",product);
+        Log.e("Categoryproduct",categoryproductList.size()+"");
+        if(categoryproductList.size() != 0) {
+
+            unit = categoryproductList.get(0).getUnit();
+            Log.e("Unit",unit);
+        }
+
         TableRow tr = new TableRow(getContext());
         TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
 
@@ -172,6 +192,8 @@ public class Requirement_create_new extends Fragment {
         TextView tv = new TextView(getContext());
         tv.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 1f));
         tv.setGravity(Gravity.LEFT);
+        int dp1 = (int) (getResources().getDimension(R.dimen._10sdp) / getResources().getDisplayMetrics().density);
+        tv.setPadding(dp1,0,0,0);
         tv.setTextColor(Color.parseColor("#000000"));
         tv.setText(product);
 
@@ -180,8 +202,10 @@ public class Requirement_create_new extends Fragment {
         TextView tv1 = new TextView(getContext());
         tv1.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 1f));
         tv1.setGravity(Gravity.LEFT);
+        int dp = (int) (getResources().getDimension(R.dimen._15sdp) / getResources().getDisplayMetrics().density);
+        tv1.setPadding(dp,0,0,0);
         tv1.setTextColor(Color.parseColor("#000000"));
-        tv1.setText(quantity);
+        tv1.setText(quantity+" "+unit);
 
         tr.addView(tv1, 1);
 
@@ -222,7 +246,7 @@ public class Requirement_create_new extends Fragment {
             submitTask.setEnabled(false);
             final ApiServices apiServices = RetrofitClient.getApiService();
             // AppUtil.logger(TAG, "User id : " + user_id + " Pwd : " + new_password.getText().toString());
-            Call<ResponseBody> call = apiServices.create_req(requirement_title.getText().toString(), AppUtil.getString(getContext(), TagsPreferences.USER_ID), purpose.getText().toString(), "Site A", category_selected, prod_list);
+            Call<ResponseBody> call = apiServices.create_req(requirement_title.getText().toString(), AppUtil.getString(getContext(), TagsPreferences.USER_ID), purpose.getText().toString(), "1", category_selected, prod_list);
             AppUtil.logger("Create a requirement ", ": " + call.request().toString());
             call.enqueue(new Callback<ResponseBody>() {
                 @Override
@@ -248,11 +272,15 @@ public class Requirement_create_new extends Fragment {
                                     @Override
                                     public void onClick(SweetAlertDialog sweetAlertDialog) {
                                         pDialog.dismiss();
-                                        ((RequirementActivity) getContext()).show_tablayout();
+                                        ((RequirementActivity) getContext()).get_category_requirements(category_selected);
 
                                     }
                                 });
 
+                            }
+                            else
+                            {
+                                AppUtil.showToast(getContext(), "Network Issue. Please check your connectivity and try again");
                             }
                         } catch (IOException e) {
                             e.printStackTrace();

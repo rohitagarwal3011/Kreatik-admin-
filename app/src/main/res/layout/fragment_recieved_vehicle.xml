@@ -3,13 +3,15 @@
     android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_height="match_parent"
-    tools:context="com.app.rbc.admin.fragments.RecievedVehicle">
+    tools:context="com.app.rbc.admin.fragments.RecievedVehicle"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto">
+
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true">
-    
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

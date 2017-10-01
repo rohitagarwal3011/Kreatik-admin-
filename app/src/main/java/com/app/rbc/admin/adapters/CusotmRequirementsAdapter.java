@@ -59,12 +59,10 @@ public class CusotmRequirementsAdapter extends RecyclerView.Adapter<CusotmRequir
             String[] quantities = requirements.get(position).getQuantities().split("\\|");
             String[] rem_quantities = requirements.get(position).getRemquantities().split("\\|");
 
-            Log.e("Quantitites", Arrays.toString(quantities));
-            Log.e("Rem Quantitites", Arrays.toString(rem_quantities));
-            float quantity = 0, rem_quantity = 0;
+            int quantity = 0, rem_quantity = 0;
             for(int i = 0 ; i < quantities.length ; i++) {
-                quantity += Float.valueOf(quantities[i]);
-                rem_quantity += Float.valueOf(rem_quantities[i]);
+                quantity +=  Math.round(Float.valueOf(quantities[i]));
+                rem_quantity += Math.round(Float.valueOf(rem_quantities[i]));
 
             }
 
