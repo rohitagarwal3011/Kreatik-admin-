@@ -122,6 +122,7 @@ public class Task_home extends Fragment implements Todo_list_adapter.OnItemLongC
     private Button deadline_button;
     private Calendar myCalendar;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private static boolean proceed ;
 
     public Task_home() {
         // Required empty public constructor
@@ -141,6 +142,7 @@ public class Task_home extends Fragment implements Todo_list_adapter.OnItemLongC
         super.onCreate(savedInstanceState);
 
         if (getArguments() != null) {
+            proceed = true;
             AppUtil.logger(TAG, getArguments().getString(TASK_ID));
             getTaskId = getArguments().getString(TASK_ID);
             getTaskTitle = getArguments().getString(TASK_TITLE);
@@ -400,9 +402,9 @@ public class Task_home extends Fragment implements Todo_list_adapter.OnItemLongC
         tasksRecyclerView.setAdapter(tasks_assigned_adapter);
         tasks_assigned_adapter.notifyDataSetChanged();
 
-        if (getArguments() != null) {
+        if (proceed) {
             AppUtil.logger(TAG, "proceed to details");
-
+            proceed=false;
 
             proceed_to_details(getTaskId, getTaskTitle);
         }

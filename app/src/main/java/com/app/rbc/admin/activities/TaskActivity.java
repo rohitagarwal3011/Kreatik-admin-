@@ -316,6 +316,7 @@ public class TaskActivity extends AppCompatActivity implements Task_home.OnTaskT
         {
             visible_fragment="Employee_list";
             setToolbar("Select Employee");
+
             super.onBackPressed();
         }
 
@@ -323,6 +324,7 @@ public class TaskActivity extends AppCompatActivity implements Task_home.OnTaskT
         {
             getSupportActionBar().setTitle("Task");
             visible_fragment="Task_home";
+
             super.onBackPressed();
 //            FragmentTransaction fm = getSupportFragmentManager().beginTransaction();
 //            fm.replace(R.id.frame_main, new Task_home());

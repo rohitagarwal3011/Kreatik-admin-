@@ -138,6 +138,18 @@ public class Stock_categories extends Fragment implements View.OnClickListener{
             ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Choose Category");
 
         }
+
+        if(source_activity.equalsIgnoreCase("StockActivity"))
+        {
+           // fab.setVisibility(View.VISIBLE);
+            fab.show();
+        }
+        else {
+            fab.hide();
+
+        }
+
+
         fab.setOnClickListener(this);
         return view;
     }
