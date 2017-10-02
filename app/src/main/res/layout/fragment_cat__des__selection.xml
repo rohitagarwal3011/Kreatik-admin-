@@ -80,6 +80,7 @@
                             android:layout_toRightOf="@id/po_number_title"
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/_40sdp"
+                            android:inputType="textCapSentences"
                             android:textSize="@dimen/_12sdp"
                             android:background="@drawable/round_edittext_light"
                             android:padding="@dimen/_5sdp"
