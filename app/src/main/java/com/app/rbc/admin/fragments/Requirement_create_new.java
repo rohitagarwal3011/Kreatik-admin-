@@ -218,12 +218,7 @@ public class Requirement_create_new extends Fragment {
 
         Boolean flag = false;
 
-        if(requirement_title.getText().toString().trim().length()==0)
-        {
-            requirement_title.setError("Enter Title");
-            flag=false;
-        }
-        else if(purpose.getText().toString().trim().length()==0)
+        if(purpose.getText().toString().trim().length()==0)
         {
             purpose.setError("Enter purpose");
             flag=false;
@@ -246,7 +241,7 @@ public class Requirement_create_new extends Fragment {
             submitTask.setEnabled(false);
             final ApiServices apiServices = RetrofitClient.getApiService();
             // AppUtil.logger(TAG, "User id : " + user_id + " Pwd : " + new_password.getText().toString());
-            Call<ResponseBody> call = apiServices.create_req(requirement_title.getText().toString(), AppUtil.getString(getContext(), TagsPreferences.USER_ID), purpose.getText().toString(), "1", category_selected, prod_list);
+            Call<ResponseBody> call = apiServices.create_req( AppUtil.getString(getContext(), TagsPreferences.USER_ID), purpose.getText().toString(), "1", category_selected, prod_list);
             AppUtil.logger("Create a requirement ", ": " + call.request().toString());
             call.enqueue(new Callback<ResponseBody>() {
                 @Override

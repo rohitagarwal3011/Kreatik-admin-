@@ -124,6 +124,12 @@ public class Employee_list extends Fragment {
         item1.setVisible(false);
         MenuItem item2 = menu.findItem(R.id.completed);
         item2.setVisible(false);
+        MenuItem item3 = menu.findItem(R.id.search);
+        item3.setVisible(false);
+
+        MenuItem item4 = menu.findItem(R.id.filter);
+        item4.setVisible(false);
+
     }
 
     @Override
