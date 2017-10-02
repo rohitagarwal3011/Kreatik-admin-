@@ -485,6 +485,11 @@ public class RequirementActivity extends AppCompatActivity implements SearchView
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_requirement_list, container, false);
+            Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
+            ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+            AppBarLayout.LayoutParams toolbarParams = ( AppBarLayout.LayoutParams) toolbar.getLayoutParams();
+            toolbarParams.setScrollFlags(1);
+            toolbar.setLayoutParams(toolbarParams);
             unbinder = ButterKnife.bind(this, rootView);
             position = getArguments().getInt(ARG_SECTION_NUMBER);
             AppUtil.logger("Position for adapter : ",String.valueOf(position));

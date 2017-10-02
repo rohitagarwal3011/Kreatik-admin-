@@ -558,6 +558,9 @@ public class StockActivity extends AppCompatActivity implements SearchView.OnQue
             Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
             ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
             ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle( ((StockActivity)getActivity()).category_selected);
+            AppBarLayout.LayoutParams toolbarParams = ( AppBarLayout.LayoutParams) toolbar.getLayoutParams();
+            toolbarParams.setScrollFlags(1);
+            toolbar.setLayoutParams(toolbarParams);
 
             return view;
         }
