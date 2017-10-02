@@ -13,6 +13,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_margin="@dimen/_5sdp"
+            android:padding="@dimen/_5sdp"
             android:id="@+id/requirement_details_layout"
             android:background="@color/white"
             android:orientation="vertical">
@@ -22,9 +24,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:background="@color/white"
-
-                android:padding="@dimen/_10sdp">
+                android:background="@color/white">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -112,6 +112,7 @@
                             android:layout_height="wrap_content"
                             android:gravity="right|center_vertical"
                             android:text="Site"
+                            android:layout_marginRight="@dimen/_5sdp"
                             android:textColor="@color/black"
                             android:textSize="@dimen/_14sdp" />
                         <TextView
@@ -167,6 +168,7 @@
                         android:layout_height="match_parent"
                         android:gravity="center_vertical"
                         android:text="Assigned"
+                        android:layout_marginRight="@dimen/_5sdp"
                         android:textStyle="bold"
                         android:id="@+id/Requirement_status"
                         android:textColor="@color/colorAccent"
@@ -191,7 +193,7 @@
                     android:textColor="@color/black"
                     android:textSize="@dimen/_11sdp"
                     android:padding="@dimen/_5sdp"
-                    android:background="#ccc"
+                    android:background="@color/heading"
 
                     />
 
@@ -205,23 +207,25 @@
                         android:id="@+id/rowheading"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/round_edittext_unselectable"
+                        android:background="@drawable/round_edittext_light"
                         >
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center_vertical"
                             android:padding="@dimen/_5sdp"
+                            android:textColor="@color/black"
                             android:textAlignment="center"
                             android:layout_weight="1"
                             android:text="Product"
-                            android:textSize="@dimen/_12sdp"/>
+                            android:textSize="@dimen/_10sdp"/>
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Quantity"
                             android:layout_weight="1"
-                            android:textSize="@dimen/_12sdp"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_10sdp"
                             android:gravity="center_vertical"
                             android:padding="@dimen/_5sdp"
                            />
@@ -229,8 +233,9 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Rem. Quantity"
+                            android:textColor="@color/black"
                             android:layout_weight="1"
-                            android:textSize="@dimen/_12sdp"
+                            android:textSize="@dimen/_10sdp"
                             android:gravity="center_vertical"
                             android:padding="@dimen/_5sdp"
 
@@ -249,7 +254,7 @@
                 android:textColor="@color/black"
                 android:textSize="@dimen/_11sdp"
                 android:padding="@dimen/_5sdp"
-                android:background="#ccc"
+                android:background="@color/heading"
                 android:layout_marginTop="@dimen/_10sdp"
                 />
             <TextView
@@ -268,7 +273,7 @@
                 android:textColor="@color/black"
                 android:textSize="@dimen/_11sdp"
                 android:padding="@dimen/_5sdp"
-                android:background="#ccc"
+                android:background="@color/heading"
                 android:layout_marginTop="@dimen/_10sdp"
                 />
 

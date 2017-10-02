@@ -1,6 +1,7 @@
 package com.app.rbc.admin.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.NestedScrollView;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -49,9 +51,23 @@ public class SiteOverviewFragment extends Fragment {
 
         s = Site.findById(Site.class,site);
         ((SiteOverviewActivity)getActivity()).getSupportActionBar().setTitle(s.getName());
+        ((SiteOverviewActivity)getActivity()).getSupportActionBar().setElevation(0);
+        ((SiteOverviewActivity)getActivity()).getSupportActionBar().setHomeButtonEnabled(true);
 
         initializeViews();
         return view;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                getActivity().getSupportFragmentManager().popBackStack();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
 

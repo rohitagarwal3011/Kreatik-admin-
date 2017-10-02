@@ -8,9 +8,9 @@
     android:layout_width="match_parent"
     card_view:cardBackgroundColor="@color/white"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/_5sdp"
-    card_view:cardCornerRadius="@dimen/_5sdp"
-    app:cardElevation="@dimen/_5sdp">
+    android:layout_margin="@dimen/_2sdp"
+    card_view:cardCornerRadius="@dimen/_2sdp"
+    app:cardElevation="@dimen/_2sdp">
 <LinearLayout
     android:orientation="vertical"
     android:layout_width="match_parent"
@@ -64,7 +64,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/transaction_status"
-            android:text="status"
+            android:text="Status"
             android:textStyle="bold"
             android:textSize="@dimen/_10sdp"
             android:textColor="@color/colorAccent"
@@ -113,6 +113,10 @@
         android:layout_marginBottom="@dimen/_5sdp"
         android:orientation="horizontal">
 
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
         <ImageView
             android:layout_width="@dimen/_50sdp"
             android:layout_height="@dimen/_50sdp"
@@ -122,66 +126,57 @@
             android:padding="@dimen/_5sdp"
             android:src="@drawable/ic_vehicle"
             />
-        <!--
-         app:civ_border_color="#ccc"
 
-         app:civ_border_width="@dimen/_1sdp"
-         app:civ_shadow="true"
-         app:civ_shadow_color="#ccc"
-         app:civ_shadow_radius="0" />-->
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:paddingLeft="@dimen/_20sdp"
-            android:gravity="center_vertical">
 
             <TextView
 
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/vehicle_number"
+                android:text="Vehicle Number"
+                android:layout_toRightOf="@id/vehicle_icon"
+                android:layout_marginLeft="@dimen/_10sdp"
                 android:gravity="left|center_vertical"
-                android:text="WB 29 2C 1984"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_11sdp" />
+                android:textSize="@dimen/_12sdp" />
 
             <TextView
 
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
+                android:text="Driver Name"
                 android:id="@+id/driver_name"
-                android:text="Driver : Dinesh Kartik"
+                android:layout_below="@id/vehicle_number"
+                android:layout_alignStart="@id/vehicle_number"
                 android:visibility="visible"
                 android:layout_marginTop="@dimen/_5sdp"
                 android:textColor="@color/mdtp_dark_gray"
-                android:textSize="@dimen/_12sdp" />
+                android:textSize="@dimen/_11sdp" />
 
-
-
-
-
-        </LinearLayout>
 
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignBaseline="@id/vehicle_number"
+            android:layout_height="wrap_content"
             android:id="@+id/challan_link"
-            android:text="Challan-1234"
-            android:textColor="@color/black"
             android:textStyle="bold"
+            android:textColor="@color/mdtp_dark_gray"
+            android:text="Challan Number"
             android:textSize="@dimen/_10sdp"
             android:gravity="center"/>
+
+        </RelativeLayout>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_marginBottom="@dimen/_10sdp"
         android:background="#f4f4f4"
-        android:padding="@dimen/_5sdp"
+        android:id="@+id/tableLinear"
+        android:layout_marginBottom="@dimen/_10sdp"
         >
 
         <TextView
@@ -190,6 +185,7 @@
             android:text="Products Information"
             android:textStyle="bold"
             android:textColor="@color/black"
+            android:padding="@dimen/_5sdp"
             android:textSize="@dimen/_12sdp"/>
 
         <TableLayout
@@ -201,27 +197,23 @@
                 android:id="@+id/rowheading"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
-                android:layout_marginTop="@dimen/_5sdp"
-                android:layout_marginBottom="@dimen/_5sdp"
-                android:padding="@dimen/_3sdp"
                 >
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/_15sdp"
-                    android:layout_weight="1"
-                    android:visibility="gone"
-                    android:gravity="center_horizontal"
-                    android:textColor="@color/black"
-                    android:text="Product"/>
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/_15sdp"
-                    android:text="Quantity"
-                    android:visibility="gone"
-                    android:gravity="center_horizontal"
-                    android:textColor="@color/black"
-                    android:layout_weight="1"/>
+                <!--<TextView-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_weight="1"-->
+                    <!--android:padding="@dimen/_5sdp"-->
+                    <!--android:gravity="center_horizontal"-->
+                    <!--android:textColor="@color/black"-->
+                    <!--android:text="Product"/>-->
+                <!--<TextView-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:text="Quantity"-->
+                    <!--android:padding="@dimen/_5sdp"-->
+                    <!--android:gravity="left"-->
+                    <!--android:textColor="@color/black"-->
+                    <!--android:layout_weight="1"/>-->
             </TableRow>
         </TableLayout>
 
@@ -232,13 +224,14 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:background="#f4f4f4"
-        android:padding="@dimen/_5sdp"
+
         >
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Images"
+            android:padding="@dimen/_5sdp"
             android:textStyle="bold"
             android:textColor="@color/black"
             android:textSize="@dimen/_12sdp"/>

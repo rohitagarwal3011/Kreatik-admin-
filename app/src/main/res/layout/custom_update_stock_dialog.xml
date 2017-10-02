@@ -93,6 +93,7 @@
         android:layout_height="@dimen/_40sdp"
         android:id="@+id/quantity"
         android:textSize="@dimen/_12sdp"
+
         android:padding="@dimen/_5sdp"
         android:textColor="@color/black"
         android:layout_alignTop="@id/quantity_title"
