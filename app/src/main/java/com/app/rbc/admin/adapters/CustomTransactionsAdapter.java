@@ -2,6 +2,7 @@ package com.app.rbc.admin.adapters;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Gravity;
@@ -23,7 +24,10 @@ import com.app.rbc.admin.models.db.models.Site;
 import com.app.rbc.admin.models.db.models.Vendor;
 import com.app.rbc.admin.models.db.models.site_overview.Trans;
 import com.app.rbc.admin.utils.AppUtil;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.squareup.picasso.Picasso;
+
+import org.joda.time.DateTime;
 
 import java.lang.reflect.Array;
 import java.text.DateFormat;
@@ -51,7 +55,7 @@ public class CustomTransactionsAdapter extends RecyclerView.Adapter<CustomTransa
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(
-                R.layout.custom_transaction_item,
+                R.layout.stock_vehicle_info,
                 parent,
                 false
         );
@@ -62,49 +66,33 @@ public class CustomTransactionsAdapter extends RecyclerView.Adapter<CustomTransa
     public void onBindViewHolder(MyViewHolder holder, final int position) {
 
 
-        String date = transactions.get(position).getDispatchdt();
-        SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
-        try {
-            Date formated = fmt.parse(date);
-            SimpleDateFormat fmtout = new SimpleDateFormat("EEE, MMM dd");
-            AppUtil.logger("Final date : ", fmtout.format(formated));
-
-            holder.transactionDate.setText(fmtout.format(formated));
-
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
+        DateTime dateTime = new DateTime(transactions.get(position).getDispatchdt());
+        holder.transactionDate.setText(dateTime.toString("MMM dd, yyyy"));
 
 
         if (transactions.get(position).getSourcetype().equalsIgnoreCase("Stock")) {
             holder.source.setText(Site.findById(Site.class,Long.valueOf(transactions.get(position).getSource())).getName());
-            Picasso.with(context).load((R.drawable.stock)).into(holder.sourceType);
         } else if(transactions.get(position).getSourcetype().equalsIgnoreCase("Site")){
             holder.source.setText(Site.findById(Site.class,Long.valueOf(transactions.get(position).getSource())).getName());
-            Picasso.with(context).load((R.drawable.site_overview)).into(holder.sourceType);
         }
         else {
 
             holder.source.setText(Vendor.find(Vendor.class,"vendorid = ?",transactions.get(position)
                     .getSource()).get(0).getName());
-            Picasso.with(context).load((R.drawable.user)).into(holder.sourceType);
         }
 
         if (transactions.get(position).getDesttype().equalsIgnoreCase("Stock")) {
             holder.destination.setText(Site.findById(Site.class,Long.valueOf(transactions.get(position).getDestination())).getName());
-            Picasso.with(context).load((R.drawable.stock)).into(holder.destinationType);
         } else if(transactions.get(position).getDesttype().equalsIgnoreCase("Site")){
             holder.destination.setText(Site.findById(Site.class,Long.valueOf(transactions.get(position).getDestination())).getName());
-            Picasso.with(context).load((R.drawable.site_overview)).into(holder.destinationType);
         }
         else {
             holder.destination.setText(Vendor.find(Vendor.class,"vendorid = ?",transactions.get(position)
             .getDestination()).get(0).getName());
-            Picasso.with(context).load((R.drawable.user)).into(holder.destinationType);
         }
-        int quantity = 0;
         String unit = "";
+        holder.productTable.removeAllViews();
+
         if(transactions.get(position).getProducts() != null && !(transactions.get(position).getProducts().equals(""))) {
             String[] products = transactions.get(position).getProducts().split("\\|");
             String[] quantities = transactions.get(position).getQuantites().split("\\|");
@@ -117,31 +105,58 @@ public class CustomTransactionsAdapter extends RecyclerView.Adapter<CustomTransa
             Log.e("Products", Arrays.toString(products));
             Log.e("Quantities",Arrays.toString(quantities));
 
-            holder.productTable.setVisibility(View.VISIBLE);
-            holder.productTable.removeAllViews();
+            holder.tableLinear.setVisibility(View.VISIBLE);
 
 
             for(int i = 0 ; i < products.length ; i++) {
-                View tr = ((SiteOverviewActivity)context).getLayoutInflater().inflate(R.layout.custom_requirement_table_row,null);
+                TableRow tr = new TableRow(context);
+                TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
 
-                TextView productText = (TextView) tr.findViewById(R.id.product);
-                TextView quantityText = (TextView) tr.findViewById(R.id.quantity);
-                Button product_icon = (Button) tr.findViewById(R.id.product_icon);
+                layoutParams.setMargins(0, (int) context.getResources().getDimension(R.dimen._5sdp), 0, (int) context.getResources().getDimensionPixelSize(R.dimen._5sdp));
+                tr.setLayoutParams(layoutParams);
+                tr.setPadding((int) context.getResources().getDimension(R.dimen._3sdp), (int) context.getResources().getDimension(R.dimen._3sdp), (int) context.getResources().getDimension(R.dimen._3sdp), (int) context.getResources().getDimension(R.dimen._3sdp));
 
-                productText.setText(products[i]);
-                quantityText.setText(Math.round(Float.valueOf(quantities[i]))+" "+unit);
-                product_icon.setText(products[i].substring(0,1));
+                TextView tv = new TextView(context);
+                tv.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 1f));
+                tv.setGravity(Gravity.LEFT);
+                tv.setTextColor(Color.parseColor("#000000"));
+                tv.setText(products[i]);
+
+                tr.addView(tv, 0);
+
+                TextView tv1 = new TextView(context);
+                tv1.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 1f));
+                tv1.setGravity(Gravity.LEFT);
+                tv1.setTextColor(Color.parseColor("#000000"));
+                tv1.setText(Math.round(Float.valueOf(quantities[i]))+" "+unit);
+
+                tr.addView(tv1, 1);
 
 
                 holder.productTable.addView(tr);
-                quantity += Float.valueOf(quantities[i]);
             }
         }
         else {
-            holder.tablelinear.setVisibility(View.GONE);
+            holder.tableLinear.setVisibility(View.GONE);
         }
 
-        holder.transaction_quantity.setText(Math.round(quantity)+" "+unit);
+        holder.driver_name.setText("Driver : "+transactions.get(position).getDriver());
+        holder.challan_link.setText("Challan No.\n"+transactions.get(position).getChallannum());
+        holder.vehicle_number.setText(transactions.get(position).getVehiclenumber());
+        if(transactions.get(position).getStatus().equalsIgnoreCase("Received")) {
+
+
+            String[] urls = transactions.get(position).getChallanimg().split("\\|");
+            Uri challanUrl = Uri.parse(urls[0]);
+            Uri invoiceUrl = Uri.parse(urls[1]);
+            Uri onreceiveUrl = Uri.parse(urls[2]);
+            Uri unloadedUrl = Uri.parse(urls[3]);
+
+            holder.challan_img.setImageURI(challanUrl);
+            holder.invoice_img.setImageURI(invoiceUrl);
+            holder.onreceive_img.setImageURI(onreceiveUrl);
+            holder.unloaded_img.setImageURI(unloadedUrl);
+        }
 
     }
 
@@ -151,27 +166,30 @@ public class CustomTransactionsAdapter extends RecyclerView.Adapter<CustomTransa
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder{
-        ImageView sourceType;
-        ImageView destinationType;
-        TextView transactionDate;
         TextView source;
         TextView destination;
+        TextView transactionDate;
+        TextView vehicle_number,driver_name,challan_link;
+        SimpleDraweeView challan_img,invoice_img,
+                onreceive_img,unloaded_img;
+        LinearLayout tableLinear;
+
         TableLayout productTable;
-        LinearLayout tablelinear;
-        TextView transaction_quantity;
 
-
-        public MyViewHolder(View itemView) {
-            super(itemView);
-            sourceType = (ImageView) itemView.findViewById(R.id.source_type);
-            transactionDate = (TextView) itemView.findViewById(R.id.transaction_date);
-
-            source = (TextView) itemView.findViewById(R.id.source);
-            destinationType = (ImageView) itemView.findViewById(R.id.destination_type);
-            destination = (TextView) itemView.findViewById(R.id.destination);
-            productTable = (TableLayout) itemView.findViewById(R.id.product_table);
-            tablelinear = (LinearLayout) itemView.findViewById(R.id.tablelinear);
-            transaction_quantity = (TextView) itemView.findViewById(R.id.transaction_quantity);
+        public MyViewHolder(View view) {
+            super(view);
+            transactionDate = (TextView) view.findViewById(R.id.transaction_date);
+            source = (TextView) view.findViewById(R.id.source);
+            destination = (TextView) view.findViewById(R.id.destination);
+            productTable = (TableLayout) view.findViewById(R.id.product_table);
+            vehicle_number = (TextView) view.findViewById(R.id.vehicle_number);
+            driver_name = (TextView) view.findViewById(R.id.driver_name);
+            challan_link = (TextView) view.findViewById(R.id.challan_link);
+            challan_img = (SimpleDraweeView) view.findViewById(R.id.challan_img);
+            invoice_img = (SimpleDraweeView) view.findViewById(R.id.invoice_img);
+            onreceive_img = (SimpleDraweeView) view.findViewById(R.id.onrecieve_img);
+            unloaded_img = (SimpleDraweeView) view.findViewById(R.id.unloaded_img);
+            tableLinear = (LinearLayout) view.findViewById(R.id.tableLinear);
 
 
         }

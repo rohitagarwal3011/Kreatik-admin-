@@ -101,6 +101,7 @@
                 android:layout_below="@id/product_table_title">
                 <TableRow
                     android:id="@+id/rowheading"
+                    android:background="@drawable/round_edittext_light"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
                     <TextView
@@ -108,18 +109,18 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:padding="@dimen/_5sdp"
-                        android:background="@drawable/round_edittext_light"
                         android:gravity="center"
+                        android:textSize="@dimen/_10sdp"
                         android:textColor="@color/black"
                         android:text="Product"/>
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Quantity"
+                        android:textSize="@dimen/_10sdp"
                         android:layout_weight="1"
                         android:padding="@dimen/_5sdp"
-                        android:background="@drawable/round_edittext_light"
-                        android:gravity="center"
+                        android:gravity="left"
                         android:textColor="@color/black"/>
                 </TableRow>
             </TableLayout>

@@ -135,6 +135,7 @@
                 android:text="Product Details"
                 android:textSize="@dimen/_12sdp"
                 android:padding="@dimen/_5sdp"
+                android:textColor="@color/black"
                 android:background="@color/heading"
                 android:id="@+id/product_table_title"/>
 
@@ -148,22 +149,24 @@
                     android:id="@+id/rowheading"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:background="@drawable/round_edittext_light"
                     >
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:gravity="left"
-                        android:background="@drawable/round_edittext_light"
+                        android:textSize="@dimen/_10sdp"
+                        android:textColor="@color/black"
+                        android:gravity="center"
                         android:padding="@dimen/_5sdp"
                         android:text="Product"/>
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:paddingTop="@dimen/_5sdp"
-                        android:paddingBottom="@dimen/_5sdp"
-                        android:paddingLeft="@dimen/_5sdp"
-                        android:background="@drawable/round_edittext_light"
+                        android:textSize="@dimen/_10sdp"
+                        android:textColor="@color/black"
+                        android:padding="@dimen/_5sdp"
                         android:text="Quantity"
                         android:gravity="left"
                         android:layout_weight="1"/>
@@ -188,7 +191,7 @@
 
             <TextView
                 android:layout_width="@dimen/_80sdp"
-                android:layout_height="@dimen/_40sdp"
+                android:layout_height="@dimen/_80sdp"
                 android:textSize="@dimen/_12sdp"
                 android:padding="@dimen/_5sdp"
                 android:gravity="center_vertical"
@@ -200,9 +203,9 @@
                 android:layout_alignTop="@id/desc_title"
                 android:layout_toRightOf="@id/desc_title"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_40sdp"
+                android:layout_height="@dimen/_80sdp"
                 android:background="@drawable/round_edittext_light"
-                android:inputType="text"
+                android:inputType="textMultiLine"
                 android:textColor="@color/black"
                 android:hint="Add a description"
                 android:padding="@dimen/_3sdp"
@@ -218,7 +221,7 @@
                 android:text="Deadline"
                 android:id="@+id/deadline_title"
                 android:padding="@dimen/_5sdp"
-                android:gravity="center"
+                android:gravity="center_vertical"
                 android:background="@drawable/round_edittext_light"
                 android:textSize="@dimen/_12sdp"/>
             <RelativeLayout

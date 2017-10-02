@@ -52,7 +52,7 @@ public class CustomSiteOverviewPagerAdapter extends FragmentPagerAdapter {
     }
 
     public void refreshAdapter(List<Fragment> fragments) {
-        this.fragments.clear();;
+        this.fragments.clear();
         this.fragments.addAll(fragments);
         notifyDataSetChanged();
     }

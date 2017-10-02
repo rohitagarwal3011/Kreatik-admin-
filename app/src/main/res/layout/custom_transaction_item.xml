@@ -93,55 +93,49 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:padding="@dimen/_5sdp"
         android:id="@+id/tablelinear"
-        android:layout_marginBottom="@dimen/_10sdp"
         >
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Products Information"
-            android:textStyle="bold"
             android:padding="@dimen/_5sdp"
             android:background="#eee"
             android:textColor="@color/black"
-            android:textSize="@dimen/_14sdp"/>
+            android:textSize="@dimen/_12sdp"/>
 
         <TableLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            >
+            android:id="@+id/product_table"
+            android:layout_height="wrap_content">
             <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@drawable/round_edittext_light"
                 >
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:padding="@dimen/_8sdp"
-                    android:background="@drawable/round_edittext_light"
+                    android:padding="@dimen/_5sdp"
                     android:gravity="center_horizontal"
+                    android:textSize="@dimen/_10sdp"
                     android:textColor="@color/black"
                     android:text="Product"/>
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Quantity"
-                    android:padding="@dimen/_8sdp"
-                    android:background="@drawable/round_edittext_light"
-                    android:gravity="center_horizontal"
+                    android:padding="@dimen/_5sdp"
+                    android:textSize="@dimen/_10sdp"
+                    android:gravity="left"
                     android:textColor="@color/black"
                     android:layout_weight="1"/>
             </TableRow>
         </TableLayout>
 
-        <TableLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/product_table"
-            >
-        </TableLayout>
 
     </LinearLayout>
 </LinearLayout>
