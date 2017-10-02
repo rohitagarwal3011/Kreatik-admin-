@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#eee"
     tools:context="com.app.rbc.admin.fragments.Task_home">
 
     <android.support.v4.widget.SwipeRefreshLayout
@@ -123,11 +122,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="@dimen/_2sdp"
-            android:orientation="vertical"
-            android:paddingLeft="@dimen/_5sdp"
-            android:paddingRight="@dimen/_5sdp"
-            android:paddingBottom="@dimen/_5sdp"
-            android:paddingTop="@dimen/_1sdp"/>
+            android:orientation="vertical" />
 
     </LinearLayout>
     </android.support.v4.widget.SwipeRefreshLayout>

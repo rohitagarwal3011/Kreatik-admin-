@@ -492,6 +492,7 @@ public class RequirementActivity extends AppCompatActivity implements SearchView
             swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
                 @Override
                 public void onRefresh() {
+                    swipeRefreshLayout.setRefreshing(false);
                     ((RequirementActivity)getActivity()).get_category_requirements(
                             ((RequirementActivity)getActivity()).category_selected);
                     recyclerView.invalidate();
