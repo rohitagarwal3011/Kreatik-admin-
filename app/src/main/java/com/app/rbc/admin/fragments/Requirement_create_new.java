@@ -13,6 +13,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -182,34 +183,17 @@ public class Requirement_create_new extends Fragment {
             Log.e("Unit",unit);
         }
 
-        TableRow tr = new TableRow(getContext());
-        TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
+        View tr = getActivity().getLayoutInflater().inflate(R.layout.custom_requirement_table_row,null);
 
-        layoutParams.setMargins(0, (int) getResources().getDimension(R.dimen._5sdp), 0, (int) getResources().getDimensionPixelSize(R.dimen._5sdp));
-        tr.setLayoutParams(layoutParams);
-        tr.setPadding((int) getResources().getDimension(R.dimen._3sdp), (int) getResources().getDimension(R.dimen._3sdp), (int) getResources().getDimension(R.dimen._3sdp), (int) getResources().getDimension(R.dimen._3sdp));
+        TextView productText = (TextView) tr.findViewById(R.id.product);
+        TextView quantityText = (TextView) tr.findViewById(R.id.quantity);
+        Button product_icon = (Button) tr.findViewById(R.id.product_icon);
 
-        TextView tv = new TextView(getContext());
-        tv.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 1f));
-        tv.setGravity(Gravity.LEFT);
-        int dp1 = (int) (getResources().getDimension(R.dimen._10sdp) / getResources().getDisplayMetrics().density);
-        tv.setPadding(dp1,0,0,0);
-        tv.setTextColor(Color.parseColor("#000000"));
-        tv.setText(product);
+        productText.setText(product);
+        quantityText.setText(quantity+" "+unit);
+        product_icon.setText(product.substring(0,1));
 
-        tr.addView(tv, 0);
-
-        TextView tv1 = new TextView(getContext());
-        tv1.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 1f));
-        tv1.setGravity(Gravity.LEFT);
-        int dp = (int) (getResources().getDimension(R.dimen._15sdp) / getResources().getDisplayMetrics().density);
-        tv1.setPadding(dp,0,0,0);
-        tv1.setTextColor(Color.parseColor("#000000"));
-        tv1.setText(quantity+" "+unit);
-
-        tr.addView(tv1, 1);
-
-        productTable.addView(tr, count);
+        productTable.addView(tr);
         count++;
 
     }
@@ -218,12 +202,7 @@ public class Requirement_create_new extends Fragment {
 
         Boolean flag = false;
 
-        if(requirement_title.getText().toString().trim().length()==0)
-        {
-            requirement_title.setError("Enter Title");
-            flag=false;
-        }
-        else if(purpose.getText().toString().trim().length()==0)
+        if(purpose.getText().toString().trim().length()==0)
         {
             purpose.setError("Enter purpose");
             flag=false;
@@ -246,7 +225,7 @@ public class Requirement_create_new extends Fragment {
             submitTask.setEnabled(false);
             final ApiServices apiServices = RetrofitClient.getApiService();
             // AppUtil.logger(TAG, "User id : " + user_id + " Pwd : " + new_password.getText().toString());
-            Call<ResponseBody> call = apiServices.create_req(requirement_title.getText().toString(), AppUtil.getString(getContext(), TagsPreferences.USER_ID), purpose.getText().toString(), "1", category_selected, prod_list);
+            Call<ResponseBody> call = apiServices.create_req( AppUtil.getString(getContext(), TagsPreferences.USER_ID), purpose.getText().toString(), "1", category_selected, prod_list);
             AppUtil.logger("Create a requirement ", ": " + call.request().toString());
             call.enqueue(new Callback<ResponseBody>() {
                 @Override

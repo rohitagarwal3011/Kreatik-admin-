@@ -1,5 +1,6 @@
 package com.app.rbc.admin.activities;
 
+import android.app.ActionBar;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -51,6 +52,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
         ButterKnife.bind(this);
 
         context = this.getApplicationContext();

@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView  xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/_5sdp">
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="@dimen/_5sdp"
-    android:background="@drawable/round_edittext_light"
     >
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
@@ -90,18 +93,16 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:id="@+id/tablelinear"
-        android:layout_marginBottom="@dimen/_10sdp"
-        android:background="#eee"
-        android:padding="@dimen/_10sdp"
         >
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:padding="@dimen/_5sdp"
+            android:background="@color/heading"
             android:text="Products Information"
-            android:textStyle="bold"
             android:textColor="@color/black"
-            android:textSize="@dimen/_14sdp"/>
+            android:textSize="@dimen/_12sdp"/>
 
         <TableLayout
             android:layout_width="match_parent"
@@ -112,22 +113,22 @@
                 android:id="@+id/rowheading"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_5sdp"
-                android:layout_marginBottom="@dimen/_5sdp"
-                android:padding="@dimen/_3sdp"
+                android:background="@drawable/round_edittext_light"
                 >
                 <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/_15sdp"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:padding="@dimen/_5sdp"
                     android:gravity="center_horizontal"
                     android:textColor="@color/black"
                     android:text="Product"/>
                 <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/_15sdp"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/_5sdp"
                     android:text="Quantity"
-                    android:gravity="center_horizontal"
+                    android:gravity="left"
                     android:textColor="@color/black"
                     android:layout_weight="1"/>
             </TableRow>
@@ -135,3 +136,4 @@
 
     </LinearLayout>
 </LinearLayout>
+</android.support.v7.widget.CardView>

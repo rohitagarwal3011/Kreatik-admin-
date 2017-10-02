@@ -24,11 +24,19 @@ public class SiteOverviewActivity extends AppCompatActivity {
         setContentView(R.layout.activity_site_overview);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setElevation(0);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         SugarContext.init(this);
         MultiDex.install(this);
         setFragment(1);
+
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
 
     }
 

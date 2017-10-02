@@ -85,10 +85,10 @@
                 android:layout_height="50dp"
                 android:background="@drawable/round_edittext_light"
                 android:hint="Full Name"
+                android:inputType="textPersonName"
                 android:singleLine="true"
                 android:textSize="15sp"
                 android:layout_toRightOf="@id/fullname_title"
-                android:inputType="textEmailAddress"
                 android:layout_below="@+id/form_employee_mobile"
                 android:paddingLeft="10dp"
                 android:id="@+id/form_employee_fullname"/>

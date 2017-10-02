@@ -322,39 +322,6 @@ public class RequirementDetails extends Fragment {
 
 
         productTable.addView(tr,count);
-//        TableRow tr = new TableRow(getContext());
-//        TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
-//
-//        layoutParams.setMargins(0, (int) getResources().getDimension(R.dimen._5sdp), 0, (int) getResources().getDimensionPixelSize(R.dimen._5sdp));
-//        tr.setLayoutParams(layoutParams);
-//        tr.setPadding((int) getResources().getDimension(R.dimen._3sdp), (int) getResources().getDimension(R.dimen._3sdp), (int) getResources().getDimension(R.dimen._3sdp), (int) getResources().getDimension(R.dimen._3sdp));
-//
-//        TextView tv = new TextView(getContext());
-//        tv.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 1f));
-//        tv.setGravity(Gravity.LEFT);
-//        tv.setTextColor(Color.parseColor("#000000"));
-//        tv.setText(product);
-//
-//        tr.addView(tv, 0);
-//
-//        TextView tv1 = new TextView(getContext());
-//        tv1.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 1f));
-//        tv1.setGravity(Gravity.LEFT);
-//        int dp1 = (int) (getResources().getDimension(R.dimen._15sdp) / getResources().getDisplayMetrics().density);
-//        tv1.setPadding(dp1,0,0,0);
-//        tv1.setTextColor(Color.parseColor("#000000"));
-//        tv1.setText(quantity);
-//
-//        tr.addView(tv1, 1);
-//
-//        TextView tv2 = new TextView(getContext());
-//        tv2.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 1f));
-//        tv2.setGravity(Gravity.LEFT);
-//        tv2.setTextColor(Color.parseColor("#000000"));
-//        tv2.setText(rem_quantity);
-//
-//        tr.addView(tv2, 2);
-//        productTable.addView(tr, count);
         count++;
     }
 
@@ -368,6 +335,7 @@ public class RequirementDetails extends Fragment {
             vehicleHeading.setVisibility(View.VISIBLE);
             vehicleDetails.addAll(requirementDetails.getPoReqVehicleDetails());
             vehicleInfo.setHasFixedSize(true);
+            vehicleInfo.setNestedScrollingEnabled(false);
             LinearLayoutManager gridLayoutManager = new LinearLayoutManager(getContext());
             gridLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
             vehicleInfo.setLayoutManager(gridLayoutManager);

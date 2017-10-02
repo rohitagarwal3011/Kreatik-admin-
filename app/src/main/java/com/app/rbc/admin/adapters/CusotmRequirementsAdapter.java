@@ -16,6 +16,8 @@ import com.app.rbc.admin.models.db.models.site_overview.Requirement;
 import com.app.rbc.admin.models.db.models.site_overview.Stock;
 import com.squareup.picasso.Picasso;
 
+import org.joda.time.DateTime;
+
 import java.sql.Array;
 import java.util.Arrays;
 import java.util.List;
@@ -74,8 +76,9 @@ public class CusotmRequirementsAdapter extends RecyclerView.Adapter<CusotmRequir
                 holder.remaining_quantity.setText(rem_quantity + " " + categoryproducts.get(0).getUnit());
             }
         }
+        DateTime dateTime = new DateTime(requirements.get(position).getCreatedon());
 
-        holder.createdOn.setText(requirements.get(position).getCreatedon());
+        holder.createdOn.setText(dateTime.toString("MMM dd, yyyy"));
 
     }
 
