@@ -111,7 +111,7 @@
                         android:background="@drawable/round_edittext_light"
                         android:gravity="center_vertical"
                         android:hint="Describe your task here"
-                        android:inputType="textMultiLine"
+                        android:inputType="textMultiLine|text"
                         android:maxLines="8"
                         android:padding="@dimen/_5sdp"
                         android:text=""
