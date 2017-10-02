@@ -28,12 +28,15 @@ import com.app.rbc.admin.adapters.Vehicle_detail_adapter;
 import com.app.rbc.admin.interfaces.ApiServices;
 import com.app.rbc.admin.models.Product;
 import com.app.rbc.admin.models.StockPoDetails;
+import com.app.rbc.admin.models.db.models.Categoryproduct;
 import com.app.rbc.admin.utils.AppUtil;
 import com.app.rbc.admin.utils.RetrofitClient;
 import com.app.rbc.admin.utils.TagsPreferences;
 import com.facebook.drawee.generic.RoundingParams;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.gson.Gson;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -275,6 +278,12 @@ public class Stock_po_details extends Fragment {
     }
 
     private void addrow(String product, String quantity, String rem_quantity) {
+        String unit = "";
+        List<Categoryproduct> categoryproductList = Categoryproduct.find(Categoryproduct.class,
+                "product = ?",product);
+        if(categoryproductList.size() != 0) {
+            unit = categoryproductList.get(0).getUnit();
+        }
         TableRow tr = new TableRow(getContext());
         TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
 
@@ -294,7 +303,7 @@ public class Stock_po_details extends Fragment {
         tv1.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 1f));
         tv1.setGravity(Gravity.CENTER_HORIZONTAL);
         tv1.setTextColor(Color.parseColor("#000000"));
-        tv1.setText(quantity);
+        tv1.setText(quantity+" "+unit);
 
         tr.addView(tv1, 1);
 
@@ -302,7 +311,7 @@ public class Stock_po_details extends Fragment {
         tv2.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 1f));
         tv2.setGravity(Gravity.CENTER_HORIZONTAL);
         tv2.setTextColor(Color.parseColor("#000000"));
-        tv2.setText(rem_quantity);
+        tv2.setText(rem_quantity+" "+unit);
 
         tr.addView(tv2, 2);
         productTable.addView(tr, count);

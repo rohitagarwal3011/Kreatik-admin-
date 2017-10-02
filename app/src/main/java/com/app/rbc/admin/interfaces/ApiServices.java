@@ -162,7 +162,7 @@ public interface ApiServices {
     /*Create a requriement*/
     @FormUrlEncoded
     @POST("create_req/")
-    Call<ResponseBody> create_req(@Field("title") String title, @Field("raised_by") String from_user,@Field("purpose") String purpose, @Field("site_id") String site_id, @Field("category") String category ,  @Field("prod_list") JSONArray product_list);
+    Call<ResponseBody> create_req( @Field("raised_by") String from_user,@Field("purpose") String purpose, @Field("site_id") String site_id, @Field("category") String category ,  @Field("prod_list") JSONArray product_list);
 
     /*Fetch Category Requirements*/
     @FormUrlEncoded

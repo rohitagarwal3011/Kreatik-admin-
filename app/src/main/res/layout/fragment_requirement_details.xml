@@ -205,35 +205,36 @@
                         android:id="@+id/rowheading"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:background="@drawable/round_edittext_unselectable"
                         >
                         <TextView
                             android:layout_width="match_parent"
-                            android:layout_height="@dimen/_25sdp"
-                            android:layout_weight="3"
+                            android:layout_height="wrap_content"
                             android:gravity="center_vertical"
-                            android:paddingLeft="@dimen/_5sdp"
-                            android:background="@drawable/round_edittext_light"
+                            android:padding="@dimen/_5sdp"
+                            android:textAlignment="center"
+                            android:layout_weight="1"
                             android:text="Product"
-                            android:textSize="@dimen/_10sdp"/>
+                            android:textSize="@dimen/_12sdp"/>
                         <TextView
                             android:layout_width="match_parent"
-                            android:layout_height="@dimen/_25sdp"
+                            android:layout_height="wrap_content"
                             android:text="Quantity"
-                            android:visibility="gone"
-                            android:textSize="@dimen/_11sdp"
+                            android:layout_weight="1"
+                            android:textSize="@dimen/_12sdp"
                             android:gravity="center_vertical"
-                            android:paddingLeft="@dimen/_5sdp"
-                            android:background="@drawable/round_edittext_light"
-                            android:layout_weight=".5"/>
+                            android:padding="@dimen/_5sdp"
+                           />
                         <TextView
                             android:layout_width="match_parent"
-                            android:layout_height="@dimen/_25sdp"
+                            android:layout_height="wrap_content"
                             android:text="Rem. Quantity"
-                            android:textSize="@dimen/_10sdp"
+                            android:layout_weight="1"
+                            android:textSize="@dimen/_12sdp"
                             android:gravity="center_vertical"
-                            android:paddingLeft="@dimen/_5sdp"
-                            android:background="@drawable/round_edittext_light"
-                            android:layout_weight=".5"/>
+                            android:padding="@dimen/_5sdp"
+
+                            />
                     </TableRow>
                 </TableLayout>
 
@@ -255,11 +256,8 @@
                 android:id="@+id/fulfillment_desc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingLeft="@dimen/_10sdp"
-                android:paddingRight="@dimen/_10sdp"
-                android:paddingTop="@dimen/_5sdp"
+                android:padding="@dimen/_10sdp"
                 android:background="@color/white"
-                android:text=""
                 android:textColor="@color/black"/>
 
             <TextView
