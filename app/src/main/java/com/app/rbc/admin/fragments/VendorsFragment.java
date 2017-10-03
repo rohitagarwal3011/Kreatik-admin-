@@ -20,11 +20,13 @@ import android.widget.Toast;
 
 import com.app.rbc.admin.R;
 import com.app.rbc.admin.activities.IndentRegisterActivity;
+import com.app.rbc.admin.activities.SettingsActivity;
 import com.app.rbc.admin.adapters.CustomVendorListAdapter;
 import com.app.rbc.admin.api.APIController;
 import com.app.rbc.admin.models.db.models.Vendor;
 
 import java.util.List;
+import java.util.Set;
 
 
 public class VendorsFragment extends Fragment implements View.OnClickListener {
@@ -52,7 +54,7 @@ public class VendorsFragment extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_vendors, container, false);
-        ((IndentRegisterActivity)getActivity()).getSupportActionBar().setTitle("Vendor");
+        ((SettingsActivity)getActivity()).getSupportActionBar().setTitle("Vendor");
 
         initializeViews();
         return view;
@@ -108,7 +110,7 @@ public class VendorsFragment extends Fragment implements View.OnClickListener {
 
                     int a=rv.getChildPosition(child);
                     //Log.e("Listener Id",jobList.get(a).getId()+"");
-                    ((IndentRegisterActivity)getContext()).setFragment(8,vendors.get(a).getId());
+                    ((SettingsActivity)getContext()).setFragment(8,vendors.get(a).getId());
 
 
                     return true;
@@ -145,13 +147,13 @@ public class VendorsFragment extends Fragment implements View.OnClickListener {
             case R.id.add_vendor_icon:
             case R.id.add_vendor_title:
             case R.id.add_vendor_next:
-                ((IndentRegisterActivity)getActivity()).setFragment(8);
+                ((SettingsActivity)getActivity()).setFragment(8);
                 break;
         }
     }
 
     private void callVendorsFetchApi() {
-        APIController controller = new APIController(getContext(),40,IndentRegisterActivity.ACTIVITY);
+        APIController controller = new APIController(getContext(),40,SettingsActivity.ACTIVITY);
         controller.fetchVendors();
     }
 

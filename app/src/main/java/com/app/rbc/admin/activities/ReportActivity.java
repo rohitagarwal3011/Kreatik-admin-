@@ -6,6 +6,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -15,12 +16,14 @@ import android.widget.Toast;
 import com.app.rbc.admin.Manifest;
 import com.app.rbc.admin.R;
 import com.app.rbc.admin.fragments.RecievedVehicle;
+import com.app.rbc.admin.fragments.UpdatePlaceholderFragment;
 import com.orm.SugarContext;
 
 public class ReportActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
     private RecievedVehicle recievedVehicle;
+    private UpdatePlaceholderFragment updatePlaceholderFragment;
     public static final int ACTIVITY = 8;
 
     @Override
@@ -36,14 +39,40 @@ public class ReportActivity extends AppCompatActivity {
         setFragment(1);
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId())
+        {
+            case android.R.id.home :
+                onBackPressed();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+    }
+
+
 
     private void setFragment(int code) {
         switch (code) {
             case 1:
-                recievedVehicle = new RecievedVehicle();
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                        recievedVehicle).commit();
+                updatePlaceholderFragment = new UpdatePlaceholderFragment();
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container,updatePlaceholderFragment)
+                        .commit();
                 break;
+//                recievedVehicle = new RecievedVehicle();
+//                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+//                        recievedVehicle).commit();
+//                break;
         }
     }
 
