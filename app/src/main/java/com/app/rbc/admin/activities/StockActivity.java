@@ -645,8 +645,8 @@ public class StockActivity extends AppCompatActivity implements SearchView.OnQue
             LinearLayoutManager gridLayoutManager = new LinearLayoutManager(getContext());
             gridLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
             recyclerView.setLayoutManager(gridLayoutManager);
-            recyclerView.setItemAnimator(new DefaultItemAnimator());
-            recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
+//            recyclerView.setItemAnimator(new DefaultItemAnimator());
+//            recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
 
 
             Transaction_detail_adapter adapter = new Transaction_detail_adapter(transactionDetails,getContext());

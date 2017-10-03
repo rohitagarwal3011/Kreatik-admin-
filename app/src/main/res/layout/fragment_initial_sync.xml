@@ -16,7 +16,6 @@
         android:indeterminateDrawable="@drawable/progress"
         />
 
-
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -29,12 +28,12 @@
         android:text="Syncing data"/>
 
     <ImageView
-        android:layout_width="@dimen/_40sdp"
+        android:layout_width="@dimen/_35sdp"
         android:layout_centerVertical="true"
-        android:layout_height="@dimen/_40sdp"
+        android:layout_height="@dimen/_32sdp"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="@dimen/_10sdp"
-        android:background="@drawable/kreatik_icon_circle"/>
+        android:background="@drawable/white_logo"/>
 
 
 </RelativeLayout>

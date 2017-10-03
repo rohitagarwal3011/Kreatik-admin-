@@ -139,7 +139,7 @@ public class Transaction_detail_adapter extends RecyclerView.Adapter<Transaction
                 tv1.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 1f));
                 tv1.setGravity(Gravity.LEFT);
                 tv1.setTextColor(Color.parseColor("#000000"));
-                tv1.setText(quantity);
+                tv1.setText(quantity + " "+unit);
 
                 tr.addView(tv1, 1);
 

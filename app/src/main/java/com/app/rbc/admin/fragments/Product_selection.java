@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -195,6 +196,9 @@ public class Product_selection extends Fragment {
         Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
         ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
         ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Select Products");
+        AppBarLayout.LayoutParams toolbarParams = ( AppBarLayout.LayoutParams) toolbar.getLayoutParams();
+        toolbarParams.setScrollFlags(0);
+        toolbar.setLayoutParams(toolbarParams);
 
 
         proceedButton.setOnClickListener(new View.OnClickListener() {

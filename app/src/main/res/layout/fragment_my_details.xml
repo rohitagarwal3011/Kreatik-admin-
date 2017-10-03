@@ -85,7 +85,7 @@
                 android:layout_height="50dp"
                 android:background="@drawable/round_edittext_light"
                 android:hint="Full Name"
-                android:inputType="textPersonName"
+                android:inputType="textPersonName|textCapSentences"
                 android:singleLine="true"
                 android:textSize="15sp"
                 android:layout_toRightOf="@id/fullname_title"

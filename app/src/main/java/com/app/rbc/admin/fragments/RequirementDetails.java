@@ -265,9 +265,13 @@ public class RequirementDetails extends Fragment {
         if(reqDetail.getmDesc().toString().trim().length()==0)
         {
             descriptionHeading.setVisibility(View.GONE);
+            fulfillmentDesc.setVisibility(View.GONE);
         }
-        else
+        else {
+            descriptionHeading.setVisibility(View.VISIBLE);
+            fulfillmentDesc.setVisibility(View.VISIBLE);
             fulfillmentDesc.setText(reqDetail.getmDesc());
+        }
 
         ((RequirementDetailActivity) getContext()).setToolbar(reqDetail.getmTitle());
         RequirementDetailActivity.req_site_name = requirementDetails.getReqDetails().get(0).getSiteDetails().get(0).getName();
