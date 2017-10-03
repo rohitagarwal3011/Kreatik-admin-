@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -52,6 +53,8 @@ public class SiteOverviewPlaceholderFragment extends Fragment {
                 recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
                 RecyclerView.LayoutManager layoutManagerSite = new LinearLayoutManager(getContext());
                 recyclerView.setLayoutManager(layoutManagerSite);
+                recyclerView.setItemAnimator(new DefaultItemAnimator());
+                recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
                 stockDetailsAdapter = new CustomStockDetailsAdapter(getActivity(), stocks);
                 recyclerView.setAdapter(stockDetailsAdapter);
                 break;

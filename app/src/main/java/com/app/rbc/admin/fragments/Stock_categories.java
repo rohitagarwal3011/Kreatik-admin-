@@ -141,6 +141,18 @@ public class Stock_categories extends Fragment implements View.OnClickListener{
             toolbarParams.setScrollFlags(0);
             toolbar.setLayoutParams(toolbarParams);
         }
+
+        if(source_activity.equalsIgnoreCase("StockActivity"))
+        {
+           // fab.setVisibility(View.VISIBLE);
+            fab.show();
+        }
+        else {
+            fab.hide();
+
+        }
+
+
         fab.setOnClickListener(this);
         return view;
     }

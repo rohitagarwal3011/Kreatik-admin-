@@ -2,6 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
     tools:context="com.app.rbc.admin.fragments.RequirementDetails">
@@ -13,8 +14,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="@dimen/_5sdp"
-            android:padding="@dimen/_5sdp"
+
             android:id="@+id/requirement_details_layout"
             android:background="@color/white"
             android:orientation="vertical">
@@ -24,6 +24,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
+                android:layout_margin="@dimen/_5sdp"
+                android:padding="@dimen/_5sdp"
                 android:background="@color/white">
 
                 <TextView
@@ -253,6 +255,7 @@
                 android:id="@+id/description_heading"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_11sdp"
+                android:visibility="gone"
                 android:padding="@dimen/_5sdp"
                 android:background="@color/heading"
                 android:layout_marginTop="@dimen/_10sdp"
@@ -261,7 +264,9 @@
                 android:id="@+id/fulfillment_desc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/_10sdp"
+                android:layout_margin="@dimen/_5sdp"
+                android:padding="@dimen/_5sdp"
+                android:visibility="gone"
                 android:background="@color/white"
                 android:textColor="@color/black"/>
 

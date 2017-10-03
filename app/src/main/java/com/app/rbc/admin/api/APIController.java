@@ -10,6 +10,8 @@ import com.app.rbc.admin.R;
 import com.app.rbc.admin.activities.IndentRegisterActivity;
 import com.app.rbc.admin.activities.ReportActivity;
 import com.app.rbc.admin.activities.SiteOverviewActivity;
+import com.app.rbc.admin.activities.Splash;
+import com.app.rbc.admin.fragments.InitialSyncFragment;
 import com.app.rbc.admin.models.db.models.Categoryproduct;
 import com.app.rbc.admin.models.db.models.Employee;
 import com.app.rbc.admin.models.db.models.Site;
@@ -1074,6 +1076,9 @@ public class APIController{
 
     private void sendAPIResult(int status,String... message) {
         switch (activity) {
+            case 1 : final InitialSyncFragment frag = (InitialSyncFragment)((Splash)context).getSupportFragmentManager().findFragmentByTag("InitialSync");
+                    frag.publichApiResponse(status,code,message[0]);
+                break;
             case 2 : ((SiteOverviewActivity) context).publishAPIResponse(status, code, message[0]);
                 break;
             case 5: ((IndentRegisterActivity) context).publishAPIResponse(status, code, message[0]);

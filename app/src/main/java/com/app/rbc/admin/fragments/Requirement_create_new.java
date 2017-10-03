@@ -4,6 +4,7 @@ package com.app.rbc.admin.fragments;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -122,6 +123,9 @@ public class Requirement_create_new extends Fragment {
         ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
         ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Create New Requirement");
 
+        AppBarLayout.LayoutParams toolbarParams = ( AppBarLayout.LayoutParams) toolbar.getLayoutParams();
+        toolbarParams.setScrollFlags(0);
+        toolbar.setLayoutParams(toolbarParams);
         return view;
     }
 
