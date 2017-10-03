@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -16,6 +17,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -126,6 +128,9 @@ public class Stock_po_details extends Fragment {
         Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
         ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
         ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("PO number : "+po_number);
+        AppBarLayout.LayoutParams toolbarParams = ( AppBarLayout.LayoutParams) toolbar.getLayoutParams();
+        toolbarParams.setScrollFlags(0);
+        toolbar.setLayoutParams(toolbarParams);
 
         return view;
     }
@@ -225,7 +230,7 @@ public class Stock_po_details extends Fragment {
 
         PODate.setText(poDetail.getDetails().get(0).getCreationDt());
         // POQuantity.setText(poDetail.getDetails().get(0)..toString());
-        POAmount.setText(poDetail.getDetails().get(0).getPrice().toString());
+        POAmount.setText("Rs."+" "+poDetail.getDetails().get(0).getPrice().toString());
         POPayMode.setText(poDetail.getDetails().get(0).getPayMode());
         POStatus.setText(poDetail.getDetails().get(0).getStatus());
 
@@ -256,7 +261,8 @@ public class Stock_po_details extends Fragment {
 
     private void set_vehicle_info() {
 
-        vehicleInfo.setHasFixedSize(true);
+        vehicleInfo.setNestedScrollingEnabled(false);
+
         LinearLayoutManager gridLayoutManager = new LinearLayoutManager(getContext());
         gridLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         vehicleInfo.setLayoutManager(gridLayoutManager);
@@ -266,6 +272,7 @@ public class Stock_po_details extends Fragment {
         Vehicle_detail_adapter adapter = new Vehicle_detail_adapter(stockPoDetails.getVehicleDetails(), getContext());
         vehicleInfo.setAdapter(adapter);
         adapter.notifyDataSetChanged();
+
     }
 
     private void set_product_details() {
@@ -284,38 +291,22 @@ public class Stock_po_details extends Fragment {
         if(categoryproductList.size() != 0) {
             unit = categoryproductList.get(0).getUnit();
         }
-        TableRow tr = new TableRow(getContext());
-        TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
+        View tr = getActivity().getLayoutInflater().inflate(R.layout.custom_product_row_layout,null);
 
-        layoutParams.setMargins(0, (int) getResources().getDimension(R.dimen._5sdp), 0, (int) getResources().getDimensionPixelSize(R.dimen._5sdp));
-        tr.setLayoutParams(layoutParams);
-        tr.setPadding((int) getResources().getDimension(R.dimen._3sdp), (int) getResources().getDimension(R.dimen._3sdp), (int) getResources().getDimension(R.dimen._3sdp), (int) getResources().getDimension(R.dimen._3sdp));
+        TextView productText = (TextView) tr.findViewById(R.id.product);
+        TextView quantityText = (TextView) tr.findViewById(R.id.quantity);
+        TextView remaining_quantity_text = (TextView) tr.findViewById(R.id.remaining_quantity);
+        Button product_icon = (Button) tr.findViewById(R.id.product_icon);
+        ImageView delete_icon = (ImageView) tr.findViewById(R.id.delete_icon);
 
-        TextView tv = new TextView(getContext());
-        tv.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 1f));
-        tv.setGravity(Gravity.CENTER_HORIZONTAL);
-        tv.setTextColor(Color.parseColor("#000000"));
-        tv.setText(product);
 
-        tr.addView(tv, 0);
-
-        TextView tv1 = new TextView(getContext());
-        tv1.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 1f));
-        tv1.setGravity(Gravity.CENTER_HORIZONTAL);
-        tv1.setTextColor(Color.parseColor("#000000"));
-        tv1.setText(quantity+" "+unit);
-
-        tr.addView(tv1, 1);
-
-        TextView tv2 = new TextView(getContext());
-        tv2.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 1f));
-        tv2.setGravity(Gravity.CENTER_HORIZONTAL);
-        tv2.setTextColor(Color.parseColor("#000000"));
-        tv2.setText(rem_quantity+" "+unit);
-
-        tr.addView(tv2, 2);
+        productText.setText(product);
+        quantityText.setText(quantity+" "+unit);
+        remaining_quantity_text.setText(rem_quantity+" "+unit);
+        product_icon.setText(product.substring(0,1));
         productTable.addView(tr, count);
-        count++;
+
+
     }
 
     @Override

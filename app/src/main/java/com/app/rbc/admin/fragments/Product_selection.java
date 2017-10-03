@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -195,6 +196,9 @@ public class Product_selection extends Fragment {
         Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
         ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
         ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Select Products");
+        AppBarLayout.LayoutParams toolbarParams = ( AppBarLayout.LayoutParams) toolbar.getLayoutParams();
+        toolbarParams.setScrollFlags(0);
+        toolbar.setLayoutParams(toolbarParams);
 
 
         proceedButton.setOnClickListener(new View.OnClickListener() {
@@ -523,15 +527,17 @@ public class Product_selection extends Fragment {
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.e("Pressed","delete");
                 View view = productTable.getChildAt(v.getId());
                 if (view instanceof TableRow) {
                     // then, you can remove the the row you want...
                     // for instance...
                     TableRow row = (TableRow) view;
 
-                    if( row.getChildAt(1) instanceof TextView  ) {
-                        TextView tv = (TextView) row.getChildAt(1);
-                        productTable.removeViewAt(v.getId());
+                    if( row.getChildAt(1) instanceof RelativeLayout  ) {
+                        Log.e("Deleting",v.getId()+"");
+                        TextView tv = (TextView) row.findViewById(R.id.product);
+                        productTable.removeView(productTable.getChildAt(v.getId()));
                         count--;
                         deleteStateStore(tv.getText().toString());
                         product_grid.remove(tv.getText().toString());

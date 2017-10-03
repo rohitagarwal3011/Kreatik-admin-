@@ -11,9 +11,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/_20sdp"
-            android:paddingEnd="@dimen/_16sdp"
-            android:paddingStart="@dimen/_16sdp">
+            android:padding="@dimen/_10sdp">
 
 
             <TextView
@@ -36,7 +34,7 @@
                 android:layout_toRightOf="@id/vehicle_number_title"
                 android:background="@drawable/round_edittext_light"
                 android:hint="Enter Vehicle Number"
-                android:inputType="text"
+                android:inputType="textPersonName|textCapSentences"
                 android:maxLength="10"
                 android:maxLines="1"
                 android:padding="@dimen/_8sdp"
@@ -67,7 +65,7 @@
                 android:layout_toRightOf="@id/driver_name_title"
                 android:background="@drawable/round_edittext_light"
                 android:hint="Enter Driver's Name"
-                android:inputType="textPersonName"
+                android:inputType="textPersonName|textCapSentences"
                 android:maxLength="20"
                 android:maxLines="1"
                 android:padding="@dimen/_8sdp"
@@ -96,7 +94,7 @@
                 android:layout_alignTop="@id/challan_number_title"
                 android:layout_toRightOf="@id/challan_number_title"
                 android:hint="Enter Challan Number"
-                android:inputType="text"
+                android:inputType="text|textCapSentences"
                 android:maxLength="10"
                 android:background="@drawable/round_edittext_light"
                 android:padding="@dimen/_8sdp"
@@ -111,8 +109,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_40sdp"
                 android:layout_below="@id/challan_number_title"
-                android:layout_marginTop="@dimen/_20sdp"
-                android:layout_marginBottom="@dimen/_20sdp"
+                android:layout_marginTop="@dimen/_10sdp"
                 android:text="submit"
                 android:textColor="@android:color/white"
                 android:textSize="18sp"

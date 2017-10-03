@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -136,8 +137,22 @@ public class Stock_categories extends Fragment implements View.OnClickListener{
           Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
             ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
             ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Choose Category");
+            AppBarLayout.LayoutParams toolbarParams = ( AppBarLayout.LayoutParams) toolbar.getLayoutParams();
+            toolbarParams.setScrollFlags(0);
+            toolbar.setLayoutParams(toolbarParams);
+        }
+
+        if(source_activity.equalsIgnoreCase("StockActivity"))
+        {
+           // fab.setVisibility(View.VISIBLE);
+            fab.show();
+        }
+        else {
+            fab.hide();
 
         }
+
+
         fab.setOnClickListener(this);
         return view;
     }

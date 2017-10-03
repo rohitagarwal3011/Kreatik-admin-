@@ -2,12 +2,15 @@ package com.app.rbc.admin.adapters;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -17,7 +20,10 @@ import com.app.rbc.admin.models.StockCategoryDetails;
 import com.app.rbc.admin.models.VehicleDetail;
 import com.app.rbc.admin.models.db.models.Categoryproduct;
 import com.app.rbc.admin.utils.AppUtil;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.squareup.picasso.Picasso;
+
+import org.joda.time.DateTime;
 
 import java.util.List;
 
@@ -31,29 +37,39 @@ public class Transaction_detail_adapter extends RecyclerView.Adapter<Transaction
 
     private List<StockCategoryDetails.TransactionDetail> data;
     private Context context;
+    private LayoutInflater inflater;
 
     int count;
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
 
-        ImageView sourceType;
-        ImageView destinationType;
-        TextView transactionDate;
         TextView source;
         TextView destination;
+        TextView transactionDate,transaction_status;
+        TextView vehicle_number,driver_name,challan_link;
+        SimpleDraweeView challan_img,invoice_img,
+        onreceive_img,unloaded_img;
+
+        LinearLayout tableLinear;
+
         TableLayout productTable;
-        TextView transaction_quantity;
 
         public MyViewHolder(View view) {
             super(view);
-            sourceType = (ImageView) view.findViewById(R.id.source_type);
             transactionDate = (TextView) view.findViewById(R.id.transaction_date);
-
             source = (TextView) view.findViewById(R.id.source);
-            destinationType = (ImageView) view.findViewById(R.id.destination_type);
             destination = (TextView) view.findViewById(R.id.destination);
             productTable = (TableLayout) view.findViewById(R.id.product_table);
-            transaction_quantity = (TextView) view.findViewById(R.id.transaction_quantity);
+            vehicle_number = (TextView) view.findViewById(R.id.vehicle_number);
+            driver_name = (TextView) view.findViewById(R.id.driver_name);
+            challan_link = (TextView) view.findViewById(R.id.challan_link);
+            challan_img = (SimpleDraweeView) view.findViewById(R.id.challan_img);
+            invoice_img = (SimpleDraweeView) view.findViewById(R.id.invoice_img);
+            onreceive_img = (SimpleDraweeView) view.findViewById(R.id.onrecieve_img);
+            unloaded_img = (SimpleDraweeView) view.findViewById(R.id.unloaded_img);
+            tableLinear = (LinearLayout) view.findViewById(R.id.tableLinear);
+            transaction_status = (TextView) view.findViewById(R.id.transaction_status);
+
             count=1;
 
         }
@@ -63,13 +79,15 @@ public class Transaction_detail_adapter extends RecyclerView.Adapter<Transaction
     public Transaction_detail_adapter(List<StockCategoryDetails.TransactionDetail> data, Context context) {
         this.data = data;
         this.context = context;
+        this.inflater = (LayoutInflater) context.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
+
     }
 
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.stock_transaction_details, parent, false);
+                .inflate(R.layout.stock_vehicle_info, parent, false);
         return new MyViewHolder(itemView);
     }
 
@@ -81,58 +99,14 @@ public class Transaction_detail_adapter extends RecyclerView.Adapter<Transaction
 
         holder.source.setText(transactionDetail.getDetails().get(0).getSource());
         holder.destination.setText(transactionDetail.getDetails().get(0).getDestination());
-        holder.transactionDate.setText(transactionDetail.getDetails().get(0).getDispatchDt());
-        if (transactionDetail.getDetails().get(0).getSourceType().equalsIgnoreCase("Stock")) {
-            Picasso.with(context).load((R.drawable.stock)).into(holder.sourceType);
-        } else if(transactionDetail.getDetails().get(0).getSourceType().equalsIgnoreCase("Site")){
-
-            Picasso.with(context).load((R.drawable.site_overview)).into(holder.sourceType);
-        }
-        else {
-            Picasso.with(context).load((R.drawable.user)).into(holder.sourceType);
-        }
-
-        if (transactionDetail.getDetails().get(0).getDestType().equalsIgnoreCase("Stock")) {
-            Picasso.with(context).load((R.drawable.stock)).into(holder.destinationType);
-        } else if(transactionDetail.getDetails().get(0).getDestType().equalsIgnoreCase("Site")){
-
-            Picasso.with(context).load((R.drawable.site_overview)).into(holder.destinationType);
-        }
-        else {
-            Picasso.with(context).load((R.drawable.user)).into(holder.destinationType);
-        }
+        DateTime dateTime = new DateTime(transactionDetail.getDetails().get(0).getDispatchDt());
+        holder.transactionDate.setText(dateTime.toString("MMM dd, yyyy"));
 
         if(!transactionDetail.getProducts().isEmpty()) {
 
             holder.productTable.setVisibility(View.VISIBLE);
             holder.productTable.removeAllViews();
-            TableRow tr0 = new TableRow(context);
-            TableRow.LayoutParams layoutParams0 = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
 
-            layoutParams0.setMargins(0, (int) context.getResources().getDimension(R.dimen._5sdp), 0, (int) context.getResources().getDimensionPixelSize(R.dimen._5sdp));
-            tr0.setLayoutParams(layoutParams0);
-            tr0.setPadding((int) context.getResources().getDimension(R.dimen._3sdp), (int) context.getResources().getDimension(R.dimen._3sdp), (int) context.getResources().getDimension(R.dimen._3sdp), (int) context.getResources().getDimension(R.dimen._3sdp));
-
-            TextView tv0 = new TextView(context);
-            tv0.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 1f));
-            tv0.setGravity(Gravity.CENTER_HORIZONTAL);
-            tv0.setTextColor(Color.parseColor("#000000"));
-            tv0.setText("Product");
-
-            tr0.addView(tv0, 0);
-
-            TextView tv01 = new TextView(context);
-            tv01.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 1f));
-            tv01.setGravity(Gravity.CENTER_HORIZONTAL);
-            tv01.setTextColor(Color.parseColor("#000000"));
-            tv01.setText("Quantity");
-
-            tr0.addView(tv01, 1);
-
-            holder.productTable.addView(tr0, 0);
-            count =1;
-
-            int totalQuantity = 0;
             String unit = "";
             if(data.get(position).getProducts().size() != 0) {
                 List<Categoryproduct> categoryproducts = Categoryproduct.find(Categoryproduct.class,
@@ -145,8 +119,7 @@ public class Transaction_detail_adapter extends RecyclerView.Adapter<Transaction
                 StockCategoryDetails.TransactionDetail.Product products = data.get(position).getProducts().get(i);
                 String product = products.getProduct();
                 String quantity = products.getQuantity().toString();
-                totalQuantity += Float.valueOf(quantity);
-                quantity += unit;
+
                 TableRow tr = new TableRow(context);
                 TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
 
@@ -156,7 +129,7 @@ public class Transaction_detail_adapter extends RecyclerView.Adapter<Transaction
 
                 TextView tv = new TextView(context);
                 tv.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 1f));
-                tv.setGravity(Gravity.CENTER_HORIZONTAL);
+                tv.setGravity(Gravity.LEFT);
                 tv.setTextColor(Color.parseColor("#000000"));
                 tv.setText(product);
 
@@ -164,22 +137,43 @@ public class Transaction_detail_adapter extends RecyclerView.Adapter<Transaction
 
                 TextView tv1 = new TextView(context);
                 tv1.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 1f));
-                tv1.setGravity(Gravity.CENTER_HORIZONTAL);
+                tv1.setGravity(Gravity.LEFT);
                 tv1.setTextColor(Color.parseColor("#000000"));
-                tv1.setText(quantity);
+                tv1.setText(quantity + " "+unit);
 
                 tr.addView(tv1, 1);
 
-                holder.productTable.addView(tr, count);
+
+
+                holder.productTable.addView(tr);
                 count++;
-               // AppUtil.logger("Transaction Detail Adapter : ", String.valueOf(count));
             }
-            holder.transaction_quantity.setText(totalQuantity+" "+unit);
         }
         else {
-            holder.productTable.setVisibility(View.GONE);
+            holder.tableLinear.setVisibility(View.GONE);
         }
 
+        StockCategoryDetails.TransactionDetail.Detail detail = transactionDetail.getDetails().get(0);
+        if(detail != null) {
+            holder.driver_name.setText("Driver : " + detail.getDriver());
+            holder.challan_link.setText("Challan No.\n" + detail.getChallanNum());
+            holder.vehicle_number.setText(detail.getVehicleNumber());
+
+            if (detail.getStatus().equalsIgnoreCase("Received")) {
+                String[] urls = detail.getChallanImg().split("\\|");
+                Uri challanUrl = Uri.parse(urls[0]);
+                Uri invoiceUrl = Uri.parse(urls[1]);
+                Uri onreceiveUrl = Uri.parse(urls[2]);
+                Uri unloadedUrl = Uri.parse(urls[3]);
+
+                holder.challan_img.setImageURI(challanUrl);
+                holder.invoice_img.setImageURI(invoiceUrl);
+                holder.onreceive_img.setImageURI(onreceiveUrl);
+                holder.unloaded_img.setImageURI(unloadedUrl);
+
+            }
+        }
+        holder.transaction_status.setText(detail.getStatus());
 
     }
 

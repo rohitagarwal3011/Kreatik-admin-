@@ -4,6 +4,7 @@ package com.app.rbc.admin.fragments;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -11,6 +12,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -139,6 +141,9 @@ public class Stock_add_po_details extends Fragment {
         ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
         ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Add PO details");
 
+        AppBarLayout.LayoutParams toolbarParams = ( AppBarLayout.LayoutParams) toolbar.getLayoutParams();
+        toolbarParams.setScrollFlags(0);
+        toolbar.setLayoutParams(toolbarParams);
 
         return view;
     }
@@ -212,31 +217,18 @@ public class Stock_add_po_details extends Fragment {
             unit = categoryproductList.get(0).getUnit();
         }
 
-        TableRow tr = new TableRow(getContext());
-        TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
+        View tr = getActivity().getLayoutInflater().inflate(R.layout.custom_requirement_table_row,null);
 
-        layoutParams.setMargins(0, (int) getResources().getDimension(R.dimen._5sdp), 0, (int) getResources().getDimensionPixelSize(R.dimen._5sdp));
-        tr.setLayoutParams(layoutParams);
-        tr.setPadding((int) getResources().getDimension(R.dimen._3sdp), (int) getResources().getDimension(R.dimen._3sdp), (int) getResources().getDimension(R.dimen._3sdp), (int) getResources().getDimension(R.dimen._3sdp));
+        TextView productText = (TextView) tr.findViewById(R.id.product);
+        TextView quantityText = (TextView) tr.findViewById(R.id.quantity);
+        Button product_icon = (Button) tr.findViewById(R.id.product_icon);
 
-        TextView tv = new TextView(getContext());
-        tv.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 1f));
-        tv.setGravity(Gravity.CENTER);
-        tv.setTextColor(Color.parseColor("#000000"));
-        tv.setText(product);
+        productText.setText(product);
+        quantityText.setText(quantity+" "+unit);
+        product_icon.setText(product.substring(0,1));
 
-        tr.addView(tv, 0);
+        productTable.addView(tr);
 
-        TextView tv1 = new TextView(getContext());
-        tv1.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 1f));
-        tv1.setGravity(Gravity.CENTER);
-        tv1.setTextColor(Color.parseColor("#000000"));
-        tv1.setText(quantity+" "+unit);
-
-        tr.addView(tv1, 1);
-
-        productTable.addView(tr, count);
-        count++;
     }
 
     private Boolean verify() {

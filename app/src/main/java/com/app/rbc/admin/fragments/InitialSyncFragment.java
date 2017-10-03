@@ -40,7 +40,7 @@ public class InitialSyncFragment extends Fragment {
         controller.fetchEmp();
     }
 
-    public void publichApiResponse(int code,int status,String... message) {
+    public void publichApiResponse(int status,int code,String... message) {
         switch (code) {
             case 0:
                 if(status == 2) {
@@ -80,6 +80,7 @@ public class InitialSyncFragment extends Fragment {
                     Intent intent = new Intent(getActivity(),
                             HomeActivity.class);
                     startActivity(intent);
+                    getActivity().finish();
                 }
                 else {
                     publishError();
@@ -96,6 +97,7 @@ public class InitialSyncFragment extends Fragment {
         Intent intent = new Intent(getActivity(),
                 HomeActivity.class);
         startActivity(intent);
+        getActivity().finish();
 
     }
 

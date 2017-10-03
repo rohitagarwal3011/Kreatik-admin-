@@ -80,6 +80,7 @@
                     android:id="@+id/challan_number"
                     android:hint="Challan Number"
                     android:textSize="15sp"
+                    android:inputType="textPersonName"
                     android:padding="10dp"
                     android:layout_alignTop="@id/challan_number_title"
                     android:background="@drawable/round_edittext_light"

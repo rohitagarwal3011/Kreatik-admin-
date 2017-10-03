@@ -112,6 +112,7 @@ public class RequirementActivity extends AppCompatActivity implements SearchView
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setElevation(0);
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -484,6 +485,11 @@ public class RequirementActivity extends AppCompatActivity implements SearchView
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_requirement_list, container, false);
+            Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
+            ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+            AppBarLayout.LayoutParams toolbarParams = ( AppBarLayout.LayoutParams) toolbar.getLayoutParams();
+            toolbarParams.setScrollFlags(1);
+            toolbar.setLayoutParams(toolbarParams);
             unbinder = ButterKnife.bind(this, rootView);
             position = getArguments().getInt(ARG_SECTION_NUMBER);
             AppUtil.logger("Position for adapter : ",String.valueOf(position));
@@ -491,6 +497,7 @@ public class RequirementActivity extends AppCompatActivity implements SearchView
             swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
                 @Override
                 public void onRefresh() {
+                    swipeRefreshLayout.setRefreshing(false);
                     ((RequirementActivity)getActivity()).get_category_requirements(
                             ((RequirementActivity)getActivity()).category_selected);
                     recyclerView.invalidate();

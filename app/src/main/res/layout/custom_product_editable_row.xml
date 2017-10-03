@@ -29,6 +29,7 @@
         android:background="@drawable/round_edittext_light"
         android:id="@+id/quantity"
         android:textSize="@dimen/_12sdp"
+        android:inputType="number"
         android:gravity="left|center_vertical"
         android:layout_weight="1"/>
 

@@ -548,6 +548,7 @@ public class StockActivity extends AppCompatActivity implements SearchView.OnQue
             swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
                 @Override
                 public void onRefresh() {
+                    swipeRefreshLayout.setRefreshing(false);
                     ((StockActivity)getActivity()).get_product_details(
                             ((StockActivity)getActivity()).category_selected);
                     recyclerView.invalidate();
@@ -557,6 +558,9 @@ public class StockActivity extends AppCompatActivity implements SearchView.OnQue
             Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
             ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
             ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle( ((StockActivity)getActivity()).category_selected);
+            AppBarLayout.LayoutParams toolbarParams = ( AppBarLayout.LayoutParams) toolbar.getLayoutParams();
+            toolbarParams.setScrollFlags(1);
+            toolbar.setLayoutParams(toolbarParams);
 
             return view;
         }
@@ -641,8 +645,8 @@ public class StockActivity extends AppCompatActivity implements SearchView.OnQue
             LinearLayoutManager gridLayoutManager = new LinearLayoutManager(getContext());
             gridLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
             recyclerView.setLayoutManager(gridLayoutManager);
-            recyclerView.setItemAnimator(new DefaultItemAnimator());
-            recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
+//            recyclerView.setItemAnimator(new DefaultItemAnimator());
+//            recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
 
 
             Transaction_detail_adapter adapter = new Transaction_detail_adapter(transactionDetails,getContext());
