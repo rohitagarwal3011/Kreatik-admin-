@@ -1,6 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="15dp"
+        android:textSize="16sp"
+        android:text="Approve Quantity"
+        android:background="@drawable/round_edittext_light"
+        android:textColor="@color/mdtp_dark_gray"
+        android:id="@+id/form_title"/>
 
-</LinearLayout>
+    <TableLayout
+        android:layout_below="@id/form_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/product_table"
+        >
+        <TableRow android:id="@+id/rowheading"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:paddingTop="@dimen/_4sdp"
+            android:paddingBottom="@dimen/_2sdp"
+            android:background="@drawable/round_edittext_light"
+            xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:padding="@dimen/_5sdp"
+                android:textColor="@color/black"
+                android:gravity="left"
+                android:id="@+id/product"
+                android:text="Product"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Quantity"
+                android:padding="@dimen/_5sdp"
+                android:textColor="@color/black"
+                android:id="@+id/quantity"
+                android:gravity="left"
+                android:layout_weight="1"/>
+
+
+        </TableRow>
+
+    </TableLayout>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_40sdp"
+        android:layout_below="@id/product_table"
+        android:layout_margin="@dimen/_10sdp"
+        android:background="@color/colorAccent"
+        android:text="Approve"
+        android:id="@+id/approve"
+        android:textColor="@color/white"/>
+</RelativeLayout>
+</ScrollView>

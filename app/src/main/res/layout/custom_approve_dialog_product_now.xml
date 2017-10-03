@@ -1,0 +1,30 @@
+<TableRow android:id="@+id/rowheading"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/_5sdp"
+    android:padding="@dimen/_5sdp"
+    android:gravity="center_vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_40sdp"
+        android:layout_weight="1"
+        android:padding="@dimen/_5sdp"
+        android:gravity="left|center_vertical"
+        android:id="@+id/product"
+        android:text="Product"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_40sdp"
+        android:text="Quantity"
+        android:padding="@dimen/_5sdp"
+        android:background="@drawable/round_edittext_light"
+        android:id="@+id/quantity"
+        android:textSize="@dimen/_12sdp"
+        android:inputType="number"
+        android:gravity="left|center_vertical"
+        android:layout_weight="1"/>
+
+</TableRow>

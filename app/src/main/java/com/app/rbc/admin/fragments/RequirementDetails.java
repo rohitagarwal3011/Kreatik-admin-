@@ -1,6 +1,7 @@
 package com.app.rbc.admin.fragments;
 
 
+import android.app.Dialog;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -10,21 +11,26 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.app.rbc.admin.R;
 import com.app.rbc.admin.activities.RequirementActivity;
 import com.app.rbc.admin.activities.RequirementDetailActivity;
 import com.app.rbc.admin.activities.SiteOverviewActivity;
 import com.app.rbc.admin.adapters.Vehicle_detail_adapter;
+import com.app.rbc.admin.api.APIController;
+import com.app.rbc.admin.api.APIInterface;
 import com.app.rbc.admin.interfaces.ApiServices;
 import com.app.rbc.admin.models.Product;
 import com.app.rbc.admin.models.VehicleDetail;
@@ -35,7 +41,11 @@ import com.app.rbc.admin.utils.RetrofitClient;
 import com.app.rbc.admin.utils.TagsPreferences;
 import com.facebook.drawee.generic.RoundingParams;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.google.common.collect.Table;
 import com.google.gson.Gson;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -104,6 +114,7 @@ public class RequirementDetails extends Fragment {
     private String mParam2;
 
     private String category_selected;
+    Dialog approveDialog;
 
     int count;
 
@@ -219,7 +230,125 @@ public class RequirementDetails extends Fragment {
     }
 
     private void setApproveDialog() {
+        approveDialog  = new Dialog(getContext());
+        View dialogView = getActivity().getLayoutInflater().inflate(R.layout.custom_approve_dialog,null);
 
+        final TableLayout product_table = (TableLayout) dialogView.findViewById(R.id.product_table);
+        final Button approve = (Button) dialogView.findViewById(R.id.approve);
+
+        final com.app.rbc.admin.models.RequirementDetails.ReqDetail reqDetail = requirementDetails.getReqDetails().get(0);
+        final int count = reqDetail.getProducts().size();
+
+        for(int i = 0 ; i < reqDetail.getProducts().size() ; i++) {
+            View tr = ((RequirementDetailActivity)getContext()).getLayoutInflater().inflate(R.layout.custom_approve_dialog_product_now,null);
+            String product = reqDetail.getProducts().get(i).getProduct();
+            String quantity = reqDetail.getProducts().get(i).getQuantity()+"";
+            TextView productText = (TextView) tr.findViewById(R.id.product);
+            EditText quantityText = (EditText) tr.findViewById(R.id.quantity);
+
+            productText.setText(product);
+            quantityText.setText(quantity);
+
+
+            product_table.addView(tr);
+        }
+
+        //Listeners
+        approve.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int validate = 1;
+                JSONArray prod_list = new JSONArray();
+                try {
+
+                    for (int i = 0; i < count; i++) {
+                        View view = product_table.getChildAt(i + 1);
+                        if (view instanceof TableRow) {
+                            // then, you can remove the the row you want...
+                            // for instance...
+                            TableRow row = (TableRow) view;
+                            TextView product = (TextView) row.findViewById(R.id.product);
+                            EditText quantity = (EditText) row.findViewById(R.id.quantity);
+                            if (quantity.getText().toString().trim().equalsIgnoreCase("")) {
+                                quantity.setError("Please enter a valid quantity");
+                                quantity.requestFocus();
+                                validate = 0;
+                                break;
+                            }
+                            else {
+                                JSONObject productObj = new JSONObject();
+                                productObj.put("product",product.getText().toString());
+                                productObj.put("quantity",Float.parseFloat(quantity.getText().toString()));
+                                prod_list.put(productObj);
+                            }
+                        }
+                    }
+                    Log.e("List",prod_list.toString());
+                }catch (Exception e) {
+                    Log.e("Prod List Formation",e.toString());
+                }
+
+                if(validate == 1) {
+                    callApproveReqQtyApi(prod_list,reqDetail.getRqId());
+                    approveDialog.dismiss();
+                }
+
+            }
+        });
+
+        approveDialog.setContentView(dialogView);
+        approveDialog.show();
+    }
+
+    private void callApproveReqQtyApi(JSONArray prod_list,String rq_id) {
+        pDialog = new SweetAlertDialog(getContext(), SweetAlertDialog.PROGRESS_TYPE);
+        pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+        pDialog.setTitleText("Loading");
+        pDialog.setCancelable(false);
+        pDialog.show();
+
+        APIController controller = new APIController(getContext(),100,100);
+        APIInterface apiInterface = controller.getInterface();
+        Call<String> call = apiInterface.approveRequirementQuantity(rq_id,prod_list.toString());
+
+        call.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                pDialog.dismiss();
+                try {
+                    if (response.errorBody() == null) {
+                        JSONObject body = new JSONObject(response.body().toString());
+                        AppUtil.logger("Requirement Detail Approve",body.toString());
+                        int status = body.getJSONObject("meta").getInt("status");
+                        String message = body.getJSONObject("meta").getString("message");
+
+                        if (status != 2) {
+                            approveDialog.show();
+                        }
+                        Toast.makeText(getContext(),
+                                message,
+                                Toast.LENGTH_SHORT).show();
+
+                    } else {
+                        approveDialog.show();
+                        AppUtil.logger("Requirement Detail Approve", response.errorBody().string());
+                    }
+                }
+                catch (Exception e) {
+                    AppUtil.logger("Requirement Approve Parsing",e.toString());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                pDialog.dismiss();
+                approveDialog.show();
+                AppUtil.logger("Requirement Detail Approve",t.toString());
+                Toast.makeText(getContext(),
+                        "Service ecnountered an error",
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void setData() {
