@@ -305,7 +305,8 @@ public class TaskActivity extends AppCompatActivity implements Task_home.OnTaskT
 ////                }
 //            }
 //            else {
-
+            getSupportFragmentManager().popBackStack(null,
+                    getSupportFragmentManager().POP_BACK_STACK_INCLUSIVE);
                 setToolbar("Tasks");
                 task_home = new Task_home();
                 setFragment(task_home,Task_home.TAG);
@@ -316,7 +317,6 @@ public class TaskActivity extends AppCompatActivity implements Task_home.OnTaskT
         {
             visible_fragment="Employee_list";
             setToolbar("Select Employee");
-
             super.onBackPressed();
         }
 
@@ -324,7 +324,6 @@ public class TaskActivity extends AppCompatActivity implements Task_home.OnTaskT
         {
             getSupportActionBar().setTitle("Task");
             visible_fragment="Task_home";
-
             super.onBackPressed();
 //            FragmentTransaction fm = getSupportFragmentManager().beginTransaction();
 //            fm.replace(R.id.frame_main, new Task_home());

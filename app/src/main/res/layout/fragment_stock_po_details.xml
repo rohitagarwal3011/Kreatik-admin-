@@ -5,16 +5,16 @@
    <LinearLayout
        android:layout_width="match_parent"
        android:layout_height="match_parent"
+       android:background="@color/white"
        android:orientation="vertical">
 
-       <android.support.v7.widget.CardView
-           android:layout_width="match_parent"
-           android:layout_height="wrap_content"
-           android:layout_margin="@dimen/_5sdp">
+
 
        <LinearLayout
            android:layout_width="match_parent"
            android:layout_height="wrap_content"
+           android:layout_margin="@dimen/_5sdp"
+           android:padding="@dimen/_5sdp"
            android:orientation="vertical">
 
            <TextView
@@ -22,6 +22,7 @@
                android:layout_height="wrap_content"
                android:text="Created by"
                android:padding="@dimen/_5sdp"
+               android:visibility="gone"
                android:background="@color/heading"
                android:textColor="@color/black"
                android:textSize="@dimen/_12sdp"/>
@@ -149,13 +150,7 @@
 
 
        </LinearLayout>
-       </android.support.v7.widget.CardView>
 
-       <android.support.v7.widget.CardView
-           android:layout_width="match_parent"
-
-           android:layout_margin="@dimen/_5sdp"
-           android:layout_height="wrap_content">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -210,13 +205,7 @@
         </TableLayout>
 
     </LinearLayout>
-       </android.support.v7.widget.CardView>
 
-       <android.support.v7.widget.CardView
-           android:layout_width="match_parent"
-
-           android:layout_margin="@dimen/_5sdp"
-           android:layout_height="wrap_content">
 
        <LinearLayout
            android:layout_width="match_parent"
@@ -235,22 +224,19 @@
            <LinearLayout
                android:layout_width="match_parent"
                android:layout_height="wrap_content"
+               android:padding="@dimen/_5sdp"
                android:orientation="horizontal">
 
-               <com.facebook.drawee.view.DraweeView
-                   android:layout_width="@dimen/_50sdp"
-                   android:layout_height="@dimen/_50sdp"
+               <ImageView
+                   android:layout_width="@dimen/_70sdp"
+                   android:layout_height="@dimen/_70sdp"
                    android:id="@+id/source_type"
-                   android:background="#000"
                    android:layout_gravity="center_vertical"
-                   android:layout_margin="@dimen/_5sdp"
-                   fresco:roundedCornerRadius="@dimen/_5sdp"
-                   fresco:roundWithOverlayColor="#ccc"
-                   fresco:roundBottomLeft="true"
-                   fresco:roundBottomRight="true"
-                   fresco:roundingBorderWidth="1dp"
-                   fresco:roundingBorderColor="#ccc"
-                   android:src="@drawable/user"
+                   android:paddingBottom="@dimen/_15sdp"
+                   android:paddingLeft="@dimen/_10sdp"
+                   android:paddingRight="@dimen/_15sdp"
+                   android:src="@drawable/vendors"
+                   android:layout_below="@id/vendor_info_title"
                    />
                <!--
                 app:civ_border_color="#ccc"
@@ -304,18 +290,15 @@
                </LinearLayout>
 
        </LinearLayout>
-       </android.support.v7.widget.CardView>
 
 
        <TextView
            android:layout_width="match_parent"
            android:layout_height="wrap_content"
            android:text="Vehicle's Information"
-           android:visibility="gone"
 
            android:textColor="@color/black"
            android:textSize="@dimen/_12sdp"
-           android:layout_margin="@dimen/_5sdp"
            android:background="@color/heading"
            android:padding="@dimen/_5sdp"
            />

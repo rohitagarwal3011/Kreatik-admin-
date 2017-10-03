@@ -45,10 +45,11 @@ public class Transaction_detail_adapter extends RecyclerView.Adapter<Transaction
 
         TextView source;
         TextView destination;
-        TextView transactionDate;
+        TextView transactionDate,transaction_status;
         TextView vehicle_number,driver_name,challan_link;
         SimpleDraweeView challan_img,invoice_img,
         onreceive_img,unloaded_img;
+
         LinearLayout tableLinear;
 
         TableLayout productTable;
@@ -67,6 +68,7 @@ public class Transaction_detail_adapter extends RecyclerView.Adapter<Transaction
             onreceive_img = (SimpleDraweeView) view.findViewById(R.id.onrecieve_img);
             unloaded_img = (SimpleDraweeView) view.findViewById(R.id.unloaded_img);
             tableLinear = (LinearLayout) view.findViewById(R.id.tableLinear);
+            transaction_status = (TextView) view.findViewById(R.id.transaction_status);
 
             count=1;
 
@@ -137,7 +139,7 @@ public class Transaction_detail_adapter extends RecyclerView.Adapter<Transaction
                 tv1.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 1f));
                 tv1.setGravity(Gravity.LEFT);
                 tv1.setTextColor(Color.parseColor("#000000"));
-                tv1.setText(quantity);
+                tv1.setText(quantity + " "+unit);
 
                 tr.addView(tv1, 1);
 
@@ -171,6 +173,7 @@ public class Transaction_detail_adapter extends RecyclerView.Adapter<Transaction
 
             }
         }
+        holder.transaction_status.setText(detail.getStatus());
 
     }
 

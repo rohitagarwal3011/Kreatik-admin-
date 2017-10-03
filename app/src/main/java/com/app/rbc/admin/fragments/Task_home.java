@@ -174,6 +174,7 @@ public class Task_home extends Fragment implements Todo_list_adapter.OnItemLongC
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                swipeRefreshLayout.setRefreshing(false);
                 get_todo_list();
             }
         });
@@ -196,8 +197,6 @@ public class Task_home extends Fragment implements Todo_list_adapter.OnItemLongC
         LocalBroadcastManager.getInstance(getContext()).registerReceiver(mRegistrationBroadcastReceiver,
                 new IntentFilter(Constant.REGISTRATION_COMPLETE));
 
-        // register new push message receiver
-        // by doing this, the activity will be notified each time a new message arrives
         LocalBroadcastManager.getInstance(getContext()).registerReceiver(mRegistrationBroadcastReceiver,
                 new IntentFilter(Constant.PUSH_NOTIFICATION));
     }

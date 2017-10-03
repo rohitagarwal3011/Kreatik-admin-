@@ -28,6 +28,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.squareup.picasso.Picasso;
 
 import org.joda.time.DateTime;
+import org.w3c.dom.Text;
 
 import java.lang.reflect.Array;
 import java.text.DateFormat;
@@ -157,6 +158,7 @@ public class CustomTransactionsAdapter extends RecyclerView.Adapter<CustomTransa
             holder.onreceive_img.setImageURI(onreceiveUrl);
             holder.unloaded_img.setImageURI(unloadedUrl);
         }
+        holder.transaction_status.setText(transactions.get(position).getStatus());
 
     }
 
@@ -173,6 +175,7 @@ public class CustomTransactionsAdapter extends RecyclerView.Adapter<CustomTransa
         SimpleDraweeView challan_img,invoice_img,
                 onreceive_img,unloaded_img;
         LinearLayout tableLinear;
+        TextView transaction_status;
 
         TableLayout productTable;
 
@@ -190,6 +193,7 @@ public class CustomTransactionsAdapter extends RecyclerView.Adapter<CustomTransa
             onreceive_img = (SimpleDraweeView) view.findViewById(R.id.onrecieve_img);
             unloaded_img = (SimpleDraweeView) view.findViewById(R.id.unloaded_img);
             tableLinear = (LinearLayout) view.findViewById(R.id.tableLinear);
+            transaction_status = (TextView) view.findViewById(R.id.transaction_status);
 
 
         }

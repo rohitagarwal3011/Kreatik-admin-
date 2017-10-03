@@ -13,6 +13,8 @@
     android:layout_width="match_parent"
     card_view:cardBackgroundColor="@color/white"
     android:layout_height="wrap_content"
+    android:layout_marginLeft="@dimen/_2sdp"
+    android:layout_marginRight="@dimen/_2sdp"
     android:layout_marginBottom="@dimen/_2sdp"
     card_view:cardCornerRadius="@dimen/_2sdp"
     app:cardElevation="@dimen/_2sdp">
