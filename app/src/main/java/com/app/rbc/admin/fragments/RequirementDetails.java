@@ -218,10 +218,17 @@ public class RequirementDetails extends Fragment {
         });
     }
 
+    private void setApproveDialog() {
+
+    }
+
     private void setData() {
         AppUtil.logger("RequirementDetails : ", "Show Details");
 
         com.app.rbc.admin.models.RequirementDetails.ReqDetail.Detail reqDetail = requirementDetails.getReqDetails().get(0).getDetails().get(0);
+        if(reqDetail.getmStatus().equalsIgnoreCase("Created")) {
+            setApproveDialog();
+        }
 
         if (reqDetail.getmRaisedBy().toString().trim().equalsIgnoreCase(AppUtil.getString(getContext(), TagsPreferences.USER_ID))) {
 
