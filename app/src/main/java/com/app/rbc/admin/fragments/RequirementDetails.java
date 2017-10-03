@@ -161,7 +161,7 @@ public class RequirementDetails extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        count = 1;
+
         get_data();
     }
 
@@ -197,7 +197,7 @@ public class RequirementDetails extends Fragment {
             public void onResponse(Call<com.app.rbc.admin.models.RequirementDetails> call, Response<com.app.rbc.admin.models.RequirementDetails> response) {
                 pDialog.dismiss();
                 if (response.body().getMeta().getStatus() == 2) {
-
+                    count = 1;
 
                     // AppUtil.putString(getContext().getApplicationContext(), TagsPreferences.PO_DETAILS, new Gson().toJson(response.body()));
                     requirementDetails = new Gson().fromJson(new Gson().toJson(response.body()), com.app.rbc.admin.models.RequirementDetails.class);
@@ -230,6 +230,14 @@ public class RequirementDetails extends Fragment {
     }
 
     private void setApproveDialog() {
+        String unit = "";
+        List<Categoryproduct> categoryproductList = Categoryproduct.find(Categoryproduct.class,
+                "category = ?",category_selected);
+        if(categoryproductList.size() != 0) {
+
+            unit = categoryproductList.get(0).getUnit();
+        }
+
         approveDialog  = new Dialog(getContext());
         View dialogView = getActivity().getLayoutInflater().inflate(R.layout.custom_approve_dialog,null);
 
@@ -244,10 +252,12 @@ public class RequirementDetails extends Fragment {
             String product = reqDetail.getProducts().get(i).getProduct();
             String quantity = reqDetail.getProducts().get(i).getQuantity()+"";
             TextView productText = (TextView) tr.findViewById(R.id.product);
+            TextView unitText = (TextView) tr.findViewById(R.id.unit);
             EditText quantityText = (EditText) tr.findViewById(R.id.quantity);
 
             productText.setText(product);
             quantityText.setText(quantity);
+            unitText.setText(unit);
 
 
             product_table.addView(tr);
@@ -300,6 +310,11 @@ public class RequirementDetails extends Fragment {
         approveDialog.show();
     }
 
+    private void reloadFragment() {
+        getActivity().getSupportFragmentManager()
+                .beginTransaction().detach(this).attach(this).commit(); 
+    }
+
     private void callApproveReqQtyApi(JSONArray prod_list,String rq_id) {
         pDialog = new SweetAlertDialog(getContext(), SweetAlertDialog.PROGRESS_TYPE);
         pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
@@ -324,6 +339,9 @@ public class RequirementDetails extends Fragment {
 
                         if (status != 2) {
                             approveDialog.show();
+                        }
+                        else {
+                            reloadFragment();
                         }
                         Toast.makeText(getContext(),
                                 message,
@@ -353,6 +371,7 @@ public class RequirementDetails extends Fragment {
 
     private void setData() {
         AppUtil.logger("RequirementDetails : ", "Show Details");
+
 
         com.app.rbc.admin.models.RequirementDetails.ReqDetail.Detail reqDetail = requirementDetails.getReqDetails().get(0).getDetails().get(0);
         if(reqDetail.getmStatus().equalsIgnoreCase("Created")) {

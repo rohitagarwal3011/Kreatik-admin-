@@ -8,8 +8,10 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="15dp"
-        android:textSize="16sp"
+        android:paddingLeft="@dimen/_5sdp"
+        android:paddingTop="@dimen/_10sdp"
+        android:paddingBottom="@dimen/_10sdp"
+        android:textSize="@dimen/_14sdp"
         android:text="Approve Quantity"
         android:background="@drawable/round_edittext_light"
         android:textColor="@color/mdtp_dark_gray"
