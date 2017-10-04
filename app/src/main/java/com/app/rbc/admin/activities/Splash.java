@@ -272,15 +272,15 @@ public class Splash extends AppCompatActivity {
                                         }
                                     } catch (Exception e) {
 
-                                        ChangeFragment.changeFragment(getSupportFragmentManager(),R.id.layoutMain,new InitialSyncFragment(),"InitialSync");
+                                        //ChangeFragment.changeFragment(getSupportFragmentManager(),R.id.layoutMain,new InitialSyncFragment(),"InitialSync");
 
-//                                        Intent intent = new Intent(Splash.this, HomeActivity.class);
-//
-//
-//                                        startActivity(intent);
-//                                        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-//
-//                                        finish();
+                                        Intent intent = new Intent(Splash.this, HomeActivity.class);
+
+
+                                        startActivity(intent);
+                                        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+
+                                        finish();
                                     }
                                 } else {
 

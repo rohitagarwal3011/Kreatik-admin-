@@ -19,7 +19,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.app.rbc.admin.R;
-import com.app.rbc.admin.activities.IndentRegisterActivity;
+import com.app.rbc.admin.activities.SettingsActivity;
 import com.app.rbc.admin.adapters.CustomProductAdpater;
 import com.app.rbc.admin.api.APIController;
 import com.app.rbc.admin.models.db.models.Categoryproduct;
@@ -61,7 +61,7 @@ public class AddProductFragment extends Fragment implements View.OnClickListener
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_add_product, container, false);
-        ((IndentRegisterActivity)getActivity()).getSupportActionBar().setTitle(category);
+        ((SettingsActivity)getActivity()).getSupportActionBar().setTitle(category);
         initializeUI();
         return view;
     }
@@ -230,7 +230,7 @@ public class AddProductFragment extends Fragment implements View.OnClickListener
         sweetAlertDialog.setCancelable(false);
         sweetAlertDialog.show();
 
-        APIController controller = new APIController(getContext(),code,IndentRegisterActivity.ACTIVITY);
+        APIController controller = new APIController(getContext(),code, SettingsActivity.ACTIVITY);
         controller.addCategoryProduct(categoryproduct);
     }
 
@@ -248,7 +248,7 @@ public class AddProductFragment extends Fragment implements View.OnClickListener
         sweetAlertDialog.setCancelable(false);
         sweetAlertDialog.show();
 
-        APIController controller = new APIController(getContext(),code,IndentRegisterActivity.ACTIVITY);
+        APIController controller = new APIController(getContext(),code,SettingsActivity.ACTIVITY);
         controller.updateProduct(editProduct,old_prod);
     }
 
@@ -260,7 +260,7 @@ public class AddProductFragment extends Fragment implements View.OnClickListener
         sweetAlertDialog.setCancelable(false);
         sweetAlertDialog.show();
 
-        APIController controller = new APIController(getContext(),code,IndentRegisterActivity.ACTIVITY);
+        APIController controller = new APIController(getContext(),code,SettingsActivity.ACTIVITY);
         controller.updateCategory(category,product_category.getText().toString(),
                 product_unit.getText().toString());
     }
@@ -278,10 +278,10 @@ public class AddProductFragment extends Fragment implements View.OnClickListener
                     adapter.refreshAdapter(Categoryproduct.find(Categoryproduct.class,"category = ?",this.category));
                 }
                 else if(code == 93) {
-                    APIController controller = new APIController(getContext(),51,IndentRegisterActivity.ACTIVITY);
+                    APIController controller = new APIController(getContext(),51,SettingsActivity.ACTIVITY);
                     controller.fetchCategoriesProducts();
 
-                    ((IndentRegisterActivity)getActivity()).popBackStack();
+                    ((SettingsActivity)getActivity()).popBackStack();
                 }
 
                 break;

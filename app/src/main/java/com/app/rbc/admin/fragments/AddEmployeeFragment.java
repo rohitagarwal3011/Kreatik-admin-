@@ -28,6 +28,7 @@ import android.widget.Toast;
 
 import com.app.rbc.admin.R;
 import com.app.rbc.admin.activities.IndentRegisterActivity;
+import com.app.rbc.admin.activities.SettingsActivity;
 import com.app.rbc.admin.api.APIController;
 import com.app.rbc.admin.models.Employee;
 import com.app.rbc.admin.models.db.models.User;
@@ -67,10 +68,10 @@ public class AddEmployeeFragment extends Fragment implements View.OnClickListene
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_add_employee, container, false);
         if(edit) {
-            ((IndentRegisterActivity) getActivity()).getSupportActionBar().setTitle("Edit");
+            ((SettingsActivity) getActivity()).getSupportActionBar().setTitle("Edit");
         }
         else {
-            ((IndentRegisterActivity) getActivity()).getSupportActionBar().setTitle("Add an employee");
+            ((SettingsActivity) getActivity()).getSupportActionBar().setTitle("Add an employee");
         }
         initializeUI();
         return view;
@@ -186,7 +187,7 @@ public class AddEmployeeFragment extends Fragment implements View.OnClickListene
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.form_employee_image:
-                ((IndentRegisterActivity)getActivity()).checkPermission(READ_EXTERNAL_CARD);
+                ((SettingsActivity)getActivity()).checkPermission(READ_EXTERNAL_CARD);
                 break;
             case R.id.save:
                 if(edit != true) {
@@ -331,7 +332,7 @@ public class AddEmployeeFragment extends Fragment implements View.OnClickListene
         sweetAlertDialog.setCancelable(false);
         sweetAlertDialog.show();
 
-        APIController controller = new APIController(getContext(),code,IndentRegisterActivity.ACTIVITY);
+        APIController controller = new APIController(getContext(),code,SettingsActivity.ACTIVITY);
         controller.addUser(user);
     }
 
@@ -346,7 +347,7 @@ public class AddEmployeeFragment extends Fragment implements View.OnClickListene
         sweetAlertDialog.setCancelable(false);
         sweetAlertDialog.show();
 
-        APIController controller = new APIController(getContext(),code,IndentRegisterActivity.ACTIVITY);
+        APIController controller = new APIController(getContext(),code,SettingsActivity.ACTIVITY);
         controller.updateUser(editEmployee);
     }
 
@@ -361,7 +362,7 @@ public class AddEmployeeFragment extends Fragment implements View.OnClickListene
     private void callEmployeeFetchApi() {
         new Thread() {
             public void run() {
-                APIController controller = new APIController(getContext(),20,IndentRegisterActivity.ACTIVITY);
+                APIController controller = new APIController(getContext(),20,SettingsActivity.ACTIVITY);
                 controller.fetchEmp();
             }
         }.start();
@@ -407,12 +408,12 @@ public class AddEmployeeFragment extends Fragment implements View.OnClickListene
                     this.state_store = null;
                 }
                 callEmployeeFetchApi();
-                ((IndentRegisterActivity)getActivity()).popBackStack();
+                ((SettingsActivity)getActivity()).popBackStack();
             }
             else if(code == 62) {
                 callEmployeeFetchApi();
                 editEmployee.save();
-                ((IndentRegisterActivity)getActivity()).popBackStack();
+                ((SettingsActivity)getActivity()).popBackStack();
             }
             break;
             case 1 : error.setText(message[0]);

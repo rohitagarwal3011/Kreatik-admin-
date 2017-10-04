@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.app.rbc.admin.R;
 import com.app.rbc.admin.activities.IndentRegisterActivity;
+import com.app.rbc.admin.activities.SettingsActivity;
 import com.app.rbc.admin.api.APIController;
 import com.app.rbc.admin.models.db.models.Vendor;
 
@@ -38,10 +39,10 @@ public class AddVendorFragment extends Fragment implements View.OnClickListener{
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_add_vendor, container, false);
         if(edit) {
-            ((IndentRegisterActivity) getActivity()).getSupportActionBar().setTitle("Edit");
+            ((SettingsActivity) getActivity()).getSupportActionBar().setTitle("Edit");
         }
         else {
-            ((IndentRegisterActivity) getActivity()).getSupportActionBar().setTitle("Add a vendor");
+            ((SettingsActivity) getActivity()).getSupportActionBar().setTitle("Add a vendor");
         }
 
         initializeUI();
@@ -176,7 +177,7 @@ public class AddVendorFragment extends Fragment implements View.OnClickListener{
         sweetAlertDialog.setCancelable(false);
         sweetAlertDialog.show();
 
-        APIController controller = new APIController(getContext(),code,IndentRegisterActivity.ACTIVITY);
+        APIController controller = new APIController(getContext(),code,SettingsActivity.ACTIVITY);
         controller.addVendor(vendor);
     }
 
@@ -191,7 +192,7 @@ public class AddVendorFragment extends Fragment implements View.OnClickListener{
         sweetAlertDialog.setCancelable(false);
         sweetAlertDialog.show();
 
-        APIController controller = new APIController(getContext(),code,IndentRegisterActivity.ACTIVITY);
+        APIController controller = new APIController(getContext(),code,SettingsActivity.ACTIVITY);
         controller.updateVendor(editVendor);
     }
 
@@ -204,7 +205,7 @@ public class AddVendorFragment extends Fragment implements View.OnClickListener{
     private void callVendorsFetchApi() {
         new Thread() {
             public void run() {
-                APIController controller = new APIController(getContext(),40,IndentRegisterActivity.ACTIVITY);
+                APIController controller = new APIController(getContext(),40,SettingsActivity.ACTIVITY);
                 controller.fetchVendors();
             }
         }.start();
@@ -248,11 +249,11 @@ public class AddVendorFragment extends Fragment implements View.OnClickListener{
                         this.state_store = null;
                     }
                     callVendorsFetchApi();
-                    ((IndentRegisterActivity)getActivity()).popBackStack();
+                    ((SettingsActivity)getActivity()).popBackStack();
                 }
                 else if(code == 82) {
                     editVendor.save();
-                    ((IndentRegisterActivity)getActivity()).popBackStack();
+                    ((SettingsActivity)getActivity()).popBackStack();
                 }
                 break;
             case 1 : error.setText(message[0]);
