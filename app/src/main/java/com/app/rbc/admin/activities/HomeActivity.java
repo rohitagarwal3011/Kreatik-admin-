@@ -181,7 +181,7 @@ public class HomeActivity extends AppCompatActivity
     @OnClick(R.id.module_reports)
     public void open_reports_module(View view) {
 
-        Intent intent = new Intent(HomeActivity.this, ReportActivity.class);
+        Intent intent = new Intent(HomeActivity.this, YoutubeActivity.class);
         startActivity(intent);
 
     }

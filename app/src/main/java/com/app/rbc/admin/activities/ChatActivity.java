@@ -52,7 +52,7 @@ public class ChatActivity extends AppCompatActivity {
         FragmentManager fm = getSupportFragmentManager();
         switch (code) {
             case 0 :
-                getSupportActionBar().setTitle("Indents & Registers");
+                getSupportActionBar().setTitle("Chats");
                 updatePlaceholderFragment = new UpdatePlaceholderFragment();
                 fm.beginTransaction()
                         .replace(R.id.fragment_container, updatePlaceholderFragment)
