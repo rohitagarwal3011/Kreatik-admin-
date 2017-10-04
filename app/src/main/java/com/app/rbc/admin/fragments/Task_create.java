@@ -499,6 +499,8 @@ public class Task_create extends Fragment implements DatePickerDialog.OnDateSetL
                                             public void onClick(SweetAlertDialog sweetAlertDialog) {
                                                 pDialog.dismiss();
                                                 Task_home task_home = new Task_home();
+                                                getActivity().getSupportFragmentManager().popBackStack(null,
+                                                        getActivity().getSupportFragmentManager().POP_BACK_STACK_INCLUSIVE);
                                                 ((TaskActivity) getContext()).setToolbar("Tasks");
                                                 ((TaskActivity) getContext()).setFragment(task_home, Task_home.TAG);
 
