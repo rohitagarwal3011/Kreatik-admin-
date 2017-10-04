@@ -181,7 +181,7 @@ public class HomeActivity extends AppCompatActivity
     @OnClick(R.id.module_reports)
     public void open_reports_module(View view) {
 
-        Intent intent = new Intent(HomeActivity.this, YoutubeActivity.class);
+        Intent intent = new Intent(HomeActivity.this, ReportActivity.class);
         startActivity(intent);
 
     }
@@ -200,7 +200,7 @@ public class HomeActivity extends AppCompatActivity
     @OnClick(R.id.module_chat)
     public void open_chat(View view) {
 
-        Intent intent = new Intent(HomeActivity.this, ChatActivity.class);
+        Intent intent = new Intent(HomeActivity.this, AddVehicleActivity.class);
         startActivity(intent);
 
     }

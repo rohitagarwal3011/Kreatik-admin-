@@ -84,15 +84,15 @@ public class ReportActivity extends AppCompatActivity {
     private void setFragment(int code) {
         switch (code) {
             case 1:
-                updatePlaceholderFragment = new UpdatePlaceholderFragment();
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container,updatePlaceholderFragment)
-                        .commit();
-                break;
-//                recievedVehicle = new RecievedVehicle();
-//                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-//                        recievedVehicle).commit();
+//                updatePlaceholderFragment = new UpdatePlaceholderFragment();
+//                getSupportFragmentManager().beginTransaction()
+//                        .replace(R.id.fragment_container,updatePlaceholderFragment)
+//                        .commit();
 //                break;
+                recievedVehicle = new RecievedVehicle();
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                        recievedVehicle).commit();
+                break;
         }
     }
 

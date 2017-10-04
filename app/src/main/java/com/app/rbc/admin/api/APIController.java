@@ -366,7 +366,7 @@ public class APIController{
 
 
     public void fetchVehicleList() {
-        Call<String> call = apiInterface.vehicleList(2);
+        Call<String> call = apiInterface.vehicleList(1);
 
         call.enqueue(new Callback<String>() {
             @Override
