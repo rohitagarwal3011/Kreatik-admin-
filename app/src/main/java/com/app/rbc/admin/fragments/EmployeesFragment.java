@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.app.rbc.admin.R;
 import com.app.rbc.admin.activities.IndentRegisterActivity;
+import com.app.rbc.admin.activities.SettingsActivity;
 import com.app.rbc.admin.adapters.CustomEmployeeListAdapter;
 import com.app.rbc.admin.api.APIController;
 import com.app.rbc.admin.models.db.models.Employee;
@@ -53,7 +54,7 @@ public class EmployeesFragment extends Fragment implements View.OnClickListener{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_employees, container, false);
-        ((IndentRegisterActivity)getActivity()).getSupportActionBar().setTitle("Employees");
+        ((SettingsActivity)getActivity()).getSupportActionBar().setTitle("Employees");
         initializeViews();
         return view;
     }
@@ -109,7 +110,7 @@ public class EmployeesFragment extends Fragment implements View.OnClickListener{
 
                     int a=rv.getChildPosition(child);
 
-                    ((IndentRegisterActivity)getContext()).setFragment(6,employees.get(a).getId());
+                    ((SettingsActivity)getContext()).setFragment(6,employees.get(a).getId());
 
 
 
@@ -145,14 +146,14 @@ public class EmployeesFragment extends Fragment implements View.OnClickListener{
             case R.id.add_employee_icon:
             case R.id.add_employee_title:
             case R.id.add_employee_next:
-                ((IndentRegisterActivity)getActivity()).setFragment(6);
+                ((SettingsActivity)getActivity()).setFragment(6);
                 break;
         }
     }
 
 
     private void callEmployeeFetchApi() {
-        APIController controller = new APIController(getContext(),20,IndentRegisterActivity.ACTIVITY);
+        APIController controller = new APIController(getContext(),20,SettingsActivity.ACTIVITY);
         controller.fetchEmp();
     }
 

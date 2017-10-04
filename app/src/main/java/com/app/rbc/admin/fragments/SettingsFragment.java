@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 
 import com.app.rbc.admin.R;
 import com.app.rbc.admin.activities.IndentRegisterActivity;
+import com.app.rbc.admin.activities.SettingsActivity;
 import com.app.rbc.admin.adapters.CustomSetingsListAdapter;
 
 
@@ -36,8 +37,8 @@ public class SettingsFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_settings, container, false);
-        ((IndentRegisterActivity)getActivity()).getSupportActionBar().setTitle("Settings");
-        ((IndentRegisterActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ((SettingsActivity)getActivity()).getSupportActionBar().setTitle("Settings");
+        ((SettingsActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         initializeUI();
         return view;
     }
@@ -59,7 +60,7 @@ public class SettingsFragment extends Fragment {
 
                     int a=rv.getChildPosition(child);
 
-                    ((IndentRegisterActivity)getActivity()).setFragment(a+1);
+                    ((SettingsActivity)getActivity()).setFragment(a+1);
 
 
 

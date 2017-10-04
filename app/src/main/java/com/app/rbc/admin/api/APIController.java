@@ -9,6 +9,7 @@ import android.util.Log;
 import com.app.rbc.admin.R;
 import com.app.rbc.admin.activities.IndentRegisterActivity;
 import com.app.rbc.admin.activities.ReportActivity;
+import com.app.rbc.admin.activities.SettingsActivity;
 import com.app.rbc.admin.activities.SiteOverviewActivity;
 import com.app.rbc.admin.activities.Splash;
 import com.app.rbc.admin.fragments.InitialSyncFragment;
@@ -1072,8 +1073,6 @@ public class APIController{
     }
 
 
-
-
     private void sendAPIResult(int status,String... message) {
         switch (activity) {
             case 1 : final InitialSyncFragment frag = (InitialSyncFragment)((Splash)context).getSupportFragmentManager().findFragmentByTag("InitialSync");
@@ -1081,7 +1080,7 @@ public class APIController{
                 break;
             case 2 : ((SiteOverviewActivity) context).publishAPIResponse(status, code, message[0]);
                 break;
-            case 5: ((IndentRegisterActivity) context).publishAPIResponse(status, code, message[0]);
+            case 5: ((SettingsActivity) context).publishAPIResponse(status, code, message[0]);
                 break;
             case 8 : ((ReportActivity) context).publishAPIResponse(status, code, message[0]);
                 break;

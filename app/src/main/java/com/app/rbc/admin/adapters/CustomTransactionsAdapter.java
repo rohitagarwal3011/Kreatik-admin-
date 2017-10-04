@@ -26,6 +26,7 @@ import com.app.rbc.admin.models.db.models.site_overview.Trans;
 import com.app.rbc.admin.utils.AppUtil;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.squareup.picasso.Picasso;
+import com.stfalcon.frescoimageviewer.ImageViewer;
 
 import org.joda.time.DateTime;
 import org.w3c.dom.Text;
@@ -34,6 +35,7 @@ import java.lang.reflect.Array;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -47,6 +49,7 @@ public class CustomTransactionsAdapter extends RecyclerView.Adapter<CustomTransa
 
     private List<Trans> transactions;
     private Context context;
+    ArrayList posters= new ArrayList(1);
 
     public CustomTransactionsAdapter(Context context,List<Trans> transactions) {
         this.transactions = transactions;
@@ -148,15 +151,73 @@ public class CustomTransactionsAdapter extends RecyclerView.Adapter<CustomTransa
 
 
             String[] urls = transactions.get(position).getChallanimg().split("\\|");
-            Uri challanUrl = Uri.parse(urls[0]);
-            Uri invoiceUrl = Uri.parse(urls[1]);
-            Uri onreceiveUrl = Uri.parse(urls[2]);
-            Uri unloadedUrl = Uri.parse(urls[3]);
+
+            final Uri challanUrl = Uri.parse(urls[0]);
+            final Uri invoiceUrl = Uri.parse(urls[1]);
+            final Uri onreceiveUrl = Uri.parse(urls[2]);
+            final Uri unloadedUrl = Uri.parse(urls[3]);
 
             holder.challan_img.setImageURI(challanUrl);
             holder.invoice_img.setImageURI(invoiceUrl);
             holder.onreceive_img.setImageURI(onreceiveUrl);
             holder.unloaded_img.setImageURI(unloadedUrl);
+
+            holder.challan_img.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    posters.clear();
+
+                    posters.add(challanUrl);
+
+                    new ImageViewer.Builder<>(context, posters)
+                            .setStartPosition(0)
+                            .allowSwipeToDismiss(true)
+                            .show();
+                }
+            });
+
+
+            holder.invoice_img.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    posters.clear();
+
+                    posters.add(invoiceUrl);
+
+                    new ImageViewer.Builder<>(context, posters)
+                            .setStartPosition(0)
+                            .allowSwipeToDismiss(true)
+                            .show();
+                }
+            });
+
+            holder.onreceive_img.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    posters.clear();
+
+                    posters.add(onreceiveUrl);
+
+                    new ImageViewer.Builder<>(context, posters)
+                            .setStartPosition(0)
+                            .allowSwipeToDismiss(true)
+                            .show();
+                }
+            });
+
+            holder.unloaded_img.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    posters.clear();
+
+                    posters.add(unloadedUrl);
+
+                    new ImageViewer.Builder<>(context, posters)
+                            .setStartPosition(0)
+                            .allowSwipeToDismiss(true)
+                            .show();
+                }
+            });
         }
         holder.transaction_status.setText(transactions.get(position).getStatus());
 

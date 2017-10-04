@@ -22,9 +22,11 @@ import com.app.rbc.admin.models.db.models.Categoryproduct;
 import com.app.rbc.admin.utils.AppUtil;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.squareup.picasso.Picasso;
+import com.stfalcon.frescoimageviewer.ImageViewer;
 
 import org.joda.time.DateTime;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -38,6 +40,7 @@ public class Transaction_detail_adapter extends RecyclerView.Adapter<Transaction
     private List<StockCategoryDetails.TransactionDetail> data;
     private Context context;
     private LayoutInflater inflater;
+    ArrayList posters= new ArrayList(1);
 
     int count;
     public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -96,9 +99,18 @@ public class Transaction_detail_adapter extends RecyclerView.Adapter<Transaction
 
         StockCategoryDetails.TransactionDetail transactionDetail = data.get(position);
 
+        if(transactionDetail.getDetails().get(0).getSourceType().equalsIgnoreCase("Site")) {
+            holder.source.setText(transactionDetail.getSrc_details().get(0).getName());
+            holder.destination.setText(transactionDetail.getDest_details().get(0).getName());
+        }
+        else
+        {
+            holder.source.setText(transactionDetail.getVendor_details().get(0).getVendorName());
+            holder.destination.setText(transactionDetail.getDest_details().get(0).getName());
 
-        holder.source.setText(transactionDetail.getDetails().get(0).getSource());
-        holder.destination.setText(transactionDetail.getDetails().get(0).getDestination());
+        }
+//        holder.source.setText(transactionDetail.getDetails().get(0).getSource());
+//        holder.destination.setText(transactionDetail.getDetails().get(0).getDestination());
         DateTime dateTime = new DateTime(transactionDetail.getDetails().get(0).getDispatchDt());
         holder.transactionDate.setText(dateTime.toString("MMM dd, yyyy"));
 
@@ -161,16 +173,72 @@ public class Transaction_detail_adapter extends RecyclerView.Adapter<Transaction
 
             if (detail.getStatus().equalsIgnoreCase("Received")) {
                 String[] urls = detail.getChallanImg().split("\\|");
-                Uri challanUrl = Uri.parse(urls[0]);
-                Uri invoiceUrl = Uri.parse(urls[1]);
-                Uri onreceiveUrl = Uri.parse(urls[2]);
-                Uri unloadedUrl = Uri.parse(urls[3]);
+                final Uri challanUrl = Uri.parse(urls[0]);
+                final Uri invoiceUrl = Uri.parse(urls[1]);
+                final Uri onreceiveUrl = Uri.parse(urls[2]);
+                final Uri unloadedUrl = Uri.parse(urls[3]);
 
                 holder.challan_img.setImageURI(challanUrl);
                 holder.invoice_img.setImageURI(invoiceUrl);
                 holder.onreceive_img.setImageURI(onreceiveUrl);
                 holder.unloaded_img.setImageURI(unloadedUrl);
 
+                holder.challan_img.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        posters.clear();
+
+                        posters.add(challanUrl);
+
+                        new ImageViewer.Builder<>(context, posters)
+                                .setStartPosition(0)
+                                .allowSwipeToDismiss(true)
+                                .show();
+                    }
+                });
+
+
+                holder.invoice_img.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        posters.clear();
+
+                        posters.add(invoiceUrl);
+
+                        new ImageViewer.Builder<>(context, posters)
+                                .setStartPosition(0)
+                                .allowSwipeToDismiss(true)
+                                .show();
+                    }
+                });
+
+                holder.onreceive_img.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        posters.clear();
+
+                        posters.add(onreceiveUrl);
+
+                        new ImageViewer.Builder<>(context, posters)
+                                .setStartPosition(0)
+                                .allowSwipeToDismiss(true)
+                                .show();
+                    }
+                });
+
+                holder.unloaded_img.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        posters.clear();
+
+                        posters.add(unloadedUrl);
+
+                        new ImageViewer.Builder<>(context, posters)
+                                .setStartPosition(0)
+                                .allowSwipeToDismiss(true)
+                                .show();
+                    }
+                });
             }
         }
         holder.transaction_status.setText(detail.getStatus());
