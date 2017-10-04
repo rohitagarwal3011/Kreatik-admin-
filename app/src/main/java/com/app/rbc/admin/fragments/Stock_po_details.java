@@ -230,7 +230,7 @@ public class Stock_po_details extends Fragment {
 
         PODate.setText(poDetail.getDetails().get(0).getCreationDt());
         // POQuantity.setText(poDetail.getDetails().get(0)..toString());
-        POAmount.setText(poDetail.getDetails().get(0).getPrice().toString());
+        POAmount.setText("Rs."+" "+poDetail.getDetails().get(0).getPrice().toString());
         POPayMode.setText(poDetail.getDetails().get(0).getPayMode());
         POStatus.setText(poDetail.getDetails().get(0).getStatus());
 

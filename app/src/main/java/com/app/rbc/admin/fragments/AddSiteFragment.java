@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.app.rbc.admin.R;
 import com.app.rbc.admin.activities.IndentRegisterActivity;
+import com.app.rbc.admin.activities.SettingsActivity;
 import com.app.rbc.admin.api.APIController;
 import com.app.rbc.admin.models.db.models.Employee;
 import com.app.rbc.admin.models.db.models.Site;
@@ -45,10 +46,10 @@ public class AddSiteFragment extends Fragment implements View.OnClickListener{
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_add_site, container, false);
         if(edit) {
-            ((IndentRegisterActivity) getActivity()).getSupportActionBar().setTitle("Edit");
+            ((SettingsActivity) getActivity()).getSupportActionBar().setTitle("Edit");
         }
         else {
-            ((IndentRegisterActivity) getActivity()).getSupportActionBar().setTitle("Add a site");
+            ((SettingsActivity) getActivity()).getSupportActionBar().setTitle("Add a site");
         }
         initializeUI();
         return view;
@@ -223,7 +224,7 @@ public class AddSiteFragment extends Fragment implements View.OnClickListener{
         sweetAlertDialog.setCancelable(false);
         sweetAlertDialog.show();
 
-        APIController controller = new APIController(getContext(),code,IndentRegisterActivity.ACTIVITY);
+        APIController controller = new APIController(getContext(),code,SettingsActivity.ACTIVITY);
         controller.addSite(site);
     }
 
@@ -239,7 +240,7 @@ public class AddSiteFragment extends Fragment implements View.OnClickListener{
         sweetAlertDialog.setCancelable(false);
         sweetAlertDialog.show();
 
-        APIController controller = new APIController(getContext(),code,IndentRegisterActivity.ACTIVITY);
+        APIController controller = new APIController(getContext(),code,SettingsActivity.ACTIVITY);
         controller.updateSite(editSite);
     }
 
@@ -253,7 +254,7 @@ public class AddSiteFragment extends Fragment implements View.OnClickListener{
     private void callSitesFetchApi() {
         new Thread(){
             public void run() {
-                APIController controller = new APIController(getContext(),30,IndentRegisterActivity.ACTIVITY);
+                APIController controller = new APIController(getContext(),30,SettingsActivity.ACTIVITY);
                 controller.fetchSites();
             }
         }.start();
@@ -300,11 +301,11 @@ public class AddSiteFragment extends Fragment implements View.OnClickListener{
                         this.state_store = null;
                     }
                     callSitesFetchApi();
-                    ((IndentRegisterActivity)getActivity()).popBackStack();
+                    ((SettingsActivity)getActivity()).popBackStack();
                 }
                 else if(code == 72) {
                     editSite.save();
-                    ((IndentRegisterActivity)getActivity()).popBackStack();
+                    ((SettingsActivity)getActivity()).popBackStack();
                 }
             break;
             case 1 : error.setText(message[0]);

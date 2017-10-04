@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.app.rbc.admin.R;
 import com.app.rbc.admin.models.VehicleDetail;
+import com.app.rbc.admin.models.db.models.Categoryproduct;
 import com.app.rbc.admin.utils.AppUtil;
 import com.facebook.drawee.generic.RoundingParams;
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -121,7 +122,14 @@ public class Vehicle_detail_adapter extends RecyclerView.Adapter<Vehicle_detail_
                 holder.source.setText(vehicleDetail.getSiteDetails().get(1).getName());
                 holder.destination.setText(vehicleDetail.getSiteDetails().get(0).getName());
             }
-
+        String unit = "";
+        if(data.get(position).getProducts().size() != 0) {
+            List<Categoryproduct> categoryproducts = Categoryproduct.find(Categoryproduct.class,
+                    "product = ?",data.get(position).getProducts().get(0).getProduct());
+            if(categoryproducts.size() != 0) {
+                unit = categoryproducts.get(0).getUnit();
+            }
+        }
 
         holder.transaction_status.setText(vehicleDetail.getDetails().get(0).getStatus());
         holder.vehicle_number.setText(vehicleDetail.getDetails().get(0).getVehicleNumber());
@@ -203,7 +211,7 @@ public class Vehicle_detail_adapter extends RecyclerView.Adapter<Vehicle_detail_
                 tv1.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 1f));
                 tv1.setGravity(Gravity.LEFT);
                 tv1.setTextColor(Color.parseColor("#000000"));
-                tv1.setText(quantity);
+                tv1.setText(quantity+ " "+unit);
 
                 tr.addView(tv1, 1);
 

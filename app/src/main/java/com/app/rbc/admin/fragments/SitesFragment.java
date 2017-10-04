@@ -18,7 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.app.rbc.admin.R;
-import com.app.rbc.admin.activities.IndentRegisterActivity;
+import com.app.rbc.admin.activities.SettingsActivity;
 import com.app.rbc.admin.adapters.CustomSiteListAdapter;
 import com.app.rbc.admin.api.APIController;
 import com.app.rbc.admin.models.db.models.Site;
@@ -51,7 +51,7 @@ public class SitesFragment extends Fragment implements View.OnClickListener{
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_sites, container, false);
-        ((IndentRegisterActivity)getActivity()).getSupportActionBar().setTitle("Sites");
+        ((SettingsActivity)getActivity()).getSupportActionBar().setTitle("Sites");
 
         initializeViews();
         return view;
@@ -108,7 +108,7 @@ public class SitesFragment extends Fragment implements View.OnClickListener{
 
                     int a=rv.getChildPosition(child);
                     //Log.e("Listener Id",jobList.get(a).getId()+"");
-                    ((IndentRegisterActivity)getContext()).setFragment(7,sites.get(a).getId());
+                    ((SettingsActivity)getContext()).setFragment(7,sites.get(a).getId());
 
 
                     return true;
@@ -143,13 +143,13 @@ public class SitesFragment extends Fragment implements View.OnClickListener{
             case R.id.add_factory_icon:
             case R.id.add_factory_title:
             case R.id.add_factory_next:
-                ((IndentRegisterActivity)getActivity()).setFragment(7);
+                ((SettingsActivity)getActivity()).setFragment(7);
                 break;
         }
     }
 
     private void callSitesFetchApi() {
-        APIController controller = new APIController(getContext(),30,IndentRegisterActivity.ACTIVITY);
+        APIController controller = new APIController(getContext(),30,SettingsActivity.ACTIVITY);
         controller.fetchSites();
     }
 

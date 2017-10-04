@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
-    android:background="@drawable/login6"
+    android:background="@drawable/login7"
     tools:context="com.app.rbc.admin.activities.LoginActivity">
 
 

@@ -53,12 +53,17 @@ public class SiteOverviewFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_site_overview, container, false);
 
         s = Site.findById(Site.class,site);
-        ((SiteOverviewActivity)getActivity()).getSupportActionBar().setTitle(s.getName());
-        ((SiteOverviewActivity)getActivity()).getSupportActionBar().setElevation(0);
-        ((SiteOverviewActivity)getActivity()).getSupportActionBar().setHomeButtonEnabled(true);
+
 
         initializeViews();
         return view;
+    }
+
+    private void setToolbar() {
+        ((SiteOverviewActivity)getActivity()).getSupportActionBar().setTitle(s.getName());
+        ((SiteOverviewActivity)getActivity()).getSupportActionBar().setElevation(0);
+        ((SiteOverviewActivity)getActivity()).getSupportActionBar().setHomeButtonEnabled(true);
+        ((SiteOverviewActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
@@ -77,6 +82,7 @@ public class SiteOverviewFragment extends Fragment {
 
 
     private void initializeViews() {
+        setToolbar();
         site_type = (TextView) view.findViewById(R.id.site_type);
         site_location = (TextView) view.findViewById(R.id.site_location);
         site_incharge = (TextView) view.findViewById(R.id.site_incharge);

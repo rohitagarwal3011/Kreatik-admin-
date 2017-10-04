@@ -138,9 +138,16 @@ public interface    APIInterface {
     @GET("all_site_list/")
     Call<String> fetchSites();
 
-    @GET("total_vendor_list//")
+    @GET("total_vendor_list/")
     Call<String> fetchVendors();
 
-    @GET("stock_category//")
+    @GET("stock_category/")
     Call<String> fetchCategoriesProducts();
+
+    @FormUrlEncoded
+    @POST("approve_req_qty/")
+    Call<String> approveRequirementQuantity(@Field("rq_id") String rq_id,
+                                            @Field("prod_list") String prod_list);
+
+
 }
