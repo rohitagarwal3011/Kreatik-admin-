@@ -88,6 +88,7 @@ public class YoutubeActivity extends AppCompatActivity implements EasyPermission
     public void setFragment(int code,Object... data) {
         switch (code) {
             case 1 :
+                getSupportActionBar().setTitle("Videos");
                 videoListFragment = VideoListFragment.newInstance(data);
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fragment_container, videoListFragment)

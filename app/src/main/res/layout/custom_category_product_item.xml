@@ -18,7 +18,7 @@
             android:layout_height="45dp"
             android:textColor="@color/white"
             android:id="@+id/category_icon"
-            android:background="@drawable/site_circle_grey"/>
+            android:background="@drawable/circle_accent"/>
 
         <TextView
             android:layout_width="wrap_content"

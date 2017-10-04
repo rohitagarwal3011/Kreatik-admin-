@@ -132,27 +132,14 @@ public class SettingsActivity extends AppCompatActivity {
             case android.R.id.home :
                 onBackPressed();
                 return true;
-            case R.id.playlist:
-                startYoutubeIntent();
-                return true;
 
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.indent_register_menu, menu);
-        return true;
-    }
 
 
-    private void startYoutubeIntent() {
-        Intent intent = new Intent(SettingsActivity.this, YoutubeActivity.class);
-        startActivity(intent);
-    }
 
     @Override
     public void onBackPressed() {

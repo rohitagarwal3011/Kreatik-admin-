@@ -1,11 +1,14 @@
 package com.app.rbc.admin.activities;
 
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
@@ -39,6 +42,14 @@ public class ReportActivity extends AppCompatActivity {
         setFragment(1);
     }
 
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+    }
+
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -47,6 +58,9 @@ public class ReportActivity extends AppCompatActivity {
             case android.R.id.home :
                 onBackPressed();
                 return true;
+            case R.id.playlist:
+                startYoutubeIntent();
+                return true;
 
             default:
                 return super.onOptionsItemSelected(item);
@@ -54,11 +68,17 @@ public class ReportActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.indent_register_menu, menu);
+        return true;
     }
 
+
+    private void startYoutubeIntent() {
+        Intent intent = new Intent(ReportActivity.this, YoutubeActivity.class);
+        startActivity(intent);
+    }
 
 
     private void setFragment(int code) {
