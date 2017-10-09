@@ -1,11 +1,13 @@
 package com.app.rbc.admin.adapters;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -40,7 +42,8 @@ public class CustomStockDetailsAdapter extends RecyclerView.Adapter<CustomStockD
     @Override
     public void onBindViewHolder(MyViewHolder holder, final int position) {
         Log.e("Setting",position+"");
-        holder.stock_location.setText(Site.findById(Site.class,Long.valueOf(stocks.get(position).getSite())).getName());
+
+
         holder.stock_product.setText(stocks.get(position).getProduct());
         holder.stock_quantity.setText(stocks.get(position).getQuantity());
         List<Categoryproduct> categoryproducts = Categoryproduct.find(Categoryproduct.class,
@@ -50,15 +53,7 @@ public class CustomStockDetailsAdapter extends RecyclerView.Adapter<CustomStockD
             +categoryproducts.get(0).getUnit());
         }
 
-
-        if(stocks.get(position).getStocktype().equalsIgnoreCase("Stock"))
-        {
-            Picasso.with(context).load((R.drawable.stock)).into(holder.stock_type);
-        }
-        else {
-
-            Picasso.with(context).load((R.drawable.crane)).into(holder.stock_type);
-        }
+        holder.stock_type.setText(stocks.get(position).getProduct().substring(0,1));
 
     }
 
@@ -69,14 +64,14 @@ public class CustomStockDetailsAdapter extends RecyclerView.Adapter<CustomStockD
 
     public class MyViewHolder extends RecyclerView.ViewHolder{
         public TextView stock_location;
-        public ImageView stock_type;
+        public Button stock_type;
         public TextView stock_product;
         public TextView stock_quantity;
 
         public MyViewHolder(View itemView) {
             super(itemView);
             stock_location=(TextView)itemView.findViewById(R.id.stock_location);
-            stock_type= (ImageView)itemView.findViewById(R.id.stock_type);
+            stock_type= (Button)itemView.findViewById(R.id.stock_type);
             stock_quantity = (TextView)itemView.findViewById(R.id.stock_quantity);
             stock_product = (TextView)itemView.findViewById(R.id.stock_product);
 

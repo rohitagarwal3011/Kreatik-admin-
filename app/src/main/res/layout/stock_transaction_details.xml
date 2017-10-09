@@ -84,9 +84,6 @@
         android:textColor="@color/black"
         android:layout_gravity="bottom|right"/>
 
-
-
-
 </FrameLayout>
     <LinearLayout
         android:layout_width="match_parent"
