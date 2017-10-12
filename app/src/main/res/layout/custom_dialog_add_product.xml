@@ -10,6 +10,7 @@
             android:layout_height="wrap_content"
             android:padding="15dp"
             android:textSize="16sp"
+            android:text="Add Product"
             android:background="@drawable/round_edittext_light"
             android:textColor="@color/mdtp_dark_gray"
             android:id="@+id/form_title"/>
@@ -30,6 +31,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:imeOptions="actionNext"
+            android:inputType="textPersonName"
             android:singleLine="true"
             android:maxLines="1"
             android:layout_toRightOf="@+id/form_product_title"

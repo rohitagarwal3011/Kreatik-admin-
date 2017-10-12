@@ -38,10 +38,12 @@ import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.app.rbc.admin.R;
+import com.app.rbc.admin.adapters.CustomStockSiteListAdapter;
 import com.app.rbc.admin.adapters.PO_detail_adapter;
 import com.app.rbc.admin.adapters.Stock_detail_adapter;
 import com.app.rbc.admin.adapters.Transaction_detail_adapter;
@@ -56,10 +58,13 @@ import com.app.rbc.admin.fragments.Stock_po_details;
 import com.app.rbc.admin.fragments.Vendor_list;
 import com.app.rbc.admin.interfaces.ApiServices;
 import com.app.rbc.admin.models.StockCategoryDetails;
+import com.app.rbc.admin.models.db.models.Site;
+import com.app.rbc.admin.models.db.models.site_overview.Order;
 import com.app.rbc.admin.utils.AppUtil;
 import com.app.rbc.admin.utils.ChangeFragment;
 import com.app.rbc.admin.utils.RetrofitClient;
 import com.app.rbc.admin.utils.TagsPreferences;
+import com.facebook.drawee.backends.pipeline.Fresco;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -107,16 +112,23 @@ public class StockActivity extends AppCompatActivity implements SearchView.OnQue
     StockCategoryDetails productDetails;
     private Menu menu;
 
+    public List<Order> po_task = new ArrayList<>();
+    public List<Order> po_details = new ArrayList<>();
+
+    public Bundle task_finalform,details_finalform;
+
 
 
     public static Boolean show_tabs = false;
+    public Boolean show_menu = false;
 
+    Intent intent;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stock);
         ButterKnife.bind(this);
-
+        Fresco.initialize(this);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -142,8 +154,17 @@ public class StockActivity extends AppCompatActivity implements SearchView.OnQue
 //                        .setAction("Action", null).show();
             }
         });
-        hide_tablayout();
-        changeFragment(getSupportFragmentManager(), R.id.frame_main, new Stock_categories().newInstance("StockActivity"), Stock_categories.TAG);
+
+        try {
+            intent = getIntent();
+            if (intent.getStringExtra("type").equalsIgnoreCase("new_po")||intent.getStringExtra("type").equalsIgnoreCase("vehicle")) {
+                get_product_details(intent.getStringExtra("category"));
+            }
+        }
+        catch (Exception e){
+            hide_tablayout();
+            changeFragment(getSupportFragmentManager(), R.id.frame_main, new Stock_categories().newInstance("StockActivity"), Stock_categories.TAG);
+        }
     }
 
     public void show_dialog()
@@ -199,14 +220,18 @@ public class StockActivity extends AppCompatActivity implements SearchView.OnQue
 
         if(tabLayout.getVisibility() == View.VISIBLE)
         {
+            menu.findItem(R.id.search).setVisible(false);
+            menu.findItem(R.id.filter).setVisible(false);
             hide_tablayout();
-            //changeFragment(getSupportFragmentManager(), R.id.frame_main, new Stock_categories().newInstance("StockActivity"), Stock_categories.TAG);
+            changeFragment(getSupportFragmentManager(), R.id.frame_main, new Stock_categories().newInstance("StockActivity"), Stock_categories.TAG);
         }
         else {
 
-            if(getSupportFragmentManager().findFragmentByTag(Stock_categories.TAG).isVisible())
+            Fragment mFragment = getSupportFragmentManager().findFragmentById(R.id.frame_main);
+
+            if(mFragment instanceof  Stock_categories)
             {
-                getSupportFragmentManager().popBackStackImmediate();
+               // getSupportFragmentManager().popBackStackImmediate();
                 Intent intent = new Intent(StockActivity.this, HomeActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -215,8 +240,11 @@ public class StockActivity extends AppCompatActivity implements SearchView.OnQue
             }
             else if (show_tabs)
             {
-                show_tablayout();
                 getSupportFragmentManager().popBackStackImmediate();
+                show_tablayout();
+                //super.onBackPressed();
+                //getSupportFragmentManager().popBackStackImmediate();
+
             }
 
 //            else if(getSupportFragmentManager()..isVisible())
@@ -228,8 +256,8 @@ public class StockActivity extends AppCompatActivity implements SearchView.OnQue
 //                show_tablayout();
 //            }
             else {
-                getSupportFragmentManager().popBackStackImmediate();
-               // super.onBackPressed();
+               // getSupportFragmentManager().popBackStackImmediate();
+                super.onBackPressed();
 
             }
         }
@@ -242,16 +270,22 @@ public class StockActivity extends AppCompatActivity implements SearchView.OnQue
         getMenuInflater().inflate(R.menu.menu_stock, menu);
         this.menu = menu;
 
-        if(!show_tabs)
+        if(show_menu)
+        {
+            menu.findItem(R.id.search).setVisible(true);
+            menu.findItem(R.id.filter).setVisible(true);
+
+        }
+        else
         {
             menu.findItem(R.id.search).setVisible(false);
             menu.findItem(R.id.filter).setVisible(false);
-
         }
         SearchManager searchManager =
                 (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView = (SearchView)
                 MenuItemCompat.getActionView(menu.findItem(R.id.search));
+        searchView.setMaxWidth(Integer.MAX_VALUE);
 
         searchView.setSearchableInfo(
                 searchManager.getSearchableInfo(getComponentName()));
@@ -294,6 +328,8 @@ public class StockActivity extends AppCompatActivity implements SearchView.OnQue
 
 
     public void get_product_details(String category) {
+
+        getSupportFragmentManager().popBackStackImmediate();
         pDialog = new SweetAlertDialog(StockActivity.this, SweetAlertDialog.PROGRESS_TYPE);
         pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
         pDialog.setTitleText("Loading");
@@ -310,14 +346,25 @@ public class StockActivity extends AppCompatActivity implements SearchView.OnQue
             @Override
             public void onResponse(Call<StockCategoryDetails> call, Response<StockCategoryDetails> response) {
                 pDialog.dismiss();
-                if (response.body().getMeta().getStatus() == 2) {
+                try {
+                    if (response.body().getMeta().getStatus() == 2) {
 
 
-                    AppUtil.putString(getApplicationContext(), TagsPreferences.CATEGORY_DETAILS, new Gson().toJson(response.body()));
-                    productDetails = new Gson().fromJson(AppUtil.getString(getApplicationContext(), TagsPreferences.CATEGORY_DETAILS), StockCategoryDetails.class);
-                    AppUtil.logger("Product Details : ", AppUtil.getString(getApplicationContext(), TagsPreferences.CATEGORY_DETAILS));
-                    show_tablayout();
+                        AppUtil.putString(getApplicationContext(), TagsPreferences.CATEGORY_DETAILS, new Gson().toJson(response.body()));
+                        productDetails = new Gson().fromJson(AppUtil.getString(getApplicationContext(), TagsPreferences.CATEGORY_DETAILS), StockCategoryDetails.class);
+                        AppUtil.logger("Product Details : ", AppUtil.getString(getApplicationContext(), TagsPreferences.CATEGORY_DETAILS));
+
+
+                        if (intent.getStringExtra("type").equalsIgnoreCase("new_po") || intent.getStringExtra("type").equalsIgnoreCase("vehicle")) {
+                            show_po_details(intent.getStringExtra("po_id"));
+                        }
+                    }
                 }
+                    catch (Exception e){
+                        show_tablayout();
+                    }
+
+
 
             }
 
@@ -334,8 +381,11 @@ public class StockActivity extends AppCompatActivity implements SearchView.OnQue
 
     public void show_tablayout() {
 
+        AppUtil.logger("Stock Activity ", "Show Tablayout");
+        toolbar.setTitle(category_selected);
         tabLayout.setVisibility(View.VISIBLE);
         mViewPager.setVisibility(View.VISIBLE);
+
         frameMain.setVisibility(View.GONE);
         fab.show();
 
@@ -343,8 +393,10 @@ public class StockActivity extends AppCompatActivity implements SearchView.OnQue
         tabLayout.setupWithViewPager(mViewPager);
 
 
-        menu.findItem(R.id.search).setVisible(true);
-        menu.findItem(R.id.filter).setVisible(true);
+//        menu.findItem(R.id.search).setVisible(true);
+//        menu.findItem(R.id.filter).setVisible(true);
+        show_menu=true;
+        this.invalidateOptionsMenu();
 
     }
 
@@ -354,13 +406,16 @@ public class StockActivity extends AppCompatActivity implements SearchView.OnQue
         mViewPager.setVisibility(View.GONE);
         frameMain.setVisibility(View.VISIBLE);
         fab.hide();
+        show_menu=false;
+        this.invalidateOptionsMenu();
 
-        if(menu != null)
-        {
-            menu.findItem(R.id.search).setVisible(false);
-            menu.findItem(R.id.filter).setVisible(false);
-
-        }
+//        if(menu != null)
+//        {
+//            AppUtil.logger("StockActivity","Hide toolbar icons");
+//            menu.findItem(R.id.search).setVisible(false);
+//            menu.findItem(R.id.filter).setVisible(false);
+//            this.invalidateOptionsMenu();
+//        }
     }
 
     public void show_po_details(String po)
@@ -444,6 +499,10 @@ public class StockActivity extends AppCompatActivity implements SearchView.OnQue
         public static final String TAG = "Placeholder Fragment";
         @BindView(R.id.recycler_view)
         RecyclerView recyclerView;
+
+        @BindView(R.id.empty_relative)
+        RelativeLayout empty_relative;
+
         Unbinder unbinder;
         private View view;
         private List<StockCategoryDetails.StockDetail> stockDetail;
@@ -493,12 +552,39 @@ public class StockActivity extends AppCompatActivity implements SearchView.OnQue
             swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
                 @Override
                 public void onRefresh() {
+                    swipeRefreshLayout.setRefreshing(false);
                     ((StockActivity)getActivity()).get_product_details(
                             ((StockActivity)getActivity()).category_selected);
                     recyclerView.invalidate();
                 }
             });
+
+            Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
+            ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+            ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle( ((StockActivity)getActivity()).category_selected);
+            AppBarLayout.LayoutParams toolbarParams = ( AppBarLayout.LayoutParams) toolbar.getLayoutParams();
+            toolbarParams.setScrollFlags(1);
+            toolbar.setLayoutParams(toolbarParams);
+
             return view;
+        }
+
+        @Override
+        public void onResume() {
+            super.onResume();
+            Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
+            ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+            ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle( ((StockActivity)getActivity()).category_selected);
+
+        }
+
+        @Override
+        public void onAttachFragment(Fragment childFragment) {
+            super.onAttachFragment(childFragment);
+            Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
+            ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+            ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle( ((StockActivity)getActivity()).category_selected);
+
         }
 
         @Override
@@ -522,6 +608,14 @@ public class StockActivity extends AppCompatActivity implements SearchView.OnQue
         public void show_stock_details() {
 
             stockDetail = new Gson().fromJson(AppUtil.getString(getContext().getApplicationContext(), TagsPreferences.CATEGORY_DETAILS), StockCategoryDetails.class).getStockDetails();
+
+            if(stockDetail.size() == 0) {
+                empty_relative.setVisibility(View.VISIBLE);
+            }
+            else {
+                empty_relative.setVisibility(View.GONE);
+            }
+
             recyclerView.setHasFixedSize(true);
             LinearLayoutManager gridLayoutManager = new LinearLayoutManager(getContext());
             gridLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -529,8 +623,24 @@ public class StockActivity extends AppCompatActivity implements SearchView.OnQue
             recyclerView.setItemAnimator(new DefaultItemAnimator());
             recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
 
+            List<String> sites = new ArrayList<>();
+            for(int i = 0 ; i < stockDetail.size() ; i++) {
+                int j;
+                for(j = 0 ; j < sites.size() ; j++) {
+                    if(sites.get(j).equalsIgnoreCase(stockDetail.get(i).getMsitename())) {
+                        break;
+                    }
+                }
+                if(j == sites.size()) {
+                    sites.add(stockDetail.get(i).getMsitename());
+                    Log.e("Site count",sites.size()+"");
+                }
+            }
+            Log.e("totla Stocks",stockDetail.size()+"");
 
-            Stock_detail_adapter adapter = new Stock_detail_adapter(stockDetail,getContext());
+
+            CustomStockSiteListAdapter adapter = new CustomStockSiteListAdapter(getContext(),stockDetail,
+                    sites);
             recyclerView.setAdapter(adapter);
             adapter.notifyDataSetChanged();
 
@@ -544,12 +654,19 @@ public class StockActivity extends AppCompatActivity implements SearchView.OnQue
 
         public void show_transaction_details() {
             transactionDetails = new Gson().fromJson(AppUtil.getString(getContext().getApplicationContext(), TagsPreferences.CATEGORY_DETAILS), StockCategoryDetails.class).getTransactionDetails();
+            if(transactionDetails.size() == 0) {
+                empty_relative.setVisibility(View.VISIBLE);
+            }
+            else {
+                empty_relative.setVisibility(View.GONE);
+            }
+
             recyclerView.setHasFixedSize(true);
             LinearLayoutManager gridLayoutManager = new LinearLayoutManager(getContext());
             gridLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
             recyclerView.setLayoutManager(gridLayoutManager);
-            recyclerView.setItemAnimator(new DefaultItemAnimator());
-            recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
+//            recyclerView.setItemAnimator(new DefaultItemAnimator());
+//            recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
 
 
             Transaction_detail_adapter adapter = new Transaction_detail_adapter(transactionDetails,getContext());
@@ -564,7 +681,15 @@ public class StockActivity extends AppCompatActivity implements SearchView.OnQue
         }
 
         public void show_PO_details() {
+
             poDetails = new Gson().fromJson(AppUtil.getString(getContext().getApplicationContext(), TagsPreferences.CATEGORY_DETAILS), StockCategoryDetails.class).getPoDetails();
+
+            if(poDetails.size() == 0) {
+                empty_relative.setVisibility(View.VISIBLE);
+            }
+            else {
+                empty_relative.setVisibility(View.GONE);
+            }
             recyclerView.setHasFixedSize(true);
             LinearLayoutManager gridLayoutManager = new LinearLayoutManager(getContext());
             gridLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -635,17 +760,17 @@ public class StockActivity extends AppCompatActivity implements SearchView.OnQue
             }
 
             ArrayAdapter<String> product_adapter = new ArrayAdapter<String>(getActivity(),
-                    android.R.layout.simple_expandable_list_item_1,
+                    R.layout.custom_spinner_text,
                     products);
             product_spinner.setAdapter(product_adapter);
 
             ArrayAdapter<String> site_adapter = new ArrayAdapter<String>(getActivity(),
-                    android.R.layout.simple_expandable_list_item_1,
+                    R.layout.custom_spinner_text,
                     sites);
             site_spinner.setAdapter(site_adapter);
 
             ArrayAdapter<String> stock_type_adapter = new ArrayAdapter<String>(getActivity(),
-                    android.R.layout.simple_expandable_list_item_1,
+                    R.layout.custom_spinner_text,
                     stock_types);
             stock_type_spinner.setAdapter(stock_type_adapter);
 
@@ -739,17 +864,17 @@ public class StockActivity extends AppCompatActivity implements SearchView.OnQue
             }
 
             ArrayAdapter<String> category_adapter = new ArrayAdapter<String>(getActivity(),
-                    android.R.layout.simple_expandable_list_item_1,
+                    R.layout.custom_spinner_text,
                     categories);
             category_spinner.setAdapter(category_adapter);
 
             ArrayAdapter<String> statuses_adapter = new ArrayAdapter<String>(getActivity(),
-                    android.R.layout.simple_expandable_list_item_1,
+                    R.layout.custom_spinner_text,
                     statuses);
             status_spinner.setAdapter(statuses_adapter);
 
             ArrayAdapter<String> created_bys_adapter = new ArrayAdapter<String>(getActivity(),
-                    android.R.layout.simple_expandable_list_item_1,
+                    R.layout.custom_spinner_text,
                     created_bys);
             created_by_spinner.setAdapter(created_bys_adapter);
 
@@ -842,17 +967,17 @@ public class StockActivity extends AppCompatActivity implements SearchView.OnQue
             }
 
             ArrayAdapter<String> vehicle_number_adapter = new ArrayAdapter<String>(getActivity(),
-                    android.R.layout.simple_expandable_list_item_1,
+                    R.layout.custom_spinner_text,
                     vehicle_numbers);
             vehicle_number_spinner.setAdapter(vehicle_number_adapter);
 
             ArrayAdapter<String> statuses_adapter = new ArrayAdapter<String>(getActivity(),
-                    android.R.layout.simple_expandable_list_item_1,
+                    R.layout.custom_spinner_text,
                     statuses);
             status_spinner.setAdapter(statuses_adapter);
 
             ArrayAdapter<String> destination_type_adapter = new ArrayAdapter<String>(getActivity(),
-                    android.R.layout.simple_expandable_list_item_1,
+                    R.layout.custom_spinner_text,
                     destination_types);
             destination_type_spinner.setAdapter(destination_type_adapter);
 
@@ -883,6 +1008,13 @@ public class StockActivity extends AppCompatActivity implements SearchView.OnQue
                             }
                         }
                         filtered.add(transactionDetails.get(i));
+                    }
+
+                    if(filtered.size() == 0) {
+                        empty_relative.setVisibility(View.GONE);
+                    }
+                    else {
+                        empty_relative.setVisibility(View.VISIBLE);
                     }
                     set_show_transaction_recycler(filtered);
                 }

@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,10 +54,23 @@ public class SiteOverviewListFragment extends Fragment {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_site_overview_list, container, false);
         ((SiteOverviewActivity)getActivity()).getSupportActionBar().setTitle("Sites");
+        ((SiteOverviewActivity)getActivity()).getSupportActionBar().setElevation(0);
+        ((SiteOverviewActivity)getActivity()).getSupportActionBar().setHomeButtonEnabled(true);
         initializeViews();
         return view;
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                getActivity().getSupportFragmentManager().popBackStack();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 
     private void initializeViews() {
 

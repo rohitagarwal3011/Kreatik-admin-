@@ -5,21 +5,27 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.app.rbc.admin.R;
+import com.app.rbc.admin.activities.RequirementDetailActivity;
 import com.app.rbc.admin.activities.StockActivity;
 import com.app.rbc.admin.interfaces.ApiServices;
+import com.app.rbc.admin.models.db.models.Categoryproduct;
 import com.app.rbc.admin.utils.AdapterWithCustomItem;
 import com.app.rbc.admin.utils.AppUtil;
 import com.app.rbc.admin.utils.MySpinner;
@@ -39,6 +45,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -130,6 +137,21 @@ public class Stock_po_create_task extends Fragment implements DatePickerDialog.O
         View view = inflater.inflate(R.layout.fragment_stock_po_create_task, container, false);
         unbinder = ButterKnife.bind(this, view);
         count=1;
+
+        Bundle bundle = ((StockActivity)getActivity()).task_finalform;
+        if(bundle != null) {
+            dateSelect.setSelection(bundle.getInt("dateselect"));
+            timeSelect.setSelection(bundle.getInt("timeselect"));
+        }
+
+        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
+        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Select Deadline ");
+        AppBarLayout.LayoutParams toolbarParams = ( AppBarLayout.LayoutParams) toolbar.getLayoutParams();
+        toolbarParams.setScrollFlags(0);
+        toolbar.setLayoutParams(toolbarParams);
+
+
         return view;
     }
 
@@ -139,6 +161,18 @@ public class Stock_po_create_task extends Fragment implements DatePickerDialog.O
         set_data();
         spinner_values();
 
+    }
+
+    @Override
+    public void onPause() {
+        if(((StockActivity)getActivity()).task_finalform == null) {
+            ((StockActivity)getActivity()).task_finalform = new Bundle();
+        }
+        Bundle bundle = ((StockActivity) getActivity()).task_finalform;
+        bundle.putInt("dateselect", dateSelect.getSelectedItemPosition());
+        bundle.putInt("timeselect", timeSelect.getSelectedItemPosition());
+
+        super.onPause();
     }
 
 
@@ -164,30 +198,25 @@ public class Stock_po_create_task extends Fragment implements DatePickerDialog.O
 
     private void addrow(String product,String quantity)
     {
-        TableRow tr = new TableRow(getContext());
-        TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
+        String unit = "";
+        List<Categoryproduct> categoryproductList = Categoryproduct.find(Categoryproduct.class,
+                "product = ?",product);
+        if(categoryproductList.size() != 0) {
 
-        layoutParams.setMargins(0, (int) getResources().getDimension(R.dimen._5sdp), 0, (int) getResources().getDimensionPixelSize(R.dimen._5sdp));
-        tr.setLayoutParams(layoutParams);
-        tr.setPadding((int) getResources().getDimension(R.dimen._3sdp), (int) getResources().getDimension(R.dimen._3sdp), (int) getResources().getDimension(R.dimen._3sdp), (int) getResources().getDimension(R.dimen._3sdp));
+            unit = categoryproductList.get(0).getUnit();
+        }
 
-        TextView tv = new TextView(getContext());
-        tv.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 1f));
-        tv.setGravity(Gravity.LEFT);
-        tv.setTextColor(Color.parseColor("#000000"));
-        tv.setText(product);
+        View tr = getActivity().getLayoutInflater().inflate(R.layout.custom_requirement_table_row,null);
 
-        tr.addView(tv, 0);
+        TextView productText = (TextView) tr.findViewById(R.id.product);
+        TextView quantityText = (TextView) tr.findViewById(R.id.quantity);
+        Button product_icon = (Button) tr.findViewById(R.id.product_icon);
 
-        TextView tv1 = new TextView(getContext());
-        tv1.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 1f));
-        tv1.setGravity(Gravity.LEFT);
-        tv1.setTextColor(Color.parseColor("#000000"));
-        tv1.setText(quantity);
+        productText.setText(product);
+        quantityText.setText(quantity+" "+unit);
+        product_icon.setText(product.substring(0,1));
 
-        tr.addView(tv1, 1);
-
-        productTable.addView(tr, count);
+        productTable.addView(tr);
         count++;
     }
     private Boolean check_length(EditText field) {
@@ -251,26 +280,33 @@ public class Stock_po_create_task extends Fragment implements DatePickerDialog.O
 
                     submitTask.setEnabled(true);
                     submitTask.setProgress(0);
-                    final SweetAlertDialog pDialog = new SweetAlertDialog(getContext(), SweetAlertDialog.SUCCESS_TYPE);
-                    pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
-                    pDialog.setTitleText("Task Created");
-                    pDialog.setContentText("Your task has been successfully created");
-                    pDialog.setCancelable(false);
-                    pDialog.show();
 
-                    pDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                        @Override
-                        public void onClick(SweetAlertDialog sweetAlertDialog) {
-                            pDialog.dismiss();
-                            ((StockActivity) getContext()).get_product_details(product_selected);
-
-                        }
-                    });
                     try {
 
                         try {
                             JSONObject obj = new JSONObject(response.body().string());
                             AppUtil.logger(TAG, obj.toString());
+                            if(obj.getJSONObject("meta").getInt("status")==2)
+                            {
+                                final SweetAlertDialog pDialog = new SweetAlertDialog(getContext(), SweetAlertDialog.SUCCESS_TYPE);
+                                pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+                                pDialog.setTitleText("Task Created");
+                                pDialog.setContentText("Your task has been successfully created");
+                                pDialog.setCancelable(false);
+                                pDialog.show();
+
+                                pDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                    @Override
+                                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                        pDialog.dismiss();
+                                        ((StockActivity) getContext()).get_product_details(product_selected);
+
+                                    }
+                                });
+                            }
+                            else {
+                                AppUtil.showToast(getContext(), "Network Issue. Please check your connectivity and try again");
+                            }
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -304,7 +340,7 @@ public class Stock_po_create_task extends Fragment implements DatePickerDialog.O
 
 
         dateAdapter = new AdapterWithCustomItem(getContext(), dates);
-        dateAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        dateAdapter.setDropDownViewResource(R.layout.custom_spinner_text);
         dateSelect.setAdapter(dateAdapter);
 
         Calendar calendar = Calendar.getInstance();
@@ -353,7 +389,7 @@ public class Stock_po_create_task extends Fragment implements DatePickerDialog.O
         deadline_time = "13:00:00";
 
         timeAdapter = new AdapterWithCustomItem(getContext(), times);
-        timeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        timeAdapter.setDropDownViewResource(R.layout.custom_spinner_text);
         timeSelect.setAdapter(timeAdapter);
         timeSelect.setOnItemSelectedEvenIfUnchangedListener(new AdapterView.OnItemSelectedListener() {
             @Override

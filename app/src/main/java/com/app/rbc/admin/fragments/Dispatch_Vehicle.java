@@ -1,10 +1,13 @@
 package com.app.rbc.admin.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +15,10 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.app.rbc.admin.R;
+import com.app.rbc.admin.activities.AddVehicleActivity;
+import com.app.rbc.admin.activities.HomeActivity;
 import com.app.rbc.admin.activities.RequirementDetailActivity;
+import com.app.rbc.admin.activities.StockActivity;
 import com.app.rbc.admin.interfaces.ApiServices;
 import com.app.rbc.admin.utils.AppUtil;
 import com.app.rbc.admin.utils.RetrofitClient;
@@ -93,12 +99,29 @@ public class Dispatch_Vehicle extends Fragment {
         }
     }
 
+
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_dispatch__vehicle, container, false);
         unbinder = ButterKnife.bind(this, view);
+
+
+        Bundle bundle = ((AddVehicleActivity)getActivity()).finalform;
+        if(bundle != null) {
+            vehicleNumber.setText(bundle.getString("vehiclenumber"));
+            driverName.setText(bundle.getString("drivername"));
+            challanNo.setText(bundle.getString("challannumber"));
+        }
+
+        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
+        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Dispatch Vehicle");
+
+
         return view;
     }
 
@@ -108,6 +131,21 @@ public class Dispatch_Vehicle extends Fragment {
         setData();
 
     }
+
+    @Override
+    public void onPause() {
+        if(((AddVehicleActivity)getActivity()).finalform == null) {
+            ((AddVehicleActivity)getActivity()).finalform = new Bundle();
+        }
+        Bundle bundle = ((AddVehicleActivity) getActivity()).finalform;
+        bundle.putString("vehiclenumber", vehicleNumber.getText().toString());
+        bundle.putString("drivername", driverName.getText().toString());
+        bundle.putString("challannumber", challanNo.getText().toString());
+
+        super.onPause();
+    }
+
+
     JSONArray prod_list = new JSONArray();
 
     public void setData()
@@ -195,8 +233,8 @@ public class Dispatch_Vehicle extends Fragment {
 
                     final SweetAlertDialog pDialog = new SweetAlertDialog(getContext(), SweetAlertDialog.SUCCESS_TYPE);
                     pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
-                    pDialog.setTitleText("Task Created");
-                    pDialog.setContentText("Your task has been successfully created");
+                    pDialog.setTitleText("Vehicle Dispatched");
+                    pDialog.setContentText("Dispatched Vehicle info has been saved.");
                     pDialog.setCancelable(false);
                     pDialog.show();
 
@@ -204,6 +242,11 @@ public class Dispatch_Vehicle extends Fragment {
                         @Override
                         public void onClick(SweetAlertDialog sweetAlertDialog) {
                             pDialog.dismiss();
+                            Intent intent = new Intent(getContext(), HomeActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
+                            getActivity().finish();
                             //((RequirementDetailActivity) getContext()).get_data();
 
                         }

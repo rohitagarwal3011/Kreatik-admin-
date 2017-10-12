@@ -6,9 +6,12 @@ import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -89,15 +92,6 @@ public class Cat_Des_Selection extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment Cat_Des_Selection.
-     */
-    // TODO: Rename and change types and number of parameters
     public static Cat_Des_Selection newInstance(String param1, String param2) {
         Cat_Des_Selection fragment = new Cat_Des_Selection();
         Bundle args = new Bundle();
@@ -123,6 +117,11 @@ public class Cat_Des_Selection extends Fragment {
         View view = inflater.inflate(R.layout.fragment_cat__des__selection, container, false);
         unbinder = ButterKnife.bind(this, view);
         vehicle_for_po = false;
+
+        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
+        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Dispatch Vehicle");
+
         return view;
     }
 
@@ -131,7 +130,7 @@ public class Cat_Des_Selection extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         get_site();
-        //get_vendors();
+//        get_vendors();
         setSelectCategory();
         onclicks();
     }
@@ -197,7 +196,6 @@ public class Cat_Des_Selection extends Fragment {
                     get_vendors();
                     setSourceasSite();
                     setSelectDestination();
-
 //                    SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
 //                    Date formated = null;
 //                    try {
@@ -269,8 +267,11 @@ public class Cat_Des_Selection extends Fragment {
         });
     }
 
+    String destination_id;
+
     private void setSelectDestination() {
         List<String> sites = new ArrayList<>();
+        sites.add("Choose Site");
         for (int i = 0; i < allSiteList.getSiteList().size(); i++) {
             sites.add(allSiteList.getSiteList().get(i).getName());
         }
@@ -278,10 +279,24 @@ public class Cat_Des_Selection extends Fragment {
         ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, sites); //selected item will look like a spinner set from XML
         spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         selectDestination.setAdapter(spinnerArrayAdapter);
+
+        selectDestination.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+              if (position>0)
+                destination_id= String.valueOf(allSiteList.getSiteList().get(position-1).getId());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
 
     private void setSourceasSite() {
         List<String> sites = new ArrayList<>();
+        sites.add("Choose Site");
         for (int i = 0; i < allSiteList.getSiteList().size(); i++) {
             sites.add(allSiteList.getSiteList().get(i).getName());
         }
@@ -293,6 +308,7 @@ public class Cat_Des_Selection extends Fragment {
 
     private void setSourceAsVendor() {
         List<String> vendorlist = new ArrayList<>();
+        vendorlist.add("Choose Vendor");
         for (int i = 0; i < vendors.getVendorList().size(); i++) {
             vendorlist.add(vendors.getVendorList().get(i).getVendorName());
         }
@@ -316,13 +332,13 @@ public class Cat_Des_Selection extends Fragment {
         po_number = PONumber.getText().toString();
 
         if(vehicle_for_po)
-            source = vendors.getVendorList().get(selectSource.getSelectedItemPosition()).getVendorId();
+            source = vendors.getVendorList().get(selectSource.getSelectedItemPosition()-1).getVendorId();
         else
-            source = ""+allSiteList.getSiteList().get(selectSource.getSelectedItemPosition()).getId();
+            source = ""+allSiteList.getSiteList().get(selectSource.getSelectedItemPosition()-1).getId();
 
-        destination = allSiteList.getSiteList().get(selectDestination.getSelectedItemPosition()).getId();
+        destination = allSiteList.getSiteList().get(selectDestination.getSelectedItemPosition()-1).getId();
 
-        ChangeFragment.changeFragment(getActivity().getSupportFragmentManager(), R.id.frame_main, Cat_Des_Requirement_List.newInstance(selectCategory.getSelectedItem().toString(), selectDestination.getSelectedItem().toString()), Dispatch_Vehicle.TAG);
+        ChangeFragment.changeFragment(getActivity().getSupportFragmentManager(), R.id.frame_main, Cat_Des_Requirement_List.newInstance(selectCategory.getSelectedItem().toString(), destination_id), Dispatch_Vehicle.TAG);
 
     }
 }

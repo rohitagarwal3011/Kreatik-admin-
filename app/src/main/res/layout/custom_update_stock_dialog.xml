@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:padding="@dimen/_5sdp"
+    android:layout_height="match_parent">
+
+
+    <TextView
+        android:layout_width="@dimen/_80sdp"
+        android:layout_height="@dimen/_40sdp"
+        android:background="@drawable/round_edittext_light"
+        android:text="Category"
+        android:textSize="@dimen/_12sdp"
+        android:padding="@dimen/_5sdp"
+        android:gravity="center_vertical"
+        android:id="@+id/category_title"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_40sdp"
+        android:layout_alignTop="@id/category_title"
+        android:layout_toRightOf="@id/category_title"
+        android:background="@drawable/round_edittext_light">
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_40sdp"
+            android:id="@+id/category_spinner"/>
+    </RelativeLayout>
+
+
+    <TextView
+        android:layout_width="@dimen/_80sdp"
+        android:layout_below="@id/category_title"
+        android:layout_height="@dimen/_40sdp"
+        android:background="@drawable/round_edittext_light"
+        android:text="Product"
+        android:textSize="@dimen/_12sdp"
+        android:padding="@dimen/_5sdp"
+        android:gravity="center_vertical"
+        android:id="@+id/product_title"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_40sdp"
+        android:layout_alignTop="@id/product_title"
+        android:layout_toRightOf="@id/product_title"
+        android:background="@drawable/round_edittext_light">
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_40sdp"
+            android:id="@+id/product_spinner"/>
+    </RelativeLayout>
+
+
+    <TextView
+        android:layout_width="@dimen/_80sdp"
+        android:layout_below="@id/product_title"
+        android:layout_height="@dimen/_40sdp"
+        android:background="@drawable/round_edittext_light"
+        android:text="Site"
+        android:textSize="@dimen/_12sdp"
+        android:padding="@dimen/_5sdp"
+        android:gravity="center_vertical"
+        android:id="@+id/site_title"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_40sdp"
+        android:layout_alignTop="@id/site_title"
+        android:layout_toRightOf="@id/site_title"
+        android:background="@drawable/round_edittext_light">
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_40sdp"
+            android:id="@+id/site_spinner"/>
+    </RelativeLayout>
+
+
+    <TextView
+        android:layout_width="@dimen/_80sdp"
+        android:layout_below="@id/site_title"
+        android:layout_height="@dimen/_40sdp"
+        android:background="@drawable/round_edittext_light"
+        android:text="Quantity"
+        android:textSize="@dimen/_12sdp"
+        android:padding="@dimen/_5sdp"
+        android:gravity="center_vertical"
+        android:id="@+id/quantity_title"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:inputType="number"
+        android:layout_height="@dimen/_40sdp"
+        android:id="@+id/quantity"
+        android:textSize="@dimen/_12sdp"
+
+        android:padding="@dimen/_5sdp"
+        android:textColor="@color/black"
+        android:layout_alignTop="@id/quantity_title"
+        android:layout_toRightOf="@id/quantity_title"
+        android:background="@drawable/round_edittext_light"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_40sdp"
+        android:layout_below="@id/quantity_title"
+        android:layout_margin="@dimen/_5sdp"
+        android:id="@+id/save"
+        android:background="@color/colorAccent"
+        android:textColor="@color/white"
+        android:text="Save"/>
+
+
+
+
+
+</RelativeLayout>

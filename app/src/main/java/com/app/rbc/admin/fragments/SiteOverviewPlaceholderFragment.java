@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -33,6 +34,9 @@ public class SiteOverviewPlaceholderFragment extends Fragment {
     private List<Trans> transactions;
     public long site;
     public int position;
+    private CustomStockDetailsAdapter stockDetailsAdapter;
+    private CusotmRequirementsAdapter requirementsAdapter;
+    private CustomTransactionsAdapter transactionsAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -45,31 +49,34 @@ public class SiteOverviewPlaceholderFragment extends Fragment {
 
     private void initializeUI() {
         switch (position) {
-            case 0 : stocks = Stock.find(Stock.class, "site = ?", site + "");
+            case 0 : stocks = Stock.find(Stock.class, "site = ? and statestore != ?", site + "",1+"");
                 recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
                 RecyclerView.LayoutManager layoutManagerSite = new LinearLayoutManager(getContext());
                 recyclerView.setLayoutManager(layoutManagerSite);
-                CustomStockDetailsAdapter stockDetailsAdapter = new CustomStockDetailsAdapter(getActivity(), stocks);
+                recyclerView.setItemAnimator(new DefaultItemAnimator());
+                recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
+                stockDetailsAdapter = new CustomStockDetailsAdapter(getActivity(), stocks);
                 recyclerView.setAdapter(stockDetailsAdapter);
                 break;
             case 1:
-                requirements = Requirement.find(Requirement.class, "site = ?", site + "");
+                requirements = Requirement.find(Requirement.class, "site = ? and statestore != ?", site + "",1+"");
                 recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
                 RecyclerView.LayoutManager layoutManagerRequirement = new LinearLayoutManager(getContext());
                 recyclerView.setLayoutManager(layoutManagerRequirement);
                 Log.e("layout","manager");
-                CusotmRequirementsAdapter requirementsAdapter = new CusotmRequirementsAdapter(getActivity(), requirements);
+                requirementsAdapter = new CusotmRequirementsAdapter(getActivity(), requirements);
                 recyclerView.setAdapter(requirementsAdapter);
                 Log.e("adapter","set");
                 break;
             case 2:
-                transactions = Trans.find(Trans.class,"source = ? or destination = ?",site+"",site+"");
+                transactions = Trans.find(Trans.class,"source = ? and statestore != ? or destination = ? and statestore != ?",
+                        site+"",1+"",site+"",1+"");
                 Log.e("count",transactions.size()+"");
                 recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
                 RecyclerView.LayoutManager layoutManagerTransaction = new LinearLayoutManager(getContext());
                 recyclerView.setLayoutManager(layoutManagerTransaction);
                 Log.e("layout","manager");
-                CustomTransactionsAdapter transactionsAdapter = new CustomTransactionsAdapter(getActivity(), transactions);
+                transactionsAdapter = new CustomTransactionsAdapter(getActivity(), transactions);
                 recyclerView.setAdapter(transactionsAdapter);
                 Log.e("adapter","set");
                 break;

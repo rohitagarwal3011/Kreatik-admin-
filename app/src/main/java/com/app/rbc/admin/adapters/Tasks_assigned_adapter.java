@@ -187,12 +187,12 @@ public class Tasks_assigned_adapter extends RecyclerView.Adapter<Tasks_assigned_
 
         String date_recieved = data.get(position).getDeadline();
         String date = date_recieved.substring(0,date_recieved.indexOf('T'));
-        AppUtil.logger("Date substring: ",date);
+       // AppUtil.logger("Date substring: ",date);
         SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
         try {
             Date formated = fmt.parse(date);
             SimpleDateFormat fmtout = new SimpleDateFormat("EEE, MMM dd");
-            AppUtil.logger("Final date : ", fmtout.format(formated));
+            //AppUtil.logger("Final date : ", fmtout.format(formated));
 
             holder.deadLine.setText(fmtout.format(formated));
 

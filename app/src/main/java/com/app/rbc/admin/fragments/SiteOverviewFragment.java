@@ -1,15 +1,20 @@
 package com.app.rbc.admin.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.NestedScrollView;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -41,22 +46,43 @@ public class SiteOverviewFragment extends Fragment {
     private NestedScrollView nestedScrollView;
     private Site s;
     private TextView site_type,site_location,site_incharge;
+    private CustomSiteOverviewPagerAdapter customSiteOverviewPagerAdapter;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_site_overview, container, false);
 
         s = Site.findById(Site.class,site);
-        ((SiteOverviewActivity)getActivity()).getSupportActionBar().setTitle(s.getName());
+
 
         initializeViews();
         return view;
+    }
+
+    private void setToolbar() {
+        ((SiteOverviewActivity)getActivity()).getSupportActionBar().setTitle(s.getName());
+        ((SiteOverviewActivity)getActivity()).getSupportActionBar().setElevation(0);
+        ((SiteOverviewActivity)getActivity()).getSupportActionBar().setHomeButtonEnabled(true);
+        ((SiteOverviewActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                getActivity().getSupportFragmentManager().popBackStack();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
 
 
 
     private void initializeViews() {
+        setToolbar();
         site_type = (TextView) view.findViewById(R.id.site_type);
         site_location = (TextView) view.findViewById(R.id.site_location);
         site_incharge = (TextView) view.findViewById(R.id.site_incharge);
@@ -78,31 +104,35 @@ public class SiteOverviewFragment extends Fragment {
                 ContextCompat.getColor(getContext(), R.color.white)
         );
 
-        SiteOverviewPlaceholderFragment stocks = new SiteOverviewPlaceholderFragment();
-        stocks.site = site;
-        stocks.position = 0;
-        fragments.add(0,stocks);
 
-        SiteOverviewPlaceholderFragment requirements = new SiteOverviewPlaceholderFragment();
-        requirements.site = site;
-        requirements.position = 1;
-        fragments.add(1,requirements);
-
-        SiteOverviewPlaceholderFragment transactions = new SiteOverviewPlaceholderFragment();
-        transactions.site = site;
-        transactions.position = 2;
-        fragments.add(2,transactions);
+        setCustomOverviewPagerAdapter();
 
         callSiteOverviewApi();
-        setCustomOverviewPagerAdapter();
 
     }
 
     private void setCustomOverviewPagerAdapter() {
-        CustomSiteOverviewPagerAdapter customSiteOverviewPagerAdapter = new CustomSiteOverviewPagerAdapter(
+        customSiteOverviewPagerAdapter = new CustomSiteOverviewPagerAdapter(
                 getChildFragmentManager(),viewPager,tabLayout,fragments);
+
+        SiteOverviewPlaceholderFragment stocks = new SiteOverviewPlaceholderFragment();
+        stocks.site = site;
+        stocks.position = 0;
+        customSiteOverviewPagerAdapter.addFragment(stocks,0);
+
+        SiteOverviewPlaceholderFragment requirements = new SiteOverviewPlaceholderFragment();
+        requirements.site = site;
+        requirements.position = 1;
+        customSiteOverviewPagerAdapter.addFragment(requirements,1);
+
+        SiteOverviewPlaceholderFragment transactions = new SiteOverviewPlaceholderFragment();
+        transactions.site = site;
+        transactions.position = 2;
+        customSiteOverviewPagerAdapter.addFragment(transactions,2);
+
+
         viewPager.setAdapter(customSiteOverviewPagerAdapter);
-        viewPager.invalidate();
+        customSiteOverviewPagerAdapter.notifyDataSetChanged();
     }
 
 
@@ -121,7 +151,7 @@ public class SiteOverviewFragment extends Fragment {
         sweetAlertDialog.dismiss();
         switch(status) {
             case 2 :
-                viewPager.invalidate();
+                setCustomOverviewPagerAdapter();
                 break;
             case 0:
                 Toast.makeText(getContext(),
@@ -130,4 +160,5 @@ public class SiteOverviewFragment extends Fragment {
                 break;
         }
     }
+
 }

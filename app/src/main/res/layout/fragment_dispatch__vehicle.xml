@@ -11,18 +11,17 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/_20sdp"
-            android:paddingEnd="@dimen/_16sdp"
-            android:paddingStart="@dimen/_16sdp">
+            android:padding="@dimen/_10sdp">
 
 
             <TextView
                 android:layout_width="@dimen/_120sdp"
                 android:layout_height="@dimen/_40sdp"
                 android:id="@+id/vehicle_number_title"
-                android:textSize="@dimen/_14sdp"
-                android:paddingLeft="@dimen/_4sdp"
-                android:paddingTop="@dimen/_10sdp"
+                android:textSize="@dimen/_12sdp"
+                android:gravity="left|center_vertical"
+                android:paddingLeft="@dimen/_5sdp"
+                android:padding="@dimen/_5sdp"
                 android:background="@drawable/round_edittext_light"
                 android:text="Vehicle Number"
                 />
@@ -35,7 +34,7 @@
                 android:layout_toRightOf="@id/vehicle_number_title"
                 android:background="@drawable/round_edittext_light"
                 android:hint="Enter Vehicle Number"
-                android:inputType="text"
+                android:inputType="textPersonName|textCapSentences"
                 android:maxLength="10"
                 android:maxLines="1"
                 android:padding="@dimen/_8sdp"
@@ -50,10 +49,12 @@
                 android:id="@+id/driver_name_title"
                 android:background="@drawable/round_edittext_light"
                 android:layout_below="@id/vehicle_number_title"
-                android:textSize="@dimen/_14sdp"
+                android:textSize="@dimen/_12sdp"
+                android:gravity="left|center_vertical"
+                android:paddingLeft="@dimen/_5sdp"
+                android:padding="@dimen/_5sdp"
+
                 android:text="Driver Name"
-                android:paddingLeft="@dimen/_4sdp"
-                android:paddingTop="@dimen/_10sdp"
                 />
 
             <EditText
@@ -64,7 +65,7 @@
                 android:layout_toRightOf="@id/driver_name_title"
                 android:background="@drawable/round_edittext_light"
                 android:hint="Enter Driver's Name"
-                android:inputType="textPersonName"
+                android:inputType="textPersonName|textCapSentences"
                 android:maxLength="20"
                 android:maxLines="1"
                 android:padding="@dimen/_8sdp"
@@ -76,13 +77,14 @@
 
                 android:layout_width="@dimen/_120sdp"
                 android:layout_height="@dimen/_40sdp"
-                android:textSize="@dimen/_14sdp"
+                android:textSize="@dimen/_12sdp"
+                android:padding="@dimen/_5sdp"
                 android:layout_below="@id/driver_name_title"
                 android:background="@drawable/round_edittext_light"
                 android:id="@+id/challan_number_title"
                 android:text="Challan Number"
-                android:paddingLeft="@dimen/_4sdp"
-                android:paddingTop="@dimen/_10sdp"
+                android:gravity="left|center_vertical"
+                android:paddingLeft="@dimen/_5sdp"
                 />
 
             <EditText
@@ -91,8 +93,8 @@
                 android:layout_height="@dimen/_40sdp"
                 android:layout_alignTop="@id/challan_number_title"
                 android:layout_toRightOf="@id/challan_number_title"
-                android:hint="Enter Challan No."
-                android:inputType="text"
+                android:hint="Enter Challan Number"
+                android:inputType="text|textCapSentences"
                 android:maxLength="10"
                 android:background="@drawable/round_edittext_light"
                 android:padding="@dimen/_8sdp"
@@ -105,10 +107,9 @@
             <com.dd.processbutton.iml.ActionProcessButton
                 android:id="@+id/submit_button"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_45sdp"
+                android:layout_height="@dimen/_40sdp"
                 android:layout_below="@id/challan_number_title"
-                android:layout_marginTop="@dimen/_20sdp"
-                android:layout_marginBottom="@dimen/_20sdp"
+                android:layout_marginTop="@dimen/_10sdp"
                 android:text="submit"
                 android:textColor="@android:color/white"
                 android:textSize="18sp"

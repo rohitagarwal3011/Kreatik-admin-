@@ -37,6 +37,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -48,6 +49,9 @@ import com.app.rbc.admin.fragments.Stock_categories;
 import com.app.rbc.admin.interfaces.ApiServices;
 import com.app.rbc.admin.models.RequirementList;
 import com.app.rbc.admin.models.StockCategoryDetails;
+import com.app.rbc.admin.models.db.models.Site;
+import com.app.rbc.admin.models.db.models.site_overview.Order;
+import com.app.rbc.admin.models.db.models.site_overview.Requirement;
 import com.app.rbc.admin.utils.AppUtil;
 import com.app.rbc.admin.utils.ChangeFragment;
 import com.app.rbc.admin.utils.RetrofitClient;
@@ -58,6 +62,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -88,22 +93,15 @@ public class RequirementActivity extends AppCompatActivity implements SearchView
     @BindView(R.id.frame_main)
     FrameLayout frameMain;
 
+    public List<Order> orders = new ArrayList<>();
+    public Bundle finalForm;
     public String category_selected;
-    /**
-     * The {@link PagerAdapter} that will provide
-     * fragments for each of the sections. We use a
-     * {@link FragmentPagerAdapter} derivative, which will keep every
-     * loaded fragment in memory. If this becomes too memory intensive, it
-     * may be best to switch to a
-     * {@link FragmentStatePagerAdapter}.
-     */
+
     public SectionsPagerAdapter mSectionsPagerAdapter;
 
-    /**
-     * The {@link ViewPager} that will host the section contents.
-     */
     private ViewPager mViewPager;
     private Menu menu;
+    public SearchView searchView;
 
     public static boolean show_tabs = false;
     @Override
@@ -114,10 +112,12 @@ public class RequirementActivity extends AppCompatActivity implements SearchView
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setElevation(0);
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
+        show_tabs=false;
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
 //        mViewPager.setAdapter(mSectionsPagerAdapter);
@@ -145,17 +145,26 @@ public class RequirementActivity extends AppCompatActivity implements SearchView
 
     }
 
+    Intent intent;
+
     @Override
     protected void onResume() {
         super.onResume();
-        if (show_tabs)
-        {
-            show_tablayout();
-        }
-        else {
-            hide_tablayout();
-            changeFragment(getSupportFragmentManager(), R.id.frame_main, new Stock_categories().newInstance("RequirementActivity"), Stock_categories.TAG);
 
+        try{
+            intent = getIntent();
+            if (intent.getStringExtra("type").equalsIgnoreCase("create_req")||intent.getStringExtra("type").equalsIgnoreCase("vehicle")) {
+                get_category_requirements(intent.getStringExtra("category"));
+            }
+        }
+        catch (Exception e) {
+            if (show_tabs) {
+                show_tablayout();
+            } else {
+                hide_tablayout();
+                changeFragment(getSupportFragmentManager(), R.id.frame_main, new Stock_categories().newInstance("RequirementActivity"), Stock_categories.TAG);
+
+            }
         }
     }
 
@@ -243,9 +252,10 @@ public class RequirementActivity extends AppCompatActivity implements SearchView
         }
         SearchManager searchManager =
                 (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView = (SearchView)
+        searchView = (SearchView)
                 MenuItemCompat.getActionView(menu.findItem(R.id.search));
 
+        searchView.setMaxWidth(Integer.MAX_VALUE);
         searchView.setSearchableInfo(
                 searchManager.getSearchableInfo(getComponentName()));
         searchView.setSubmitButtonEnabled(true);
@@ -281,6 +291,7 @@ public class RequirementActivity extends AppCompatActivity implements SearchView
     }
     public void show_tablayout() {
 
+        toolbar.setTitle(category_selected+" Requirement");
         tabLayout.setVisibility(View.VISIBLE);
         mViewPager.setVisibility(View.VISIBLE);
         frameMain.setVisibility(View.GONE);
@@ -338,7 +349,18 @@ public class RequirementActivity extends AppCompatActivity implements SearchView
                     AppUtil.putString(getApplicationContext(), TagsPreferences.REQUIREMENT_LIST, new Gson().toJson(response.body()));
                     //productDetails = new Gson().fromJson(AppUtil.getString(getApplicationContext(), TagsPreferences.CATEGORY_DETAILS), RequirementList.class);
                     AppUtil.logger("Product Details : ", AppUtil.getString(getApplicationContext(), TagsPreferences.REQUIREMENT_LIST));
-                    show_tablayout();
+
+                    try {
+                        if (intent.getStringExtra("type").equalsIgnoreCase("new_req")||intent.getStringExtra("type").equalsIgnoreCase("vehicle")) {
+                            show_req_details(intent.getStringExtra("rq_id"));
+                        }
+                    }
+                    catch (Exception e){
+                        show_tablayout();
+                    }
+
+
+
                 }
 
             }
@@ -378,7 +400,9 @@ public class RequirementActivity extends AppCompatActivity implements SearchView
                List<RequirementList.ReqList> search = new ArrayList<>();
                 for(int i = 0 ; i < placeholderFragment.latest.size()  ; i++) {
                     RequirementList.ReqList.Detail detail = placeholderFragment.latest.get(i).getDetails().get(0);
-                    if(detail.getTitle().toLowerCase().contains(newText.toLowerCase())) {
+                    if(detail.getTitle().toLowerCase().contains(newText.toLowerCase()) ||
+                            detail.getSite().toLowerCase().contains(newText.toLowerCase()) ||
+                            detail.getPurpose().toLowerCase().contains(newText.toLowerCase())) {
                         search.add(placeholderFragment.latest.get(i));
                     }
                 }
@@ -389,7 +413,9 @@ public class RequirementActivity extends AppCompatActivity implements SearchView
                 List<RequirementList.ReqList> search_ongoing = new ArrayList<>();
                 for(int i = 0 ; i < placeholderFragment.ongoing.size()  ; i++) {
                     RequirementList.ReqList.Detail detail = placeholderFragment.ongoing.get(i).getDetails().get(0);
-                    if(detail.getTitle().toLowerCase().contains(newText.toLowerCase())) {
+                    if(detail.getTitle().toLowerCase().contains(newText.toLowerCase()) ||
+                            detail.getSite().toLowerCase().contains(newText.toLowerCase()) ||
+                            detail.getPurpose().toLowerCase().contains(newText.toLowerCase())) {
                         search_ongoing.add(placeholderFragment.ongoing.get(i));
                     }
                 }
@@ -400,7 +426,9 @@ public class RequirementActivity extends AppCompatActivity implements SearchView
                 List<RequirementList.ReqList> search_complete = new ArrayList<>();
                 for(int i = 0 ; i < placeholderFragment.complete.size()  ; i++) {
                     RequirementList.ReqList.Detail detail = placeholderFragment.complete.get(i).getDetails().get(0);
-                    if(detail.getTitle().toLowerCase().contains(newText.toLowerCase())) {
+                    if(detail.getTitle().toLowerCase().contains(newText.toLowerCase()) ||
+                            detail.getSite().toLowerCase().contains(newText.toLowerCase()) ||
+                            detail.getPurpose().toLowerCase().contains(newText.toLowerCase())) {
                         search_complete.add(placeholderFragment.complete.get(i));
                     }
                 }
@@ -423,6 +451,11 @@ public class RequirementActivity extends AppCompatActivity implements SearchView
         private static final String ARG_SECTION_NUMBER = "section_number";
         @BindView(R.id.recycler_view)
         RecyclerView recyclerView;
+
+        @BindView(R.id.empty_relative)
+        RelativeLayout empty_relative;
+
+
         Unbinder unbinder;
         private Button created_on;
         private Calendar myCalendar;
@@ -453,6 +486,11 @@ public class RequirementActivity extends AppCompatActivity implements SearchView
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_requirement_list, container, false);
+            Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
+            ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+            AppBarLayout.LayoutParams toolbarParams = ( AppBarLayout.LayoutParams) toolbar.getLayoutParams();
+            toolbarParams.setScrollFlags(1);
+            toolbar.setLayoutParams(toolbarParams);
             unbinder = ButterKnife.bind(this, rootView);
             position = getArguments().getInt(ARG_SECTION_NUMBER);
             AppUtil.logger("Position for adapter : ",String.valueOf(position));
@@ -460,6 +498,7 @@ public class RequirementActivity extends AppCompatActivity implements SearchView
             swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
                 @Override
                 public void onRefresh() {
+                    swipeRefreshLayout.setRefreshing(false);
                     ((RequirementActivity)getActivity()).get_category_requirements(
                             ((RequirementActivity)getActivity()).category_selected);
                     recyclerView.invalidate();
@@ -497,12 +536,32 @@ public class RequirementActivity extends AppCompatActivity implements SearchView
 
             switch (position) {
                 case 1:
+                    if(latest.size() == 0) {
+                        empty_relative.setVisibility(View.VISIBLE);
+                    }
+                    else {
+                        empty_relative.setVisibility(View.GONE);
+                    }
                     show_requirement_list(latest);
                     break;
                 case 2:
+                    if(ongoing.size() == 0) {
+                        empty_relative.setVisibility(View.VISIBLE);
+                    }
+                    else {
+                        empty_relative.setVisibility(View.GONE);
+                    }
                   show_requirement_list(ongoing);
                     break;
                 case 3:
+
+                    if(complete.size() == 0) {
+                        empty_relative.setVisibility(View.VISIBLE);
+                    }
+                    else {
+                        empty_relative.setVisibility(View.GONE);
+                    }
+
                     show_requirement_list(complete);
                     break;
 
@@ -587,12 +646,12 @@ public class RequirementActivity extends AppCompatActivity implements SearchView
             }
 
             ArrayAdapter<String> category_adapter = new ArrayAdapter<>(getActivity(),
-                    android.R.layout.simple_expandable_list_item_1,
+                    R.layout.custom_spinner_text,
                     categories);
             category_spinner.setAdapter(category_adapter);
 
             ArrayAdapter<String> site_adapter = new ArrayAdapter<>(getActivity(),
-                    android.R.layout.simple_expandable_list_item_1,
+                    R.layout.custom_spinner_text,
                     sites);
             site_spinner.setAdapter(site_adapter);
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#23ab9e</color>
-    <color name="colorPrimaryDark">#177b72</color>
+    <color name="colorPrimaryDark">#259288</color>
     <!-- <color name="colorPrimary">#009688</color>
     <color name="colorPrimaryDark">#00796B</color>-->
     <color name="colorAccent1">#e8716b</color>
@@ -29,6 +29,7 @@
     <color name="light_text">#9E9E9E</color>
 
     <color name="verified">#81C784</color>
+    <color name="heading">#EEEEEE</color>
     <color name="unselectedtext">#EEEEEE</color>
 </resources>
 

@@ -58,6 +58,17 @@ public class StockCategoryDetails {
         @SerializedName("stock_type")
         private String mstock_type;
 
+        public String getMsitename() {
+            return msitename;
+        }
+
+        public void setMsitename(String msitename) {
+            this.msitename = msitename;
+        }
+
+        @SerializedName("sitename")
+        private String msitename;
+
         public String getMstock_type() {
             return mstock_type;
         }
@@ -280,7 +291,38 @@ public class StockCategoryDetails {
             @SerializedName("trans_id")
             private String mTransId;
 
-            public List<Detail> getDetails() {
+        @SerializedName("src_details")
+        private List<SiteDetail> src_details;
+        @SerializedName("dest_details")
+        private List<SiteDetail> dest_details;
+        @SerializedName("vendor_details")
+        private List<Vendors.VendorList> vendor_details;
+
+        public List<SiteDetail> getSrc_details() {
+            return src_details;
+        }
+
+        public void setSrc_details(List<SiteDetail> src_details) {
+            this.src_details = src_details;
+        }
+
+        public List<SiteDetail> getDest_details() {
+            return dest_details;
+        }
+
+        public void setDest_details(List<SiteDetail> dest_details) {
+            this.dest_details = dest_details;
+        }
+
+        public List<Vendors.VendorList> getVendor_details() {
+            return vendor_details;
+        }
+
+        public void setVendor_details(List<Vendors.VendorList> vendor_details) {
+            this.vendor_details = vendor_details;
+        }
+
+        public List<Detail> getDetails() {
                 return mDetails;
             }
 

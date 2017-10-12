@@ -19,12 +19,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 
 import com.app.rbc.admin.R;
 import com.app.rbc.admin.activities.IndentRegisterActivity;
+import com.app.rbc.admin.activities.SettingsActivity;
 import com.app.rbc.admin.adapters.CustomCategoryProductAdapter;
 import com.app.rbc.admin.api.APIController;
 import com.app.rbc.admin.models.db.models.Categoryproduct;
@@ -48,6 +50,7 @@ public class CategoriesProductFragment extends Fragment implements View.OnClickL
     private CustomCategoryProductAdapter adapter;
     private Categoryproduct categoryproduct;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private RelativeLayout empty_relative;
 
     final GestureDetector mGestureDetector = new GestureDetector(getContext(),
             new GestureDetector.SimpleOnGestureListener() {
@@ -63,7 +66,7 @@ public class CategoriesProductFragment extends Fragment implements View.OnClickL
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_categories_product, container, false);
-        ((IndentRegisterActivity)getActivity()).getSupportActionBar().setTitle("Product Categories");
+        ((SettingsActivity)getActivity()).getSupportActionBar().setTitle("Product Categories");
 
         initializeUI();
         return view;
@@ -76,6 +79,7 @@ public class CategoriesProductFragment extends Fragment implements View.OnClickL
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         String query = "Select category from Categoryproduct group by category";
         categories = getCategories(query,getContext());
+        empty_relative = (RelativeLayout) view.findViewById(R.id.empty_relative);
 
 
         // Recycler Listener
@@ -88,7 +92,7 @@ public class CategoriesProductFragment extends Fragment implements View.OnClickL
 
                     int a=rv.getChildPosition(child);
 
-                    ((IndentRegisterActivity)getActivity()).setFragment(9,categories.get(a));
+                    ((SettingsActivity)getActivity()).setFragment(9,categories.get(a));
 
 
 
@@ -124,6 +128,7 @@ public class CategoriesProductFragment extends Fragment implements View.OnClickL
             }
         });
         if(categories.size() == 0) {
+            empty_relative.setVisibility(View.VISIBLE);
             callCategoriesProductsFetchApi();
         }
 
@@ -207,14 +212,14 @@ public class CategoriesProductFragment extends Fragment implements View.OnClickL
         sweetAlertDialog.setCancelable(false);
         sweetAlertDialog.show();
 
-        APIController controller = new APIController(getContext(),code,IndentRegisterActivity.ACTIVITY);
+        APIController controller = new APIController(getContext(),code,SettingsActivity.ACTIVITY);
         controller.addCategoryProduct(categoryproduct);
     }
 
 
     private void callCategoriesProductsFetchApi() {
         swipeRefreshLayout.setRefreshing(true);
-        APIController controller = new APIController(getContext(),51,IndentRegisterActivity.ACTIVITY);
+        APIController controller = new APIController(getContext(),51,SettingsActivity.ACTIVITY);
         controller.fetchCategoriesProducts();
     }
 
@@ -242,6 +247,12 @@ public class CategoriesProductFragment extends Fragment implements View.OnClickL
             break;
             case 51 : switch(status) {
                 case 2 :
+                    if(Categoryproduct.count(Categoryproduct.class) == 0) {
+                        empty_relative.setVisibility(View.VISIBLE);
+                    }
+                    else {
+                        empty_relative.setVisibility(View.GONE);
+                    }
                     refreshAdapter();
                     break;
                 case 0:

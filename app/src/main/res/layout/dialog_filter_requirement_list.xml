@@ -6,41 +6,56 @@
 
     <TextView
         android:layout_width="100dp"
-        android:layout_height="50dp"
+        android:layout_height="@dimen/_40sdp"
         android:id="@+id/category_title"
         android:paddingTop="15dp"
         android:text="Category"
         android:textColor="@color/cardview_dark_background"/>
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_40sdp"
+        android:background="@drawable/round_edittext_light"
+
+        android:layout_toRightOf="@id/category_title"
+        android:layout_alignTop="@id/category_title"
+        android:id="@+id/category_spinner_relative">
+
     <Spinner
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@drawable/round_edittext_light"
-        android:id="@+id/category_spinner"
-        android:layout_toRightOf="@id/category_title"
-        android:layout_alignTop="@id/category_title"/>
+        android:layout_height="@dimen/_40sdp"
+        android:id="@+id/category_spinner" />
+
+    </RelativeLayout>
 
     <TextView
         android:layout_width="100dp"
-        android:layout_height="50dp"
+        android:layout_height="@dimen/_40sdp"
         android:id="@+id/site_title"
         android:text="Site"
-        android:layout_below="@id/category_title"
+        android:layout_below="@id/category_spinner_relative"
         android:paddingTop="15dp"
         android:textColor="@color/cardview_dark_background"/>
 
-    <Spinner
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:id="@+id/site_spinner"
+        android:layout_height="@dimen/_40sdp"
         android:background="@drawable/round_edittext_light"
         android:layout_toRightOf="@id/site_title"
-        android:layout_alignTop="@id/site_title"/>
+        android:layout_alignTop="@id/site_title"
+        android:id="@+id/site_spinner_relative">
+
+    <Spinner
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_40sdp"
+        android:id="@+id/site_spinner" />
+
+    </RelativeLayout>
 
 
     <TextView
         android:layout_width="100dp"
-        android:layout_height="50dp"
+        android:layout_height="@dimen/_40sdp"
         android:id="@+id/created_by_title"
         android:text="Created On"
         android:layout_below="@id/site_title"
@@ -50,7 +65,7 @@
     <Button
         android:text="Select Date"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="@dimen/_40sdp"
         android:background="@drawable/round_edittext_light"
         android:id="@+id/created_on_button"
         android:layout_toRightOf="@id/created_by_title"
@@ -58,7 +73,7 @@
 
     <Button
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="@dimen/_40sdp"
         android:layout_below="@id/created_by_title"
         android:layout_marginTop="15dp"
         android:layout_marginBottom="15dp"

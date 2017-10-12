@@ -5,13 +5,16 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
 import com.app.rbc.admin.R;
 import com.app.rbc.admin.adapters.Requirement_list_adapter;
@@ -49,6 +52,8 @@ public class Cat_Des_Requirement_List extends Fragment {
     RecyclerView recyclerView;
     Unbinder unbinder;
 
+    @BindView(R.id.empty_relative)
+    RelativeLayout empty_relative;
     String TAG;
 
     // TODO: Rename and change types of parameters
@@ -95,6 +100,10 @@ public class Cat_Des_Requirement_List extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_cat__des__requirement__list, container, false);
         unbinder = ButterKnife.bind(this, view);
+        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
+        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Select a Requirement");
+
         return view;
     }
 
@@ -131,13 +140,21 @@ public class Cat_Des_Requirement_List extends Fragment {
                     catDesRequirementList = new Gson().fromJson( new Gson().toJson(response.body()), CatDesRequirementList.class);
                     //AppUtil.logger("Product Details : ", AppUtil.getString(getContext(), TagsPreferences.REQUIREMENT_LIST));
                     show_requirement_list(catDesRequirementList.getReqList());
+
+
+                    if(catDesRequirementList.getReqList().size() == 0) {
+                        empty_relative.setVisibility(View.VISIBLE);
+                    }
+                    else {
+                        empty_relative.setVisibility(View.GONE);
+                    }
                 }
 
             }
 
             @Override
             public void onFailure(Call<CatDesRequirementList> call1, Throwable t) {
-
+                empty_relative.setVisibility(View.VISIBLE);
                 pDialog.dismiss();
 
 
@@ -154,13 +171,9 @@ public class Cat_Des_Requirement_List extends Fragment {
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
-
-
         Requirement_list_adapter adapter = new Requirement_list_adapter(reqLists, getContext());
         recyclerView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
-
     }
 
     public static List<String> product_list = new ArrayList<>();

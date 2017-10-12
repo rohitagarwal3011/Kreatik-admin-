@@ -12,8 +12,11 @@ import android.widget.TextView;
 
 import com.app.rbc.admin.R;
 import com.app.rbc.admin.activities.IndentRegisterActivity;
+import com.app.rbc.admin.activities.SettingsActivity;
 import com.app.rbc.admin.api.APIController;
 import com.app.rbc.admin.models.db.models.Vendor;
+
+import java.util.List;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
@@ -28,17 +31,18 @@ public class AddVendorFragment extends Fragment implements View.OnClickListener{
     private static boolean edit = false;
     private static long editId;
     private Vendor editVendor;
-
+    private Vendor state_store;
+    private boolean save_state_store = true;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_add_vendor, container, false);
         if(edit) {
-            ((IndentRegisterActivity) getActivity()).getSupportActionBar().setTitle("Edit");
+            ((SettingsActivity) getActivity()).getSupportActionBar().setTitle("Edit");
         }
         else {
-            ((IndentRegisterActivity) getActivity()).getSupportActionBar().setTitle("Add a vendor");
+            ((SettingsActivity) getActivity()).getSupportActionBar().setTitle("Add a vendor");
         }
 
         initializeUI();
@@ -73,6 +77,40 @@ public class AddVendorFragment extends Fragment implements View.OnClickListener{
             save_add_another.setLayoutParams(params);
 
         }
+
+        else {
+            List<Vendor> statestores = Vendor.find(Vendor.class,"statestore = ?",1+"");
+            if(statestores.size() != 0) {
+                state_store = statestores.get(0);
+
+                vendor_address.setText(state_store.getAddress());
+                vendor_name.setText(state_store.getName());
+                vendor_phone.setText(state_store.getPhone());
+            }
+        }
+    }
+
+    @Override
+    public void onPause() {
+        if(save_state_store) {
+            if (edit != true) {
+                Vendor state_store;
+                if (this.state_store == null) {
+                    state_store = new Vendor();
+                } else {
+                    state_store = this.state_store;
+                }
+                state_store.setName(vendor_name.getText().toString());
+                state_store.setStatestore(1);
+                state_store.setAddress(vendor_address.getText().toString());
+                state_store.setPhone(vendor_phone.getText().toString());
+                state_store.save();
+                state_store.setStatestore(1);
+                state_store.save();
+            }
+        }
+
+        super.onPause();
     }
 
     @Override
@@ -139,7 +177,7 @@ public class AddVendorFragment extends Fragment implements View.OnClickListener{
         sweetAlertDialog.setCancelable(false);
         sweetAlertDialog.show();
 
-        APIController controller = new APIController(getContext(),code,IndentRegisterActivity.ACTIVITY);
+        APIController controller = new APIController(getContext(),code,SettingsActivity.ACTIVITY);
         controller.addVendor(vendor);
     }
 
@@ -154,7 +192,7 @@ public class AddVendorFragment extends Fragment implements View.OnClickListener{
         sweetAlertDialog.setCancelable(false);
         sweetAlertDialog.show();
 
-        APIController controller = new APIController(getContext(),code,IndentRegisterActivity.ACTIVITY);
+        APIController controller = new APIController(getContext(),code,SettingsActivity.ACTIVITY);
         controller.updateVendor(editVendor);
     }
 
@@ -167,7 +205,7 @@ public class AddVendorFragment extends Fragment implements View.OnClickListener{
     private void callVendorsFetchApi() {
         new Thread() {
             public void run() {
-                APIController controller = new APIController(getContext(),40,IndentRegisterActivity.ACTIVITY);
+                APIController controller = new APIController(getContext(),40,SettingsActivity.ACTIVITY);
                 controller.fetchVendors();
             }
         }.start();
@@ -187,21 +225,35 @@ public class AddVendorFragment extends Fragment implements View.OnClickListener{
         return addVendorFragment;
     }
 
+    private void deleteStateStores() {
+        List<Vendor> statestores = Vendor.find(Vendor.class,"statestore = ?",1+"");
+        Vendor.deleteInTx(statestores);
+    }
+
     public void publishAPIResponse(int status,int code,String... message) {
         sweetAlertDialog.dismiss();
         switch(status) {
             case 2 :
                 if(code == 81) {
+                    deleteStateStores();
+                    if(this.state_store != null) {
+                        this.state_store = null;
+                    }
                     callVendorsFetchApi();
                     refreshUI();
                 }
                 else if(code == 80){
+                    deleteStateStores();
+                    this.save_state_store = false;
+                    if(this.state_store != null) {
+                        this.state_store = null;
+                    }
                     callVendorsFetchApi();
-                    ((IndentRegisterActivity)getActivity()).popBackStack();
+                    ((SettingsActivity)getActivity()).popBackStack();
                 }
                 else if(code == 82) {
                     editVendor.save();
-                    ((IndentRegisterActivity)getActivity()).popBackStack();
+                    ((SettingsActivity)getActivity()).popBackStack();
                 }
                 break;
             case 1 : error.setText(message[0]);

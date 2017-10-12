@@ -3,11 +3,14 @@ package com.app.rbc.admin.fragments;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -95,6 +98,14 @@ public class Stock_list_product_wise extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_stock_list_product_wise, container, false);
         unbinder = ButterKnife.bind(this, view);
+
+        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
+        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Select a Site");
+        AppBarLayout.LayoutParams toolbarParams = ( AppBarLayout.LayoutParams) toolbar.getLayoutParams();
+        toolbarParams.setScrollFlags(0);
+        toolbar.setLayoutParams(toolbarParams);
+
         return view;
 
 
@@ -107,6 +118,18 @@ public class Stock_list_product_wise extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         try {
+            get_list();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        try {
+            productlist = new JSONArray();
             get_list();
         } catch (JSONException e) {
             e.printStackTrace();
@@ -128,7 +151,7 @@ public class Stock_list_product_wise extends Fragment {
         pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
         pDialog.setTitleText("Loading");
         pDialog.setCancelable(false);
-        pDialog.show();
+       // pDialog.show();
 
         final ApiServices apiServices = RetrofitClient.getApiService();
         // AppUtil.logger(TAG, "User id : " + user_id + " Pwd : " + new_password.getText().toString());
@@ -138,9 +161,9 @@ public class Stock_list_product_wise extends Fragment {
         call.enqueue(new Callback<StockListProductWise>() {
             @Override
             public void onResponse(Call<StockListProductWise> call, Response<StockListProductWise> response) {
-                pDialog.dismiss();
-                if (response.body().getMeta().getStatus() == 2) {
 
+                if (response.body().getMeta().getStatus() == 2) {
+                    //pDialog.dismiss();
                     stockDetail.clear();
                     stockListProductWise = new Gson().fromJson(new Gson().toJson(response.body()), StockListProductWise.class);
                     AppUtil.logger("Stock Product Wise response : ", new Gson().toJson(response.body()));
@@ -157,7 +180,7 @@ public class Stock_list_product_wise extends Fragment {
             @Override
             public void onFailure(Call<StockListProductWise> call1, Throwable t) {
 
-                pDialog.dismiss();
+               // pDialog.dismiss();
 
 
                 AppUtil.showToast(getContext(), "Network Issue. Please check your connectivity and try again");
@@ -178,16 +201,15 @@ public class Stock_list_product_wise extends Fragment {
         stockList.setAdapter(adapter);
         adapter.notifyDataSetChanged();
 
-
-
     }
 
     public static String site_selected;
     public static String site_name;
 
-    public void set_site_selected(String site ) throws NullPointerException
+    public void set_site_selected(String site , String name ) throws NullPointerException
     {
         site_selected=site;
+        site_name=name;
 
         AppUtil.logger("Site_selected : ",site_selected);
 

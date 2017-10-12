@@ -5,15 +5,19 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -26,12 +30,17 @@ import com.app.rbc.admin.adapters.Vehicle_detail_adapter;
 import com.app.rbc.admin.interfaces.ApiServices;
 import com.app.rbc.admin.models.Product;
 import com.app.rbc.admin.models.StockPoDetails;
+import com.app.rbc.admin.models.db.models.Categoryproduct;
 import com.app.rbc.admin.utils.AppUtil;
 import com.app.rbc.admin.utils.RetrofitClient;
 import com.app.rbc.admin.utils.TagsPreferences;
 import com.facebook.drawee.generic.RoundingParams;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.gson.Gson;
+
+import org.json.JSONObject;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -52,6 +61,7 @@ public class Stock_po_details extends Fragment {
     public static final String TAG = "Stock_po_details";
     private static final String PO_NUMBER = "PO_NUMBER";
     private static final String ARG_PARAM2 = "param2";
+
     @BindView(R.id.profile_pic)
     SimpleDraweeView profilePic;
     @BindView(R.id.employee_name)
@@ -117,6 +127,13 @@ public class Stock_po_details extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_stock_po_details, container, false);
         unbinder = ButterKnife.bind(this, view);
+        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
+        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("PO number : "+po_number);
+        AppBarLayout.LayoutParams toolbarParams = ( AppBarLayout.LayoutParams) toolbar.getLayoutParams();
+        toolbarParams.setScrollFlags(0);
+        toolbar.setLayoutParams(toolbarParams);
+
         return view;
     }
 
@@ -145,13 +162,16 @@ public class Stock_po_details extends Fragment {
             @Override
             public void onResponse(Call<StockPoDetails> call, Response<StockPoDetails> response) {
                 pDialog.dismiss();
-                if (response.body().getMeta().getStatus() == 2) {
+                try {
+
+                    AppUtil.logger("PO detail response : ",new Gson().toJson(response.body()));
+                    if (response.body().getMeta().getStatus() == 2) {
 
 
-                    AppUtil.putString(getContext().getApplicationContext(), TagsPreferences.PO_DETAILS, new Gson().toJson(response.body()));
-                    stockPoDetails = new Gson().fromJson(AppUtil.getString(getContext(), TagsPreferences.PO_DETAILS), StockPoDetails.class);
-                    AppUtil.logger("PO Details : ", AppUtil.getString(getContext().getApplicationContext(), TagsPreferences.PO_DETAILS));
-                    set_data();
+                        AppUtil.putString(getContext().getApplicationContext(), TagsPreferences.PO_DETAILS, new Gson().toJson(response.body()));
+                        stockPoDetails = new Gson().fromJson(AppUtil.getString(getContext(), TagsPreferences.PO_DETAILS), StockPoDetails.class);
+                        AppUtil.logger("PO Details : ", AppUtil.getString(getContext().getApplicationContext(), TagsPreferences.PO_DETAILS));
+                        set_data();
 
 //                    SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
 //                    Date formated = null;
@@ -162,6 +182,11 @@ public class Stock_po_details extends Fragment {
 //                    }
 
 
+                    }
+                }
+                catch (Exception e)
+                {
+                    AppUtil.showToast(getContext(), "Network Issue. Please check your connectivity and try again");
                 }
 
             }
@@ -188,16 +213,38 @@ public class Stock_po_details extends Fragment {
     private void set_po_details() {
 
         StockPoDetails.PoDetail poDetail = stockPoDetails.getPoDetails().get(0);
-        String[] user = AppUtil.get_employee_from_user_id(getContext(), poDetail.getDetails().get(0).getCreatedBy().toString().trim());
+        if(poDetail.getDetails().get(0).getCreatedBy().toString().trim().equalsIgnoreCase(AppUtil.getString(getContext(),TagsPreferences.USER_ID)))
+        {
+            employeeName.setText(AppUtil.getString(getContext(),TagsPreferences.NAME));
+            role.setText(AppUtil.getString(getContext(),TagsPreferences.ROLE));
+            int color = getContext().getResources().getColor(R.color.black_overlay);
+            RoundingParams roundingParams = RoundingParams.fromCornersRadius(5f);
+            roundingParams.setBorder(color, 1.0f);
+            roundingParams.setRoundAsCircle(true);
+            profilePic.getHierarchy().setRoundingParams(roundingParams);
+
+
+            profilePic.setImageURI(AppUtil.getString(getContext(),TagsPreferences.PROFILE_IMAGE));
+
+
+        }
+        else
+        {
+            String[] user = AppUtil.get_employee_from_user_id(getContext(), poDetail.getDetails().get(0).getCreatedBy().toString().trim());
+
+            show_profile_pic(user);
+            employeeName.setText(user[0]);
+            role.setText(user[2]);
+        }
         AppUtil.logger("User Details : ", poDetail.getDetails().get(0).getCreatedBy());
-        show_profile_pic(user);
-        employeeName.setText(user[0]);
-        role.setText(user[2]);
+
         PODate.setText(poDetail.getDetails().get(0).getCreationDt());
         // POQuantity.setText(poDetail.getDetails().get(0)..toString());
-        POAmount.setText(poDetail.getDetails().get(0).getPrice().toString());
+        POAmount.setText("Rs."+" "+poDetail.getDetails().get(0).getPrice().toString());
         POPayMode.setText(poDetail.getDetails().get(0).getPayMode());
         POStatus.setText(poDetail.getDetails().get(0).getStatus());
+
+
 
     }
 
@@ -224,7 +271,8 @@ public class Stock_po_details extends Fragment {
 
     private void set_vehicle_info() {
 
-        vehicleInfo.setHasFixedSize(true);
+        vehicleInfo.setNestedScrollingEnabled(false);
+
         LinearLayoutManager gridLayoutManager = new LinearLayoutManager(getContext());
         gridLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         vehicleInfo.setLayoutManager(gridLayoutManager);
@@ -234,6 +282,7 @@ public class Stock_po_details extends Fragment {
         Vehicle_detail_adapter adapter = new Vehicle_detail_adapter(stockPoDetails.getVehicleDetails(), getContext());
         vehicleInfo.setAdapter(adapter);
         adapter.notifyDataSetChanged();
+
     }
 
     private void set_product_details() {
@@ -246,38 +295,28 @@ public class Stock_po_details extends Fragment {
     }
 
     private void addrow(String product, String quantity, String rem_quantity) {
-        TableRow tr = new TableRow(getContext());
-        TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
+        String unit = "";
+        List<Categoryproduct> categoryproductList = Categoryproduct.find(Categoryproduct.class,
+                "product = ?",product);
+        if(categoryproductList.size() != 0) {
+            unit = categoryproductList.get(0).getUnit();
+        }
+        View tr = getActivity().getLayoutInflater().inflate(R.layout.custom_product_row_layout,null);
 
-        layoutParams.setMargins(0, (int) getResources().getDimension(R.dimen._5sdp), 0, (int) getResources().getDimensionPixelSize(R.dimen._5sdp));
-        tr.setLayoutParams(layoutParams);
-        tr.setPadding((int) getResources().getDimension(R.dimen._3sdp), (int) getResources().getDimension(R.dimen._3sdp), (int) getResources().getDimension(R.dimen._3sdp), (int) getResources().getDimension(R.dimen._3sdp));
+        TextView productText = (TextView) tr.findViewById(R.id.product);
+        TextView quantityText = (TextView) tr.findViewById(R.id.quantity);
+        TextView remaining_quantity_text = (TextView) tr.findViewById(R.id.remaining_quantity);
+        Button product_icon = (Button) tr.findViewById(R.id.product_icon);
+        ImageView delete_icon = (ImageView) tr.findViewById(R.id.delete_icon);
 
-        TextView tv = new TextView(getContext());
-        tv.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 1f));
-        tv.setGravity(Gravity.CENTER_HORIZONTAL);
-        tv.setTextColor(Color.parseColor("#000000"));
-        tv.setText(product);
 
-        tr.addView(tv, 0);
-
-        TextView tv1 = new TextView(getContext());
-        tv1.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 1f));
-        tv1.setGravity(Gravity.CENTER_HORIZONTAL);
-        tv1.setTextColor(Color.parseColor("#000000"));
-        tv1.setText(quantity);
-
-        tr.addView(tv1, 1);
-
-        TextView tv2 = new TextView(getContext());
-        tv2.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 1f));
-        tv2.setGravity(Gravity.CENTER_HORIZONTAL);
-        tv2.setTextColor(Color.parseColor("#000000"));
-        tv2.setText(rem_quantity);
-
-        tr.addView(tv2, 2);
+        productText.setText(product);
+        quantityText.setText(quantity+" "+unit);
+        remaining_quantity_text.setText(rem_quantity+" "+unit);
+        product_icon.setText(product.substring(0,1));
         productTable.addView(tr, count);
-        count++;
+
+
     }
 
     @Override

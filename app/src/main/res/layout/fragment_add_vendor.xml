@@ -26,6 +26,7 @@
                     android:singleLine="true"
                     android:imeOptions="actionNext"
                     android:textSize="15sp"
+                    android:inputType="textPersonName"
                     android:paddingLeft="10dp"
                     android:id="@+id/form_vendor_name"/>
                 <EditText
@@ -36,7 +37,7 @@
                     android:layout_below="@+id/form_vendor_name"
                     android:background="@drawable/round_edittext_light"
                     android:hint="Address"
-                    android:inputType="text"
+                    android:inputType="textPersonName|textCapSentences"
                     android:textSize="15sp"
                     android:paddingLeft="10dp"
                     android:id="@+id/form_vendor_address"/>

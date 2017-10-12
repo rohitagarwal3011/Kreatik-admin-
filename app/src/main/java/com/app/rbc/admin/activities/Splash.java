@@ -14,7 +14,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.app.rbc.admin.R;
+import com.app.rbc.admin.fragments.InitialSyncFragment;
 import com.app.rbc.admin.utils.AppUtil;
+import com.app.rbc.admin.utils.ChangeFragment;
 import com.app.rbc.admin.utils.TagsPreferences;
 
 import org.json.JSONArray;
@@ -48,6 +50,10 @@ public class Splash extends AppCompatActivity {
 
         reveal = (ImageView) findViewById(R.id.reveal);
         reveal.setVisibility(View.VISIBLE);
+        View decorView = getWindow().getDecorView();
+// Hide the status bar.
+        int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
+        decorView.setSystemUiVisibility(uiOptions);
 //        final Animation myAnim = AnimationUtils.loadAnimation(Splash.this, R.anim.bounce);
 //        myAnim.setDuration(2000);
 //
@@ -206,7 +212,53 @@ public class Splash extends AppCompatActivity {
                                             overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 
                                             finish();
-                                        } else {
+                                        }
+
+                                        else if (type.equalsIgnoreCase("new_po"))
+                                        {
+                                            Intent intent = new Intent(Splash.this, StockActivity.class);
+                                            intent.putExtra("category",intent.getStringExtra("category"));
+                                            intent.putExtra("po_id",intent.getStringExtra("parent_id"));
+                                            intent.putExtra("type",intent.getStringExtra("type"));
+                                            startActivity(intent);
+                                            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+
+                                            finish();
+                                        }
+
+                                        else if (type.equalsIgnoreCase("create_req"))
+                                        {
+                                            Intent intent = new Intent(Splash.this, RequirementActivity.class);
+                                            intent.putExtra("category",intent.getStringExtra("category"));
+                                            intent.putExtra("rq_id",intent.getStringExtra("rq_id"));
+                                            intent.putExtra("type",intent.getStringExtra("type"));
+                                            startActivity(intent);
+                                            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                                            finish();
+                                        }
+                                        else if (type.equalsIgnoreCase("vehicle") )
+                                        {
+                                            if(intent.getStringExtra("vehicle_for").equalsIgnoreCase("po")) {
+                                                Intent intent = new Intent(Splash.this, StockActivity.class);
+                                                intent.putExtra("category", intent.getStringExtra("category"));
+                                                intent.putExtra("po_id", intent.getStringExtra("parent_id"));
+                                                intent.putExtra("type", intent.getStringExtra("type"));
+                                                startActivity(intent);
+                                                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                                                finish();
+                                            }
+                                            else {
+                                                Intent intent = new Intent(Splash.this, RequirementActivity.class);
+                                                intent.putExtra("category", intent.getStringExtra("category"));
+                                                intent.putExtra("rq_id", intent.getStringExtra("parent_id"));
+                                                intent.putExtra("type", intent.getStringExtra("type"));
+                                                startActivity(intent);
+                                                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                                                finish();
+                                            }
+                                        }
+
+                                        else {
 
 
                                             Intent intent = new Intent(Splash.this, HomeActivity.class);
@@ -219,6 +271,8 @@ public class Splash extends AppCompatActivity {
 
                                         }
                                     } catch (Exception e) {
+
+                                        //ChangeFragment.changeFragment(getSupportFragmentManager(),R.id.layoutMain,new InitialSyncFragment(),"InitialSync");
 
                                         Intent intent = new Intent(Splash.this, HomeActivity.class);
 

@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.app.rbc.admin.R;
 import com.app.rbc.admin.activities.IndentRegisterActivity;
+import com.app.rbc.admin.activities.SettingsActivity;
 import com.app.rbc.admin.adapters.CustomEmployeeListAdapter;
 import com.app.rbc.admin.api.APIController;
 import com.app.rbc.admin.models.db.models.Employee;
@@ -33,6 +34,7 @@ public class EmployeesFragment extends Fragment implements View.OnClickListener{
 
     private View view;
     private RecyclerView recyclerView;
+    private RelativeLayout empty_relative;
     private CustomEmployeeListAdapter adapter;
     private List<Employee> employees;
     SwipeRefreshLayout swipeRefreshLayout;
@@ -52,7 +54,7 @@ public class EmployeesFragment extends Fragment implements View.OnClickListener{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_employees, container, false);
-        ((IndentRegisterActivity)getActivity()).getSupportActionBar().setTitle("Employees");
+        ((SettingsActivity)getActivity()).getSupportActionBar().setTitle("Employees");
         initializeViews();
         return view;
     }
@@ -62,6 +64,7 @@ public class EmployeesFragment extends Fragment implements View.OnClickListener{
         TextView add_employee_title = (TextView) view.findViewById(R.id.add_employee_title);
         ImageView add_employee_icon = (ImageView) view.findViewById(R.id.add_employee_icon);
         Button add_employee_next = (Button) view.findViewById(R.id.add_employee_next);
+        empty_relative = (RelativeLayout) view.findViewById(R.id.empty_relative);
 
         add_employee_container.setOnClickListener(this);
         add_employee_icon.setOnClickListener(this);
@@ -87,10 +90,11 @@ public class EmployeesFragment extends Fragment implements View.OnClickListener{
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        employees = Employee.listAll(Employee.class);
+        employees = Employee.find(Employee.class,"statestore != ?",1+"");
         setRecyclerView(employees);
 
         if(employees.size() == 0) {
+            empty_relative.setVisibility(View.VISIBLE);
             swipeRefreshLayout.setRefreshing(true);
             callEmployeeFetchApi();
         }
@@ -105,9 +109,8 @@ public class EmployeesFragment extends Fragment implements View.OnClickListener{
                 if (child != null && mGestureDetector.onTouchEvent(e)) {
 
                     int a=rv.getChildPosition(child);
-                    //Log.e("Listener Id",jobList.get(a).getId()+"");
 
-                    ((IndentRegisterActivity)getContext()).setFragment(6,employees.get(a).getId());
+                    ((SettingsActivity)getContext()).setFragment(6,employees.get(a).getId());
 
 
 
@@ -143,14 +146,14 @@ public class EmployeesFragment extends Fragment implements View.OnClickListener{
             case R.id.add_employee_icon:
             case R.id.add_employee_title:
             case R.id.add_employee_next:
-                ((IndentRegisterActivity)getActivity()).setFragment(6);
+                ((SettingsActivity)getActivity()).setFragment(6);
                 break;
         }
     }
 
 
     private void callEmployeeFetchApi() {
-        APIController controller = new APIController(getContext(),20,IndentRegisterActivity.ACTIVITY);
+        APIController controller = new APIController(getContext(),20,SettingsActivity.ACTIVITY);
         controller.fetchEmp();
     }
 
@@ -158,6 +161,12 @@ public class EmployeesFragment extends Fragment implements View.OnClickListener{
         swipeRefreshLayout.setRefreshing(false);
         switch(status) {
             case 2 :
+                if(Employee.count(Employee.class) == 0) {
+                    empty_relative.setVisibility(View.VISIBLE);
+                }
+                else {
+                    empty_relative.setVisibility(View.GONE);
+                }
                 refreshAdapter();
                 break;
             case 0:
@@ -169,7 +178,7 @@ public class EmployeesFragment extends Fragment implements View.OnClickListener{
     }
 
     private void refreshAdapter() {
-        adapter.refreshAdapter(Employee.listAll(Employee.class));
+        adapter.refreshAdapter(Employee.find(Employee.class,"statestore != ?",1+""));
     }
 
 }

@@ -3,23 +3,34 @@ package com.app.rbc.admin.api;
 
 import android.content.Context;
 
+import android.graphics.Color;
 import android.util.Log;
+import android.view.View;
 
 
 import com.app.rbc.admin.R;
 import com.app.rbc.admin.activities.IndentRegisterActivity;
 import com.app.rbc.admin.activities.ReportActivity;
+import com.app.rbc.admin.activities.SettingsActivity;
 import com.app.rbc.admin.activities.SiteOverviewActivity;
+import com.app.rbc.admin.activities.Splash;
+import com.app.rbc.admin.fragments.InitialSyncFragment;
+import com.app.rbc.admin.interfaces.ApiServices;
+import com.app.rbc.admin.models.AllSiteList;
+import com.app.rbc.admin.models.StockCategories;
+import com.app.rbc.admin.models.Vendors;
 import com.app.rbc.admin.models.db.models.Categoryproduct;
 import com.app.rbc.admin.models.db.models.Employee;
 import com.app.rbc.admin.models.db.models.Site;
 import com.app.rbc.admin.models.db.models.User;
 import com.app.rbc.admin.models.db.models.Vehicle;
 import com.app.rbc.admin.models.db.models.Vendor;
+import com.app.rbc.admin.models.db.models.site_overview.Order;
 import com.app.rbc.admin.models.db.models.site_overview.Requirement;
 import com.app.rbc.admin.models.db.models.site_overview.Stock;
 import com.app.rbc.admin.models.db.models.site_overview.Trans;
 import com.app.rbc.admin.utils.AppUtil;
+import com.app.rbc.admin.utils.RetrofitClient;
 import com.app.rbc.admin.utils.TagsPreferences;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -34,12 +45,14 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
@@ -51,8 +64,8 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
 public class APIController{
 
     private final String BASE_URL = "http://plethron.pythonanywhere.com/eagle/";
-    private Retrofit retrofit;
-    private APIInterface apiInterface;
+    public Retrofit retrofit;
+    public APIInterface apiInterface;
     private Context context;
     private int code;
     private Gson gson;
@@ -76,17 +89,24 @@ public class APIController{
         apiInterface = retrofit.create(APIInterface.class);
     }
 
+    public APIInterface getInterface() {
+        return this.apiInterface;
+    }
+
     public void addUser(User user) {
         try {
             File file;
+            RequestBody filepart;
+            MultipartBody.Part myfile;
             if (user.getFile_present() == 0) {
                 file = null;
+                myfile = null;
             } else {
                 file = new File(user.getMyfile());
+                filepart = RequestBody.create(MediaType.parse("image/*"), file);
+                myfile = MultipartBody.Part.createFormData("myfile",file.getName(), filepart);
             }
-            Log.e("file",file.getPath());
-            RequestBody filepart = RequestBody.create(MediaType.parse("image/*"), file);
-            MultipartBody.Part myfile = MultipartBody.Part.createFormData("myfile",file.getName(), filepart);
+
 
             RequestBody name = RequestBody.create(MediaType.parse("text/plain"), user.getName());
             RequestBody email = RequestBody.create(MediaType.parse("text/plain"), user.getEmail());
@@ -121,10 +141,12 @@ public class APIController{
                 @Override
                 public void onFailure(Call call, Throwable t) {
                     Log.e("Error", t.toString());
-                    sendAPIResult(0);
+                    sendAPIResult(0,"Service encountered an error");
                 }
             });
         } catch (Exception e) {
+            sendAPIResult(0,"Service encountered an error");
+
             Log.e("Add User Exception",e.toString());
         }
     }
@@ -169,10 +191,12 @@ public class APIController{
                 @Override
                 public void onFailure(Call call, Throwable t) {
                     Log.e("Error", t.toString());
-                    sendAPIResult(0);
+                    sendAPIResult(0,"Service encountered an error");
                 }
             });
         } catch (Exception e) {
+            sendAPIResult(0,"Service encountered an error");
+
             Log.e("Add User Exception",e.toString());
         }
     }
@@ -192,21 +216,23 @@ public class APIController{
                         Log.e("Response",body.toString());
                         int status = body.getJSONObject("meta").getInt("status");
                         String message = body.getJSONObject("meta").getString("message");
+                        getSiteList();
                         sendAPIResult(status,message);
                     }catch (Exception e) {
+                        sendAPIResult(0,"Service encountered an error");
 
                     }
                 }
                 else {
                     Log.e("Error",response.errorBody().toString());
-                    sendAPIResult(0);
+                    sendAPIResult(0,"Service encountered an error");
                 }
             }
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
                 Log.e("Error",t.toString());
-                sendAPIResult(0);
+                sendAPIResult(0,"Service encountered an error");
             }
         });
     }
@@ -228,21 +254,23 @@ public class APIController{
                         Log.e("Response",body.toString());
                         int status = body.getJSONObject("meta").getInt("status");
                         String message = body.getJSONObject("meta").getString("message");
+                        getSiteList();
                         sendAPIResult(status,message);
                     }catch (Exception e) {
+                        sendAPIResult(0,"Service encountered an error");
 
                     }
                 }
                 else {
                     Log.e("Error",response.errorBody().toString());
-                    sendAPIResult(0);
+                    sendAPIResult(0,"Service encountered an error");
                 }
             }
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
                 Log.e("Error",t.toString());
-                sendAPIResult(0);
+                sendAPIResult(0,"Service encountered an error");
             }
         });
     }
@@ -261,21 +289,23 @@ public class APIController{
                         Log.e("Response",body.toString());
                         int status = body.getJSONObject("meta").getInt("status");
                         String message = body.getJSONObject("meta").getString("message");
+                        getStockList();
                         sendAPIResult(status,message);
                     }catch (Exception e) {
+                        sendAPIResult(0,"Service encountered an error");
 
                     }
                 }
                 else {
                     Log.e("Error",response.errorBody().toString());
-                    sendAPIResult(0);
+                    sendAPIResult(0,"Service encountered an error");
                 }
             }
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
                 Log.e("Error",t.toString());
-                sendAPIResult(0);
+                sendAPIResult(0,"Service encountered an error");
             }
         });
     }
@@ -294,6 +324,7 @@ public class APIController{
                         Log.e("Response",body.toString());
                         int status = body.getJSONObject("meta").getInt("status");
                         String message = body.getJSONObject("meta").getString("message");
+                        getVendorList();
                         sendAPIResult(status,message);
                     }catch (Exception e) {
 
@@ -301,14 +332,14 @@ public class APIController{
                 }
                 else {
                     Log.e("Error",response.errorBody().toString());
-                    sendAPIResult(0);
+                    sendAPIResult(0,"Service encountered an error");
                 }
             }
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
                 Log.e("Error",t.toString());
-                sendAPIResult(0);
+                sendAPIResult(0,"Service encountered an error");
             }
         });
     }
@@ -332,17 +363,20 @@ public class APIController{
                 }
                 else {
                     Log.e("Error",response.errorBody().toString());
-                    sendAPIResult(0);
+                    sendAPIResult(0,"Service encountered an error");
                 }
             }
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
                 Log.e("Error",t.toString());
-                sendAPIResult(0);
+                sendAPIResult(0,"Service encountered an error");
             }
         });
     }
+
+
+
 
     public void fetchVehicleList() {
         Call<String> call = apiInterface.vehicleList(1);
@@ -382,7 +416,25 @@ public class APIController{
                                 vehicle.setDestination(details.getString("destination"));
                                 vehicle.setChallannum(details.getString("challan_num"));
                                 vehicle.setChallanimg(details.getString("challan_img"));
+
+
                             }
+
+                            JSONArray products_array = vehicleObj.getJSONArray("products");
+                            String products = "",quantities = "";
+                            for(int j = 0 ; j < products_array.length() ; j++) {
+                                JSONObject productObj = products_array.getJSONObject(j);
+                                if(j == products_array.length()-1) {
+                                    products += productObj.getString("product");
+                                    quantities += productObj.getString("quantity");
+                                }
+                                else {
+                                    products += productObj.getString("product")+"|";
+                                    quantities += productObj.getString("quantity")+"|";
+                                }
+                            }
+                            vehicle.setProducts(products);
+                            vehicle.setQuantities(quantities);
                             vehicleList.add(vehicle);
 
                         }
@@ -396,19 +448,19 @@ public class APIController{
                 }
                 else {
                     Log.e("Error",response.errorBody().toString());
-                    sendAPIResult(0);
+                    sendAPIResult(0,"Service encountered an error");
                 }
             }
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
                 Log.e("Error",t.toString());
-                sendAPIResult(0);
+                sendAPIResult(0,"Service encountered an error");
             }
         });
     }
 
-    public void receiveVehicle(Vehicle vehicle,File challan_img,File invoice_img,
+    public void receiveVehicle(Vehicle vehicle,JSONArray prod_list,File challan_img,File invoice_img,
                                File onreceive_img,File unloaded_img) {
         try {
             RequestBody challan_img_rb = RequestBody.create(MediaType.parse("image/*"), challan_img);
@@ -426,9 +478,10 @@ public class APIController{
 
             RequestBody trans_id = RequestBody.create(MediaType.parse("text/plain"), vehicle.getTransid());
             RequestBody challan_num = RequestBody.create(MediaType.parse("text/plain"), vehicle.getChallannum());
+            RequestBody prod_list_part = RequestBody.create(MediaType.parse("text/plain"), prod_list.toString());
 
 
-            Call<String> call = apiInterface.receiveVehicle(trans_id, challan_num,challan_img_part,invoice_img_part,
+            Call<String> call = apiInterface.receiveVehicle(trans_id,prod_list_part,challan_num,challan_img_part,invoice_img_part,
                     onreceive_img_part,unloaded_img_part);
             call.enqueue(new Callback<String>() {
                 @Override
@@ -455,7 +508,7 @@ public class APIController{
                 @Override
                 public void onFailure(Call call, Throwable t) {
                     Log.e("Error", t.toString());
-                    sendAPIResult(0);
+                    sendAPIResult(0,"Service encountered an error");
                 }
             });
         } catch (Exception e) {
@@ -488,20 +541,21 @@ public class APIController{
                         AppUtil.putString(context,TagsPreferences.PROFILE_IMAGE,data.getString("Profile_image"));
 
                         sendAPIResult(status,message);
+                        getEmployeeList();
                     }catch (Exception e) {
 
                     }
                 }
                 else {
                     Log.e("Error",response.errorBody().toString());
-                    sendAPIResult(0);
+                    sendAPIResult(0,"Service encountered an error");
                 }
             }
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
                 Log.e("Error",t.toString());
-                sendAPIResult(0);
+                sendAPIResult(0,"Service encountered an error");
             }
         });
     }
@@ -524,20 +578,22 @@ public class APIController{
                         int status = body.getJSONObject("meta").getInt("status");
                         String message = body.getJSONObject("meta").getString("message");
                         sendAPIResult(status,message);
+                        getEmployeeList();
                     }catch (Exception e) {
+                        sendAPIResult(0,"Service encountered an error");
 
                     }
                 }
                 else {
                     Log.e("Error",response.errorBody().toString());
-                    sendAPIResult(0);
+                    sendAPIResult(0,"Service encountered an error");
                 }
             }
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
                 Log.e("Error",t.toString());
-                sendAPIResult(0);
+                sendAPIResult(0,"Service encountered an error");
             }
         });
     }
@@ -559,6 +615,7 @@ public class APIController{
                         Log.e("Response",body.toString());
                         int status = body.getJSONObject("meta").getInt("status");
                         String message = body.getJSONObject("meta").getString("message");
+                        getVendorList();
                         sendAPIResult(status,message);
                     }catch (Exception e) {
 
@@ -566,14 +623,14 @@ public class APIController{
                 }
                 else {
                     Log.e("Error",response.errorBody().toString());
-                    sendAPIResult(0);
+                    sendAPIResult(0,"Service encountered an error");
                 }
             }
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
                 Log.e("Error",t.toString());
-                sendAPIResult(0);
+                sendAPIResult(0,"Service encountered an error");
             }
         });
     }
@@ -633,15 +690,27 @@ public class APIController{
                             requirement.setCategory(detailsObj.getString("category"));
                             requirement.setDesc(detailsObj.getString("desc"));
 
-                            JSONArray product_array = requirementObj.getJSONArray("products");
+                            JSONArray products_array = requirementObj.getJSONArray("products");
 
-                            for(int j = 0 ; j < product_array.length() ; j++) {
-                                JSONObject productObj = product_array.getJSONObject(i);
+                            String products = "",quantities = "",rem_quantity="";
+                            for(int j = 0 ; j < products_array.length() ; j++) {
+                                JSONObject productObj = products_array.getJSONObject(j);
+                                if(j == products_array.length() -1) {
+                                    products = products + productObj.getString("product");
+                                    quantities = quantities + productObj.getString("quantity");
+                                    rem_quantity = rem_quantity + productObj.getString("rem_quantity");
+                                }
+                                else {
+                                    products = products + productObj.getString("product") + "|";
+                                    quantities = quantities + productObj.getString("quantity") + "|";
+                                    rem_quantity = rem_quantity + productObj.getString("rem_quantity") + "|";
+                                }
 
-                                requirement.setProducts(productObj.getString("product")+" ");
-                                requirement.setQuantities(productObj.getString("quantity")+" ");
-                                requirement.setRemquantities(productObj.getString("rem_quantity")+" ");
                             }
+
+                            requirement.setProducts(products);
+                            requirement.setQuantities(quantities);
+                            requirement.setRemquantities(rem_quantity);
                             requirement.save();
                         }
 
@@ -743,14 +812,14 @@ public class APIController{
                 }
                 else {
                     Log.e("Error",response.errorBody().toString());
-                    sendAPIResult(0);
+                    sendAPIResult(0,"Service encountered an error");
                 }
             }
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
                 Log.e("Error",t.toString());
-                sendAPIResult(0);
+                sendAPIResult(0,"Service encountered an error");
             }
         });
     }
@@ -769,6 +838,7 @@ public class APIController{
                         Log.e("Response",body.toString());
                         int status = body.getJSONObject("meta").getInt("status");
                         String message = body.getJSONObject("meta").getString("message");
+                        getStockList();
                         sendAPIResult(status,message);
                     }catch (Exception e) {
                         Log.e("Error Add Category",e.toString());
@@ -776,14 +846,14 @@ public class APIController{
                 }
                 else {
                     Log.e("Error",response.errorBody().toString());
-                    sendAPIResult(0);
+                    sendAPIResult(0,"Service encountered an error");
                 }
             }
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
                 Log.e("Error",t.toString());
-                sendAPIResult(0);
+                sendAPIResult(0,"Service encountered an error");
             }
         });
     }
@@ -803,6 +873,7 @@ public class APIController{
                         Log.e("Response",body.toString());
                         int status = body.getJSONObject("meta").getInt("status");
                         String message = body.getJSONObject("meta").getString("message");
+                        getStockList();
                         sendAPIResult(status,message);
                     }catch (Exception e) {
                         Log.e("Error Update Category",e.toString());
@@ -810,14 +881,14 @@ public class APIController{
                 }
                 else {
                     Log.e("Error",response.errorBody().toString());
-                    sendAPIResult(0);
+                    sendAPIResult(0,"Service encountered an error");
                 }
             }
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
                 Log.e("Error",t.toString());
-                sendAPIResult(0);
+                sendAPIResult(0,"Service encountered an error");
             }
         });
     }
@@ -841,10 +912,12 @@ public class APIController{
                             JSONArray data = body.getJSONArray("data");
                             Type listType = new TypeToken<List<Employee>>(){}.getType();
                             List<Employee> employees = gson.fromJson(data.toString(), listType);
-                            Employee.deleteAll(Employee.class);
+                            List<Employee> deleteEmps = Employee.find(Employee.class,"statestore != ?",1+"");
+                            Employee.deleteInTx(deleteEmps);
                             Employee.saveInTx(employees);
                             Log.e("Employees Count",employees.size()+"");
-                            sendAPIResult(status,message);
+                            sendAPIResult(status,"Success");
+                            getEmployeeList();
                         }
 
                     }catch (Exception e) {
@@ -874,6 +947,7 @@ public class APIController{
                 if(response.errorBody() == null) {
                     try {
                         JSONObject body = new JSONObject(response.body().toString());
+                        AppUtil.logger("Fetch Site Response",body.toString());
                         int status = body.getJSONObject("meta").getInt("status");
                         String message = body.getJSONObject("meta").getString("message");
                         if(status != 2) {
@@ -884,10 +958,12 @@ public class APIController{
                             JSONArray data = body.getJSONArray("site_list");
                             Type listType = new TypeToken<List<Site>>(){}.getType();
                             List<Site> sites = gson.fromJson(data.toString(), listType);
-                            Site.deleteAll(Site.class);
+                            List<Site> deleteSites = Site.find(Site.class,"statestore != ?",1+"");
+                            Site.deleteInTx(deleteSites);
                             Site.saveInTx(sites);
                             Log.e("Site Count",sites.size()+"");
-                            sendAPIResult(status,message);
+                            getSiteList();
+                            sendAPIResult(status,"Success");
                         }
 
                     }catch (Exception e) {
@@ -927,10 +1003,14 @@ public class APIController{
                             JSONArray data = body.getJSONArray("vendor_list");
                             Type listType = new TypeToken<List<Vendor>>(){}.getType();
                             List<Vendor> vendors = gson.fromJson(data.toString(), listType);
-                            Vendor.deleteAll(Vendor.class);
+                            List<Vendor> deleteVendors = Vendor.find(Vendor.class,"statestore != ?",1+"");
+
+                            Vendor.deleteInTx(deleteVendors);
                             Vendor.saveInTx(vendors);
                             Log.e("Vendor Count",vendors.size()+"");
-                            sendAPIResult(status,message);
+                            sendAPIResult(status,"Success");
+                            getVendorList();
+
                         }
 
                     }catch (Exception e) {
@@ -993,7 +1073,8 @@ public class APIController{
 
 
                             Log.e("Category Product Count",categoryproducts.size()+"");
-                            sendAPIResult(status,message);
+                            getStockList();
+                            sendAPIResult(status,"Success");
                         }
 
                     }catch (Exception e) {
@@ -1015,18 +1096,131 @@ public class APIController{
     }
 
 
-
-
     private void sendAPIResult(int status,String... message) {
         switch (activity) {
+            case 1 : final InitialSyncFragment frag = (InitialSyncFragment)((Splash)context).getSupportFragmentManager().findFragmentByTag("InitialSync");
+                    frag.publichApiResponse(status,code,message[0]);
+                break;
             case 2 : ((SiteOverviewActivity) context).publishAPIResponse(status, code, message[0]);
                 break;
-            case 5: ((IndentRegisterActivity) context).publishAPIResponse(status, code, message[0]);
+            case 5: ((SettingsActivity) context).publishAPIResponse(status, code, message[0]);
                 break;
             case 8 : ((ReportActivity) context).publishAPIResponse(status, code, message[0]);
                 break;
 
         }
+    }
+
+
+
+
+
+
+    //Shared Preferences
+
+    public void getEmployeeList() {
+        final ApiServices apiServices = RetrofitClient.getApiService();
+        Call<com.app.rbc.admin.models.Employee> call2 = apiServices.fetch_emp(AppUtil.getString(context, TagsPreferences.USER_ID));
+        AppUtil.logger("Home Activity ", "Fetch Employee : " + call2.request().toString() + "User id : " +
+                AppUtil.getString(context, TagsPreferences.USER_ID));
+        call2.enqueue(new Callback<com.app.rbc.admin.models.Employee>() {
+            @Override
+            public void onResponse(Call<com.app.rbc.admin.models.Employee> call2, Response<com.app.rbc.admin.models.Employee> response) {
+
+                com.app.rbc.admin.models.Employee employee = new com.app.rbc.admin.models.Employee();
+                employee = response.body();
+                AppUtil.putString(context, TagsPreferences.EMPLOYEE_LIST, new Gson().toJson(employee));
+                AppUtil.logger("List : ", AppUtil.getString(context, TagsPreferences.EMPLOYEE_LIST));
+
+            }
+
+
+            @Override
+            public void onFailure(Call<com.app.rbc.admin.models.Employee> call2, Throwable t) {
+                AppUtil.logger("Employee List Pref Error", t.toString());
+            }
+        });
+
+    }
+
+    private void getStockList() {
+
+            final ApiServices apiServices = RetrofitClient.getApiService();
+            Call<StockCategories> call = apiServices.stock_category();
+            AppUtil.logger("Stock Category ", "Get Categories : " + call.request().toString());
+            call.enqueue(new Callback<StockCategories>() {
+                @Override
+                public void onResponse(Call<StockCategories> call, Response<StockCategories> response) {
+                    if (response.body().getMeta().getStatus() == 2) {
+
+
+                        AppUtil.putString(context, TagsPreferences.STOCK_LIST, new Gson().toJson(response.body()));
+                        AppUtil.logger("Stock List : ", AppUtil.getString(context, TagsPreferences.STOCK_LIST));
+
+                    }
+
+                }
+
+                @Override
+                public void onFailure(Call<StockCategories> call1, Throwable t) {
+                    AppUtil.logger("Stock List Pref Error", t.toString());
+                }
+            });
+
+    }
+
+
+    private void getVendorList() {
+
+        final ApiServices apiServices = RetrofitClient.getApiService();
+        Call<Vendors> call = apiServices.total_vendor_list();
+        AppUtil.logger("Vendor_list ", "Get Vendors : " + call.request().toString());
+        call.enqueue(new Callback<Vendors>() {
+            @Override
+            public void onResponse(Call<Vendors> call, Response<Vendors> response) {
+                if (response.body().getMeta().getStatus() == 2) {
+
+
+                    AppUtil.putString(context, TagsPreferences.VENDORS_LIST, new Gson().toJson(response.body()));
+                    AppUtil.logger("Vendors List : ", AppUtil.getString(context, TagsPreferences.VENDORS_LIST));
+
+
+
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<Vendors> call1, Throwable t) {
+                AppUtil.logger("Vendor List Pref Error", t.toString());
+            }
+        });
+    }
+
+    private void getSiteList() {
+
+        final ApiServices apiServices = RetrofitClient.getApiService();
+        Call<AllSiteList> call = apiServices.all_site_list();
+        AppUtil.logger("Stock Category ", "Get Categories : " + call.request().toString());
+        call.enqueue(new Callback<AllSiteList>() {
+            @Override
+            public void onResponse(Call<AllSiteList> call, Response<AllSiteList> response) {
+                if (response.body().getMeta().getStatus() == 2) {
+
+
+                    AppUtil.putString(context, TagsPreferences.SITE_LIST, new Gson().toJson(response.body()));
+                    AppUtil.logger("Site List : ", AppUtil.getString(context, TagsPreferences.SITE_LIST));
+
+
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<AllSiteList> call1, Throwable t) {
+                AppUtil.logger("Site List Pref Error", t.toString());
+            }
+        });
     }
 
 }

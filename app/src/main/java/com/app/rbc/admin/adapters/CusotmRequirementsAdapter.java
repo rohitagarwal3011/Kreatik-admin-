@@ -10,11 +10,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.app.rbc.admin.R;
+import com.app.rbc.admin.models.db.models.Categoryproduct;
 import com.app.rbc.admin.models.db.models.Site;
 import com.app.rbc.admin.models.db.models.site_overview.Requirement;
 import com.app.rbc.admin.models.db.models.site_overview.Stock;
 import com.squareup.picasso.Picasso;
 
+import org.joda.time.DateTime;
+
+import java.sql.Array;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -43,11 +48,37 @@ public class CusotmRequirementsAdapter extends RecyclerView.Adapter<CusotmRequir
     @Override
     public void onBindViewHolder(MyViewHolder holder, final int position) {
         Log.e("Setting",position+"");
-        holder.requirementTitle.setText(requirements.get(position).getTitle());
-        holder.requirementSite.setText(requirements.get(position).getSite());
+        Site site = Site.findById(Site.class,Long.valueOf(requirements.get(position).getSite()));
+        if(site != null) {
+            holder.requirementSite.setText(site.getName());
+        }
         holder.purpose.setText(requirements.get(position).getPurpose());
         holder.requirementStatus.setText(requirements.get(position).getStatus());
-        holder.createdOn.setText(requirements.get(position).getCreatedon());
+
+        if(!(requirements.get(position).getProducts().equalsIgnoreCase(""))) {
+
+            String[] products = requirements.get(position).getProducts().split("\\|");
+            String[] quantities = requirements.get(position).getQuantities().split("\\|");
+            String[] rem_quantities = requirements.get(position).getRemquantities().split("\\|");
+
+            int quantity = 0, rem_quantity = 0;
+            for(int i = 0 ; i < quantities.length ; i++) {
+                quantity +=  Math.round(Float.valueOf(quantities[i]));
+                rem_quantity += Math.round(Float.valueOf(rem_quantities[i]));
+
+            }
+
+
+            List<Categoryproduct> categoryproducts = Categoryproduct.find(Categoryproduct.class,
+                    "product = ?", products[0]);
+            if (categoryproducts.size() != 0) {
+                holder.total_quantity.setText(quantity + " " + categoryproducts.get(0).getUnit());
+                holder.remaining_quantity.setText(rem_quantity + " " + categoryproducts.get(0).getUnit());
+            }
+        }
+        DateTime dateTime = new DateTime(requirements.get(position).getCreatedon());
+
+        holder.createdOn.setText(dateTime.toString("MMM dd, yyyy"));
 
     }
 
@@ -57,19 +88,22 @@ public class CusotmRequirementsAdapter extends RecyclerView.Adapter<CusotmRequir
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder{
-        TextView requirementTitle;
+        TextView total_quantity;
         TextView requirementSite;
         TextView purpose;
         TextView requirementStatus;
         TextView createdOn;
+        TextView remaining_quantity;
 
         public MyViewHolder(View itemView) {
             super(itemView);
-            requirementTitle = (TextView) itemView.findViewById(R.id.requirement_title);
+            total_quantity = (TextView) itemView.findViewById(R.id.total_quantity);
             requirementSite = (TextView) itemView.findViewById(R.id.requirement_site);
             purpose = (TextView) itemView.findViewById(R.id.purpose);
             requirementStatus = (TextView) itemView.findViewById(R.id.requirement_status);
             createdOn = (TextView) itemView.findViewById(R.id.created_on);
+            remaining_quantity = (TextView) itemView.findViewById(R.id.remaining_quantity);
+
 
         }
     }

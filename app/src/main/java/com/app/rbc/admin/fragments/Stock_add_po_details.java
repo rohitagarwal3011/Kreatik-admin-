@@ -4,20 +4,26 @@ package com.app.rbc.admin.fragments;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.app.rbc.admin.R;
+import com.app.rbc.admin.activities.RequirementDetailActivity;
 import com.app.rbc.admin.activities.StockActivity;
 import com.app.rbc.admin.interfaces.ApiServices;
 import com.app.rbc.admin.models.Vendors;
+import com.app.rbc.admin.models.db.models.Categoryproduct;
 import com.app.rbc.admin.utils.AppUtil;
 import com.app.rbc.admin.utils.RetrofitClient;
 import com.app.rbc.admin.utils.TagsPreferences;
@@ -29,6 +35,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -120,6 +127,24 @@ public class Stock_add_po_details extends Fragment {
         unbinder = ButterKnife.bind(this, view);
         count=1;
         remaining_quantity = 0;
+
+
+        Bundle bundle = ((StockActivity)getActivity()).details_finalform;
+        if(bundle != null) {
+            POTitle.setText(bundle.getString("title"));
+            POAmount.setText(bundle.getString("amount"));
+            POPayMode.setText(bundle.getString("paymentmode"));
+
+        }
+
+        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
+        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Add PO details");
+
+        AppBarLayout.LayoutParams toolbarParams = ( AppBarLayout.LayoutParams) toolbar.getLayoutParams();
+        toolbarParams.setScrollFlags(0);
+        toolbar.setLayoutParams(toolbarParams);
+
         return view;
     }
 
@@ -131,6 +156,20 @@ public class Stock_add_po_details extends Fragment {
 
 
     }
+
+    @Override
+    public void onPause() {
+        if(((StockActivity)getActivity()).details_finalform == null) {
+            ((StockActivity)getActivity()).details_finalform = new Bundle();
+        }
+        Bundle bundle = ((StockActivity) getActivity()).details_finalform;
+        bundle.putString("title", POTitle.getText().toString());
+        bundle.putString("amount", POAmount.getText().toString());
+        bundle.putString("paymentmode", POPayMode.getText().toString());
+
+        super.onPause();
+    }
+
 
 
     private void set_data() {
@@ -170,31 +209,26 @@ public class Stock_add_po_details extends Fragment {
 
     private void addrow(String product,String quantity)
     {
-        TableRow tr = new TableRow(getContext());
-        TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
+        String unit = "";
+        List<Categoryproduct> categoryproductList = Categoryproduct.find(Categoryproduct.class,
+                "product = ?",product);
+        if(categoryproductList.size() != 0) {
 
-        layoutParams.setMargins(0, (int) getResources().getDimension(R.dimen._5sdp), 0, (int) getResources().getDimensionPixelSize(R.dimen._5sdp));
-        tr.setLayoutParams(layoutParams);
-        tr.setPadding((int) getResources().getDimension(R.dimen._3sdp), (int) getResources().getDimension(R.dimen._3sdp), (int) getResources().getDimension(R.dimen._3sdp), (int) getResources().getDimension(R.dimen._3sdp));
+            unit = categoryproductList.get(0).getUnit();
+        }
 
-        TextView tv = new TextView(getContext());
-        tv.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 1f));
-        tv.setGravity(Gravity.LEFT);
-        tv.setTextColor(Color.parseColor("#000000"));
-        tv.setText(product);
+        View tr = getActivity().getLayoutInflater().inflate(R.layout.custom_requirement_table_row,null);
 
-        tr.addView(tv, 0);
+        TextView productText = (TextView) tr.findViewById(R.id.product);
+        TextView quantityText = (TextView) tr.findViewById(R.id.quantity);
+        Button product_icon = (Button) tr.findViewById(R.id.product_icon);
 
-        TextView tv1 = new TextView(getContext());
-        tv1.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 1f));
-        tv1.setGravity(Gravity.LEFT);
-        tv1.setTextColor(Color.parseColor("#000000"));
-        tv1.setText(quantity);
+        productText.setText(product);
+        quantityText.setText(quantity+" "+unit);
+        product_icon.setText(product.substring(0,1));
 
-        tr.addView(tv1, 1);
+        productTable.addView(tr);
 
-        productTable.addView(tr, count);
-        count++;
     }
 
     private Boolean verify() {
@@ -264,6 +298,9 @@ public class Stock_add_po_details extends Fragment {
                                     }
                                 });
 
+                            }else
+                            {
+                                AppUtil.showToast(getContext(), "Network Issue. Please check your connectivity and try again");
                             }
                         } catch (IOException e) {
                             e.printStackTrace();

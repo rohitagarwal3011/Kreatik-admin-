@@ -38,6 +38,13 @@
                 android:layout_marginTop="@dimen/_10sdp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:id="@+id/settings"
+                android:text="Settings"/>
+
+            <TextView
+                android:layout_marginTop="@dimen/_10sdp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:text="Help &amp; Support"/>
             <TextView
                 android:layout_marginTop="@dimen/_10sdp"

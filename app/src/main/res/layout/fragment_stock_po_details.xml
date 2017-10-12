@@ -1,34 +1,35 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+<ScrollView android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:fresco="http://schemas.android.com/apk/res-auto"
-    tools:context="com.app.rbc.admin.fragments.Stock_po_details">
-
-    <android.support.v4.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto">
    <LinearLayout
        android:layout_width="match_parent"
        android:layout_height="match_parent"
+       android:background="@color/white"
        android:orientation="vertical">
+
+
 
        <LinearLayout
            android:layout_width="match_parent"
            android:layout_height="wrap_content"
-           android:orientation="vertical"
-           android:background="#87cad0"
-           android:padding="@dimen/_10sdp">
+           android:layout_margin="@dimen/_5sdp"
+           android:padding="@dimen/_5sdp"
+           android:orientation="vertical">
 
            <TextView
                android:layout_width="match_parent"
                android:layout_height="wrap_content"
-               android:text="Created by :"
+               android:text="Created by"
+               android:padding="@dimen/_5sdp"
+               android:visibility="gone"
+               android:background="@color/heading"
                android:textColor="@color/black"
-               android:textSize="@dimen/_14sdp"/>
+               android:textSize="@dimen/_12sdp"/>
            <LinearLayout
                android:layout_width="match_parent"
                android:layout_height="wrap_content"
+               android:padding="@dimen/_5sdp"
                android:orientation="horizontal">
 
                <com.facebook.drawee.view.SimpleDraweeView
@@ -72,9 +73,9 @@
                        android:layout_height="wrap_content"
                        android:gravity="left|center_vertical"
                        android:text="Manager"
+                       android:layout_marginTop="@dimen/_3sdp"
                        android:textStyle="italic"
                        android:visibility="visible"
-                       android:textColor="#757575"
                        android:textSize="@dimen/_10sdp" />
 
                        <TextView
@@ -83,9 +84,9 @@
                            android:layout_height="wrap_content"
                            android:gravity="center_vertical"
                            android:text="06-10-17"
+                           android:layout_marginTop="@dimen/_3sdp"
                            android:visibility="visible"
-                           android:textColor="@color/black"
-                           android:textSize="@dimen/_12sdp" />
+                           android:textSize="@dimen/_10sdp" />
 
 
 
@@ -104,7 +105,7 @@
                        android:gravity="right|center_vertical"
                        android:text="Rs. 5,0000"
                        android:textColor="@color/colorAccent"
-                       android:textSize="@dimen/_15sdp" />
+                       android:textSize="@dimen/_12sdp" />
                    <TextView
                        android:id="@+id/PO_pay_mode"
                        android:layout_width="match_parent"
@@ -114,7 +115,7 @@
                        android:textStyle="italic"
                        android:visibility="visible"
                        android:textColor="@color/black"
-                       android:textSize="@dimen/_12sdp" />
+                       android:textSize="@dimen/_10sdp" />
                    <LinearLayout
                        android:layout_width="match_parent"
                        android:layout_height="wrap_content"
@@ -139,7 +140,7 @@
                            android:text="Created"
                            android:id="@+id/PO_status"
                            android:textColor="@color/black"
-                           android:textSize="@dimen/_12sdp" />
+                           android:textSize="@dimen/_10sdp" />
 
 
                    </LinearLayout>
@@ -149,21 +150,21 @@
 
 
        </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="#eee"
-        android:padding="@dimen/_10sdp"
-        >
+        android:orientation="vertical">
+
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Products Information"
-            android:textStyle="bold"
             android:textColor="@color/black"
-            android:textSize="@dimen/_14sdp"/>
+            android:padding="@dimen/_5sdp"
+            android:background="@color/heading"
+            android:textSize="@dimen/_12sdp"/>
 
         <TableLayout
             android:layout_width="match_parent"
@@ -172,31 +173,32 @@
             >
             <TableRow
                 android:id="@+id/rowheading"
+                android:background="@drawable/round_edittext_light"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_5sdp"
-                android:layout_marginBottom="@dimen/_5sdp"
-                android:padding="@dimen/_3sdp"
                 >
                 <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/_15sdp"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:gravity="center_horizontal"
                     android:textColor="@color/black"
+                    android:padding="@dimen/_5sdp"
+                    android:gravity="center_horizontal"
                     android:text="Product"/>
                 <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/_15sdp"
+                    android:layout_height="wrap_content"
                     android:text="Quantity"
-                    android:gravity="center_horizontal"
+                    android:padding="@dimen/_5sdp"
+                    android:gravity="left"
                     android:textColor="@color/black"
                     android:layout_weight="1"/>
                 <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/_15sdp"
-                    android:text="Remainig Qty"
-                    android:gravity="center_horizontal"
+                    android:layout_height="wrap_content"
+                    android:text="Rem. Quantity"
+                    android:padding="@dimen/_5sdp"
+                    android:gravity="left"
                     android:textColor="@color/black"
                     android:layout_weight="1"/>
             </TableRow>
@@ -208,32 +210,33 @@
        <LinearLayout
            android:layout_width="match_parent"
            android:layout_height="wrap_content"
-           android:orientation="vertical"
-           android:background="#FF1493"
-           android:padding="@dimen/_10sdp"
-           >
+           android:orientation="vertical">
 
            <TextView
                android:layout_width="match_parent"
                android:layout_height="wrap_content"
+               android:background="@color/heading"
                android:text="Vendor's Information"
-               android:textStyle="bold"
-               android:textColor="@color/white"
-               android:textSize="@dimen/_14sdp"/>
+               android:padding="@dimen/_5sdp"
+               android:textColor="@color/black"
+               android:textSize="@dimen/_12sdp"/>
 
            <LinearLayout
                android:layout_width="match_parent"
                android:layout_height="wrap_content"
+               android:padding="@dimen/_5sdp"
                android:orientation="horizontal">
 
                <ImageView
-                   android:layout_width="@dimen/_50sdp"
-                   android:layout_height="@dimen/_50sdp"
+                   android:layout_width="@dimen/_70sdp"
+                   android:layout_height="@dimen/_70sdp"
                    android:id="@+id/source_type"
-                   android:background="#000"
                    android:layout_gravity="center_vertical"
-                   android:padding="@dimen/_5sdp"
-                   android:src="@drawable/user"
+                   android:paddingBottom="@dimen/_15sdp"
+                   android:paddingLeft="@dimen/_10sdp"
+                   android:paddingRight="@dimen/_15sdp"
+                   android:src="@drawable/vendors"
+                   android:layout_below="@id/vendor_info_title"
                    />
                <!--
                 app:civ_border_color="#ccc"
@@ -247,7 +250,8 @@
                    android:layout_width="match_parent"
                    android:layout_height="wrap_content"
                    android:orientation="vertical"
-                   android:paddingLeft="@dimen/_20sdp"
+                   android:paddingTop="@dimen/_5sdp"
+                   android:paddingBottom="@dimen/_5sdp"
                    android:gravity="center_vertical">
 
                    <TextView
@@ -258,16 +262,15 @@
                        android:id="@+id/vendor_name"
                        android:text="Bihani Traders"
                        android:textColor="@color/black"
-                       android:textSize="@dimen/_14sdp" />
+                       android:textSize="@dimen/_12sdp" />
                    <TextView
                        android:layout_width="match_parent"
                        android:layout_height="wrap_content"
                        android:id="@+id/vendor_address"
                        android:gravity="left|center_vertical"
-                       android:text="B-3/5 Sector-11, Rohini\n New Delhi - 110085"
+                       android:text="B-3/5 Sector-11, Rohini\nNew Delhi - 110085"
                        android:visibility="visible"
-                       android:textColor="@color/mdtp_dark_gray"
-                       android:textSize="@dimen/_12sdp" />
+                       android:textSize="@dimen/_11sdp" />
 
                    <TextView
 
@@ -277,8 +280,7 @@
                        android:id="@+id/vendor_phone"
                        android:text="+91-9564145000"
                        android:visibility="visible"
-                       android:textColor="@color/black"
-                       android:textSize="@dimen/_12sdp" />
+                       android:textSize="@dimen/_11sdp" />
 
 
 
@@ -289,30 +291,26 @@
 
        </LinearLayout>
 
+
        <TextView
            android:layout_width="match_parent"
            android:layout_height="wrap_content"
            android:text="Vehicle's Information"
+
            android:textColor="@color/black"
-           android:textSize="@dimen/_14sdp"
-           android:padding="@dimen/_10sdp"
+           android:textSize="@dimen/_12sdp"
+           android:background="@color/heading"
+           android:padding="@dimen/_5sdp"
            />
 
-       <android.support.v4.widget.NestedScrollView
-           android:layout_width="match_parent"
-           android:layout_height="match_parent">
+
        <android.support.v7.widget.RecyclerView
            android:layout_width="match_parent"
-           android:layout_height="match_parent"
-           android:id="@+id/vehicle_info"
-           android:scrollbars="vertical"/>
-        </android.support.v4.widget.NestedScrollView>
-
-
+           android:layout_height="wrap_content"
+           android:id="@+id/vehicle_info" />
 
 
 
 
    </LinearLayout>
-</android.support.v4.widget.NestedScrollView>
-</FrameLayout>
+</ScrollView>

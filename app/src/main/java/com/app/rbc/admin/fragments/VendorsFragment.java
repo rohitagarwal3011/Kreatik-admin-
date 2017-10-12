@@ -20,11 +20,13 @@ import android.widget.Toast;
 
 import com.app.rbc.admin.R;
 import com.app.rbc.admin.activities.IndentRegisterActivity;
+import com.app.rbc.admin.activities.SettingsActivity;
 import com.app.rbc.admin.adapters.CustomVendorListAdapter;
 import com.app.rbc.admin.api.APIController;
 import com.app.rbc.admin.models.db.models.Vendor;
 
 import java.util.List;
+import java.util.Set;
 
 
 public class VendorsFragment extends Fragment implements View.OnClickListener {
@@ -33,6 +35,7 @@ public class VendorsFragment extends Fragment implements View.OnClickListener {
     private RecyclerView recyclerView;
     private CustomVendorListAdapter adapter;
     private List<Vendor> vendors;
+    private RelativeLayout empty_relative;
     SwipeRefreshLayout swipeRefreshLayout;
 
     final GestureDetector mGestureDetector = new GestureDetector(getContext(),
@@ -51,7 +54,7 @@ public class VendorsFragment extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_vendors, container, false);
-        ((IndentRegisterActivity)getActivity()).getSupportActionBar().setTitle("Vendor");
+        ((SettingsActivity)getActivity()).getSupportActionBar().setTitle("Vendor");
 
         initializeViews();
         return view;
@@ -62,6 +65,7 @@ public class VendorsFragment extends Fragment implements View.OnClickListener {
         TextView add_vendor_title = (TextView) view.findViewById(R.id.add_vendor_title);
         ImageView add_vendor_icon = (ImageView) view.findViewById(R.id.add_vendor_icon);
         Button add_vendor_next = (Button) view.findViewById(R.id.add_vendor_next);
+        empty_relative = (RelativeLayout) view.findViewById(R.id.empty_relative);
 
         add_vendor_container.setOnClickListener(this);
         add_vendor_title.setOnClickListener(this);
@@ -86,10 +90,11 @@ public class VendorsFragment extends Fragment implements View.OnClickListener {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        vendors = Vendor.listAll(Vendor.class);
+        vendors = Vendor.find(Vendor.class,"statestore != ?",1+"");
         setRecyclerView(vendors);
 
         if(vendors.size() == 0) {
+            empty_relative.setVisibility(View.VISIBLE);
             swipeRefreshLayout.setRefreshing(true);
             callVendorsFetchApi();
         }
@@ -105,7 +110,7 @@ public class VendorsFragment extends Fragment implements View.OnClickListener {
 
                     int a=rv.getChildPosition(child);
                     //Log.e("Listener Id",jobList.get(a).getId()+"");
-                    ((IndentRegisterActivity)getContext()).setFragment(8,vendors.get(a).getId());
+                    ((SettingsActivity)getContext()).setFragment(8,vendors.get(a).getId());
 
 
                     return true;
@@ -142,13 +147,13 @@ public class VendorsFragment extends Fragment implements View.OnClickListener {
             case R.id.add_vendor_icon:
             case R.id.add_vendor_title:
             case R.id.add_vendor_next:
-                ((IndentRegisterActivity)getActivity()).setFragment(8);
+                ((SettingsActivity)getActivity()).setFragment(8);
                 break;
         }
     }
 
     private void callVendorsFetchApi() {
-        APIController controller = new APIController(getContext(),40,IndentRegisterActivity.ACTIVITY);
+        APIController controller = new APIController(getContext(),40,SettingsActivity.ACTIVITY);
         controller.fetchVendors();
     }
 
@@ -156,6 +161,12 @@ public class VendorsFragment extends Fragment implements View.OnClickListener {
         swipeRefreshLayout.setRefreshing(false);
         switch(status) {
             case 2 :
+                if(Vendor.count(Vendor.class) == 0) {
+                    empty_relative.setVisibility(View.VISIBLE);
+                }
+                else {
+                    empty_relative.setVisibility(View.GONE);
+                }
                 refreshAdapter();
                 break;
             case 0:
@@ -167,6 +178,6 @@ public class VendorsFragment extends Fragment implements View.OnClickListener {
     }
 
     private void refreshAdapter() {
-        adapter.refreshAdapter(Vendor.listAll(Vendor.class));
+        adapter.refreshAdapter(Vendor.find(Vendor.class,"statestore != ?",1+""));
     }
 }

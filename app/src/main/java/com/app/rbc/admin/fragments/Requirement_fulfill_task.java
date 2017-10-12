@@ -5,13 +5,18 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -19,8 +24,10 @@ import android.widget.TextView;
 
 import com.app.rbc.admin.R;
 import com.app.rbc.admin.activities.RequirementDetailActivity;
-import com.app.rbc.admin.activities.StockActivity;
 import com.app.rbc.admin.interfaces.ApiServices;
+import com.app.rbc.admin.models.StockListProductWise;
+import com.app.rbc.admin.models.db.models.Categoryproduct;
+import com.app.rbc.admin.models.db.models.site_overview.Requirement;
 import com.app.rbc.admin.utils.AdapterWithCustomItem;
 import com.app.rbc.admin.utils.AppUtil;
 import com.app.rbc.admin.utils.ChangeFragment;
@@ -41,6 +48,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -100,25 +108,16 @@ public class Requirement_fulfill_task extends Fragment implements DatePickerDial
     AdapterWithCustomItem timeAdapter;
     String date_shown, time_shown;
 
-
+    private long state_store_id;
     public Requirement_fulfill_task() {
-        // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment Requirement_fulfill_task.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static Requirement_fulfill_task newInstance(String param1, String param2) {
+    public static Requirement_fulfill_task newInstance(String param1, String param2,Requirement state_store_req) {
         Requirement_fulfill_task fragment = new Requirement_fulfill_task();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
+        state_store_req = state_store_req;
         fragment.setArguments(args);
         return fragment;
     }
@@ -130,7 +129,10 @@ public class Requirement_fulfill_task extends Fragment implements DatePickerDial
             category_selected = getArguments().getString(ARG_PARAM1);
             user_selected = getArguments().getString(ARG_PARAM2);
         }
+
     }
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -139,6 +141,18 @@ public class Requirement_fulfill_task extends Fragment implements DatePickerDial
         View view = inflater.inflate(R.layout.fragment_requirement_fulfill_task, container, false);
         unbinder = ButterKnife.bind(this, view);
         count =1;
+
+        Bundle bundle = ((RequirementDetailActivity)getActivity()).finalform;
+        if(bundle != null) {
+            desc.setText(bundle.getString("description"));
+            dateSelect.setSelection(bundle.getInt("dateselect"));
+            timeSelect.setSelection(bundle.getInt("timeselect"));
+        }
+
+        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
+        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Assign a Task");
+
         return view;
     }
 
@@ -150,13 +164,26 @@ public class Requirement_fulfill_task extends Fragment implements DatePickerDial
 
     }
 
+    @Override
+    public void onPause() {
+        if(((RequirementDetailActivity)getActivity()).finalform == null) {
+            ((RequirementDetailActivity)getActivity()).finalform = new Bundle();
+        }
+        Bundle bundle = ((RequirementDetailActivity) getActivity()).finalform;
+        bundle.putString("description", desc.getText().toString());
+        bundle.putInt("dateselect", dateSelect.getSelectedItemPosition());
+        bundle.putInt("timeselect", timeSelect.getSelectedItemPosition());
+
+        super.onPause();
+    }
+
 
     private void set_data() {
         String[] user = AppUtil.get_employee_from_user_id(getContext(), user_selected);
         employeeForTask.setText(user[0]);
         requirementCategory.setText(category_selected);
-        fromSite.setText(Stock_list_product_wise.site_selected);
-        toSite.setText(RequirementDetailActivity.req_site);
+        fromSite.setText(Stock_list_product_wise.site_name);
+        toSite.setText(RequirementDetailActivity.req_site_name);
 
         try {
 
@@ -176,30 +203,26 @@ public class Requirement_fulfill_task extends Fragment implements DatePickerDial
 
     private void addrow(String product,String quantity)
     {
-        TableRow tr = new TableRow(getContext());
-        TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
 
-        layoutParams.setMargins(0, (int) getResources().getDimension(R.dimen._5sdp), 0, (int) getResources().getDimensionPixelSize(R.dimen._5sdp));
-        tr.setLayoutParams(layoutParams);
-        tr.setPadding((int) getResources().getDimension(R.dimen._3sdp), (int) getResources().getDimension(R.dimen._3sdp), (int) getResources().getDimension(R.dimen._3sdp), (int) getResources().getDimension(R.dimen._3sdp));
+        String unit = "";
+        List<Categoryproduct> categoryproductList = Categoryproduct.find(Categoryproduct.class,
+                "product = ?",product);
+        if(categoryproductList.size() != 0) {
 
-        TextView tv = new TextView(getContext());
-        tv.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 1f));
-        tv.setGravity(Gravity.LEFT);
-        tv.setTextColor(Color.parseColor("#000000"));
-        tv.setText(product);
+            unit = categoryproductList.get(0).getUnit();
+        }
 
-        tr.addView(tv, 0);
+        View tr = getActivity().getLayoutInflater().inflate(R.layout.custom_requirement_table_row,null);
 
-        TextView tv1 = new TextView(getContext());
-        tv1.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 1f));
-        tv1.setGravity(Gravity.LEFT);
-        tv1.setTextColor(Color.parseColor("#000000"));
-        tv1.setText(quantity);
+        TextView productText = (TextView) tr.findViewById(R.id.product);
+        TextView quantityText = (TextView) tr.findViewById(R.id.quantity);
+        Button product_icon = (Button) tr.findViewById(R.id.product_icon);
 
-        tr.addView(tv1, 1);
+        productText.setText(product);
+        quantityText.setText(quantity+" "+unit);
+        product_icon.setText(product.substring(0,1));
 
-        productTable.addView(tr, count);
+        productTable.addView(tr);
         count++;
     }
     private Boolean check_length(EditText field) {
@@ -228,17 +251,20 @@ public class Requirement_fulfill_task extends Fragment implements DatePickerDial
 
         if (new Timestamp(date1.getTime()).before(new Timestamp(new Date().getTime()))) {
             AppUtil.showToast(getContext(), "Choose correct time");
-            flag = false;
+            flag= false;
+
         } else {
-            flag = true;
+
+            if(check_length(desc))
+            {
+                flag = true;
+            }
+            else
+                flag=false;
+
+
         }
 
-        if(check_length(desc))
-        {
-            flag=true;
-        }
-        else
-            flag=false;
 
 
         return flag;
@@ -253,7 +279,7 @@ public class Requirement_fulfill_task extends Fragment implements DatePickerDial
 
 
         dateAdapter = new AdapterWithCustomItem(getContext(), dates);
-        dateAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        dateAdapter.setDropDownViewResource(R.layout.custom_spinner_text);
         dateSelect.setAdapter(dateAdapter);
 
         Calendar calendar = Calendar.getInstance();
@@ -302,7 +328,7 @@ public class Requirement_fulfill_task extends Fragment implements DatePickerDial
         deadline_time = "13:00:00";
 
         timeAdapter = new AdapterWithCustomItem(getContext(), times);
-        timeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        timeAdapter.setDropDownViewResource(R.layout.custom_spinner_text);
         timeSelect.setAdapter(timeAdapter);
         timeSelect.setOnItemSelectedEvenIfUnchangedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -421,7 +447,7 @@ public class Requirement_fulfill_task extends Fragment implements DatePickerDial
 
 
             final ApiServices apiServices = RetrofitClient.getApiService();
-            Call<ResponseBody> call = apiServices.fulfill_req(RequirementDetailActivity.rq_id,toSite.getText().toString(),fromSite.getText().toString(),to_user, from_user, product, prod_list,desc.getText().toString(), deadline);
+            Call<ResponseBody> call = apiServices.fulfill_req(RequirementDetailActivity.rq_id,RequirementDetailActivity.req_site_id, Stock_list_product_wise.site_selected,to_user, from_user, product, prod_list,desc.getText().toString(), deadline);
 
             AppUtil.logger(TAG, "Creation Request : " + call.request().toString() + " Product :" + prod_list + " \n " + " Employee ID  :" + to_user + " \n " + "Assigned by :" + from_user + " \n " + "Deadline :" + deadline + " \n ");
             call.enqueue(new Callback<ResponseBody>() {
@@ -430,29 +456,45 @@ public class Requirement_fulfill_task extends Fragment implements DatePickerDial
 
                     // progress.dismiss();
 
+
                     submitTask.setEnabled(true);
                     submitTask.setProgress(0);
-                    final SweetAlertDialog pDialog = new SweetAlertDialog(getContext(), SweetAlertDialog.SUCCESS_TYPE);
-                    pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
-                    pDialog.setTitleText("Task Created");
-                    pDialog.setContentText("Your task has been successfully created");
-                    pDialog.setCancelable(false);
-                    pDialog.show();
 
-                    pDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                        @Override
-                        public void onClick(SweetAlertDialog sweetAlertDialog) {
-                            pDialog.dismiss();
-                            ChangeFragment.changeFragment(getActivity().getSupportFragmentManager(), R.id.frame_main, com.app.rbc.admin.fragments.RequirementDetails.newInstance(category_selected), com.app.rbc.admin.fragments.RequirementDetails.TAG);
-
-
-                        }
-                    });
                     try {
 
                         try {
                             JSONObject obj = new JSONObject(response.body().string());
                             AppUtil.logger(TAG, obj.toString());
+                            if(obj.getJSONObject("meta").getInt("status")==2)
+                            {
+                                final SweetAlertDialog pDialog = new SweetAlertDialog(getContext(), SweetAlertDialog.SUCCESS_TYPE);
+                                pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+                                pDialog.setTitleText("Task Created");
+                                pDialog.setContentText("Your task has been successfully created");
+                                pDialog.setCancelable(false);
+                                pDialog.show();
+
+                                pDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                    @Override
+                                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                        pDialog.dismiss();
+//                                        while (getFragmentManager().getBackStackEntryCount() != 0) {
+//                                            getFragmentManager().popBackStackImmediate();
+//                                        }
+
+                                        getActivity().getSupportFragmentManager().popBackStack(null,
+                                                getActivity().getSupportFragmentManager().POP_BACK_STACK_INCLUSIVE);
+
+                                        ChangeFragment.changeFragment(getActivity().getSupportFragmentManager(), R.id.frame_main, com.app.rbc.admin.fragments.RequirementDetails.newInstance(category_selected), com.app.rbc.admin.fragments.RequirementDetails.TAG);
+
+
+                                    }
+                                });
+                            }
+                            else
+                                AppUtil.showToast(getContext(), "Network Issue. Please check your connectivity and try again");
+
+
                         } catch (IOException e) {
                             e.printStackTrace();
                         }

@@ -10,6 +10,8 @@ import com.orm.SugarRecord;
 
 public class Vendor extends SugarRecord{
 
+    private int statestore;
+
     public Vendor() {
 
     }
@@ -57,5 +59,13 @@ public class Vendor extends SugarRecord{
 
     public void setVendorid(String vendorid) {
         this.vendorid = vendorid;
+    }
+
+    public int getStatestore() {
+        return statestore;
+    }
+
+    public void setStatestore(int statestore) {
+        this.statestore = statestore;
     }
 }

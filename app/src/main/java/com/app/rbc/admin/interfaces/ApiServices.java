@@ -162,7 +162,7 @@ public interface ApiServices {
     /*Create a requriement*/
     @FormUrlEncoded
     @POST("create_req/")
-    Call<ResponseBody> create_req(@Field("title") String title, @Field("raised_by") String from_user,@Field("purpose") String purpose, @Field("site") String site_id, @Field("category") String category ,  @Field("prod_list") JSONArray product_list);
+    Call<ResponseBody> create_req( @Field("raised_by") String from_user,@Field("purpose") String purpose, @Field("site_id") String site_id, @Field("category") String category ,  @Field("prod_list") JSONArray product_list);
 
     /*Fetch Category Requirements*/
     @FormUrlEncoded
@@ -178,13 +178,13 @@ public interface ApiServices {
     /*Fetch Product Wise Stock*/
     @FormUrlEncoded
     @POST("prod_wise_stock/")
-    Call<StockListProductWise> prod_wise_stock(@Field("productlist") JSONArray product_list);
+    Call<StockListProductWise> prod_wise_stock(@Field("prodlist") JSONArray product_list);
 
 
     /*Create a task to create PO*/
     @FormUrlEncoded
     @POST("fulfill_req/")
-    Call<ResponseBody> fulfill_req(@Field("rq_id") String rq_id,@Field("for_site") String for_site,@Field("from_site") String from_site,@Field("to_user") String to_user, @Field("from_user") String from_user,@Field("category") String category,@Field("prod_list") JSONArray prod_list ,@Field("comment") String comment, @Field("deadline") String deadline);
+    Call<ResponseBody> fulfill_req(@Field("rq_id") String rq_id,@Field("for_site_id") String for_site,@Field("from_site_id") String from_site,@Field("to_user") String to_user, @Field("from_user") String from_user,@Field("category") String category,@Field("prod_list") JSONArray prod_list ,@Field("comment") String comment, @Field("deadline") String deadline);
 
     /*Fetch Category and Site Specific Requirements*/
     @FormUrlEncoded
@@ -200,6 +200,8 @@ public interface ApiServices {
     @FormUrlEncoded
     @POST("add_vehicle_info/")
     Call<ResponseBody> add_vehicle_info(@Field("rq_id") String rq_id,@Field("destination") String destination,@Field("source") String source, @Field("parent_id") String parent_id,@Field("category") String category,@Field("prod_list") JSONArray prod_list ,@Field("vehicle_number") String vehicle_number, @Field("driver") String driver,@Field("challan") String challan);
+
+
 
 
 

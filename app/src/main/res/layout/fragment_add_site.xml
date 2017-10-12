@@ -1,8 +1,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.example.jeet.kreatik.fragments.AddEmployeeFragment">
+    android:layout_height="match_parent">
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -20,11 +19,12 @@
 
                 <EditText
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_height="@dimen/_40sdp"
                     android:layout_toRightOf="@+id/form_employee_image"
                     android:background="@drawable/round_edittext_light"
                     android:hint="Site Name"
                     android:singleLine="true"
+                    android:inputType="textPersonName|textCapSentences"
                     android:imeOptions="actionNext"
                     android:textSize="15sp"
                     android:paddingLeft="10dp"
@@ -33,11 +33,12 @@
 
                 <EditText
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_height="@dimen/_40sdp"
                     android:layout_below="@id/form_site_name"
                     android:background="@drawable/round_edittext_light"
                     android:id="@+id/form_site_location"
                     android:hint="Site Location"
+                    android:inputType="textPersonName|textCapSentences"
                     android:singleLine="true"
                     android:imeOptions="actionNext"
                     android:textSize="15sp"
@@ -45,7 +46,7 @@
 
                 <TextView
                     android:layout_width="100dp"
-                    android:layout_height="50dp"
+                    android:layout_height="@dimen/_40sdp"
                     android:text="Type"
                     android:paddingLeft="10dp"
                     android:paddingTop="15dp"
@@ -54,18 +55,25 @@
                     android:layout_below="@id/form_site_location"
                     android:background="@drawable/round_edittext_light"/>
 
-                <Spinner
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_height="@dimen/_40sdp"
                     android:background="@drawable/round_edittext_light"
-                    android:id="@+id/form_site_type_spinner"
-                    android:layout_toRightOf="@+id/site_type_title"
-                    android:layout_alignTop="@id/site_type_title" />
+                    android:layout_toRightOf="@id/site_type_title"
+                    android:layout_alignTop="@id/site_type_title"
+                    android:id="@+id/form_site_type_spinner_relative">
+
+                    <Spinner
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:id="@+id/form_site_type_spinner" />
+
+                </RelativeLayout>
 
 
                 <TextView
                     android:layout_width="100dp"
-                    android:layout_height="50dp"
+                    android:layout_height="@dimen/_40sdp"
                     android:text="In-charge"
                     android:textSize="15sp"
                     android:paddingLeft="10dp"
@@ -74,20 +82,27 @@
                     android:layout_below="@id/site_type_title"
                     android:background="@drawable/round_edittext_light"/>
 
-                <Spinner
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_height="@dimen/_40sdp"
                     android:background="@drawable/round_edittext_light"
-                    android:id="@+id/form_site_incharge_spinner"
-                    android:layout_toRightOf="@+id/site_incharge_title"
-                    android:layout_alignTop="@id/site_incharge_title" />
+                    android:layout_toRightOf="@id/site_incharge_title"
+                    android:layout_alignTop="@id/site_incharge_title"
+                    android:id="@+id/form_site_incharge_spinner_relative">
+
+
+                    <Spinner
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_40sdp"
+                        android:id="@+id/form_site_incharge_spinner"/>
+                </RelativeLayout>
 
             </RelativeLayout>
         </android.support.v7.widget.CardView>
 
         <Button
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="@dimen/_40sdp"
             android:background="@color/colorAccent"
             android:text="Save"
             android:layout_margin="10dp"
@@ -108,7 +123,7 @@
 
         <Button
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="@dimen/_40sdp"
             android:layout_margin="10dp"
             android:background="@color/colorAccentRed"
             android:text="Save &amp; Add another"
