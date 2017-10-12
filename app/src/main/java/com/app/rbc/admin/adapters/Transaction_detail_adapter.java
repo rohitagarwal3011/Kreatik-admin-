@@ -56,6 +56,7 @@ public class Transaction_detail_adapter extends RecyclerView.Adapter<Transaction
         LinearLayout tableLinear;
 
         TableLayout productTable;
+        LinearLayout images_layout;
 
         public MyViewHolder(View view) {
             super(view);
@@ -72,7 +73,7 @@ public class Transaction_detail_adapter extends RecyclerView.Adapter<Transaction
             unloaded_img = (SimpleDraweeView) view.findViewById(R.id.unloaded_img);
             tableLinear = (LinearLayout) view.findViewById(R.id.tableLinear);
             transaction_status = (TextView) view.findViewById(R.id.transaction_status);
-
+            images_layout = (LinearLayout) itemView.findViewById(R.id.images_layout);
             count=1;
 
         }
@@ -172,6 +173,8 @@ public class Transaction_detail_adapter extends RecyclerView.Adapter<Transaction
             holder.vehicle_number.setText(detail.getVehicleNumber());
 
             if (detail.getStatus().equalsIgnoreCase("Received")) {
+
+                holder.images_layout.setVisibility(View.VISIBLE);
                 String[] urls = detail.getChallanImg().split("\\|");
                 final Uri challanUrl = Uri.parse(urls[0]);
                 final Uri invoiceUrl = Uri.parse(urls[1]);
@@ -239,6 +242,9 @@ public class Transaction_detail_adapter extends RecyclerView.Adapter<Transaction
                                 .show();
                     }
                 });
+            }
+            else {
+                holder.images_layout.setVisibility(View.GONE);
             }
         }
         holder.transaction_status.setText(detail.getStatus());

@@ -146,6 +146,7 @@ public class RequirementDetails extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        RequirementActivity.show_tabs = true;
     }
 
     @Override

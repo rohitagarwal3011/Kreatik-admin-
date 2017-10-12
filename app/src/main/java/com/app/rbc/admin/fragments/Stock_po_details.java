@@ -38,6 +38,8 @@ import com.facebook.drawee.generic.RoundingParams;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.gson.Gson;
 
+import org.json.JSONObject;
+
 import java.util.List;
 
 import butterknife.BindView;
@@ -160,13 +162,16 @@ public class Stock_po_details extends Fragment {
             @Override
             public void onResponse(Call<StockPoDetails> call, Response<StockPoDetails> response) {
                 pDialog.dismiss();
-                if (response.body().getMeta().getStatus() == 2) {
+                try {
+
+                    AppUtil.logger("PO detail response : ",new Gson().toJson(response.body()));
+                    if (response.body().getMeta().getStatus() == 2) {
 
 
-                    AppUtil.putString(getContext().getApplicationContext(), TagsPreferences.PO_DETAILS, new Gson().toJson(response.body()));
-                    stockPoDetails = new Gson().fromJson(AppUtil.getString(getContext(), TagsPreferences.PO_DETAILS), StockPoDetails.class);
-                    AppUtil.logger("PO Details : ", AppUtil.getString(getContext().getApplicationContext(), TagsPreferences.PO_DETAILS));
-                    set_data();
+                        AppUtil.putString(getContext().getApplicationContext(), TagsPreferences.PO_DETAILS, new Gson().toJson(response.body()));
+                        stockPoDetails = new Gson().fromJson(AppUtil.getString(getContext(), TagsPreferences.PO_DETAILS), StockPoDetails.class);
+                        AppUtil.logger("PO Details : ", AppUtil.getString(getContext().getApplicationContext(), TagsPreferences.PO_DETAILS));
+                        set_data();
 
 //                    SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
 //                    Date formated = null;
@@ -177,6 +182,11 @@ public class Stock_po_details extends Fragment {
 //                    }
 
 
+                    }
+                }
+                catch (Exception e)
+                {
+                    AppUtil.showToast(getContext(), "Network Issue. Please check your connectivity and try again");
                 }
 
             }

@@ -17,6 +17,7 @@ import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -59,7 +60,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -69,7 +69,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import butterknife.OnTouch;
 import butterknife.Unbinder;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import okhttp3.MediaType;
@@ -80,8 +79,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static android.R.attr.data;
-import static android.R.attr.tabStripEnabled;
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 
@@ -124,6 +121,7 @@ public class Task_details extends Fragment {
 
     private String log_type,cmt,status,docs,changed_time,docs_url;
     private MultipartBody.Part body;
+    private File photoFile;
 
 
     public Task_details() {
@@ -138,7 +136,7 @@ public class Task_details extends Fragment {
      * @return A new instance of fragment Task_details.
      */
     // TODO: Rename and change types and number of parameters
-    public static Task_details newInstance(String param1,String param2) {
+    public static Task_details newInstance(String param1, String param2) {
         Task_details fragment = new Task_details();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
@@ -279,7 +277,7 @@ public class Task_details extends Fragment {
         pDialog.setTitleText("Loading");
         pDialog.setCancelable(false);
         pDialog.show();
-        Call<Tasklogs> call = apiServices.task_details(task_id,AppUtil.getString(context,TagsPreferences.USER_ID));
+        Call<Tasklogs> call = apiServices.task_details(task_id, AppUtil.getString(context, TagsPreferences.USER_ID));
         AppUtil.logger(TAG, "Get Task details : " + call.request().toString() + "Task ID : " + task_id);
         call.enqueue(new Callback<Tasklogs>() {
             @Override
@@ -382,7 +380,7 @@ public class Task_details extends Fragment {
 
                 Employee employee_list = new Gson().fromJson(AppUtil.getString(context.getApplicationContext(), TagsPreferences.EMPLOYEE_LIST), Employee.class);
                 String pic_url = "";
-                if(response.body().getData().get(0).getFromUser().equalsIgnoreCase(AppUtil.getString(context,TagsPreferences.USER_ID)))
+                if(response.body().getData().get(0).getFromUser().equalsIgnoreCase(AppUtil.getString(context, TagsPreferences.USER_ID)))
                 {
                     for(int i=0;i<employee_list.getData().size();i++)
                     {
@@ -788,7 +786,7 @@ public class Task_details extends Fragment {
     public void loadImagefromGallery() {
         // Create intent to Open Image applications like Gallery, Google Photos
         Intent galleryIntent = new Intent(Intent.ACTION_PICK,
-                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         // Start the Intent
         getActivity().startActivityForResult(galleryIntent, RESULT_LOAD_IMG);
     }
@@ -796,20 +794,31 @@ public class Task_details extends Fragment {
 
 
     public void captureImage() {
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
-        fileUri = FileUtils.getOutputMediaFileUri(MEDIA_TYPE_IMAGE);
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
+        if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
 
-        // start the image capture Intent
-        getActivity().startActivityForResult(intent, CAMERA_CAPTURE_IMAGE_REQUEST_CODE);
+            photoFile = null;
+            try {
+                photoFile = FileUtils.createImageFile();
+            } catch (IOException ex) {
+                Log.e("Vehicle Recieved",ex.toString());
+
+            }
+
+            if (photoFile != null) {
+                Uri photoURI = FileProvider.getUriForFile(getActivity(),
+                        "com.example.android.fileprovider",
+                        photoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                getActivity().startActivityForResult(takePictureIntent, CAMERA_CAPTURE_IMAGE_REQUEST_CODE);
+            }
+        }
+
     }
 
-    /**
-     * Here we store the file url as it will be null after returning from camera
-     * app
-     */
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -827,6 +836,7 @@ public class Task_details extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
 
         final Intent intent_data = data;
+        Log.e("Intent",requestCode+"");
             if(requestCode == RESULT_LOAD_PDF )
             {
                 if(resultCode == RESULT_OK)
@@ -941,29 +951,29 @@ public class Task_details extends Fragment {
 
         // when image is clicked
         else if (requestCode == CAMERA_CAPTURE_IMAGE_REQUEST_CODE) {
-            if (resultCode == RESULT_OK) {
-                // successfully captured the image
-                // display it in image view
-                AppUtil.logger("Task_create", "Image Path : " + fileUri);
-                try {
-                    compress_and_send_image(fileUri.getPath());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (BadElementException e) {
-                    e.printStackTrace();
+                if (resultCode == RESULT_OK) {
+                    // successfully captured the image
+                    // display it in image view
+                    AppUtil.logger("Task_create", "Image Path : " + photoFile.getPath());
+                    try {
+                        compress_and_send_image(photoFile.getPath());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (BadElementException e) {
+                        e.printStackTrace();
+                    }
+                    //  compress_create_pdf_and_show_card(fileUri.getPath());
+                } else if (resultCode == RESULT_CANCELED) {
+                    // user cancelled Image capture
+                    Toast.makeText(getActivity().getApplicationContext(),
+                            "User cancelled image capture", Toast.LENGTH_SHORT)
+                            .show();
+                } else {
+                    // failed to capture image
+                    Toast.makeText(getActivity().getApplicationContext(),
+                            "Sorry! Failed to capture image", Toast.LENGTH_SHORT)
+                            .show();
                 }
-                //  compress_create_pdf_and_show_card(fileUri.getPath());
-            } else if (resultCode == RESULT_CANCELED) {
-                // user cancelled Image capture
-                Toast.makeText(getActivity().getApplicationContext(),
-                        "User cancelled image capture", Toast.LENGTH_SHORT)
-                        .show();
-            } else {
-                // failed to capture image
-                Toast.makeText(getActivity().getApplicationContext(),
-                        "Sorry! Failed to capture image", Toast.LENGTH_SHORT)
-                        .show();
-            }
         }
 
 
@@ -985,13 +995,10 @@ public class Task_details extends Fragment {
         Compress compress = new Compress();
         String image_returned = compress.compressImage(image_path);
         AppUtil.logger("Returned path : ", image_returned);
-        Image img = Image.getInstance(image_returned);
         Uri fileUri = Uri.parse(image_returned);
         AppUtil.logger("Uri of image ",fileUri.toString());
-        //fileUri=selectedImage;
-        File file = FileUtils.getFile(getContext(), fileUri);
-        file= new File(image_returned);
-//                    attactment = new File(imgDecodableString);
+        File file= new File(image_returned);
+
         RequestBody requestFile =
                 RequestBody.create(
                         MediaType.parse("image/jpg"),

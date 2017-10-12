@@ -117,6 +117,7 @@ public class RequirementActivity extends AppCompatActivity implements SearchView
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
+        show_tabs=false;
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
 //        mViewPager.setAdapter(mSectionsPagerAdapter);
@@ -152,7 +153,7 @@ public class RequirementActivity extends AppCompatActivity implements SearchView
 
         try{
             intent = getIntent();
-            if (intent.getStringExtra("type").equalsIgnoreCase("new_req")||intent.getStringExtra("type").equalsIgnoreCase("vehicle")) {
+            if (intent.getStringExtra("type").equalsIgnoreCase("create_req")||intent.getStringExtra("type").equalsIgnoreCase("vehicle")) {
                 get_category_requirements(intent.getStringExtra("category"));
             }
         }

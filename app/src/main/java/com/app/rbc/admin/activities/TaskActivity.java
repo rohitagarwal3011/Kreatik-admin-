@@ -29,6 +29,7 @@ import android.widget.Toast;
 
 import com.app.rbc.admin.Manifest;
 import com.app.rbc.admin.R;
+import com.app.rbc.admin.fragments.Cat_Des_Selection;
 import com.app.rbc.admin.fragments.Employee_list;
 import com.app.rbc.admin.fragments.RecievedVehicle;
 import com.app.rbc.admin.fragments.Task_create;
@@ -384,7 +385,9 @@ public class TaskActivity extends AppCompatActivity implements Task_home.OnTaskT
     @Override
     public boolean onQueryTextChange(String newText) {
         AppUtil.logger(TAG,newText);
-        task_home.setRecyclerSearch(newText);
+//        Fragment mFragment = getSupportFragmentManager().findFragmentById(R.id.frame_main);
+//        if (mFragment instanceof Task_home)
+//            task_home.setRecyclerSearch(newText);
         return true;
     }
 

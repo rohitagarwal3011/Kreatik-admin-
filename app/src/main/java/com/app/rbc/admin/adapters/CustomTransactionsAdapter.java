@@ -149,7 +149,7 @@ public class CustomTransactionsAdapter extends RecyclerView.Adapter<CustomTransa
         holder.vehicle_number.setText(transactions.get(position).getVehiclenumber());
         if(transactions.get(position).getStatus().equalsIgnoreCase("Received")) {
 
-
+            holder.images_layout.setVisibility(View.VISIBLE);
             String[] urls = transactions.get(position).getChallanimg().split("\\|");
 
             final Uri challanUrl = Uri.parse(urls[0]);
@@ -219,6 +219,9 @@ public class CustomTransactionsAdapter extends RecyclerView.Adapter<CustomTransa
                 }
             });
         }
+        else {
+            holder.images_layout.setVisibility(View.GONE);
+        }
         holder.transaction_status.setText(transactions.get(position).getStatus());
 
     }
@@ -239,6 +242,7 @@ public class CustomTransactionsAdapter extends RecyclerView.Adapter<CustomTransa
         TextView transaction_status;
 
         TableLayout productTable;
+        LinearLayout images_layout;
 
         public MyViewHolder(View view) {
             super(view);
@@ -255,6 +259,7 @@ public class CustomTransactionsAdapter extends RecyclerView.Adapter<CustomTransa
             unloaded_img = (SimpleDraweeView) view.findViewById(R.id.unloaded_img);
             tableLinear = (LinearLayout) view.findViewById(R.id.tableLinear);
             transaction_status = (TextView) view.findViewById(R.id.transaction_status);
+            images_layout = (LinearLayout) itemView.findViewById(R.id.images_layout);
 
 
         }

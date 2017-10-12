@@ -159,7 +159,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
             }
 
-            else if (remoteMessage.getData().get("type").equalsIgnoreCase("new_req"))
+            else if (remoteMessage.getData().get("type").equalsIgnoreCase("create_req"))
             {
                 String category= remoteMessage.getData().get("category");
                 String parent_id=remoteMessage.getData().get("rq_id");

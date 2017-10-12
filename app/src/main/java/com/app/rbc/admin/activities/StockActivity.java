@@ -238,7 +238,7 @@ public class StockActivity extends AppCompatActivity implements SearchView.OnQue
             }
             else if (show_tabs)
             {
-                //getSupportFragmentManager().popBackStackImmediate();
+                getSupportFragmentManager().popBackStackImmediate();
                 show_tablayout();
                 //super.onBackPressed();
                 //getSupportFragmentManager().popBackStackImmediate();
@@ -344,23 +344,25 @@ public class StockActivity extends AppCompatActivity implements SearchView.OnQue
             @Override
             public void onResponse(Call<StockCategoryDetails> call, Response<StockCategoryDetails> response) {
                 pDialog.dismiss();
-                if (response.body().getMeta().getStatus() == 2) {
+                try {
+                    if (response.body().getMeta().getStatus() == 2) {
 
 
-                    AppUtil.putString(getApplicationContext(), TagsPreferences.CATEGORY_DETAILS, new Gson().toJson(response.body()));
-                    productDetails = new Gson().fromJson(AppUtil.getString(getApplicationContext(), TagsPreferences.CATEGORY_DETAILS), StockCategoryDetails.class);
-                    AppUtil.logger("Product Details : ", AppUtil.getString(getApplicationContext(), TagsPreferences.CATEGORY_DETAILS));
+                        AppUtil.putString(getApplicationContext(), TagsPreferences.CATEGORY_DETAILS, new Gson().toJson(response.body()));
+                        productDetails = new Gson().fromJson(AppUtil.getString(getApplicationContext(), TagsPreferences.CATEGORY_DETAILS), StockCategoryDetails.class);
+                        AppUtil.logger("Product Details : ", AppUtil.getString(getApplicationContext(), TagsPreferences.CATEGORY_DETAILS));
 
-                    try {
-                        if (intent.getStringExtra("type").equalsIgnoreCase("new_po")||intent.getStringExtra("type").equalsIgnoreCase("vehicle")) {
+
+                        if (intent.getStringExtra("type").equalsIgnoreCase("new_po") || intent.getStringExtra("type").equalsIgnoreCase("vehicle")) {
                             show_po_details(intent.getStringExtra("po_id"));
                         }
                     }
+                }
                     catch (Exception e){
                         show_tablayout();
                     }
 
-                }
+
 
             }
 

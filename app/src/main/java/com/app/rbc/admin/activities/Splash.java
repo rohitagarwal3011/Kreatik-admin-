@@ -226,7 +226,7 @@ public class Splash extends AppCompatActivity {
                                             finish();
                                         }
 
-                                        else if (type.equalsIgnoreCase("new_req"))
+                                        else if (type.equalsIgnoreCase("create_req"))
                                         {
                                             Intent intent = new Intent(Splash.this, RequirementActivity.class);
                                             intent.putExtra("category",intent.getStringExtra("category"));

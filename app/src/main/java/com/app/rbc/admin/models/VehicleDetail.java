@@ -18,15 +18,35 @@ public class VehicleDetail {
     @SerializedName("trans_id")
     private String mTransId;
 
-    @SerializedName("site_details")
-    private List<SiteDetail> siteDetails;
+    @SerializedName("src_details")
+    private List<SiteDetail> src_details;
+    @SerializedName("dest_details")
+    private List<SiteDetail> dest_details;
+    @SerializedName("vendor_details")
+    private List<Vendors.VendorList> vendor_details;
 
-    public List<SiteDetail> getSiteDetails() {
-        return siteDetails;
+    public List<SiteDetail> getSrc_details() {
+        return src_details;
     }
 
-    public void setSiteDetails(List<SiteDetail> siteDetails) {
-        this.siteDetails = siteDetails;
+    public void setSrc_details(List<SiteDetail> src_details) {
+        this.src_details = src_details;
+    }
+
+    public List<SiteDetail> getDest_details() {
+        return dest_details;
+    }
+
+    public void setDest_details(List<SiteDetail> dest_details) {
+        this.dest_details = dest_details;
+    }
+
+    public List<Vendors.VendorList> getVendor_details() {
+        return vendor_details;
+    }
+
+    public void setVendor_details(List<Vendors.VendorList> vendor_details) {
+        this.vendor_details = vendor_details;
     }
 
     public List<Detail> getDetails() {
