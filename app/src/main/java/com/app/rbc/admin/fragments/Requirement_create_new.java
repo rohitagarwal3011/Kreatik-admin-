@@ -14,8 +14,10 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -25,6 +27,7 @@ import com.app.rbc.admin.activities.RequirementActivity;
 import com.app.rbc.admin.activities.StockActivity;
 import com.app.rbc.admin.interfaces.ApiServices;
 import com.app.rbc.admin.models.db.models.Categoryproduct;
+import com.app.rbc.admin.models.db.models.Site;
 import com.app.rbc.admin.models.db.models.site_overview.Requirement;
 import com.app.rbc.admin.utils.AppUtil;
 import com.app.rbc.admin.utils.RetrofitClient;
@@ -36,6 +39,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -64,15 +68,16 @@ public class Requirement_create_new extends Fragment {
     @BindView(R.id.purpose)
     EditText purpose;
     @BindView(R.id.site_id)
-    TextView siteId;
+    Spinner siteId;
     @BindView(R.id.submit_task)
     ActionProcessButton submitTask;
     Unbinder unbinder;
 
-    // TODO: Rename and change types of parameters
     private String category_selected;
     private String mParam2;
 
+    //Spinner Data
+    private List<Site> sites;
 
 
     JSONArray prod_list = new JSONArray();
@@ -104,6 +109,20 @@ public class Requirement_create_new extends Fragment {
         }
     }
 
+    private void setSiteSpinner() {
+        List<String> siteNames = new ArrayList<>();
+        siteNames.add("--Select a site--");
+        sites = Site.listAll(Site.class);
+
+        for(int i = 0 ; i < sites.size() ; i++) {
+            siteNames.add(sites.get(i).getName());
+        }
+
+        ArrayAdapter<String> site_adapter = new ArrayAdapter<String>(getContext(),
+                R.layout.custom_spinner_text,
+                siteNames);
+        siteId.setAdapter(site_adapter);
+    }
 
 
     @Override
@@ -126,6 +145,7 @@ public class Requirement_create_new extends Fragment {
         AppBarLayout.LayoutParams toolbarParams = ( AppBarLayout.LayoutParams) toolbar.getLayoutParams();
         toolbarParams.setScrollFlags(0);
         toolbar.setLayoutParams(toolbarParams);
+        setSiteSpinner();
         return view;
     }
 
@@ -228,8 +248,12 @@ public class Requirement_create_new extends Fragment {
             submitTask.setProgress(1);
             submitTask.setEnabled(false);
             final ApiServices apiServices = RetrofitClient.getApiService();
-            // AppUtil.logger(TAG, "User id : " + user_id + " Pwd : " + new_password.getText().toString());
-            Call<ResponseBody> call = apiServices.create_req( AppUtil.getString(getContext(), TagsPreferences.USER_ID), purpose.getText().toString(), "1", category_selected, prod_list);
+
+            Call<ResponseBody> call = apiServices.create_req( AppUtil.getString(getContext(),
+                    TagsPreferences.USER_ID), purpose.getText().toString(),
+                    sites.get(siteId.getSelectedItemPosition()-1).getId()+"",
+                    category_selected, prod_list);
+
             AppUtil.logger("Create a requirement ", ": " + call.request().toString());
             call.enqueue(new Callback<ResponseBody>() {
                 @Override

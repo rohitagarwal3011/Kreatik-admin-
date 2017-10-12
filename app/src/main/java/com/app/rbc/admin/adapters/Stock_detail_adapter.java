@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -31,7 +32,7 @@ public class Stock_detail_adapter  extends RecyclerView.Adapter<Stock_detail_ada
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
-        ImageView stock_type;
+        Button stock_type;
         TextView stock_location;
         TextView stock_quantity;
         TextView stock_product;
@@ -39,7 +40,7 @@ public class Stock_detail_adapter  extends RecyclerView.Adapter<Stock_detail_ada
         public MyViewHolder(View view) {
             super(view);
             stock_location=(TextView)view.findViewById(R.id.stock_location);
-            stock_type= (ImageView)view.findViewById(R.id.stock_type);
+            stock_type= (Button)view.findViewById(R.id.stock_type);
             stock_quantity = (TextView)view.findViewById(R.id.stock_quantity);
             stock_product = (TextView)view.findViewById(R.id.stock_product);
 
@@ -54,12 +55,9 @@ public class Stock_detail_adapter  extends RecyclerView.Adapter<Stock_detail_ada
                         info.set_site_selected(data.get(getAdapterPosition()).getWhere(),data.get(getAdapterPosition()).getMsitename());
 
                     }
-                    else
-                    {
+                    else {
 
                     }
-//                    final Stock_categories info = (Stock_categories) ((StockActivity) context).getSupportFragmentManager().findFragmentByTag(Stock_categories.TAG);
-//                    info.set_product_type(getAdapterPosition());
 
                 }
             });
@@ -95,14 +93,7 @@ public class Stock_detail_adapter  extends RecyclerView.Adapter<Stock_detail_ada
             categoryproducts.get(0).getUnit());
         }
 
-        if(data.get(position).getMstock_type().equalsIgnoreCase("Stock"))
-        {
-            Picasso.with(context).load((R.drawable.stock)).into(holder.stock_type);
-        }
-        else {
-
-            Picasso.with(context).load((R.drawable.crane)).into(holder.stock_type);
-        }
+       holder.stock_type.setText(data.get(position).getProduct().substring(0,1));
 
     }
 
