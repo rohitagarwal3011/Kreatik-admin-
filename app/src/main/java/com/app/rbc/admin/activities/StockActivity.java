@@ -43,6 +43,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.app.rbc.admin.R;
+import com.app.rbc.admin.adapters.CustomStockSiteListAdapter;
 import com.app.rbc.admin.adapters.PO_detail_adapter;
 import com.app.rbc.admin.adapters.Stock_detail_adapter;
 import com.app.rbc.admin.adapters.Transaction_detail_adapter;
@@ -57,6 +58,7 @@ import com.app.rbc.admin.fragments.Stock_po_details;
 import com.app.rbc.admin.fragments.Vendor_list;
 import com.app.rbc.admin.interfaces.ApiServices;
 import com.app.rbc.admin.models.StockCategoryDetails;
+import com.app.rbc.admin.models.db.models.Site;
 import com.app.rbc.admin.models.db.models.site_overview.Order;
 import com.app.rbc.admin.utils.AppUtil;
 import com.app.rbc.admin.utils.ChangeFragment;
@@ -619,8 +621,24 @@ public class StockActivity extends AppCompatActivity implements SearchView.OnQue
             recyclerView.setItemAnimator(new DefaultItemAnimator());
             recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
 
+            List<String> sites = new ArrayList<>();
+            for(int i = 0 ; i < stockDetail.size() ; i++) {
+                int j;
+                for(j = 0 ; j < sites.size() ; j++) {
+                    if(sites.get(j).equalsIgnoreCase(stockDetail.get(i).getMsitename())) {
+                        break;
+                    }
+                }
+                if(j == sites.size()) {
+                    sites.add(stockDetail.get(i).getMsitename());
+                    Log.e("Site count",sites.size()+"");
+                }
+            }
+            Log.e("totla Stocks",stockDetail.size()+"");
 
-            Stock_detail_adapter adapter = new Stock_detail_adapter(stockDetail,getContext());
+
+            CustomStockSiteListAdapter adapter = new CustomStockSiteListAdapter(getContext(),stockDetail,
+                    sites);
             recyclerView.setAdapter(adapter);
             adapter.notifyDataSetChanged();
 
